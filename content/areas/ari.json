@@ -128,7 +128,30 @@
         ]
       },
       "subarea": "saphan-khwai",
-      "links": {}
+      "links": {},
+      "photo": {
+        "src": "/photos/pins/ari/chatuchak-park.jpg",
+        "alt": "The arched bridge over the lake in Chatuchak Park",
+        "credit": "\"Chatuchak Park (I)\" by Supanut Arunoprayote",
+        "licence": "CC BY 4.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Chatuchak_Park_(I).jpg"
+      },
+      "photos": [
+        {
+          "src": "/photos/pins/ari/chatuchak-park.jpg",
+          "alt": "The arched bridge over the lake in Chatuchak Park",
+          "credit": "\"Chatuchak Park (I)\" by Supanut Arunoprayote",
+          "licence": "CC BY 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Chatuchak_Park_(I).jpg"
+        },
+        {
+          "src": "/photos/pins/ari/chatuchak-park-2.jpg",
+          "alt": "Trees and a pond in Chatuchak Park with towers beyond",
+          "credit": "\"Chatuchak Bangkok cityscape\" by BeautifulMedia",
+          "licence": "CC BY 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Chatuchak_Bangkok_cityscape.jpg"
+        }
+      ]
     },
     {
       "id": "lay-lao",
@@ -284,7 +307,37 @@
         "credit": "\"Chatuchak Weekend Market 1\" by Christophe95",
         "licence": "CC BY-SA 4.0",
         "source": "https://commons.wikimedia.org/wiki/File:Chatuchak_Weekend_Market_1.jpg"
-      }
+      },
+      "photos": [
+        {
+          "src": "/photos/pins/ari/chatuchak-market.jpg",
+          "alt": "A lane of stalls at Chatuchak Weekend Market",
+          "credit": "\"Chatuchak Weekend Market 1\" by Christophe95",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Chatuchak_Weekend_Market_1.jpg"
+        },
+        {
+          "src": "/photos/pins/ari/chatuchak-market-2.jpg",
+          "alt": "A covered aisle of flower and food stalls at Chatuchak Weekend Market",
+          "credit": "\"Chatuchak Weekend Market 2\" by Christophe95",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Chatuchak_Weekend_Market_2.jpg"
+        },
+        {
+          "src": "/photos/pins/ari/chatuchak-market-3.jpg",
+          "alt": "Shoppers in a narrow clothing soi at Chatuchak Weekend Market",
+          "credit": "\"Chatuchak Weekend Market Soi\" by JJ Harrison",
+          "licence": "CC BY-SA 3.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Chatuchak_Weekend_Market_Soi.jpg"
+        },
+        {
+          "src": "/photos/pins/ari/chatuchak-market-4.jpg",
+          "alt": "A fruit seller with cups of cut fruit at Chatuchak Weekend Market",
+          "credit": "\"Chatuchak Weekend Market P1100762\" by Deror Avi",
+          "licence": "CC BY-SA 3.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Chatuchak_Weekend_Market_P1100762.JPG"
+        }
+      ]
     },
     {
       "id": "or-tor-kor-market",
@@ -339,7 +392,37 @@
         ]
       },
       "subarea": "saphan-khwai",
-      "links": {}
+      "links": {},
+      "photo": {
+        "src": "/photos/pins/ari/rot-fai-park.jpg",
+        "alt": "The lake in Wachirabenchathat Park reflecting the city towers",
+        "credit": "\"Wachirabenchatat Park - Bangkok - Thailand\" by Garonzi Stefania",
+        "licence": "CC BY-SA 4.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Wachirabenchatat_Park_-_Bangkok_-_Thailand.jpg"
+      },
+      "photos": [
+        {
+          "src": "/photos/pins/ari/rot-fai-park.jpg",
+          "alt": "The lake in Wachirabenchathat Park reflecting the city towers",
+          "credit": "\"Wachirabenchatat Park - Bangkok - Thailand\" by Garonzi Stefania",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Wachirabenchatat_Park_-_Bangkok_-_Thailand.jpg"
+        },
+        {
+          "src": "/photos/pins/ari/rot-fai-park-2.jpg",
+          "alt": "The stone garden path and pond in Wachirabenchathat Park",
+          "credit": "\"Wachirabenchathat Park Stone Garden 05.23\" by Supanut Arunoprayote",
+          "licence": "CC BY 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Wachirabenchathat_Park_Stone_Garden_05.23.jpg"
+        },
+        {
+          "src": "/photos/pins/ari/rot-fai-park-3.jpg",
+          "alt": "Lawns and tall trees by the water in Wachirabenchathat Park",
+          "credit": "\"สวนวชิรเบญจทัศ (สวนรถไฟ) IMG 7315\" by PEAK99",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:%E0%B8%AA%E0%B8%A7%E0%B8%99%E0%B8%A7%E0%B8%8A%E0%B8%B4%E0%B8%A3%E0%B9%80%E0%B8%9A%E0%B8%8D%E0%B8%88%E0%B8%97%E0%B8%B1%E0%B8%A8_(%E0%B8%AA%E0%B8%A7%E0%B8%99%E0%B8%A3%E0%B8%96%E0%B9%84%E0%B8%9F)_IMG_7315.jpg"
+        }
+      ]
     },
     {
       "id": "ari-soi-1-cafes",
