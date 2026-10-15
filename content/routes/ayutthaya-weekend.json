@@ -1,0 +1,36 @@
+{
+  "id": "ayutthaya-weekend",
+  "city": "bangkok",
+  "name": { "en": "Ayutthaya weekend by car or scooter" },
+  "tagline": { "en": "Two days: palace, ruins by the river, one night in the old capital, back for Sunday dinner." },
+  "mode": "car",
+  "days": 2,
+  "distanceKm": 180,
+  "camera": { "center": [100.56, 14.05], "zoom": 9.3, "pitch": 0, "bearing": 0 },
+  "waypoints": [
+    [100.5603, 13.7375],
+    [100.5500, 13.9000],
+    [100.5790, 14.0300],
+    [100.5810, 14.2330],
+    [100.5420, 14.3430],
+    [100.5580, 14.3560],
+    [100.5680, 14.3570],
+    [100.5760, 14.3520],
+    [100.5700, 14.2500],
+    [100.5500, 13.9000],
+    [100.5603, 13.7375]
+  ],
+  "path": null,
+  "stops": [
+    { "id": "start-asok", "kind": "start", "day": 1, "name": { "en": "Leave Bangkok" }, "why": { "en": "Pick up the car or scooter early. The expressway north is quiet before 8:00." }, "location": { "lon": 100.5603, "lat": 13.7375 }, "links": {} },
+    { "id": "coffee-rangsit", "kind": "coffee", "day": 1, "name": { "en": "Coffee stop near Rangsit" }, "why": { "en": "First break after the city traffic. Placeholder: pick a real cafe on the content pass." }, "location": { "lon": 100.5790, "lat": 14.0300 }, "links": {} },
+    { "id": "bang-pa-in", "kind": "sight", "day": 1, "name": { "en": "Bang Pa-In Royal Palace" }, "why": { "en": "The summer palace: Thai, Chinese and European pavilions around a lake. One hour is enough." }, "location": { "lon": 100.5810, "lat": 14.2330 }, "links": {} },
+    { "id": "wat-chaiwatthanaram", "kind": "sight", "day": 1, "name": { "en": "Wat Chaiwatthanaram" }, "why": { "en": "The riverside ruin from the postcards. Best light an hour before sunset." }, "location": { "lon": 100.5420, "lat": 14.3430 }, "links": {} },
+    { "id": "hotel-ayutthaya", "kind": "hotel", "day": 1, "name": { "en": "Riverside hotel in Ayutthaya" }, "why": { "en": "Placeholder: a mid-range riverside stay on the island. Real pick on the content pass." }, "location": { "lon": 100.5580, "lat": 14.3560 }, "links": {} },
+    { "id": "wat-phra-si-sanphet", "kind": "sight", "day": 2, "name": { "en": "Wat Phra Si Sanphet" }, "why": { "en": "Three chedis of the old royal temple. Go at opening, before the tour buses." }, "location": { "lon": 100.5583, "lat": 14.3556 }, "links": {} },
+    { "id": "wat-mahathat", "kind": "sight", "day": 2, "name": { "en": "Wat Mahathat" }, "why": { "en": "The Buddha head in the tree roots. Five minutes by scooter from Si Sanphet." }, "location": { "lon": 100.5680, "lat": 14.3570 }, "links": {} },
+    { "id": "lunch-boat-noodles", "kind": "food", "day": 2, "name": { "en": "Boat noodles by the river" }, "why": { "en": "Ayutthaya's dish. Placeholder: name the stall on the content pass." }, "location": { "lon": 100.5760, "lat": 14.3520 }, "links": {} },
+    { "id": "coffee-return", "kind": "coffee", "day": 2, "name": { "en": "Coffee on the way back" }, "why": { "en": "Placeholder cafe south of the island, before the highway." }, "location": { "lon": 100.5700, "lat": 14.2500 }, "links": {} },
+    { "id": "end-bangkok", "kind": "end", "day": 2, "name": { "en": "Back in Bangkok" }, "why": { "en": "Aim to be on the expressway by 16:00 to miss the Sunday return traffic." }, "location": { "lon": 100.5603, "lat": 13.7375 }, "links": {} }
+  ]
+}

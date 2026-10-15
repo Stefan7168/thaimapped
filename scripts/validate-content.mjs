@@ -14,7 +14,7 @@ const read = (p) => JSON.parse(readFileSync(join(root, p), 'utf8'))
 
 const ajv = new Ajv2020({ allErrors: true, strict: true })
 addFormats(ajv)
-for (const name of ['common', 'country', 'city', 'area']) ajv.addSchema(read(`schema/${name}.schema.json`))
+for (const name of ['common', 'country', 'city', 'area', 'route']) ajv.addSchema(read(`schema/${name}.schema.json`))
 
 const errors = []
 function check(schemaId, data, label) {
@@ -87,6 +87,22 @@ for (const { id: cityId } of country.cities) {
       if (pin.subarea && !subIds.has(pin.subarea)) errors.push(`${label}: pin ${pin.id} names unknown sub-area ${pin.subarea}`)
       if (pin.walk && !stationIds.has(pin.walk.station)) errors.push(`${label}: pin ${pin.id} walks to unknown station ${pin.walk.station}`)
     }
+  }
+}
+
+// Routes: each must belong to a live city and have unique stop ids.
+const liveCities = new Set(country.cities.filter((c) => c.status === 'live').map((c) => c.id))
+for (const f of readdirSync(join(root, 'routes'))) {
+  const route = read(`routes/${f}`)
+  const label = `routes/${f}`
+  check('route', route, label)
+  if (route.id !== f.replace(/\.json$/, '')) errors.push(`${label}: id is ${route.id}`)
+  if (!liveCities.has(route.city)) errors.push(`${label}: city ${route.city} is not live`)
+  const ids = new Set()
+  for (const stop of route.stops ?? []) {
+    if (ids.has(stop.id)) errors.push(`${label}: duplicate stop ${stop.id}`)
+    ids.add(stop.id)
+    if (stop.day > route.days) errors.push(`${label}: stop ${stop.id} is on day ${stop.day} of ${route.days}`)
   }
 }
 

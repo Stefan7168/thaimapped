@@ -6,7 +6,18 @@ import type { Locale } from '@/lib/content/types'
  */
 const en = {
   brand: 'ThaiMapped',
-  nav: { cities: 'Cities' },
+  nav: { cities: 'Cities', trips: 'Trips' },
+  trip: {
+    heading: 'Weekend trips',
+    intro: 'Road trips with the route, the stops and a place to sleep, day by day.',
+    day: (n: number) => `Day ${n}`,
+    days: (n: number) => (n === 1 ? '1 day' : `${n} days`),
+    km: (n: number) => `${n} km`,
+    mode: { car: 'By car', scooter: 'By scooter', transit: 'By train and bus', walk: 'On foot', boat: 'By boat' } as Record<string, string>,
+    pathNote: 'Straight lines between stops for now. The road-following line comes from the routing step.',
+    back: 'Back to the map',
+  },
+  stop: { start: 'Start', end: 'End', coffee: 'Coffee', food: 'Food', sight: 'Sight', hotel: 'Sleep', viewpoint: 'Viewpoint', market: 'Market', fuel: 'Fuel' } as Record<string, string>,
   country: { comingSoon: 'Coming soon', explore: 'Explore' },
   search: {
     placeholder: 'Search an area, station or place',

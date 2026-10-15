@@ -74,7 +74,7 @@ export function CityExplorer({ locale, bundle }: { locale: Locale; bundle: CityB
           {s.filters.open}
           {count > 0 && <span className="rounded-full bg-accent px-1.5 text-xs font-semibold text-white">{count}</span>}
         </button>
-        <span className="hidden shrink-0 text-sm text-ink-2 md:inline">{t(city.name, locale)}</span>
+        <Link href={`/${locale}/${city.id}/trip`} className="hidden shrink-0 rounded-full border border-line bg-white px-3 py-2 text-sm font-medium md:inline-block">{s.nav.trips}</Link>
       </header>
 
       <div className="relative flex min-h-0 flex-1">

@@ -1,7 +1,7 @@
 import 'server-only'
-import { readFileSync } from 'node:fs'
+import { readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
-import type { Area, City, CityBundle, Country, Line, Station } from './types'
+import type { Area, City, CityBundle, Country, Line, Station, TripRoute } from './types'
 
 /**
  * Content lives in /content as JSON and is read at build time only.
@@ -34,4 +34,15 @@ export function loadCityBundle(cityId: string): CityBundle | null {
   const stations = city.stations ? read<{ stations: Station[] }>(city.stations).stations : []
   const lines = city.lines ? read<{ lines: Line[] }>(city.lines).lines : []
   return { city, areas, stations, lines }
+}
+
+export function loadRoutes(cityId: string): TripRoute[] {
+  return readdirSync(join(CONTENT_ROOT, 'routes'))
+    .filter((f) => f.endsWith('.json'))
+    .map((f) => read<TripRoute>(`routes/${f}`))
+    .filter((r) => r.city === cityId)
+}
+
+export function loadRoute(cityId: string, routeId: string): TripRoute | null {
+  return loadRoutes(cityId).find((r) => r.id === routeId) ?? null
 }

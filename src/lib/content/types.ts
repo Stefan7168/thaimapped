@@ -96,3 +96,31 @@ export interface CityBundle {
   stations: Station[]
   lines: Line[]
 }
+
+export type RouteMode = 'car' | 'scooter' | 'transit' | 'walk' | 'boat'
+export type StopKind = 'start' | 'end' | 'coffee' | 'food' | 'sight' | 'hotel' | 'viewpoint' | 'market' | 'fuel'
+
+export interface RouteStop {
+  id: string
+  kind: StopKind
+  day: number
+  name: Localized
+  why: Localized
+  location: { lon: number; lat: number }
+  links: PinLinks
+}
+
+export interface TripRoute {
+  id: string
+  city: string
+  name: Localized
+  tagline: Localized
+  mode: RouteMode
+  days: number
+  distanceKm?: number
+  camera: Camera
+  waypoints: [number, number][]
+  /** Road-following line from scripts/route-paths.mjs, or null until it has run. */
+  path: [number, number][] | null
+  stops: RouteStop[]
+}
