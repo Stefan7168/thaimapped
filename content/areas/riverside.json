@@ -99,12 +99,12 @@
         "en": "Converted warehouses: galleries, a bookshop, coffee; the creative district."
       },
       "location": {
-        "lon": 100.5145,
-        "lat": 13.7245
+        "lon": 100.5148,
+        "lat": 13.7281
       },
       "walk": {
         "station": "bts-silom-s6",
-        "minutes": 9
+        "minutes": 14
       },
       "when": {
         "times": [
@@ -151,12 +151,12 @@
         "en": "A riverside compound of a bookshop, a restaurant and a lawn, opposite the Sheraton."
       },
       "location": {
-        "lon": 100.5102,
-        "lat": 13.7272
+        "lon": 100.5105,
+        "lat": 13.7294
       },
       "walk": {
         "station": "bts-silom-s6",
-        "minutes": 14
+        "minutes": 17
       },
       "when": {
         "times": [
@@ -177,12 +177,12 @@
         "en": "Where the river boats start: the orange flag goes all the way to the Grand Palace."
       },
       "location": {
-        "lon": 100.514,
-        "lat": 13.7187
+        "lon": 100.5126,
+        "lat": 13.7184
       },
       "walk": {
         "station": "bts-silom-s6",
-        "minutes": 1
+        "minutes": 3
       },
       "when": {
         "times": [
@@ -207,12 +207,12 @@
         "en": "Roast duck, noodles and fruit stalls along Charoen Krung near Saphan Taksin."
       },
       "location": {
-        "lon": 100.515,
-        "lat": 13.7225
+        "lon": 100.5153,
+        "lat": 13.7205
       },
       "walk": {
         "station": "bts-silom-s6",
-        "minutes": 6
+        "minutes": 3
       },
       "when": {
         "times": [

@@ -89,8 +89,8 @@
         "en": "The clean, pricey farmers market: perfect mangoes, curry pastes, a food court."
       },
       "location": {
-        "lon": 100.5508,
-        "lat": 13.8004
+        "lon": 100.5476,
+        "lat": 13.7971
       },
       "walk": {
         "station": "mrt-blue-bl12",
@@ -118,12 +118,12 @@
         "en": "Rent a bike and loop the lake; the quiet side of Chatuchak."
       },
       "location": {
-        "lon": 100.552,
-        "lat": 13.8095
+        "lon": 100.5537,
+        "lat": 13.8118
       },
       "walk": {
         "station": "mrt-blue-bl14",
-        "minutes": 15
+        "minutes": 12
       },
       "when": {
         "times": [

@@ -99,12 +99,12 @@
         "en": "Wholesale clothes stalls, cheapest in the city, chaotic in the right way."
       },
       "location": {
-        "lon": 100.542,
-        "lat": 13.752
+        "lon": 100.5405,
+        "lat": 13.7523
       },
       "walk": {
         "station": "bts-sukhumvit-e1",
-        "minutes": 12
+        "minutes": 13
       },
       "when": {
         "times": [

@@ -100,12 +100,12 @@
         "en": "A terraced food hall: coffee downstairs, bars and a lawn upstairs."
       },
       "location": {
-        "lon": 100.584,
-        "lat": 13.7365
+        "lon": 100.5822,
+        "lat": 13.735
       },
       "walk": {
         "station": "bts-sukhumvit-e6",
-        "minutes": 20
+        "minutes": 17
       },
       "when": {
         "times": [
@@ -126,12 +126,12 @@
         "en": "The 24-hour Japanese discount store, oddly good at 02:00."
       },
       "location": {
-        "lon": 100.5835,
-        "lat": 13.7288
+        "lon": 100.5857,
+        "lat": 13.7307
       },
       "walk": {
         "station": "bts-sukhumvit-e6",
-        "minutes": 10
+        "minutes": 15
       },
       "when": {
         "times": [
@@ -156,12 +156,12 @@
         "en": "Open-air night market and bars at Phra Khanong, cheaper than Thonglor."
       },
       "location": {
-        "lon": 100.5895,
-        "lat": 13.7175
+        "lon": 100.5935,
+        "lat": 13.7147
       },
       "walk": {
         "station": "bts-sukhumvit-e8",
-        "minutes": 5
+        "minutes": 4
       },
       "when": {
         "times": [

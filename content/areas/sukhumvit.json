@@ -101,12 +101,12 @@
         "en": "The new forest park with skywalks over wetlands, next to the convention centre."
       },
       "location": {
-        "lon": 100.559,
-        "lat": 13.731
+        "lon": 100.5585,
+        "lat": 13.7292
       },
       "walk": {
         "station": "bts-sukhumvit-e4",
-        "minutes": 10
+        "minutes": 12
       },
       "when": {
         "times": [
@@ -181,12 +181,12 @@
         "en": "A small park with a pond and skaters, right next to Phrom Phong."
       },
       "location": {
-        "lon": 100.569,
-        "lat": 13.7306
+        "lon": 100.5675,
+        "lat": 13.7307
       },
       "walk": {
         "station": "bts-sukhumvit-e5",
-        "minutes": 2
+        "minutes": 4
       },
       "when": {
         "times": [
