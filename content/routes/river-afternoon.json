@@ -1,0 +1,128 @@
+{
+  "id": "river-afternoon",
+  "city": "bangkok",
+  "name": {
+    "en": "Chao Phraya by boat"
+  },
+  "tagline": {
+    "en": "One afternoon on the river: the orange flag boat, ICONSIAM, sunset drinks at Asiatique."
+  },
+  "mode": "boat",
+  "duration": "afternoon",
+  "days": 1,
+  "distanceKm": 9,
+  "themes": [
+    "city",
+    "food"
+  ],
+  "camera": {
+    "center": [
+      100.512,
+      13.72
+    ],
+    "zoom": 13.5,
+    "pitch": 0,
+    "bearing": 0
+  },
+  "waypoints": [
+    [
+      100.5142,
+      13.7188
+    ],
+    [
+      100.5097,
+      13.7266
+    ],
+    [
+      100.5142,
+      13.7188
+    ],
+    [
+      100.5064,
+      13.7047
+    ]
+  ],
+  "path": null,
+  "stops": [
+    {
+      "id": "start-sathorn-pier",
+      "kind": "start",
+      "day": 1,
+      "name": {
+        "en": "Sathorn pier"
+      },
+      "why": {
+        "en": "Under Saphan Taksin BTS. Buy a 30 baht orange flag ticket or take the free ICONSIAM shuttle."
+      },
+      "location": {
+        "lon": 100.5142,
+        "lat": 13.7188
+      },
+      "links": {}
+    },
+    {
+      "id": "iconsiam",
+      "kind": "sight",
+      "day": 1,
+      "name": {
+        "en": "ICONSIAM"
+      },
+      "why": {
+        "en": "The floating-market food hall on the ground floor is the lunch stop."
+      },
+      "location": {
+        "lon": 100.5097,
+        "lat": 13.7266
+      },
+      "links": {}
+    },
+    {
+      "id": "coffee-iconsiam",
+      "kind": "coffee",
+      "day": 1,
+      "name": {
+        "en": "Coffee on the river terrace"
+      },
+      "why": {
+        "en": "Placeholder: a terrace cafe at ICONSIAM facing the river."
+      },
+      "location": {
+        "lon": 100.51,
+        "lat": 13.7262
+      },
+      "links": {}
+    },
+    {
+      "id": "asiatique",
+      "kind": "market",
+      "day": 1,
+      "name": {
+        "en": "Asiatique at sunset"
+      },
+      "why": {
+        "en": "Free shuttle boat from Sathorn pier from 16:00. Ferris wheel and night market."
+      },
+      "location": {
+        "lon": 100.5064,
+        "lat": 13.7047
+      },
+      "links": {}
+    },
+    {
+      "id": "end-asiatique",
+      "kind": "end",
+      "day": 1,
+      "name": {
+        "en": "Boat back to Sathorn"
+      },
+      "why": {
+        "en": "Last shuttle around 23:00. BTS from Saphan Taksin."
+      },
+      "location": {
+        "lon": 100.5142,
+        "lat": 13.7188
+      },
+      "links": {}
+    }
+  ]
+}

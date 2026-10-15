@@ -3,44 +3,197 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "type": "object",
   "properties": {
-    "id": { "$ref": "common.schema.json#/$defs/slug" },
-    "city": { "$ref": "common.schema.json#/$defs/slug" },
-    "name": { "$ref": "common.schema.json#/$defs/localized" },
-    "tagline": { "$ref": "common.schema.json#/$defs/localized" },
-    "mode": { "enum": ["car", "scooter", "transit", "walk", "boat"] },
-    "days": { "type": "integer", "minimum": 1, "maximum": 14 },
-    "distanceKm": { "type": "number", "minimum": 0 },
-    "camera": { "$ref": "common.schema.json#/$defs/camera" },
+    "id": {
+      "$ref": "common.schema.json#/$defs/slug"
+    },
+    "city": {
+      "$ref": "common.schema.json#/$defs/slug"
+    },
+    "name": {
+      "$ref": "common.schema.json#/$defs/localized"
+    },
+    "tagline": {
+      "$ref": "common.schema.json#/$defs/localized"
+    },
+    "mode": {
+      "enum": [
+        "car",
+        "scooter",
+        "transit",
+        "walk",
+        "boat"
+      ]
+    },
+    "days": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 14
+    },
+    "distanceKm": {
+      "type": "number",
+      "minimum": 0
+    },
+    "camera": {
+      "$ref": "common.schema.json#/$defs/camera"
+    },
     "waypoints": {
       "description": "Hand-placed points the road line must pass through, in order. scripts/route-paths.mjs turns them into a road-following path.",
-      "type": "array", "minItems": 2,
-      "items": { "type": "array", "items": { "type": "number" }, "minItems": 2, "maxItems": 2 }
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "array",
+        "items": {
+          "type": "number"
+        },
+        "minItems": 2,
+        "maxItems": 2
+      }
     },
     "path": {
       "description": "Road-following line from the routing script, or null until it has run (the page then draws straight segments between waypoints).",
       "oneOf": [
-        { "type": "null" },
-        { "type": "array", "minItems": 2, "items": { "type": "array", "items": { "type": "number" }, "minItems": 2, "maxItems": 2 } }
+        {
+          "type": "null"
+        },
+        {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 2,
+            "maxItems": 2
+          }
+        }
       ]
     },
     "stops": {
-      "type": "array", "minItems": 2,
+      "type": "array",
+      "minItems": 2,
       "items": {
         "type": "object",
         "properties": {
-          "id": { "$ref": "common.schema.json#/$defs/slug" },
-          "kind": { "enum": ["start", "end", "coffee", "food", "sight", "hotel", "viewpoint", "market", "fuel"] },
-          "day": { "type": "integer", "minimum": 1 },
-          "name": { "$ref": "common.schema.json#/$defs/localized" },
-          "why": { "$ref": "common.schema.json#/$defs/localized" },
-          "location": { "type": "object", "properties": { "lon": { "type": "number" }, "lat": { "type": "number" } }, "required": ["lon", "lat"], "additionalProperties": false },
-          "links": { "type": "object", "properties": { "agoda": { "type": "string", "format": "uri" }, "booking": { "type": "string", "format": "uri" }, "viator": { "type": "string", "format": "uri" }, "klook": { "type": "string", "format": "uri" }, "official": { "type": "string", "format": "uri" } }, "additionalProperties": false }
+          "id": {
+            "$ref": "common.schema.json#/$defs/slug"
+          },
+          "kind": {
+            "enum": [
+              "start",
+              "end",
+              "coffee",
+              "food",
+              "sight",
+              "hotel",
+              "viewpoint",
+              "market",
+              "fuel"
+            ]
+          },
+          "day": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "name": {
+            "$ref": "common.schema.json#/$defs/localized"
+          },
+          "why": {
+            "$ref": "common.schema.json#/$defs/localized"
+          },
+          "location": {
+            "type": "object",
+            "properties": {
+              "lon": {
+                "type": "number"
+              },
+              "lat": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "lon",
+              "lat"
+            ],
+            "additionalProperties": false
+          },
+          "links": {
+            "type": "object",
+            "properties": {
+              "agoda": {
+                "type": "string",
+                "format": "uri"
+              },
+              "booking": {
+                "type": "string",
+                "format": "uri"
+              },
+              "viator": {
+                "type": "string",
+                "format": "uri"
+              },
+              "klook": {
+                "type": "string",
+                "format": "uri"
+              },
+              "official": {
+                "type": "string",
+                "format": "uri"
+              }
+            },
+            "additionalProperties": false
+          }
         },
-        "required": ["id", "kind", "day", "name", "why", "location", "links"],
+        "required": [
+          "id",
+          "kind",
+          "day",
+          "name",
+          "why",
+          "location",
+          "links"
+        ],
         "additionalProperties": false
+      }
+    },
+    "duration": {
+      "enum": [
+        "morning",
+        "afternoon",
+        "evening",
+        "full-day",
+        "multi-day"
+      ],
+      "description": "How long the trip takes. multi-day uses 'days' for the count; the others have days = 1."
+    },
+    "themes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "enum": [
+          "culture",
+          "nature",
+          "food",
+          "city",
+          "beach",
+          "nightlife"
+        ]
       }
     }
   },
-  "required": ["id", "city", "name", "tagline", "mode", "days", "camera", "waypoints", "path", "stops"],
+  "required": [
+    "id",
+    "city",
+    "name",
+    "tagline",
+    "mode",
+    "duration",
+    "days",
+    "themes",
+    "camera",
+    "waypoints",
+    "path",
+    "stops"
+  ],
   "additionalProperties": false
 }

@@ -1,0 +1,204 @@
+{
+  "id": "khao-yai-three-days",
+  "city": "bangkok",
+  "name": {
+    "en": "Khao Yai long weekend"
+  },
+  "tagline": {
+    "en": "Three days: the national park, waterfalls, wineries and a night under the stars, three hours north-east of Bangkok."
+  },
+  "mode": "car",
+  "duration": "multi-day",
+  "days": 3,
+  "distanceKm": 420,
+  "themes": [
+    "nature",
+    "food"
+  ],
+  "camera": {
+    "center": [
+      101,
+      14.3
+    ],
+    "zoom": 8.3,
+    "pitch": 0,
+    "bearing": 0
+  },
+  "waypoints": [
+    [
+      100.5603,
+      13.7375
+    ],
+    [
+      100.9,
+      14.3
+    ],
+    [
+      101.41,
+      14.71
+    ],
+    [
+      101.37,
+      14.44
+    ],
+    [
+      101.41,
+      14.71
+    ],
+    [
+      100.9,
+      14.3
+    ],
+    [
+      100.5603,
+      13.7375
+    ]
+  ],
+  "path": null,
+  "stops": [
+    {
+      "id": "start-bangkok",
+      "kind": "start",
+      "day": 1,
+      "name": {
+        "en": "Leave Bangkok"
+      },
+      "why": {
+        "en": "Motorway 6 north-east. Leave by 07:00 to be at the park by lunch."
+      },
+      "location": {
+        "lon": 100.5603,
+        "lat": 13.7375
+      },
+      "links": {}
+    },
+    {
+      "id": "coffee-saraburi",
+      "kind": "coffee",
+      "day": 1,
+      "name": {
+        "en": "Coffee near Saraburi"
+      },
+      "why": {
+        "en": "Placeholder: a highway cafe. Real pick on the content pass."
+      },
+      "location": {
+        "lon": 100.9,
+        "lat": 14.3
+      },
+      "links": {}
+    },
+    {
+      "id": "pak-chong",
+      "kind": "food",
+      "day": 1,
+      "name": {
+        "en": "Lunch in Pak Chong"
+      },
+      "why": {
+        "en": "The town at the park gate. Placeholder restaurant."
+      },
+      "location": {
+        "lon": 101.41,
+        "lat": 14.71
+      },
+      "links": {}
+    },
+    {
+      "id": "hotel-khao-yai",
+      "kind": "hotel",
+      "day": 1,
+      "name": {
+        "en": "Resort near the park gate"
+      },
+      "why": {
+        "en": "Placeholder: a mid-range resort on Thanarat Road. Real pick on the content pass."
+      },
+      "location": {
+        "lon": 101.39,
+        "lat": 14.62
+      },
+      "links": {}
+    },
+    {
+      "id": "haew-narok",
+      "kind": "viewpoint",
+      "day": 2,
+      "name": {
+        "en": "Haew Narok waterfall"
+      },
+      "why": {
+        "en": "The big one, inside the park. Park fee 400 baht for foreigners."
+      },
+      "location": {
+        "lon": 101.37,
+        "lat": 14.44
+      },
+      "links": {}
+    },
+    {
+      "id": "park-viewpoint",
+      "kind": "viewpoint",
+      "day": 2,
+      "name": {
+        "en": "Khao Yai viewpoint"
+      },
+      "why": {
+        "en": "Placeholder: a ridge viewpoint on the park road. Watch for elephants at dusk."
+      },
+      "location": {
+        "lon": 101.38,
+        "lat": 14.5
+      },
+      "links": {}
+    },
+    {
+      "id": "winery",
+      "kind": "food",
+      "day": 3,
+      "name": {
+        "en": "Winery lunch"
+      },
+      "why": {
+        "en": "Placeholder: one of the Khao Yai wineries for lunch and a tasting."
+      },
+      "location": {
+        "lon": 101.36,
+        "lat": 14.65
+      },
+      "links": {}
+    },
+    {
+      "id": "coffee-return",
+      "kind": "coffee",
+      "day": 3,
+      "name": {
+        "en": "Coffee before the highway"
+      },
+      "why": {
+        "en": "Placeholder cafe near Pak Chong."
+      },
+      "location": {
+        "lon": 101.41,
+        "lat": 14.71
+      },
+      "links": {}
+    },
+    {
+      "id": "end-bangkok",
+      "kind": "end",
+      "day": 3,
+      "name": {
+        "en": "Back in Bangkok"
+      },
+      "why": {
+        "en": "Expect three to four hours with Sunday traffic."
+      },
+      "location": {
+        "lon": 100.5603,
+        "lat": 13.7375
+      },
+      "links": {}
+    }
+  ]
+}

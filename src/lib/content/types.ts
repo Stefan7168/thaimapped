@@ -98,6 +98,8 @@ export interface CityBundle {
 }
 
 export type RouteMode = 'car' | 'scooter' | 'transit' | 'walk' | 'boat'
+export type RouteDuration = 'morning' | 'afternoon' | 'evening' | 'full-day' | 'multi-day'
+export type RouteTheme = 'culture' | 'nature' | 'food' | 'city' | 'beach' | 'nightlife'
 export type StopKind = 'start' | 'end' | 'coffee' | 'food' | 'sight' | 'hotel' | 'viewpoint' | 'market' | 'fuel'
 
 export interface RouteStop {
@@ -116,7 +118,9 @@ export interface TripRoute {
   name: Localized
   tagline: Localized
   mode: RouteMode
+  duration: RouteDuration
   days: number
+  themes: RouteTheme[]
   distanceKm?: number
   camera: Camera
   waypoints: [number, number][]

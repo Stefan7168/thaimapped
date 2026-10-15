@@ -98,6 +98,8 @@ for (const f of readdirSync(join(root, 'routes'))) {
   check('route', route, label)
   if (route.id !== f.replace(/\.json$/, '')) errors.push(`${label}: id is ${route.id}`)
   if (!liveCities.has(route.city)) errors.push(`${label}: city ${route.city} is not live`)
+  if (route.duration === 'multi-day' && route.days < 2) errors.push(`${label}: multi-day trip needs days >= 2`)
+  if (route.duration !== 'multi-day' && route.days !== 1) errors.push(`${label}: a ${route.duration} trip must have days = 1`)
   const ids = new Set()
   for (const stop of route.stops ?? []) {
     if (ids.has(stop.id)) errors.push(`${label}: duplicate stop ${stop.id}`)

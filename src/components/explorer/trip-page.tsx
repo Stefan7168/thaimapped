@@ -44,10 +44,12 @@ export function TripPage({ locale, cityId, cityName, route }: { locale: Locale; 
             <h1 className="font-display text-2xl font-semibold">{t(route.name, locale)}</h1>
             <p className="mt-1 text-sm text-ink-2">{t(route.tagline, locale)}</p>
             <p className="mt-2 flex flex-wrap gap-2 text-xs text-ink-2">
+              <span className="rounded bg-paper-2 px-1.5 py-0.5">{s.trip.duration[route.duration]}</span>
+              {route.duration === 'multi-day' && <span className="rounded bg-paper-2 px-1.5 py-0.5">{s.trip.days(route.days)}</span>}
               <span className="rounded bg-paper-2 px-1.5 py-0.5">{s.trip.mode[route.mode]}</span>
-              <span className="rounded bg-paper-2 px-1.5 py-0.5">{s.trip.days(route.days)}</span>
               {route.distanceKm !== undefined && <span className="rounded bg-paper-2 px-1.5 py-0.5">{s.trip.km(route.distanceKm)}</span>}
             </p>
+            {route.days > 1 && (
             <div className="mt-4 flex gap-1.5">
               <button type="button" aria-pressed={day === null} onClick={() => { setDay(null); setActiveStop(null) }} className={`min-h-9 rounded-full border px-3 text-sm ${day === null ? 'border-ink bg-white font-medium' : 'border-line bg-white/60'}`}>
                 {s.trip.days(route.days)}
@@ -58,9 +60,10 @@ export function TripPage({ locale, cityId, cityName, route }: { locale: Locale; 
                 </button>
               ))}
             </div>
+            )}
             {days.map((d) => (
               <section key={d} className={`mt-5 ${day !== null && day !== d ? 'opacity-50' : ''}`}>
-                <h2 className="text-xs font-semibold uppercase tracking-wider text-ink-2">{s.trip.day(d)}</h2>
+                {route.days > 1 && <h2 className="text-xs font-semibold uppercase tracking-wider text-ink-2">{s.trip.day(d)}</h2>}
                 <ol className="mt-2 space-y-1.5">
                   {route.stops.map((stop, i) => {
                     if (stop.day !== d) return null

@@ -1,0 +1,131 @@
+{
+  "id": "old-town-temples-morning",
+  "city": "bangkok",
+  "name": {
+    "en": "Old Town temples on foot"
+  },
+  "tagline": {
+    "en": "One morning: Grand Palace at opening, Wat Pho, the ferry to Wat Arun, coffee by the river."
+  },
+  "mode": "walk",
+  "duration": "morning",
+  "days": 1,
+  "distanceKm": 4,
+  "themes": [
+    "culture"
+  ],
+  "camera": {
+    "center": [
+      100.492,
+      13.749
+    ],
+    "zoom": 14.5,
+    "pitch": 0,
+    "bearing": 0
+  },
+  "waypoints": [
+    [
+      100.4946,
+      13.7443
+    ],
+    [
+      100.4917,
+      13.75
+    ],
+    [
+      100.493,
+      13.7465
+    ],
+    [
+      100.4889,
+      13.7437
+    ],
+    [
+      100.492,
+      13.746
+    ]
+  ],
+  "path": null,
+  "stops": [
+    {
+      "id": "start-sanam-chai",
+      "kind": "start",
+      "day": 1,
+      "name": {
+        "en": "Sanam Chai MRT"
+      },
+      "why": {
+        "en": "Take the Blue Line here. Exit 1 puts you a short walk from the Palace."
+      },
+      "location": {
+        "lon": 100.4946,
+        "lat": 13.7443
+      },
+      "links": {}
+    },
+    {
+      "id": "grand-palace",
+      "kind": "sight",
+      "day": 1,
+      "name": {
+        "en": "Grand Palace"
+      },
+      "why": {
+        "en": "Be at the gate at 08:30 when it opens. Two hours."
+      },
+      "location": {
+        "lon": 100.4917,
+        "lat": 13.75
+      },
+      "links": {}
+    },
+    {
+      "id": "wat-pho",
+      "kind": "sight",
+      "day": 1,
+      "name": {
+        "en": "Wat Pho"
+      },
+      "why": {
+        "en": "Reclining Buddha, then a 30 minute foot massage at the school if the queue is short."
+      },
+      "location": {
+        "lon": 100.493,
+        "lat": 13.7465
+      },
+      "links": {}
+    },
+    {
+      "id": "wat-arun",
+      "kind": "sight",
+      "day": 1,
+      "name": {
+        "en": "Wat Arun"
+      },
+      "why": {
+        "en": "Cross on the 5 baht ferry from Tha Tien pier. Climb the steep central steps."
+      },
+      "location": {
+        "lon": 100.4889,
+        "lat": 13.7437
+      },
+      "links": {}
+    },
+    {
+      "id": "coffee-tha-tien",
+      "kind": "coffee",
+      "day": 1,
+      "name": {
+        "en": "Coffee at Tha Tien"
+      },
+      "why": {
+        "en": "Placeholder: a river-view cafe near the pier. Real pick on the content pass."
+      },
+      "location": {
+        "lon": 100.492,
+        "lat": 13.746
+      },
+      "links": {}
+    }
+  ]
+}
