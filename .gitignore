@@ -42,3 +42,6 @@ next-env.d.ts
 
 # maplibre worker copied by scripts/copy-maplibre-worker.mjs
 /public/vendor
+
+# taste-skill working files (direction sheets, inspector screenshots)
+.taste-skill/

@@ -14,6 +14,8 @@ const eslintConfig = defineConfig([
     "next-env.d.ts",
     // Vendored maplibre worker, copied by scripts/copy-maplibre-worker.mjs.
     "public/vendor/**",
+    // Vendored Claude skill (taste-skill), kept as upstream wrote it.
+    ".claude/skills/**",
   ]),
 ]);
 
