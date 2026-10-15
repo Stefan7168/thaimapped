@@ -105,9 +105,9 @@ export function AreaPage({ locale, cityId, area, areas, stations, stationSlugs }
           <p className="tm-wk__lead">{t(area.tagline, locale)}</p>
           {photos.length > 0 && (
             <ul className="tm-ar__photos" aria-label={s.areaPage.photos}>
-              {photos.slice(0, 3).map((photo) => (
+              {photos.slice(0, 3).map((photo, i) => (
                 <li key={photo.src} className="tm-ar__photo">
-                  <Image src={photo.src} alt={photo.alt} width={480} height={360} sizes="(min-width: 1024px) 220px, 45vw" />
+                  <Image src={photo.src} alt={photo.alt} width={480} height={360} sizes="(min-width: 1024px) 220px, (max-width: 480px) 45vw, 30vw" priority={i === 0} />
                   <span className="tm-ar__credit">{photo.credit}</span>
                 </li>
               ))}
