@@ -68,6 +68,9 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes }: {
   const saved = useSaved()
   const hotels = useMemo(() => [...plan.hotels].sort((a, b) => Number(saved.includes(b.id)) - Number(saved.includes(a.id))), [plan.hotels, saved])
   const pinned = useMemo(() => [...stops, ...hotels], [stops, hotels])
+  // The hotel the reader saved (hearted) in this area: every stop then says how far it is from that door.
+  const myHotel = useMemo(() => hotels.find((h) => saved.includes(h.id)) ?? null, [hotels, saved])
+  const fromHotel = (pin: Pin) => (myHotel ? Math.max(1, Math.round(distanceM(myHotel.location.lon, myHotel.location.lat, pin.location.lon, pin.location.lat) / WALK_PACE_M_PER_MIN)) : null)
   // Stops of this weekend inside a ten-minute walk of a hotel, straight-line at walking pace.
   const nearbyCount = (hotel: Pin) => stops.filter((p) => distanceM(hotel.location.lon, hotel.location.lat, p.location.lon, p.location.lat) <= WALK_PACE_M_PER_MIN * 10).length
   // With a Friday-to-Sunday stay picked, each slot heading carries its date.
@@ -87,7 +90,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes }: {
   const addToCalendar = () => {
     const areaName = t(area.name, locale)
     const url = window.location.href.split('#')[0]
-    const hotelLine = hotels.length ? `${s.weekendPage.calendarHotel}: ${hotels.map((h) => t(h.name, locale)).join(', ')}` : ''
+    const hotelLine = myHotel ? `${s.weekendPage.calendarYourHotel}: ${t(myHotel.name, locale)}` : hotels.length ? `${s.weekendPage.calendarHotel}: ${hotels.map((h) => t(h.name, locale)).join(', ')}` : ''
     const events: CalendarEvent[] = WEEKEND_SLOTS.flatMap((slot) => {
       const d = slotDay(slot)
       const items = plan.slots[slot]
@@ -150,6 +153,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes }: {
             {pin.price && <span className="tm-wk__meta">{s.guide.priceFrom(thb(pin.price.from, locale))}{pin.price.basis === 'tier-estimate' ? ` (${s.guide.priceEstimate})` : ''}</span>}
             {pin.price && stay && <span className="tm-wk__meta tm-wk__stay">{s.guide.stayTotal(thb(pin.price.from * nights(stay), locale), nights(stay))}</span>}
             {pin.walk && walkStation && <span className="tm-wk__meta">{s.city.walkMinutes(pin.walk.minutes)} {s.city.from(`${walkStation.code ? walkStation.code + ' ' : ''}${t(walkStation.name, locale)}`)}</span>}
+            {pin.kind !== 'hotel' && myHotel && <span className="tm-wk__meta tm-wk__from">{s.weekendPage.fromHotel(fromHotel(pin)!, t(myHotel.name, locale))}</span>}
           </span>
         </button>
         <div className="tm-wk__links">
@@ -209,6 +213,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes }: {
             ))}
             <li className="tm-wk__slot tm-wk__slot--stay">
               <h2 className="tm-wk__time">{s.guide.stay}</h2>
+              {hotels.length > 0 && <p className="tm-wk__empty">{myHotel ? s.weekendPage.hotelPicked(t(myHotel.name, locale)) : s.weekendPage.pickHotelHint}</p>}
               {hotels.length === 0 ? <p className="tm-wk__empty">{s.guide.stayNone}</p> : <ul className="tm-wk__stops">{hotels.map(stop)}</ul>}
               {hotels.length > 1 && (
                 <div className="tm-ar__cmp">

@@ -86,6 +86,10 @@ const en = {
   },
   weekendPage: {
     eyebrow: 'A weekend plan',
+    fromHotel: (n: number, hotel: string) => `about ${n} min on foot from ${hotel}`,
+    pickHotelHint: 'Tap the heart on a hotel and every stop above says how far it is from that door.',
+    hotelPicked: (hotel: string) => `Your hotel is ${hotel}: each stop above says how far it is on foot (straight line, not checked).`,
+    calendarYourHotel: 'Your hotel',
     compareLead: 'A night, the walk to the train, and how many of this weekend\'s stops are within ten minutes on foot. Prices are typical for the class, not checked.',
     title: (area: string) => `Your weekend in ${area}`,
     description: (area: string, tagline: string) => `Friday night to Sunday in ${area}: ${tagline} With the hotels inside your budget and the walk from the train.`,

@@ -611,3 +611,6 @@ a.tm-wk__stop { text-decoration: none; }
 
 /* A quiet button beside the booking ones: directions on a trip stop. */
 .tm-button--quiet { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+
+/* The walk from the hotel the reader picked, on each weekend stop. */
+.tm-wk__from { color: var(--accent-text); }
