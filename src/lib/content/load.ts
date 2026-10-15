@@ -34,6 +34,7 @@ export function loadCityBundle(cityId: string): CityBundle | null {
     const area = read<Area>(`areas/${id}.json`)
     if (area.polygon) area.boundary = read<GeoJSON.Feature<GeoJSON.MultiPolygon>>(area.polygon).geometry
     for (const sub of area.subareas) if (sub.polygon) sub.boundary = read<GeoJSON.Feature<GeoJSON.MultiPolygon>>(sub.polygon).geometry
+    for (const pin of area.pins) if (pin.shape) pin.geometry = read<GeoJSON.Feature<GeoJSON.MultiLineString | GeoJSON.MultiPolygon>>(pin.shape.path).geometry
     return area
   })
   const stations = city.stations ? read<{ stations: Station[] }>(city.stations).stations : []

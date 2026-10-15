@@ -61,6 +61,9 @@ export interface Pin {
   links: PinLinks
   /** One real, credited photograph for the card and the home highlights. Optional until fetched. */
   photo?: AreaPhoto
+  /** A street or zone drawn on the map besides the pin; the file is read into `geometry` at load time. */
+  shape?: { kind: 'street' | 'zone'; path: string }
+  geometry?: GeoJSON.MultiLineString | GeoJSON.MultiPolygon
 }
 
 export interface Subarea {

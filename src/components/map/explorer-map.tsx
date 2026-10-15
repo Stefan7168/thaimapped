@@ -1,10 +1,10 @@
 'use client'
 
 import { useEffect, useMemo, useRef, useState } from 'react'
-import type { LngLatBoundsLike, Map as MaplibreMap, Marker, Popup } from 'maplibre-gl'
+import type { ExpressionSpecification, LngLatBoundsLike, Map as MaplibreMap, Marker, Popup } from 'maplibre-gl'
 import type { Area, Camera, Locale, Pin, Station } from '@/lib/content/types'
 import { loadMaplibreGl } from '@/lib/map/load-maplibre'
-import { addBuilding3DLayer } from '@/lib/map/buildings'
+import { addBuilding3DLayer, BUILDING_3D_LAYER_ID } from '@/lib/map/buildings'
 import { isGestureActive } from '@/lib/map/gesture'
 import { t } from '@/lib/i18n/locales'
 import { cardElement } from './pin-card'
@@ -20,6 +20,9 @@ export interface Outline {
 }
 const WALK_CIRCLE_SOURCE = 'tm-walk-circle'
 const OUTLINE_SOURCE = 'tm-area-outline'
+/** Streets and zones of the visible places: a glowing road stretch or a soft area wash. */
+const SHAPE_SOURCE = 'tm-place-shape'
+const BUILDING_TINT_LAYER = 'tm-building-3d-tint'
 const NEARBY_SOURCE = 'tm-nearby'
 
 export interface ExplorerMapProps {
@@ -134,6 +137,16 @@ export function ExplorerMap(props: ExplorerMapProps) {
         map.addLayer({ id: `${WALK_CIRCLE_SOURCE}-fill`, type: 'fill', source: WALK_CIRCLE_SOURCE, paint: { 'fill-color': '#c8553d', 'fill-opacity': 0.1 } })
         map.addLayer({ id: `${WALK_CIRCLE_SOURCE}-line`, type: 'line', source: WALK_CIRCLE_SOURCE, paint: { 'line-color': '#c8553d', 'line-width': 1.5, 'line-dasharray': [2, 2] } })
         // The district border of each ticked area, in the area's own colour.
+        map.addSource(SHAPE_SOURCE, { type: 'geojson', data: { type: 'FeatureCollection', features: [] } })
+        const strength = (quiet: number, loud: number): ExpressionSpecification => ['case', ['get', 'active'], loud, quiet]
+        map.addLayer({ id: `${SHAPE_SOURCE}-zone`, type: 'fill', source: SHAPE_SOURCE, filter: ['==', ['geometry-type'], 'Polygon'], paint: { 'fill-color': ['get', 'color'], 'fill-opacity': strength(0.18, 0.3) } })
+        map.addLayer({ id: `${SHAPE_SOURCE}-zone-edge`, type: 'line', source: SHAPE_SOURCE, filter: ['==', ['geometry-type'], 'Polygon'], paint: { 'line-color': ['get', 'color'], 'line-width': 1.5, 'line-opacity': strength(0.5, 0.9), 'line-blur': 1 } })
+        map.addLayer({ id: `${SHAPE_SOURCE}-glow`, type: 'line', source: SHAPE_SOURCE, filter: ['==', ['geometry-type'], 'LineString'], layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': ['get', 'color'], 'line-width': ['interpolate', ['linear'], ['zoom'], 13, 10, 16, 26], 'line-blur': ['interpolate', ['linear'], ['zoom'], 13, 6, 16, 14], 'line-opacity': strength(0.35, 0.55) } })
+        map.addLayer({ id: `${SHAPE_SOURCE}-core`, type: 'line', source: SHAPE_SOURCE, filter: ['==', ['geometry-type'], 'LineString'], layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': ['get', 'color'], 'line-width': ['interpolate', ['linear'], ['zoom'], 13, 3, 16, 7], 'line-opacity': strength(0.8, 1) } })
+        // Buildings inside a zone take the place's colour; the filter is set when zones change.
+        if (threeD && map.getLayer(BUILDING_3D_LAYER_ID)) {
+          map.addLayer({ id: BUILDING_TINT_LAYER, type: 'fill-extrusion', source: 'openmaptiles', 'source-layer': 'building', minzoom: 14, filter: ['boolean', false], paint: { 'fill-extrusion-base': ['coalesce', ['get', 'render_min_height'], 0], 'fill-extrusion-height': ['coalesce', ['get', 'render_height'], 8], 'fill-extrusion-color': '#d9a08f', 'fill-extrusion-opacity': ['interpolate', ['linear'], ['zoom'], 14, 0, 15.5, 0.95] } }, `${SHAPE_SOURCE}-zone`)
+        }
         map.addSource(OUTLINE_SOURCE, { type: 'geojson', data: { type: 'FeatureCollection', features: [] } })
         map.addLayer({ id: `${OUTLINE_SOURCE}-fill`, type: 'fill', source: OUTLINE_SOURCE, paint: { 'fill-color': ['get', 'color'], 'fill-opacity': 0.08 } })
         // Dashed threads from the open card to the places within a short walk.
@@ -268,6 +281,23 @@ export function ExplorerMap(props: ExplorerMapProps) {
     const features: GeoJSON.Feature[] = outlines.map((o) => ({ type: 'Feature', properties: { color: styles.getPropertyValue(`--${o.color}`).trim() || '#c8553d' }, geometry: o.boundary }))
     src?.setData?.({ type: 'FeatureCollection', features })
   }, [outlines, mapReady])
+
+  // Streets and zones of the visible places, stronger for the selected one.
+  useEffect(() => {
+    const map = mapRef.current
+    if (!map) return
+    const src = map.getSource(SHAPE_SOURCE) as { setData?: (d: GeoJSON.GeoJSON) => void } | undefined
+    const styles = getComputedStyle(document.documentElement)
+    const features: GeoJSON.Feature[] = []
+    const zones: GeoJSON.Position[][][] = []
+    for (const { pin, area } of pins) {
+      if (!pin.geometry) continue
+      features.push({ type: 'Feature', properties: { color: styles.getPropertyValue(`--${area.color}`).trim() || '#c8553d', active: pin.id === activePinId }, geometry: pin.geometry })
+      if (pin.geometry.type === 'MultiPolygon') zones.push(...pin.geometry.coordinates)
+    }
+    src?.setData?.({ type: 'FeatureCollection', features })
+    if (map.getLayer(BUILDING_TINT_LAYER)) map.setFilter(BUILDING_TINT_LAYER, zones.length ? ['within', { type: 'MultiPolygon', coordinates: zones }] : ['boolean', false])
+  }, [pins, activePinId, mapReady])
 
   return <div ref={containerRef} className="h-full w-full bg-paper" aria-label="Map" role="region" />
 }

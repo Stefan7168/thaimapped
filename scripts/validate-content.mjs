@@ -101,6 +101,19 @@ for (const { id: cityId } of country.cities) {
       if (pin.kind === 'hotel' && !pin.tier) errors.push(`${label}: hotel pin ${pin.id} needs a tier`)
       if (pin.subarea && !subIds.has(pin.subarea)) errors.push(`${label}: pin ${pin.id} names unknown sub-area ${pin.subarea}`)
       if (pin.walk && !stationIds.has(pin.walk.station)) errors.push(`${label}: pin ${pin.id} walks to unknown station ${pin.walk.station}`)
+      if (pin.shape) {
+        let shape
+        try {
+          shape = read(pin.shape.path)
+        } catch {
+          errors.push(`${label}: shape file ${pin.shape.path} for pin ${pin.id} is missing`)
+          continue
+        }
+        const want = pin.shape.kind === 'street' ? 'MultiLineString' : 'MultiPolygon'
+        if (shape.type !== 'Feature' || shape.geometry?.type !== want) errors.push(`${pin.shape.path}: must be a Feature with a ${want}`)
+        if (shape.properties?.area !== areaId || shape.properties?.pin !== pin.id) errors.push(`${pin.shape.path}: belongs to ${shape.properties?.area}/${shape.properties?.pin}, not ${areaId}/${pin.id}`)
+        if (!shape.properties?.source) errors.push(`${pin.shape.path}: has no source note`)
+      }
     }
   }
 }

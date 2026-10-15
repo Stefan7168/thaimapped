@@ -224,6 +224,22 @@
             "$ref": "common.schema.json#/$defs/slug",
             "description": "Which sub-area the pin belongs to. Optional: a pin can sit in the area but outside every named sub-area."
           },
+          "shape": {
+            "type": "object",
+            "description": "How the place is drawn beyond its pin: a street is the real road stretch, a zone is the real area. The file comes from OpenStreetMap via scripts/fetch-place-shapes.mjs, never drawn by hand.",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "enum": ["street", "zone"]
+              },
+              "path": {
+                "type": "string",
+                "pattern": "^shapes/"
+              }
+            },
+            "required": ["kind", "path"],
+            "additionalProperties": false
+          },
           "photo": {
             "type": "object",
             "properties": {
