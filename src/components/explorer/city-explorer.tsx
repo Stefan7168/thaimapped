@@ -249,7 +249,8 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
             <AreaGuide locale={locale} bundle={bundle} routes={routes} onPickArea={(id) => update({ ...filters, areas: [id] })} onPickSubarea={(areaId, subId) => onPick({ kind: 'subarea', id: subareaKey(areaId, subId) } as SearchHit)} onPickStation={(id) => onPick({ kind: 'station', id } as SearchHit)} />
           ) : (
             <div className="p-3">
-              <button type="button" onClick={() => update(EMPTY_FILTERS)} className="mb-2 flex items-center gap-1.5 text-sm text-ink-2 hover:text-ink">
+              {/* Back leaves the place (areas, sub-areas, stations); the budget, time and kind preferences stay. */}
+              <button type="button" onClick={() => update({ ...filters, areas: [], subareas: [], stations: [], lines: [] })} className="mb-2 flex items-center gap-1.5 text-sm text-ink-2 hover:text-ink">
                 <ArrowLeft aria-hidden="true" className="size-4" />
                 {s.guide.back}
               </button>

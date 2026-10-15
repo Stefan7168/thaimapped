@@ -129,6 +129,8 @@ export function visiblePins(bundle: CityBundle, f: FilterState): VisiblePin[] {
       if (tiers.size > 0 && pin.kind === 'hotel' && (!pin.tier || !tiers.has(pin.tier))) continue
       if (!fitsPrice(pin, f.price)) continue
       if (!fitsWhen(pin, f)) continue
+      // A time of day picked with no kind is a question about places, so the hotels step aside; the Hotel chip brings them back.
+      if (f.times.length > 0 && kinds.size === 0 && pin.kind === 'hotel') continue
       if (stations.length > 0) {
         const near = stations.some((st) => distanceM(st.lon, st.lat, pin.location.lon, pin.location.lat) <= WALK_RADIUS_M)
         if (!near) continue

@@ -50,6 +50,13 @@ export function HomePage({ locale, bundle, routes }: { locale: Locale; bundle: C
     })
   // The highlight the reader tapped open.
   const [cardPin, setCardPin] = useState<{ pin: Pin; area: Area } | null>(null)
+  // On a phone the map is a sticky band above the scrolling text, so a tapped card would open out of sight: bring the map back first.
+  const showStageMap = () => {
+    if (window.innerWidth > 1023) return
+    // The map is sticky, so its own top never moves: scroll to where the stage begins, where the map sits uncovered.
+    const stage = document.querySelector('.tm-stage')
+    if (stage) window.scrollTo({ top: window.scrollY + stage.getBoundingClientRect().top, behavior: 'smooth' })
+  }
   const rowsRef = useRef<Map<string, HTMLElement>>(new Map())
   // While the pointer is over the list, the hovered row leads and the scroll
   // observer stays quiet: opening a row shifts the rows below it, and the
@@ -214,7 +221,7 @@ export function HomePage({ locale, bundle, routes }: { locale: Locale; bundle: C
                           const picked = cardPin?.pin.id === p.id
                           return (
                             <li key={p.id} className="tm-hl__item">
-                              <button type="button" className="tm-hl__card" aria-pressed={picked} onClick={() => setCardPin(picked ? null : { pin: p, area: a })} style={{ ['--pin' as string]: `var(--${a.color})` }}>
+                              <button type="button" className="tm-hl__card" aria-pressed={picked} onClick={() => { setCardPin(picked ? null : { pin: p, area: a }); if (!picked) showStageMap() }} style={{ ['--pin' as string]: `var(--${a.color})` }}>
                                 {p.photo ? (
                                   <span className="tm-hl__photo">
                                     <Image src={p.photo.src} alt={p.photo.alt} fill sizes="(max-width: 1023px) 100vw, 420px" />
