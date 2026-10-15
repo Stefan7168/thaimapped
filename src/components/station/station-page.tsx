@@ -11,12 +11,13 @@ import type { StationPage as StationPageData, StationPin } from '@/lib/explorer/
 import { whenLine } from '@/lib/explorer/when'
 import { thb } from '@/lib/explorer/price'
 import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
-import { useStay } from '@/lib/stay/store'
+import { nights, useStay } from '@/lib/stay/store'
 import { trackOutbound } from '@/lib/links/track'
 import { supports3D } from '@/lib/map/device'
 import { SiteHeader } from '@/components/explorer/site-header'
 import { SiteFooter } from '@/components/explorer/site-footer'
 import { SaveButton } from '@/components/saved/save-button'
+import { StayPicker } from '@/components/stay/stay-picker'
 import { KIND_ICONS } from '@/components/explorer/kind-bar'
 
 const StageMap = dynamic(() => import('@/components/map/stage-map').then((m) => m.StageMap), {
@@ -82,6 +83,7 @@ export function StationPage({ locale, cityId, page, areas, stations, others }: {
             <span className="tm-wk__why">{t(pin.why, locale)}</span>
             {whenLine(pin, locale) && <span className="tm-wk__when">{whenLine(pin, locale)}</span>}
             {pin.price && <span className="tm-wk__meta">{s.guide.priceFrom(thb(pin.price.from, locale))}{pin.price.basis === 'tier-estimate' ? ` (${s.guide.priceEstimate})` : ''}</span>}
+            {pin.price && stay && <span className="tm-wk__meta tm-wk__stay">{s.guide.stayTotal(thb(pin.price.from * nights(stay), locale), nights(stay))}</span>}
             <span className="tm-wk__meta">{s.city.walkMinutes(minutes)} {s.city.from(label)}{estimated ? ` (${s.stationPage.estimated})` : ''}</span>
           </span>
         </button>
@@ -116,6 +118,7 @@ export function StationPage({ locale, cityId, page, areas, stations, others }: {
           <ol className="tm-wk__slots">
             <li className="tm-wk__slot">
               <h2 className="tm-wk__time">{s.stationPage.hotels}</h2>
+              {page.hotels.length > 0 && <StayPicker locale={locale} />}
               {page.hotels.length === 0 ? <p className="tm-wk__empty">{s.stationPage.noHotels}</p> : <ul className="tm-wk__stops">{page.hotels.map(row)}</ul>}
             </li>
             <li className="tm-wk__slot">
