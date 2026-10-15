@@ -91,8 +91,9 @@ function focusBounds(pins: VisiblePin[], stations: Station[], centres: [number, 
   for (const [lon, lat] of pts) {
     w = Math.min(w, lon); e = Math.max(e, lon); s = Math.min(s, lat); n = Math.max(n, lat)
   }
-  // A single point still needs a frame: pad to roughly 400 m each way.
-  const pad = 0.004
+  // A single point still needs a frame: pad to roughly 400 m each way. A real
+  // extent is framed as is, so an outline nearly fills the map.
+  const pad = e - w < 0.002 && n - s < 0.002 ? 0.004 : 0
   return [[w - pad, s - pad], [e + pad, n + pad]]
 }
 
@@ -212,7 +213,12 @@ export function ExplorerMap(props: ExplorerMapProps) {
       map.flyTo({ center: cityCamera.center, zoom: cityCamera.zoom, pitch: threeD ? cityCamera.pitch : 0, bearing: threeD ? cityCamera.bearing : 0, duration: 1400, essential: true })
       return
     }
-    map.fitBounds(bounds, { padding: 60, maxZoom: 15.5, pitch: threeD ? 50 : 0, bearing: threeD ? -12 : 0, duration: 1400, essential: true })
+    // Zoom is worked out flat, then the tilt is applied on top: fitting a
+    // pitched view directly zooms out far enough to show the whole tilted
+    // trapezoid, which left a ticked area as a small patch in the middle.
+    const cam = map.cameraForBounds(bounds, { padding: 28, maxZoom: 16, bearing: threeD ? -12 : 0 })
+    if (!cam) return
+    map.flyTo({ center: cam.center, zoom: (cam.zoom ?? cityCamera.zoom) + (threeD ? 0.3 : 0), pitch: threeD ? 50 : 0, bearing: threeD ? -12 : 0, duration: 1400, essential: true })
   }, [pins, stations, centres, outlines, threeD, cityCamera, mapReady])
 
   useEffect(() => {
