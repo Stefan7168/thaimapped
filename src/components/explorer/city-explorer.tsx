@@ -1,6 +1,7 @@
 'use client'
 
 import dynamic from 'next/dynamic'
+import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useMemo, useState, useSyncExternalStore } from 'react'
 import { ArrowLeft, SlidersHorizontal, X } from 'lucide-react'
@@ -18,7 +19,7 @@ import type { Outline } from '@/components/map/explorer-map'
 import { FilterPanel } from './filter-panel'
 import { TopSearch, type SearchHit } from './top-search'
 import { SiteFooter } from './site-footer'
-import { KindBar } from './kind-bar'
+import { KindBar, KIND_ICONS } from './kind-bar'
 import { AreaCard } from './area-card'
 
 const ExplorerMap = dynamic(() => import('@/components/map/explorer-map').then((m) => m.ExplorerMap), {
@@ -158,9 +159,18 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
         const walkStation = pin.walk ? stationById.get(pin.walk.station) : undefined
         const partners = Object.keys(pin.links) as Partner[]
         const active = activePin?.id === pin.id
+        const thumb = pin.photos?.[0] ?? pin.photo
+        const KindIcon = KIND_ICONS[pin.kind]
         return (
           <li key={pin.id}>
-            <button type="button" onClick={() => { setActivePin(pin); setListOpen(false) }} className={`w-full rounded-lg border px-3 py-2 text-left text-sm ${active ? 'border-ink bg-white' : 'border-line bg-white/70'}`}>
+            <button type="button" onClick={() => { setActivePin(pin); setListOpen(false) }} className={`tm-place ${active ? 'border-ink bg-white' : 'border-line bg-white/70'}`}>
+              {/* A square picture on the left: the place's first photo, or its kind's icon on paper until one is fetched. */}
+              {thumb ? (
+                <Image src={thumb.src} alt="" width={72} height={72} sizes="72px" className="tm-place__thumb" />
+              ) : (
+                <span aria-hidden="true" className="tm-place__thumb tm-place__thumb--empty" style={{ color: `var(--${area.color})` }}><KindIcon className="size-6" /></span>
+              )}
+              <span className="min-w-0 flex-1">
               <span className="flex items-center gap-2">
                 <span aria-hidden="true" className="size-2.5 rounded-full" style={{ background: `var(--${area.color})` }} />
                 <span className="text-[11px] font-semibold uppercase text-ink-2">{s.pin[pin.kind]}</span>
@@ -174,6 +184,7 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
                   {s.city.walkMinutes(pin.walk.minutes)} {s.city.from(`${walkStation.code ? walkStation.code + ' ' : ''}${t(walkStation.name, locale)}`)}
                 </span>
               )}
+              </span>
             </button>
             {active && partners.length > 0 && (
               <div className="mt-1 flex gap-2 px-1">

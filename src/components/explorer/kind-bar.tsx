@@ -1,6 +1,6 @@
 'use client'
 
-import { BedDouble, Landmark, Martini, ShoppingBag, Utensils, X } from 'lucide-react'
+import { BedDouble, Landmark, Martini, ShoppingBag, TrainFront, Utensils, X } from 'lucide-react'
 import type { CityBundle, Locale } from '@/lib/content/types'
 import { strings } from '@/lib/i18n/strings'
 import { KIND_CHIPS, visiblePins, type FilterState } from '@/lib/explorer/filters'
@@ -9,7 +9,8 @@ function toggle<T>(list: T[], value: T): T[] {
   return list.includes(value) ? list.filter((x) => x !== value) : [...list, value]
 }
 
-const ICONS = { hotel: BedDouble, sight: Landmark, food: Utensils, market: ShoppingBag, nightlife: Martini } as const
+/** One icon per kind, shared with the list thumbnails' placeholder. */
+export const KIND_ICONS = { hotel: BedDouble, sight: Landmark, food: Utensils, market: ShoppingBag, nightlife: Martini, transport: TrainFront } as const
 
 /**
  * The second bar under the header: what to show, as chips. Each chip carries
@@ -24,7 +25,7 @@ export function KindBar({ locale, bundle, filters, onChange }: { locale: Locale;
       <span className="shrink-0 text-xs font-semibold uppercase tracking-wider text-ink-2">{s.filters.kinds}</span>
       {KIND_CHIPS.map((k) => {
         const on = filters.kinds.includes(k)
-        const Icon = ICONS[k as keyof typeof ICONS]
+        const Icon = KIND_ICONS[k]
         const count = visiblePins(bundle, { ...filters, kinds: [k] }).length
         return (
           <button key={k} type="button" aria-pressed={on} onClick={() => onChange({ ...filters, kinds: toggle(filters.kinds, k) })} className={`tm-kind${on ? ' tm-kind--on' : ''}`}>
