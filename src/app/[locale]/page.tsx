@@ -5,6 +5,7 @@ import { LOCALES, isLocale } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
 import { pageMeta } from '@/lib/seo/page-meta'
 import { thinRoute } from '@/lib/content/slim'
+import { JsonLd, siteLd } from '@/lib/seo/json-ld'
 import { HomePage } from '@/components/home/home-page'
 
 // Whole route static, so an unknown locale is a real 404 status, never a
@@ -29,5 +30,11 @@ export default async function CountryPage(props: PageProps<'/[locale]'>) {
   const cityId = liveCityIds()[0]
   const bundle = cityId ? loadCityBundle(cityId) : null
   if (!bundle) notFound()
-  return <HomePage locale={locale} bundle={bundle} routes={loadRoutes(bundle.city.id).map(thinRoute)} />
+  const s = strings(locale)
+  return (
+    <>
+      <JsonLd data={siteLd(s.brand, s.home.intro[0], locale)} />
+      <HomePage locale={locale} bundle={bundle} routes={loadRoutes(bundle.city.id).map(thinRoute)} />
+    </>
+  )
 }

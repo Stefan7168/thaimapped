@@ -7,6 +7,7 @@ import { strings } from '@/lib/i18n/strings'
 import { pageMeta, areaPhoto } from '@/lib/seo/page-meta'
 import { slimArea, stationsFor } from '@/lib/content/slim'
 import { AreaPage } from '@/components/area/area-page'
+import { JsonLd, pinNode, placeListLd } from '@/lib/seo/json-ld'
 
 export const ensureStatic = 'navigation'
 
@@ -36,5 +37,11 @@ export default async function AreaRoute(props: PageProps<'/[locale]/[city]/area/
   if (!bundle || !a) notFound()
   // Station id to the station page's address, for the stations that have one.
   const stationSlugs = Object.fromEntries(stationPages(bundle).flatMap((p) => p.stations.map((st) => [st.id, p.slug] as const)))
-  return <AreaPage locale={locale} cityId={city} area={a} areas={bundle.areas.map(slimArea)} stations={stationsFor(bundle.stations, a.pins, a.stations)} stationSlugs={stationSlugs} />
+  const cityName = t(bundle.city.name, locale)
+  return (
+    <>
+      <JsonLd data={placeListLd(strings(locale).areaPage.title(t(a.name, locale), cityName), `/${locale}/${city}/area/${area}`, a.pins.map((p) => pinNode(p, locale, cityName)))} />
+      <AreaPage locale={locale} cityId={city} area={a} areas={bundle.areas.map(slimArea)} stations={stationsFor(bundle.stations, a.pins, a.stations)} stationSlugs={stationSlugs} />
+    </>
+  )
 }

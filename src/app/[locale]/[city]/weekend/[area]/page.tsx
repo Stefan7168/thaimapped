@@ -6,6 +6,7 @@ import { strings } from '@/lib/i18n/strings'
 import { pageMeta, areaPhoto } from '@/lib/seo/page-meta'
 import { slimArea, slimRoute, stationsFor } from '@/lib/content/slim'
 import { WeekendPage } from '@/components/weekend/weekend-page'
+import { JsonLd, pinNode, placeListLd } from '@/lib/seo/json-ld'
 
 // Static per area; the hotel budget rides along as ?price=min-max and is read in the browser.
 export const ensureStatic = 'navigation'
@@ -32,5 +33,11 @@ export default async function AreaWeekendPage(props: PageProps<'/[locale]/[city]
   const a = bundle?.areas.find((x) => x.id === area)
   if (!bundle || !a) notFound()
   // Other areas are only named and linked; the stations are only the ones this area's places walk from.
-  return <WeekendPage locale={locale} cityId={city} area={a} areas={bundle.areas.map(slimArea)} stations={stationsFor(bundle.stations, a.pins)} routes={loadRoutes(city).map(slimRoute)} />
+  const cityName = t(bundle.city.name, locale)
+  return (
+    <>
+      <JsonLd data={placeListLd(strings(locale).weekendPage.title(t(a.name, locale)), `/${locale}/${city}/weekend/${area}`, a.pins.map((p) => pinNode(p, locale, cityName)))} />
+      <WeekendPage locale={locale} cityId={city} area={a} areas={bundle.areas.map(slimArea)} stations={stationsFor(bundle.stations, a.pins)} routes={loadRoutes(city).map(slimRoute)} />
+    </>
+  )
 }
