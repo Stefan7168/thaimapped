@@ -47,6 +47,31 @@ export interface VisiblePin {
   area: Area
 }
 
+/** Walking pace used for the "walkable from here" tip, metres per minute, as the crow flies. */
+export const WALK_PACE_M_PER_MIN = 75
+/** The tip lists places within this many minutes. */
+export const NEARBY_MINUTES = 15
+
+export interface NearbyPin extends VisiblePin {
+  /** Straight-line distance, so an estimate: streets and canals add to it. */
+  minutes: number
+}
+
+/** Every pin of the city with its area, for the tip and the search. */
+export function allPins(bundle: CityBundle): VisiblePin[] {
+  return bundle.areas.flatMap((area) => area.pins.map((pin) => ({ pin, area })))
+}
+
+/** Other places within NEARBY_MINUTES of a pin, nearest first, at most `limit`. */
+export function nearbyPins(from: Pin, pins: VisiblePin[], limit = 4): NearbyPin[] {
+  return pins
+    .filter(({ pin }) => pin.id !== from.id)
+    .map((p) => ({ ...p, minutes: Math.max(1, Math.ceil(distanceM(from.location.lon, from.location.lat, p.pin.location.lon, p.pin.location.lat) / WALK_PACE_M_PER_MIN)) }))
+    .filter((p) => p.minutes <= NEARBY_MINUTES)
+    .sort((a, b) => a.minutes - b.minutes)
+    .slice(0, limit)
+}
+
 /** Stations that count as selected: picked individually or via a whole line. */
 export function selectedStations(bundle: CityBundle, f: FilterState): Station[] {
   const picked = new Set(f.stations)

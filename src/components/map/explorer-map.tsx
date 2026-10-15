@@ -9,11 +9,12 @@ import { isGestureActive } from '@/lib/map/gesture'
 import { t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
 import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
-import { WALK_RADIUS_M, type VisiblePin } from '@/lib/explorer/filters'
+import { WALK_RADIUS_M, nearbyPins, type NearbyPin, type VisiblePin } from '@/lib/explorer/filters'
 
 export const PAPER_STYLE_URL = '/map/paper.json'
 const WALK_CIRCLE_SOURCE = 'tm-walk-circle'
 const OUTLINE_SOURCE = 'tm-area-outline'
+const NEARBY_SOURCE = 'tm-nearby'
 
 export interface ExplorerMapProps {
   locale: Locale
@@ -24,6 +25,8 @@ export interface ExplorerMapProps {
   areas: Area[]
   /** Pins that pass the filters. Empty means the city overview with area labels. */
   pins: VisiblePin[]
+  /** Every pin of the city, for the "walkable from here" tip on the card. */
+  allPins: VisiblePin[]
   /** Every station of the city, for the walk line on a pin's card. */
   allStations: Station[]
   /** Stations that draw a walking circle. */
@@ -65,7 +68,7 @@ function pinElement(label: string, color: string, minor: boolean, active: boolea
 }
 
 /** The card that opens on a pin: what it is, why it is here, how far from the train, where to book. */
-function cardElement(locale: Locale, cityId: string, pin: Pin, area: Area, station: Station | undefined, onClose: () => void): HTMLElement {
+function cardElement(locale: Locale, cityId: string, pin: Pin, area: Area, station: Station | undefined, nearby: NearbyPin[], onClose: () => void, onPick: (pin: Pin) => void): HTMLElement {
   const s = strings(locale)
   const el = document.createElement('div')
   el.className = 'tm-card'
@@ -110,6 +113,35 @@ function cardElement(locale: Locale, cityId: string, pin: Pin, area: Area, stati
     }
     el.append(links)
   }
+  if (nearby.length > 0) {
+    const tip = document.createElement('div')
+    tip.className = 'tm-card__nearby'
+    const title = document.createElement('p')
+    title.className = 'tm-card__nearby-title'
+    title.textContent = s.card.nearby
+    const list = document.createElement('ul')
+    for (const n of nearby) {
+      const li = document.createElement('li')
+      const b = document.createElement('button')
+      b.type = 'button'
+      b.className = 'tm-card__nearby-row'
+      b.style.setProperty('--pin', `var(--${n.area.color})`)
+      const dot = document.createElement('span')
+      dot.className = 'tm-card__nearby-dot'
+      const name = document.createElement('span')
+      name.className = 'tm-card__nearby-name'
+      name.textContent = t(n.pin.name, locale)
+      const mins = document.createElement('span')
+      mins.className = 'tm-card__nearby-min'
+      mins.textContent = s.card.nearbyWalk(n.minutes)
+      b.append(dot, name, mins)
+      b.addEventListener('click', () => onPick(n.pin))
+      li.append(b)
+      list.append(li)
+    }
+    tip.append(title, list)
+    el.append(tip)
+  }
   return el
 }
 
@@ -134,7 +166,7 @@ function focusBounds(pins: VisiblePin[], stations: Station[], centres: [number, 
 }
 
 export function ExplorerMap(props: ExplorerMapProps) {
-  const { locale, cityId, cityCamera, threeD, areas, pins, allStations, stations, centres, outlines, activePinId, onSelectArea, onSelectPin, onClosePin } = props
+  const { locale, cityId, cityCamera, threeD, areas, pins, allPins, allStations, stations, centres, outlines, activePinId, onSelectArea, onSelectPin, onClosePin } = props
   const containerRef = useRef<HTMLDivElement>(null)
   const mapRef = useRef<MaplibreMap | null>(null)
   const markersRef = useRef<Marker[]>([])
@@ -176,6 +208,9 @@ export function ExplorerMap(props: ExplorerMapProps) {
         // The district border of each ticked area, in the area's own colour.
         map.addSource(OUTLINE_SOURCE, { type: 'geojson', data: { type: 'FeatureCollection', features: [] } })
         map.addLayer({ id: `${OUTLINE_SOURCE}-fill`, type: 'fill', source: OUTLINE_SOURCE, paint: { 'fill-color': ['get', 'color'], 'fill-opacity': 0.08 } })
+        // Dashed threads from the open card to the places within a short walk.
+        map.addSource(NEARBY_SOURCE, { type: 'geojson', data: { type: 'FeatureCollection', features: [] } })
+        map.addLayer({ id: `${NEARBY_SOURCE}-line`, type: 'line', source: NEARBY_SOURCE, paint: { 'line-color': '#2b2a26', 'line-width': 1.5, 'line-opacity': 0.5, 'line-dasharray': [1.5, 2] } })
         map.addLayer({ id: `${OUTLINE_SOURCE}-line`, type: 'line', source: OUTLINE_SOURCE, layout: { 'line-join': 'round' }, paint: { 'line-color': ['get', 'color'], 'line-width': 2.5, 'line-opacity': 0.9 } })
         mapRef.current = map
         setMapReady((n) => n + 1)
@@ -250,10 +285,21 @@ export function ExplorerMap(props: ExplorerMapProps) {
   useEffect(() => {
     const map = mapRef.current
     if (!map) return
-    popupRef.current?.remove()
+    // Drop the ref before removing: remove() fires 'close', which must not read as the user closing the card.
+    const previous = popupRef.current
     popupRef.current = null
+    previous?.remove()
+    const threads = map.getSource(NEARBY_SOURCE) as { setData?: (d: GeoJSON.GeoJSON) => void } | undefined
     const hit = activePinId ? pins.find((p) => p.pin.id === activePinId) : undefined
-    if (!hit) return
+    if (!hit) {
+      threads?.setData?.({ type: 'FeatureCollection', features: [] })
+      return
+    }
+    const nearby = nearbyPins(hit.pin, allPins)
+    threads?.setData?.({
+      type: 'FeatureCollection',
+      features: nearby.map((n) => ({ type: 'Feature', properties: {}, geometry: { type: 'LineString', coordinates: [[hit.pin.location.lon, hit.pin.location.lat], [n.pin.location.lon, n.pin.location.lat]] } })),
+    })
     let cancelled = false
     ;(async () => {
       const maplibregl = await loadMaplibreGl()
@@ -262,7 +308,7 @@ export function ExplorerMap(props: ExplorerMapProps) {
       const station = pin.walk ? stationById.get(pin.walk.station) : undefined
       const popup = new maplibregl.Popup({ closeButton: false, closeOnClick: false, offset: 14, maxWidth: '300px', className: 'tm-card-popup' })
         .setLngLat([pin.location.lon, pin.location.lat])
-        .setDOMContent(cardElement(locale, cityId, pin, area, station, () => callbacks.current.onClosePin()))
+        .setDOMContent(cardElement(locale, cityId, pin, area, station, nearby, () => callbacks.current.onClosePin(), (next) => callbacks.current.onSelectPin(next)))
         .addTo(map)
       popup.on('close', () => {
         if (popupRef.current === popup) callbacks.current.onClosePin()
@@ -282,7 +328,7 @@ export function ExplorerMap(props: ExplorerMapProps) {
     return () => {
       cancelled = true
     }
-  }, [activePinId, pins, stationById, locale, cityId, mapReady])
+  }, [activePinId, pins, allPins, stationById, locale, cityId, mapReady])
 
   // Outlines of the ticked areas. The colour comes from the same CSS token
   // the labels use, read once per update so the map and the panel agree.

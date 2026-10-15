@@ -111,6 +111,8 @@ const en = {
   },
   card: {
     close: 'Close',
+    nearby: 'Walkable from here',
+    nearbyWalk: (minutes: number) => `about ${minutes} min`,
     open: (partner: string) => `Open on ${partner}`,
     official: 'Official site',
   },

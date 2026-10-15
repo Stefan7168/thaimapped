@@ -9,7 +9,7 @@ import { t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
 import { supports3D } from '@/lib/map/device'
 import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
-import { activeFilterCount, EMPTY_FILTERS, selectedPlaceCentres, selectedStations, visiblePins, type FilterState } from '@/lib/explorer/filters'
+import { activeFilterCount, allPins, EMPTY_FILTERS, selectedPlaceCentres, selectedStations, visiblePins, type FilterState } from '@/lib/explorer/filters'
 import { FilterPanel } from './filter-panel'
 import { TopSearch, type SearchHit } from './top-search'
 import { SiteFooter } from './site-footer'
@@ -45,6 +45,7 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
     [areas, filters.areas, filters.subareas],
   )
   const stationById = useMemo(() => new Map(bundle.stations.map((st) => [st.id, st])), [bundle])
+  const everyPin = useMemo(() => allPins(bundle), [bundle])
   const count = activeFilterCount(filters)
 
   function update(next: FilterState) {
@@ -150,13 +151,19 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
               threeD={threeD}
               areas={areas}
               pins={pins}
+              allPins={everyPin}
               allStations={bundle.stations}
               stations={stations}
               centres={centres}
               outlines={outlines}
               activePinId={activePin?.id ?? null}
               onSelectArea={(id) => update({ ...filters, areas: [id] })}
-              onSelectPin={(pin) => setActivePin(pin)}
+              onSelectPin={(pin) => {
+                // A place picked from the tip may sit outside the current filters: widen to its area so it is on the map.
+                const area = areas.find((a) => a.pins.some((p) => p.id === pin.id))
+                if (area && !pins.some((v) => v.pin.id === pin.id)) setFilters({ ...EMPTY_FILTERS, areas: [area.id] })
+                setActivePin(pin)
+              }}
               onClosePin={() => setActivePin(null)}
             />
           )}

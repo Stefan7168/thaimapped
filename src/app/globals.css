@@ -73,6 +73,13 @@ body {
 .tm-card__links { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
 .tm-card__link { display: inline-flex; align-items: center; min-height: 32px; padding: 0 12px; border-radius: 9999px; background: var(--accent); color: #fff; font-size: 13px; font-weight: 600; text-decoration: none; }
 .tm-card__link--quiet { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+.tm-card__nearby { margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--line); }
+.tm-card__nearby-title { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-2); }
+.tm-card__nearby-row { display: flex; align-items: center; gap: 8px; width: 100%; min-height: 32px; padding: 0 4px; margin: 0 -4px; border-radius: 6px; text-align: left; font-size: 13px; color: var(--ink); cursor: pointer; }
+.tm-card__nearby-row:hover { background: var(--paper-2); }
+.tm-card__nearby-dot { width: 8px; height: 8px; border-radius: 9999px; background: var(--pin, var(--accent)); flex: none; }
+.tm-card__nearby-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tm-card__nearby-min { flex: none; color: var(--ink-2); }
 
 /* Trip stops: numbered badge plus label. */
 .tm-stop { cursor: pointer; display: flex; align-items: center; gap: 6px; }
