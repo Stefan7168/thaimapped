@@ -366,7 +366,30 @@
         }
       },
       "subarea": "saphan-khwai",
-      "links": {}
+      "links": {},
+      "photo": {
+        "src": "/photos/pins/ari/or-tor-kor-market.jpg",
+        "alt": "The clean, covered aisles of Or Tor Kor Market with fruit stalls on both sides",
+        "credit": "\"Or Tor Kor Market\" by rpongsaj",
+        "licence": "CC BY 2.0",
+        "source": "https://www.flickr.com/photos/15131913@N00/8426881042"
+      },
+      "photos": [
+        {
+          "src": "/photos/pins/ari/or-tor-kor-market.jpg",
+          "alt": "The clean, covered aisles of Or Tor Kor Market with fruit stalls on both sides",
+          "credit": "\"Or Tor Kor Market\" by rpongsaj",
+          "licence": "CC BY 2.0",
+          "source": "https://www.flickr.com/photos/15131913@N00/8426881042"
+        },
+        {
+          "src": "/photos/pins/ari/or-tor-kor-market-2.jpg",
+          "alt": "A spice and curry paste stall at Or Tor Kor Market",
+          "credit": "\"Or Tor Kor Market\" by Kent Wang",
+          "licence": "CC BY-SA 2.0",
+          "source": "https://www.flickr.com/photos/27454212@N00/25297875370"
+        }
+      ]
     },
     {
       "id": "rot-fai-park",
