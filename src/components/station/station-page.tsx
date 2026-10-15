@@ -15,6 +15,7 @@ import { trackOutbound } from '@/lib/links/track'
 import { supports3D } from '@/lib/map/device'
 import { SiteHeader } from '@/components/explorer/site-header'
 import { SiteFooter } from '@/components/explorer/site-footer'
+import { SaveButton } from '@/components/saved/save-button'
 import { KIND_ICONS } from '@/components/explorer/kind-bar'
 
 const StageMap = dynamic(() => import('@/components/map/stage-map').then((m) => m.StageMap), {
@@ -59,7 +60,8 @@ export function StationPage({ locale, cityId, page, areas, stations, others }: {
     const on = card?.pin.id === pin.id
     const partners = pin.kind === 'hotel' ? (Object.keys(pin.links) as Partner[]) : []
     return (
-      <li key={pin.id}>
+      <li key={pin.id} className="tm-wk__item">
+        {pin.kind === 'hotel' && <SaveButton id={pin.id} locale={locale} className="tm-wk__save" />}
         <button type="button" aria-pressed={on} onClick={() => { setCard(on ? null : { pin, area }); if (!on) showMap() }} className={`tm-wk__stop${on ? ' tm-wk__stop--on' : ''}`} style={{ ['--pin' as string]: `var(--${area.color})` }}>
           {photo ? (
             <Image src={photo.src} alt="" width={72} height={72} sizes="72px" className="tm-wk__thumb" />

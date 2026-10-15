@@ -22,6 +22,8 @@ import { TopSearch, type SearchHit } from './top-search'
 import { SiteFooter } from './site-footer'
 import { KindBar, KIND_ICONS } from './kind-bar'
 import { AreaCard } from './area-card'
+import { SaveButton } from '@/components/saved/save-button'
+import { SavedLink } from '@/components/saved/saved-link'
 
 const ExplorerMap = dynamic(() => import('@/components/map/explorer-map').then((m) => m.ExplorerMap), {
   ssr: false,
@@ -41,6 +43,7 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
   const [override3D, setOverride3D] = useState<boolean | null>(null)
   const threeD = override3D ?? detected3D
   const [filters, setFilters] = useState<FilterState>(EMPTY_FILTERS)
+  const [activePin, setActivePin] = useState<Pin | null>(null)
   // A link from the home page quiz carries "#area=<id>&price=<min>-<max>" (an older "tier=" still works). The hash never reaches the
   // server, so it is read once the page is live, in a frame callback rather than straight in the effect.
   useEffect(() => {
@@ -54,12 +57,17 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
       const station = stationList[0] ?? null
       const times = (h.get('time') ?? '').split(',').filter((x): x is TimeOfDay => (TIMES as readonly string[]).includes(x))
       const days = (h.get('day') ?? '').split(',').filter((x): x is DayKind => (DAYS as readonly string[]).includes(x))
-      if (!area && !tier && !priceParam && !station && times.length === 0 && days.length === 0) return
+      // "#pin=<id>" (from the saved list) opens that place: its area filtered, its card open.
+      const pinId = h.get('pin')
+      const pinHit = pinId ? areas.flatMap((a) => a.pins.map((pin) => ({ pin, area: a }))).find((x) => x.pin.id === pinId) : undefined
+      if (pinHit && areaList.length === 0) areaList.push(pinHit.area.id)
+      if (!area && !pinHit && !tier && !priceParam && !station && times.length === 0 && days.length === 0) return
       const m = priceParam?.match(/^(\d+)-(\d+)$/)
       const fromParam: PriceRange | null = m ? { min: Math.max(PRICE_RANGE.min, Number(m[1])), max: Math.min(PRICE_RANGE.max, Number(m[2])) } : null
       const price = fromParam && fromParam.min < fromParam.max ? fromParam : tier && (TIERS as readonly string[]).includes(tier) ? TIER_PRICE[tier as Tier] : null
       const next: FilterState = { ...EMPTY_FILTERS, areas: areaList, stations: stationList, price: isFullRange(price) ? null : price, times, days }
       setFilters(next)
+      if (pinHit) setActivePin(pinHit.pin)
     }
     const id = window.requestAnimationFrame(apply)
     window.addEventListener('hashchange', apply)
@@ -68,7 +76,6 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
       window.removeEventListener('hashchange', apply)
     }
   }, [areas, bundle.stations])
-  const [activePin, setActivePin] = useState<Pin | null>(null)
   const [sheetOpen, setSheetOpen] = useState(false)
   // Phones: the place list starts as a one-line handle so the map stays visible.
   const [listOpen, setListOpen] = useState(false)
@@ -173,8 +180,9 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
         const thumb = pin.photos?.[0] ?? pin.photo
         const KindIcon = KIND_ICONS[pin.kind]
         return (
-          <li key={pin.id}>
-            <button type="button" onClick={() => { setActivePin(pin); setListOpen(false) }} className={`tm-place ${active ? 'border-ink bg-white' : 'border-line bg-white/70'}`}>
+          <li key={pin.id} className="relative">
+            {pin.kind === 'hotel' && <SaveButton id={pin.id} locale={locale} className="absolute right-2 top-2" />}
+            <button type="button" onClick={() => { setActivePin(pin); setListOpen(false) }} className={`tm-place${pin.kind === 'hotel' ? ' tm-place--save' : ''} ${active ? 'border-ink bg-white' : 'border-line bg-white/70'}`}>
               {/* A square picture on the left: the place's first photo, or its kind's icon on paper until one is fetched. */}
               {thumb ? (
                 <Image src={thumb.src} alt="" width={72} height={72} sizes="72px" className="tm-place__thumb" />
@@ -250,6 +258,7 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
           {count > 0 && <span className="rounded-full bg-accent px-1.5 text-xs font-semibold text-white">{count}</span>}
         </button>
         <Link href={`/${locale}/${city.id}/trip`} className="hidden shrink-0 rounded-full border border-line bg-white px-3 py-2 text-sm font-medium md:inline-block">{s.nav.trips}</Link>
+        <SavedLink locale={locale} className="tm-saved-link hidden shrink-0 items-center gap-1.5 rounded-full border border-line bg-white px-3 py-2 text-sm font-medium md:inline-flex" />
       </header>
       <KindBar locale={locale} bundle={bundle} filters={filters} onChange={update} />
 

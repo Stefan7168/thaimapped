@@ -1,0 +1,36 @@
+import { notFound } from 'next/navigation'
+import type { Metadata } from 'next'
+import { liveCityIds, loadCityBundle } from '@/lib/content/load'
+import { LOCALES, isLocale } from '@/lib/i18n/locales'
+import { strings } from '@/lib/i18n/strings'
+import { pageMeta } from '@/lib/seo/page-meta'
+import { stationsFor } from '@/lib/content/slim'
+import { SavedPage, type SavedEntry } from '@/components/saved/saved-page'
+
+// Static shell; which hotels show is read in the browser (this browser's list, or ?ids= from a sent link).
+export const ensureStatic = 'navigation'
+
+export function generateStaticParams() {
+  return LOCALES.map((locale) => ({ locale }))
+}
+
+export async function generateMetadata(props: PageProps<'/[locale]/saved'>): Promise<Metadata> {
+  const { locale } = await props.params
+  if (!isLocale(locale)) return {}
+  const s = strings(locale)
+  // A personal list: not for search engines.
+  return { ...pageMeta({ locale, title: s.saved.title, description: s.saved.description, path: `/${locale}/saved` }), robots: { index: false } }
+}
+
+export default async function SavedRoute(props: PageProps<'/[locale]/saved'>) {
+  const { locale } = await props.params
+  if (!isLocale(locale)) notFound()
+  const cityId = liveCityIds()[0]
+  const bundle = cityId ? loadCityBundle(cityId) : null
+  if (!bundle) notFound()
+  // Every hotel, with only what the row shows: no outlines, no street shapes, one photo.
+  const entries: SavedEntry[] = bundle.areas.flatMap((a) =>
+    a.pins.filter((p) => p.kind === 'hotel').map((pin) => ({ pin: { ...pin, photos: pin.photos?.slice(0, 1), shape: undefined }, area: { id: a.id, name: a.name, color: a.color } })),
+  )
+  return <SavedPage locale={locale} cityId={bundle.city.id} entries={entries} stations={stationsFor(bundle.stations, entries.map((e) => e.pin))} />
+}
