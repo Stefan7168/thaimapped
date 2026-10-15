@@ -599,7 +599,10 @@ a.tm-wk__stop { text-decoration: none; }
 .tm-cmp thead th { border-top: 0; font-family: var(--font-display), Georgia, serif; font-size: 16px; font-weight: 600; }
 .tm-cmp tbody th { font-weight: 600; color: var(--ink-2); font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; min-width: 92px; position: sticky; left: 0; background: var(--paper); }
 .tm-cmp__links a { margin-right: 10px; }
-.tm-areas-cmp { margin-top: 56px; max-width: 1040px; }
+.tm-areas-cmp { padding: clamp(56px, 8vw, 120px) clamp(16px, 2.2vw, 32px) clamp(40px, 6vw, 96px); }
+.tm-areas-cmp__inner { max-width: 1760px; margin: 0 auto; }
+.tm-areas-cmp .tm-saved__note { max-width: 60ch; }
+.tm-areas-cmp .tm-cmp tbody th { background: var(--paper-2); }
 .tm-cmp--areas th, .tm-cmp--areas td { min-width: 124px; }
 .tm-cmp--areas tbody th { min-width: 84px; }
 .tm-cmp__corner { border-top: 0 !important; }
