@@ -27,7 +27,8 @@
   },
   "polygon": "boundaries/ari.geojson",
   "stations": [
-    "bts-sukhumvit-n5"
+    "bts-sukhumvit-n5",
+    "bts-sukhumvit-n7"
   ],
   "subareas": [
     {
@@ -86,15 +87,15 @@
         "en": "The Quarter Hotel"
       },
       "why": {
-        "en": "In the Ari sois, an 18-minute walk from BTS Ari."
+        "en": "In the Ari sois, a 12-minute walk from BTS Saphan Khwai."
       },
       "location": {
         "lon": 100.54209,
         "lat": 13.79157
       },
       "walk": {
-        "station": "bts-sukhumvit-n5",
-        "minutes": 18
+        "station": "bts-sukhumvit-n7",
+        "minutes": 12
       },
       "links": {
         "booking": "https://www.booking.com/searchresults.html?ss=The+Quarter+Hotel+Bangkok"
@@ -109,15 +110,15 @@
         "en": "The Iconic Hotel Ari - Jatujak"
       },
       "why": {
-        "en": "In Saphan Khwai, a 22-minute walk from BTS Ari."
+        "en": "In Saphan Khwai, a 6-minute walk from BTS Saphan Khwai."
       },
       "location": {
         "lon": 100.55273,
         "lat": 13.79169
       },
       "walk": {
-        "station": "bts-sukhumvit-n5",
-        "minutes": 22
+        "station": "bts-sukhumvit-n7",
+        "minutes": 6
       },
       "links": {
         "booking": "https://www.booking.com/searchresults.html?ss=The+Iconic+Hotel+Ari+-+Jatujak+Bangkok"

@@ -19,8 +19,8 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..')
  */
 const SHAPES = [
   { area: 'chinatown', pin: 'yaowarat-road', kind: 'street', query: 'way["highway"]["name:en"="Yaowarat Road"]', bbox: '13.735,100.505,13.745,100.518' },
-  { area: 'old-town', pin: 'khao-san-road', kind: 'street', query: 'way["highway"]["name:en"="Khao San Road"]', bbox: '13.756,100.494,13.762,100.502' },
-  { area: 'silom', pin: 'patpong-night-market', kind: 'street', query: 'way["highway"]["name:en"~"^Patpong( Road)? ?[12]?$"]', bbox: '13.727,100.531,13.732,100.536' },
+  { area: 'old-town', pin: 'khao-san-road', kind: 'street', query: 'way["highway"][!"area"]["name:en"="Khao San Road"]', bbox: '13.756,100.494,13.762,100.502' },
+  { area: 'silom', pin: 'patpong-night-market', kind: 'street', query: 'way["highway"][!"area"]["name:en"~"^Patpong ?[12]?( Road)?$"]', bbox: '13.727,100.531,13.732,100.536' },
   { area: 'ari', pin: 'chatuchak-market', kind: 'zone', query: 'wr["amenity"="marketplace"]["name:en"~"Chatuchak"]', bbox: '13.795,100.545,13.805,100.555' },
 ]
 

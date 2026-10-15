@@ -28,7 +28,8 @@
   "polygon": "boundaries/sukhumvit.geojson",
   "stations": [
     "bts-sukhumvit-e4",
-    "mrt-blue-bl22"
+    "mrt-blue-bl22",
+    "bts-sukhumvit-e5"
   ],
   "subareas": [
     {
@@ -144,15 +145,15 @@
         "en": "Oneday Hostel"
       },
       "why": {
-        "en": "In Phrom Phong, a 21-minute walk from MRT Sukhumvit."
+        "en": "In Phrom Phong, a 6-minute walk from BTS Phrom Phong."
       },
       "location": {
         "lon": 100.5703,
         "lat": 13.72654
       },
       "walk": {
-        "station": "mrt-blue-bl22",
-        "minutes": 21
+        "station": "bts-sukhumvit-e5",
+        "minutes": 6
       },
       "links": {
         "booking": "https://www.booking.com/searchresults.html?ss=Oneday+Hostel+Bangkok"

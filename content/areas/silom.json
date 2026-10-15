@@ -28,7 +28,8 @@
   "stations": [
     "bts-silom-s2",
     "mrt-blue-bl26",
-    "bts-silom-s3"
+    "bts-silom-s3",
+    "bts-silom-s5"
   ],
   "subareas": [
     {
@@ -121,15 +122,15 @@
         "en": "Holiday Inn Bangkok Silom"
       },
       "why": {
-        "en": "In Silom, a 14-minute walk from BTS Chong Nonsi."
+        "en": "In Silom, a 6-minute walk from BTS Surasak."
       },
       "location": {
         "lon": 100.51969,
         "lat": 13.72266
       },
       "walk": {
-        "station": "bts-silom-s3",
-        "minutes": 14
+        "station": "bts-silom-s5",
+        "minutes": 6
       },
       "links": {
         "booking": "https://www.booking.com/searchresults.html?ss=Holiday+Inn+Bangkok+Silom"
