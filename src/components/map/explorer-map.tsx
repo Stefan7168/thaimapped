@@ -11,6 +11,7 @@ import { fitPopupSoon, overlayInsets } from '@/lib/map/fit-popup'
 import { t } from '@/lib/i18n/locales'
 import { cardElement } from './pin-card'
 import { WALK_RADIUS_M, nearbyPins, type VisiblePin } from '@/lib/explorer/filters'
+import { declutterLabels, watchDeclutter } from '@/lib/map/declutter'
 
 export const PAPER_STYLE_URL = '/map/paper.json'
 
@@ -76,30 +77,6 @@ function pinElement(label: string, color: string, minor: boolean, active: boolea
   text.textContent = label
   el.append(dot, text)
   return el
-}
-
-/**
- * Markers do not avoid each other, so at a walk-circle zoom four labels in
- * 300 m sat on top of one another. Priority order: the active pin, stations,
- * hotels, then the rest; a label that would cover an earlier one is hidden
- * (its dot stays) until the map is zoomed in enough for it.
- */
-function declutterLabels(markers: Marker[], container: HTMLElement | null) {
-  const els = markers.map((m) => m.getElement())
-  const rank = (el: HTMLElement) => (el.classList.contains('tm-pin--active') ? 0 : el.classList.contains('tm-pin--station') ? 1 : el.classList.contains('tm-pin--minor') ? 3 : 2)
-  const ordered = els.map((el, i) => ({ el, i })).sort((a, b) => rank(a.el) - rank(b.el) || a.i - b.i)
-  const labels = ordered.map(({ el }) => el.querySelector<HTMLElement>('.tm-pin__label')).filter((l): l is HTMLElement => !!l)
-  for (const l of labels) l.classList.remove('tm-pin__label--off')
-  const rects = labels.map((l) => l.getBoundingClientRect())
-  // The picked area's name pill (area-hover.ts) has the spot first.
-  const kept: DOMRect[] = [...(container?.querySelectorAll<HTMLElement>('.tm-area-pill') ?? [])].map((el) => el.getBoundingClientRect()).filter((r) => r.width > 0)
-  labels.forEach((l, i) => {
-    const r = rects[i]
-    if (r.width === 0) return
-    const hit = kept.some((k) => r.left < k.right + 2 && r.right > k.left - 2 && r.top < k.bottom + 2 && r.bottom > k.top - 2)
-    if (hit) l.classList.add('tm-pin__label--off')
-    else kept.push(r)
-  })
 }
 
 /** Bounds around every pin and station circle, or null when there is nothing to frame. */
@@ -197,14 +174,7 @@ export function ExplorerMap(props: ExplorerMapProps) {
         dotsOnly()
         map.on('zoomend', dotsOnly)
         map.on('resize', dotsOnly)
-        let frame = 0
-        const declutter = () => {
-          cancelAnimationFrame(frame)
-          frame = requestAnimationFrame(() => declutterLabels(markersRef.current, map!.getContainer()))
-        }
-        map.on('move', declutter)
-        map.on('moveend', declutter)
-        map.on('resize', declutter)
+        watchDeclutter(map, () => markersRef.current)
         setMapReady((n) => n + 1)
       })
     })()

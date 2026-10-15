@@ -5,6 +5,7 @@ import type { LngLatBoundsLike, Map as MaplibreMap, Marker } from 'maplibre-gl'
 import type { Locale, TripRoute } from '@/lib/content/types'
 import { loadMaplibreGl } from '@/lib/map/load-maplibre'
 import { isGestureActive } from '@/lib/map/gesture'
+import { declutterLabels, watchDeclutter } from '@/lib/map/declutter'
 import { t } from '@/lib/i18n/locales'
 import { PAPER_STYLE_URL } from './explorer-map'
 
@@ -93,6 +94,11 @@ export function TripMap({ locale, route, day, activeStopId, onSelectStop }: Trip
           paint: { 'line-color': '#c8553d', 'line-width': 4, ...(route.path ? {} : { 'line-dasharray': [2, 1.5] }) },
         })
         mapRef.current = map
+        watchDeclutter(map, () => markersRef.current)
+        // Narrow stage: the stops show their numbers only (the list under the map carries the names).
+        const numsOnly = () => map!.getContainer().classList.toggle('tm-map--nums', map!.getContainer().clientWidth < 768)
+        numsOnly()
+        map.on('resize', numsOnly)
         setMapReady((n) => n + 1)
       })
     })()
@@ -122,6 +128,7 @@ export function TripMap({ locale, route, day, activeStopId, onSelectStop }: Trip
         el.addEventListener('click', () => onSelect.current(stop.id))
         markersRef.current.push(new maplibregl.Marker({ element: el, anchor: 'left' }).setLngLat([stop.location.lon, stop.location.lat]).addTo(map))
       })
+      declutterLabels(markersRef.current, map.getContainer())
     })()
     return () => {
       cancelled = true

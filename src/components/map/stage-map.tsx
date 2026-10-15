@@ -12,6 +12,7 @@ import { fitPopupSoon, overlayInsets } from '@/lib/map/fit-popup'
 import { t } from '@/lib/i18n/locales'
 import { PAPER_STYLE_URL } from './explorer-map'
 import { STOP_COLORS } from './trip-map'
+import { declutterLabels, watchDeclutter } from '@/lib/map/declutter'
 
 const ROUTE_SOURCE = 'tm-stage-route'
 
@@ -136,6 +137,11 @@ export function StageMap({ locale, camera, threeD, areas, route, routes = [], fo
         map.addLayer({ id: `${ROUTE_SOURCE}-line`, type: 'line', source: ROUTE_SOURCE, layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#c8553d', 'line-width': 4, 'line-dasharray': ['case', ['get', 'dashed'], ['literal', [2, 1.5]], ['literal', [1, 0]]] } })
         hover = addAreaHover(map, areas, locale, (id) => onSelectAreaRef.current?.(id), `${ROUTE_SOURCE}-casing`, maplibregl.Marker)
         mapRef.current = map
+        watchDeclutter(map, () => markersRef.current)
+        // Narrow stage: the trip stops show their numbers only (the list under the map carries the names).
+        const numsOnly = () => map!.getContainer().classList.toggle('tm-map--nums', map!.getContainer().clientWidth < 768)
+        numsOnly()
+        map.on('resize', numsOnly)
         setMapReady((n) => n + 1)
       })
       // The panel changes size with the viewport (56svh on phones, full height
@@ -175,6 +181,7 @@ export function StageMap({ locale, camera, threeD, areas, route, routes = [], fo
           const el = stopElement(i + 1, t(stop.name, locale), STOP_COLORS[stop.kind] ?? '#6f6a5f')
           markersRef.current.push(new maplibregl.Marker({ element: el, anchor: 'left' }).setLngLat([stop.location.lon, stop.location.lat]).addTo(map))
         })
+        declutterLabels(markersRef.current, map.getContainer())
         return
       }
       for (const a of areas) {
@@ -193,6 +200,7 @@ export function StageMap({ locale, camera, threeD, areas, route, routes = [], fo
         el.classList.add('tm-pin--station')
         markersRef.current.push(new maplibregl.Marker({ element: el, anchor: 'left' }).setLngLat([marker.lon, marker.lat]).addTo(map))
       }
+      declutterLabels(markersRef.current, map.getContainer())
     })()
     return () => {
       cancelled = true
