@@ -110,7 +110,8 @@
         "minutes": 2
       },
       "links": {
-        "booking": "https://www.booking.com/searchresults.html?ss=Sheraton+Grande+Sukhumvit+Bangkok"
+        "agoda": "https://www.agoda.com/sheraton-grande-sukhumvit-a-luxury-collection-hotel-bangkok/hotel/bangkok-th.html",
+        "booking": "https://www.booking.com/hotel/th/sheraton-grande-sukhumvit-a-luxury-collection.html"
       },
       "subarea": "asok"
     },
@@ -133,7 +134,8 @@
         "minutes": 2
       },
       "links": {
-        "booking": "https://www.booking.com/searchresults.html?ss=Grande+Centre+Point+Terminal+21+Bangkok"
+        "agoda": "https://www.agoda.com/grande-centre-point-hotel-terminal-21/hotel/bangkok-th.html",
+        "booking": "https://www.booking.com/hotel/th/grande-centre-point.html"
       },
       "subarea": "nana"
     },

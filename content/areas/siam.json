@@ -108,7 +108,8 @@
         "minutes": 5
       },
       "links": {
-        "booking": "https://www.booking.com/searchresults.html?ss=Siam+Kempinski+Hotel+Bangkok"
+        "agoda": "https://www.agoda.com/siam-kempinski-hotel-bangkok/hotel/bangkok-th.html",
+        "booking": "https://www.booking.com/hotel/th/siam-kempinski-bangkok.html"
       },
       "subarea": "siam-square"
     },
@@ -131,7 +132,8 @@
         "minutes": 2
       },
       "links": {
-        "booking": "https://www.booking.com/searchresults.html?ss=Novotel+Bangkok+on+Siam+Square"
+        "agoda": "https://www.agoda.com/novotel-bangkok-on-siam-square-hotel/hotel/bangkok-th.html",
+        "booking": "https://www.booking.com/hotel/th/novotelbangkok.html"
       },
       "subarea": "siam-square"
     },
@@ -154,7 +156,8 @@
         "minutes": 9
       },
       "links": {
-        "booking": "https://www.booking.com/searchresults.html?ss=Lub+d+Bangkok+Siam"
+        "agoda": "https://www.agoda.com/lub-d-bangkok-siam-hostel/hotel/bangkok-th.html",
+        "booking": "https://www.booking.com/hotel/th/lub-d-bangkok-siam-square.html"
       },
       "subarea": "siam-square"
     },

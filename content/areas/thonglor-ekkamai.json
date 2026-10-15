@@ -109,7 +109,8 @@
         "minutes": 2
       },
       "links": {
-        "booking": "https://www.booking.com/searchresults.html?ss=Hotel+Nikko+Bangkok"
+        "agoda": "https://www.agoda.com/hotel-nikko-bangkok/hotel/bangkok-th.html",
+        "booking": "https://www.booking.com/hotel/th/nikko-bangkok.html"
       },
       "subarea": "thonglor"
     },
@@ -132,7 +133,8 @@
         "minutes": 5
       },
       "links": {
-        "booking": "https://www.booking.com/searchresults.html?ss=Wyndham+Garden+Bangkok+Sukhumvit+42"
+        "agoda": "https://www.agoda.com/wyndham-garden-bangkok-sukhumvit-42/hotel/bangkok-th.html",
+        "booking": "https://www.booking.com/hotel/th/wyndham-garden-bangkok-sukhumvit-42.html"
       },
       "subarea": "phra-khanong"
     },
@@ -155,7 +157,8 @@
         "minutes": 17
       },
       "links": {
-        "booking": "https://www.booking.com/searchresults.html?ss=ibis+Styles+Bangkok+Sukhumvit+Phra+Khanong"
+        "agoda": "https://www.agoda.com/ibis-styles-bangkok-sukhumvit-phra-khanong/hotel/bangkok-th.html",
+        "booking": "https://www.booking.com/hotel/th/ibis-styles-bangkok-sukhumvit-phra-khanong.html"
       },
       "subarea": "phra-khanong"
     },

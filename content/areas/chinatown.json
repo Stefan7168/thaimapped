@@ -108,7 +108,8 @@
         "minutes": 5
       },
       "links": {
-        "booking": "https://www.booking.com/searchresults.html?ss=Shanghai+Mansion+Bangkok"
+        "agoda": "https://www.agoda.com/shanghai-mansion-bangkok/hotel/bangkok-th.html",
+        "booking": "https://www.booking.com/hotel/th/shanghai-inn.html"
       },
       "subarea": "yaowarat"
     },
@@ -131,6 +132,7 @@
         "minutes": 3
       },
       "links": {
+        "agoda": "https://www.agoda.com/hotel-royal-bangkok-h3093614/hotel/bangkok-th.html",
         "booking": "https://www.booking.com/searchresults.html?ss=Hotel+Royal+Bangkok+%40+Chinatown"
       },
       "subarea": "yaowarat"
@@ -154,7 +156,8 @@
         "minutes": 8
       },
       "links": {
-        "booking": "https://www.booking.com/searchresults.html?ss=Loftel+22+Hostel+Bangkok"
+        "agoda": "https://www.agoda.com/loftel-22-hostel/hotel/bangkok-th.html",
+        "booking": "https://www.booking.com/hotel/th/loftel-22-hostel.html"
       },
       "subarea": "talat-noi"
     },

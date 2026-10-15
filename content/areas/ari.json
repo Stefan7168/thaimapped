@@ -98,6 +98,7 @@
         "minutes": 12
       },
       "links": {
+        "agoda": "https://www.agoda.com/the-quarter-ari-by-uhg/hotel/bangkok-th.html",
         "booking": "https://www.booking.com/searchresults.html?ss=The+Quarter+Hotel+Bangkok"
       },
       "subarea": "ari-sois"
@@ -144,7 +145,8 @@
         "minutes": 7
       },
       "links": {
-        "booking": "https://www.booking.com/searchresults.html?ss=The+Yard+Hostel+Bangkok"
+        "agoda": "https://www.agoda.com/the-yard-hostel-bangkok/hotel/bangkok-th.html",
+        "booking": "https://www.booking.com/hotel/th/the-yard-hostel.html"
       },
       "subarea": "ari-sois"
     },

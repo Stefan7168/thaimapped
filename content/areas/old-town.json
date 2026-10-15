@@ -108,7 +108,8 @@
         "minutes": 5
       },
       "links": {
-        "booking": "https://www.booking.com/searchresults.html?ss=Riva+Arun+Bangkok"
+        "agoda": "https://www.agoda.com/riva-arun-bangkok/hotel/bangkok-th.html",
+        "booking": "https://www.booking.com/hotel/th/riva-arun-bangkok.html"
       },
       "subarea": "grand-palace"
     },
@@ -131,7 +132,8 @@
         "minutes": 5
       },
       "links": {
-        "booking": "https://www.booking.com/searchresults.html?ss=Arun+Residence+Bangkok"
+        "agoda": "https://www.agoda.com/arun-residence/hotel/bangkok-th.html",
+        "booking": "https://www.booking.com/hotel/th/arun-residence.html"
       },
       "subarea": "grand-palace"
     },
@@ -154,7 +156,8 @@
         "minutes": 22
       },
       "links": {
-        "booking": "https://www.booking.com/searchresults.html?ss=NapPark+Hostel+%40+Khao+San+Bangkok"
+        "agoda": "https://www.agoda.com/nappark-hostel/hotel/bangkok-th.html",
+        "booking": "https://www.booking.com/hotel/th/nappark-hostel-khao-san.html"
       },
       "subarea": "khao-san"
     },

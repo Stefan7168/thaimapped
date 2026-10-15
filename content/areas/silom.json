@@ -110,7 +110,8 @@
         "minutes": 11
       },
       "links": {
-        "booking": "https://www.booking.com/searchresults.html?ss=The+Sukhothai+Bangkok"
+        "agoda": "https://www.agoda.com/the-sukhothai-bangkok/hotel/bangkok-th.html",
+        "booking": "https://www.booking.com/hotel/th/the-sukhothai.html"
       },
       "subarea": "sathorn"
     },
@@ -133,7 +134,8 @@
         "minutes": 6
       },
       "links": {
-        "booking": "https://www.booking.com/searchresults.html?ss=Holiday+Inn+Bangkok+Silom"
+        "agoda": "https://www.agoda.com/holiday-inn-bangkok-silom/hotel/bangkok-th.html",
+        "booking": "https://www.booking.com/hotel/th/holiday-inn-silom-bangkok.html"
       },
       "subarea": "silom-road"
     },
