@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
-import { liveCityIds, loadCityBundle } from '@/lib/content/load'
+import { liveCityIds, loadCityBundle, loadRoutes } from '@/lib/content/load'
 import { LOCALES, isLocale, t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
 import { WeekendPage } from '@/components/weekend/weekend-page'
@@ -29,5 +29,5 @@ export default async function AreaWeekendPage(props: PageProps<'/[locale]/[city]
   const bundle = loadCityBundle(city)
   const a = bundle?.areas.find((x) => x.id === area)
   if (!bundle || !a) notFound()
-  return <WeekendPage locale={locale} cityId={city} area={a} areas={bundle.areas} stations={bundle.stations} />
+  return <WeekendPage locale={locale} cityId={city} area={a} areas={bundle.areas} stations={bundle.stations} routes={loadRoutes(city)} />
 }

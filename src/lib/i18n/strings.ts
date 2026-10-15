@@ -33,7 +33,14 @@ const en = {
     copyFailed: 'Copy the address bar to share',
     openMap: 'Open on the map',
     others: 'Other weekends',
+    dayOut: 'Or a day out of town',
+    dayOutLead: 'Trips that fit a Saturday or a Sunday, from the trips index.',
     shareFromMap: 'Open as a page you can share',
+  },
+  notFound: {
+    title: 'Nothing here',
+    lead: 'That address does not match a page on this site. The map is one tap away.',
+    action: 'Open the map',
   },
   credits: {
     title: 'Photo credits',
@@ -68,6 +75,7 @@ const en = {
       hotelPick: 'Your hotel pick',
       noHotel: 'No hotel in this budget listed here yet.',
       open: (name: string) => `Open ${name} with these filters`,
+      plan: (name: string) => `Plan the weekend in ${name}`,
       empty: 'Answer at least one question to see your area.',
     },
     areasHeading: 'Eight areas',

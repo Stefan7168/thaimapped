@@ -45,17 +45,19 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
   useEffect(() => {
     const apply = () => {
       const h = new URLSearchParams(window.location.hash.replace(/^#/, ''))
-      const area = h.get('area')
+      const areaList = (h.get('area') ?? '').split(',').filter((id) => areas.some((a) => a.id === id))
+      const area = areaList[0] ?? null
       const tier = h.get('tier')
       const priceParam = h.get('price')
-      const station = h.get('station')
+      const stationList = (h.get('station') ?? '').split(',').filter((id) => bundle.stations.some((st) => st.id === id))
+      const station = stationList[0] ?? null
       const times = (h.get('time') ?? '').split(',').filter((x): x is TimeOfDay => (TIMES as readonly string[]).includes(x))
       const days = (h.get('day') ?? '').split(',').filter((x): x is DayKind => (DAYS as readonly string[]).includes(x))
       if (!area && !tier && !priceParam && !station && times.length === 0 && days.length === 0) return
       const m = priceParam?.match(/^(\d+)-(\d+)$/)
       const fromParam: PriceRange | null = m ? { min: Math.max(PRICE_RANGE.min, Number(m[1])), max: Math.min(PRICE_RANGE.max, Number(m[2])) } : null
       const price = fromParam && fromParam.min < fromParam.max ? fromParam : tier && (TIERS as readonly string[]).includes(tier) ? TIER_PRICE[tier as Tier] : null
-      const next: FilterState = { ...EMPTY_FILTERS, areas: area && areas.some((a) => a.id === area) ? [area] : [], stations: station && bundle.stations.some((st) => st.id === station) ? [station] : [], price: isFullRange(price) ? null : price, times, days }
+      const next: FilterState = { ...EMPTY_FILTERS, areas: areaList, stations: stationList, price: isFullRange(price) ? null : price, times, days }
       setFilters(next)
     }
     const id = window.requestAnimationFrame(apply)
@@ -96,6 +98,7 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
   function update(next: FilterState) {
     setFilters(next)
     setActivePin(null)
+    writeHash(next)
   }
   function onPick(hit: SearchHit) {
     if (hit.kind === 'area') update({ ...filters, areas: filters.areas.includes(hit.id) ? filters.areas : [...filters.areas, hit.id] })
@@ -347,6 +350,23 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
       </div>
     </div>
   )
+}
+
+/**
+ * The address carries the filters the home and station pages can send (areas,
+ * stations, budget, time, day), so a view can be bookmarked or sent on.
+ * Sub-areas, lines and kinds stay out: nothing links in with them.
+ */
+function writeHash(f: FilterState) {
+  const h = new URLSearchParams()
+  if (f.areas.length) h.set('area', f.areas.join(','))
+  if (f.stations.length) h.set('station', f.stations.join(','))
+  if (f.price && !isFullRange(f.price)) h.set('price', `${f.price.min}-${f.price.max}`)
+  if (f.times.length) h.set('time', f.times.join(','))
+  if (f.days.length) h.set('day', f.days.join(','))
+  const next = h.toString().replace(/%2C/g, ',')
+  const url = `${window.location.pathname}${window.location.search}${next ? `#${next}` : ''}`
+  if (url !== `${window.location.pathname}${window.location.search}${window.location.hash}`) window.history.replaceState(null, '', url)
 }
 
 /** The left column while nothing is picked: the areas as cards, then the trips. */

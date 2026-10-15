@@ -183,6 +183,10 @@ body {
 .tm-st__index-meta { font-size: 13px; color: var(--ink-2); }
 .tm-pin--station .tm-pin__dot { width: 16px; height: 16px; }
 .tm-pin--station .tm-pin__label { font-weight: 700; border-color: var(--ink); }
+.tm-wk__trip { text-decoration: none; }
+.tm-quiz__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
+.tm-nf { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; padding: 48px 20px; text-align: center; }
+.tm-nf p { max-width: 40ch; font-size: var(--step-body); color: var(--ink); }
 .tm-wk__kind { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--pin, var(--accent)); }
 .tm-wk__name { font-family: var(--font-display), Georgia, serif; font-weight: 600; font-size: 18px; line-height: 1.15; }
 .tm-wk__why { font-size: 14px; line-height: 1.4; }

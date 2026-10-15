@@ -5,7 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useMemo, useState, useSyncExternalStore } from 'react'
 import { Share2 } from 'lucide-react'
-import type { Area, Locale, Pin, Station } from '@/lib/content/types'
+import type { Area, Locale, Pin, Station, TripRoute } from '@/lib/content/types'
 import { t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
 import { isFullRange, PRICE_RANGE, type PriceRange } from '@/lib/explorer/filters'
@@ -39,7 +39,7 @@ function readPrice(): PriceRange | null {
  * Sunday, the hotels inside the budget, the same map at the side, and a
  * link anyone can share. The page is static; the budget rides in the URL.
  */
-export function WeekendPage({ locale, cityId, area, areas, stations }: { locale: Locale; cityId: string; area: Area; areas: Area[]; stations: Station[] }) {
+export function WeekendPage({ locale, cityId, area, areas, stations, routes }: { locale: Locale; cityId: string; area: Area; areas: Area[]; stations: Station[]; routes: TripRoute[] }) {
   const s = strings(locale)
   const detected3D = useSyncExternalStore(noopSubscribe, supports3D, () => null)
   const [price, setPrice] = useState<PriceRange | null>(null)
@@ -120,6 +120,8 @@ export function WeekendPage({ locale, cityId, area, areas, stations }: { locale:
   }
 
   const others = areas.filter((a) => a.id !== area.id)
+  // Trips that fit inside one weekend day; the multi-day ones belong to the trips index.
+  const dayTrips = routes.filter((r) => r.duration !== 'multi-day')
   return (
     <>
       <SiteHeader locale={locale} cityId={cityId} />
@@ -147,6 +149,25 @@ export function WeekendPage({ locale, cityId, area, areas, stations }: { locale:
               {plan.hotels.length === 0 ? <p className="tm-wk__empty">{s.guide.stayNone}</p> : <ul className="tm-wk__stops">{plan.hotels.map(stop)}</ul>}
             </li>
           </ol>
+          {dayTrips.length > 0 && (
+            <section className="tm-wk__others">
+              <h2 className="tm-wk__time">{s.weekendPage.dayOut}</h2>
+              <p className="tm-wk__empty">{s.weekendPage.dayOutLead}</p>
+              <ul className="tm-wk__stops">
+                {dayTrips.map((r) => (
+                  <li key={r.id}>
+                    <Link href={`/${locale}/${cityId}/trip/${r.id}`} className="tm-wk__stop tm-wk__trip">
+                      <span className="tm-wk__text">
+                        <span className="tm-wk__kind">{s.trip.duration[r.duration]} · {s.trip.mode[r.mode]}{r.distanceKm !== undefined ? ` · ${s.trip.km(r.distanceKm)}` : ''}</span>
+                        <span className="tm-wk__name">{t(r.name, locale)}</span>
+                        <span className="tm-wk__why">{t(r.tagline, locale)}</span>
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
           <section className="tm-wk__others">
             <h2 className="tm-wk__time">{s.weekendPage.others}</h2>
             <ul className="tm-wk__other-list">
