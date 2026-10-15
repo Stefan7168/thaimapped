@@ -44,6 +44,12 @@ export function StationPage({ locale, cityId, page, areas, stations, others }: {
     const best = [...counts.entries()].sort((a, b) => b[1] - a[1])[0]?.[0]
     return areas.find((a) => a.id === best) ?? areas[0]
   }, [pinned, areas])
+  // The areas the nearby places belong to, most first: each links to its area page.
+  const areasNear = useMemo(() => {
+    const counts = new Map<string, { area: Area; n: number }>()
+    for (const { area } of pinned) counts.set(area.id, { area, n: (counts.get(area.id)?.n ?? 0) + 1 })
+    return [...counts.values()].sort((a, b) => b.n - a.n).map((x) => x.area)
+  }, [pinned])
   const camera = useMemo(() => ({ center: [st.lon, st.lat] as [number, number], zoom: 15, pitch: 0, bearing: 0 }), [st])
   const explorerHref = `/${locale}/${cityId}#station=${st.id}`
 
@@ -115,6 +121,21 @@ export function StationPage({ locale, cityId, page, areas, stations, others }: {
               {page.places.length === 0 ? <p className="tm-wk__empty">{s.stationPage.noPlaces}</p> : <ul className="tm-wk__stops">{page.places.map(row)}</ul>}
             </li>
           </ol>
+          {areasNear.length > 0 && (
+            <section className="tm-wk__others">
+              <h2 className="tm-wk__time">{s.stationPage.areasNear(label)}</h2>
+              <ul className="tm-wk__other-list">
+                {areasNear.map((a) => (
+                  <li key={a.id}>
+                    <Link href={`/${locale}/${cityId}/area/${a.id}`} className="tm-weekend__stop">
+                      <span aria-hidden="true" className="tm-st__line" style={{ background: `var(--${a.color})` }} />
+                      {t(a.name, locale)}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
           <section className="tm-wk__others">
             <h2 className="tm-wk__time">{s.stationPage.others}</h2>
             <ul className="tm-wk__other-list">

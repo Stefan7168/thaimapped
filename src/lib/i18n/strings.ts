@@ -12,6 +12,7 @@ const en = {
     indexTitle: 'Hotels near a station',
     indexLead: (n: number) => `${n} stations with hotels or places inside a ten-minute walk. Each page lists them nearest first, with the walk in minutes.`,
     title: (station: string) => `Near ${station}`,
+    areasNear: (station: string) => `Areas around ${station}`,
     description: (station: string, hotels: number, places: number) => `${hotels === 1 ? '1 hotel' : `${hotels} hotels`} and ${places === 1 ? '1 place' : `${places} places`} within a ten-minute walk of ${station} station, nearest first, with booking links.`,
     lead: (hotels: number, places: number) => `${hotels === 1 ? '1 hotel' : `${hotels} hotels`} and ${places === 1 ? '1 place' : `${places} places`} inside a ten-minute walk, nearest first.`,
     counts: (hotels: number, places: number) => `${hotels === 1 ? '1 hotel' : `${hotels} hotels`} · ${places === 1 ? '1 place' : `${places} places`}`,
