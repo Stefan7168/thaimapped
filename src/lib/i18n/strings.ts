@@ -81,6 +81,8 @@ const en = {
     stationsLead: 'Each station page lists the hotels and places inside a ten-minute walk.',
     others: 'Other areas',
     link: 'Area page',
+    compare: 'The hotels side by side',
+    compareLead: 'A night, the walk to the train, what is walkable from the door. Prices are typical for the class, not checked.',
   },
   weekendPage: {
     eyebrow: 'A weekend plan',

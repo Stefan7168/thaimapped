@@ -7,7 +7,7 @@ import { useMemo, useState, useSyncExternalStore } from 'react'
 import type { Area, Locale, Pin, PinKind, Station } from '@/lib/content/types'
 import { t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
-import { KIND_CHIPS } from '@/lib/explorer/filters'
+import { distanceM, KIND_CHIPS, WALK_PACE_M_PER_MIN } from '@/lib/explorer/filters'
 import { whenLine } from '@/lib/explorer/when'
 import { thb } from '@/lib/explorer/price'
 import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
@@ -18,6 +18,7 @@ import { SiteHeader } from '@/components/explorer/site-header'
 import { SiteFooter } from '@/components/explorer/site-footer'
 import { SaveButton } from '@/components/saved/save-button'
 import { StayPicker } from '@/components/stay/stay-picker'
+import { HotelCompare } from '@/components/stay/hotel-compare'
 import { KIND_ICONS } from '@/components/explorer/kind-bar'
 
 const StageMap = dynamic(() => import('@/components/map/stage-map').then((m) => m.StageMap), {
@@ -44,6 +45,8 @@ export function AreaPage({ locale, cityId, area, areas, stations, stationSlugs }
   }, [area])
   const hotels = useMemo(() => area.pins.filter((p) => p.kind === 'hotel'), [area])
   const pinned = useMemo(() => [...kinds.flatMap((g) => g.pins), ...hotels], [kinds, hotels])
+  // Places (not hotels) of this area inside a ten-minute walk of a hotel, straight-line at walking pace.
+  const nearbyCount = (hotel: Pin) => area.pins.filter((p) => p.kind !== 'hotel' && distanceM(hotel.location.lon, hotel.location.lat, p.location.lon, p.location.lat) <= WALK_PACE_M_PER_MIN * 10).length
   const areaStations = area.stations.map((id) => stationById.get(id)).filter((st): st is Station => !!st)
   const photos = area.photos ?? []
   const explorerHref = `/${locale}/${cityId}#area=${area.id}`
@@ -159,6 +162,13 @@ export function AreaPage({ locale, cityId, area, areas, stations, stationSlugs }
               <h2 className="tm-wk__time">{s.guide.stay}</h2>
               {hotels.length > 0 && <StayPicker locale={locale} />}
               {hotels.length === 0 ? <p className="tm-wk__empty">{s.guide.stayNone}</p> : <ul className="tm-wk__stops">{hotels.map(row)}</ul>}
+              {hotels.length > 1 && (
+                <div className="tm-ar__cmp">
+                  <h3 className="tm-wk__time">{s.areaPage.compare}</h3>
+                  <p className="tm-saved__note">{s.areaPage.compareLead}</p>
+                  <HotelCompare locale={locale} cityId={cityId} entries={hotels.map((pin) => ({ pin, area }))} stations={stations} nearbyCount={nearbyCount} showArea={false} />
+                </div>
+              )}
             </li>
           </ol>
           <section className="tm-wk__others">

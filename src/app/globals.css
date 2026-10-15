@@ -602,3 +602,7 @@ a.tm-wk__stop { text-decoration: none; }
 .tm-cmp--areas thead th .tm-link { font-family: inherit; font-size: inherit; }
 
 .tm-stoprow__tbc { display: inline-block; margin-top: 4px; padding: 1px 7px; border-radius: 6px; border: 1px dashed var(--line); font-size: 12px; color: var(--ink-2); }
+
+/* Area page: the hotels side by side, under the hotel list. */
+.tm-ar__cmp { margin-top: 24px; }
+.tm-ar__cmp .tm-cmp__wrap { margin-top: 12px; }

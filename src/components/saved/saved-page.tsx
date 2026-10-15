@@ -10,6 +10,7 @@ import { strings } from '@/lib/i18n/strings'
 import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
 import { adoptStayFromUrl, nights, stayParam, useStay } from '@/lib/stay/store'
 import { StayPicker } from '@/components/stay/stay-picker'
+import { HotelCompare } from '@/components/stay/hotel-compare'
 import { trackOutbound } from '@/lib/links/track'
 import { thb } from '@/lib/explorer/price'
 import { distanceM, WALK_PACE_M_PER_MIN } from '@/lib/explorer/filters'
@@ -147,52 +148,7 @@ export function SavedPage({ locale, cityId, entries, stations }: { locale: Local
             <h2 className="tm-wk__time">{s.saved.compare}</h2>
             <p className="tm-saved__note">{s.saved.compareLead}</p>
             <StayPicker locale={locale} />
-            <div className="tm-cmp__wrap">
-              <table className="tm-cmp">
-                <thead>
-                  <tr>
-                    <th scope="col"><span className="sr-only">{s.saved.compareWhat}</span></th>
-                    {hotelRows.map((e) => <th key={e.pin.id} scope="col">{t(e.pin.name, locale)}</th>)}
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <th scope="row">{s.saved.cmpArea}</th>
-                    {hotelRows.map((e) => <td key={e.pin.id}><Link href={`/${locale}/${cityId}/area/${e.area.id}`} className="tm-link">{t(e.area.name, locale)}</Link></td>)}
-                  </tr>
-                  <tr>
-                    <th scope="row">{s.saved.cmpPrice}</th>
-                    {hotelRows.map((e) => <td key={e.pin.id}>{e.pin.price ? `${s.guide.priceFrom(thb(e.pin.price.from, locale))}${e.pin.price.basis === 'tier-estimate' ? '*' : ''}` : (e.pin.tier ? s.filters.tier[e.pin.tier] : '')}</td>)}
-                  </tr>
-                  {stay && (
-                    <tr>
-                      <th scope="row">{s.saved.cmpStay(nights(stay))}</th>
-                      {hotelRows.map((e) => <td key={e.pin.id}>{e.pin.price ? `${s.guide.about(thb(e.pin.price.from * nights(stay), locale))}${e.pin.price.basis === 'tier-estimate' ? '*' : ''}` : ''}</td>)}
-                    </tr>
-                  )}
-                  <tr>
-                    <th scope="row">{s.saved.cmpStation}</th>
-                    {hotelRows.map((e) => { const st = e.pin.walk ? stationById.get(e.pin.walk.station) : undefined; return <td key={e.pin.id}>{st && e.pin.walk ? `${s.city.walkMinutes(e.pin.walk.minutes)}, ${st.code ? st.code + ' ' : ''}${t(st.name, locale)}` : ''}</td> })}
-                  </tr>
-                  <tr>
-                    <th scope="row">{s.saved.cmpNearby}</th>
-                    {hotelRows.map((e) => <td key={e.pin.id}>{s.saved.cmpPlaces(nearbyCount(e.pin))}</td>)}
-                  </tr>
-                  <tr>
-                    <th scope="row">{s.saved.cmpBook}</th>
-                    {hotelRows.map((e) => (
-                      <td key={e.pin.id} className="tm-cmp__links">
-                        {(Object.keys(e.pin.links) as Partner[]).filter((p) => p !== 'official').map((p) => {
-                          const subId = subIdFor(`${cityId}-${e.area.id}`, e.pin.id)
-                          return <a key={p} href={buildOutboundUrl(p, e.pin.links[p]!, subId, stay)} onClick={() => trackOutbound(p, subId)} target="_blank" rel="noopener sponsored" className="tm-link">{p.charAt(0).toUpperCase() + p.slice(1)}</a>
-                        })}
-                      </td>
-                    ))}
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <p className="tm-saved__note">* {s.guide.priceEstimate}</p>
+            <HotelCompare locale={locale} cityId={cityId} entries={hotelRows} stations={stations} nearbyCount={nearbyCount} />
           </section>
         )}
         {hotelRows.length > 0 && (
