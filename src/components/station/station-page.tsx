@@ -103,9 +103,6 @@ export function StationPage({ locale, cityId, page, areas, stations, others }: {
           </p>
           <h1 className="tm-h2">{s.stationPage.title(label)}</h1>
           <p className="tm-wk__lead">{s.stationPage.lead(page.hotels.length, page.places.length)}</p>
-          <div className="tm-wk__actions">
-            <Link href={explorerHref} className="tm-link">{s.weekendPage.openMap}</Link>
-          </div>
           <ol className="tm-wk__slots">
             <li className="tm-wk__slot">
               <h2 className="tm-wk__time">{s.stationPage.hotels}</h2>

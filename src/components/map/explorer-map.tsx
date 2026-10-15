@@ -78,12 +78,43 @@ function pinElement(label: string, color: string, minor: boolean, active: boolea
   return el
 }
 
+/**
+ * Markers do not avoid each other, so at a walk-circle zoom four labels in
+ * 300 m sat on top of one another. Priority order: the active pin, stations,
+ * hotels, then the rest; a label that would cover an earlier one is hidden
+ * (its dot stays) until the map is zoomed in enough for it.
+ */
+function declutterLabels(markers: Marker[], container: HTMLElement | null) {
+  const els = markers.map((m) => m.getElement())
+  const rank = (el: HTMLElement) => (el.classList.contains('tm-pin--active') ? 0 : el.classList.contains('tm-pin--station') ? 1 : el.classList.contains('tm-pin--minor') ? 3 : 2)
+  const ordered = els.map((el, i) => ({ el, i })).sort((a, b) => rank(a.el) - rank(b.el) || a.i - b.i)
+  const labels = ordered.map(({ el }) => el.querySelector<HTMLElement>('.tm-pin__label')).filter((l): l is HTMLElement => !!l)
+  for (const l of labels) l.classList.remove('tm-pin__label--off')
+  const rects = labels.map((l) => l.getBoundingClientRect())
+  // The picked area's name pill (area-hover.ts) has the spot first.
+  const kept: DOMRect[] = [...(container?.querySelectorAll<HTMLElement>('.tm-area-pill') ?? [])].map((el) => el.getBoundingClientRect()).filter((r) => r.width > 0)
+  labels.forEach((l, i) => {
+    const r = rects[i]
+    if (r.width === 0) return
+    const hit = kept.some((k) => r.left < k.right + 2 && r.right > k.left - 2 && r.top < k.bottom + 2 && r.bottom > k.top - 2)
+    if (hit) l.classList.add('tm-pin__label--off')
+    else kept.push(r)
+  })
+}
+
 /** Bounds around every pin and station circle, or null when there is nothing to frame. */
 function focusBounds(pins: VisiblePin[], stations: Station[], centres: [number, number][], outlines: Outline[]): LngLatBoundsLike | null {
   const pts: [number, number][] = [...centres]
   for (const o of outlines) for (const poly of o.boundary.coordinates) for (const [lon, lat] of poly[0]) pts.push([lon, lat])
   for (const { pin } of pins) pts.push([pin.location.lon, pin.location.lat])
   for (const st of stations) {
+    // With places to show, frame them and the station; the whole walk circle
+    // only when there is nothing inside it (fitting the circle on a phone left
+    // four places as one cluster of dots).
+    if (pins.length > 0) {
+      pts.push([st.lon, st.lat])
+      continue
+    }
     const dLat = WALK_RADIUS_M / 111_320
     const dLon = WALK_RADIUS_M / (111_320 * Math.cos((st.lat * Math.PI) / 180))
     pts.push([st.lon - dLon, st.lat - dLat], [st.lon + dLon, st.lat + dLat])
@@ -166,6 +197,14 @@ export function ExplorerMap(props: ExplorerMapProps) {
         dotsOnly()
         map.on('zoomend', dotsOnly)
         map.on('resize', dotsOnly)
+        let frame = 0
+        const declutter = () => {
+          cancelAnimationFrame(frame)
+          frame = requestAnimationFrame(() => declutterLabels(markersRef.current, map!.getContainer()))
+        }
+        map.on('move', declutter)
+        map.on('moveend', declutter)
+        map.on('resize', declutter)
         setMapReady((n) => n + 1)
       })
     })()
@@ -207,6 +246,7 @@ export function ExplorerMap(props: ExplorerMapProps) {
           if (stacked) el.classList.add('tm-pin--stack')
           markersRef.current.push(new maplibregl.Marker({ element: el, anchor: stacked ? 'top' : 'left' }).setLngLat(a.camera.center).addTo(map))
         }
+        declutterLabels(markersRef.current, map.getContainer())
         return
       }
       for (const { pin, area } of pins) {
@@ -216,8 +256,10 @@ export function ExplorerMap(props: ExplorerMapProps) {
       }
       for (const st of stations) {
         const el = pinElement(st.code ? `${st.code} ${t(st.name, locale)}` : t(st.name, locale), '#c8553d', true, false)
+        el.classList.add('tm-pin--station')
         markersRef.current.push(new maplibregl.Marker({ element: el, anchor: 'left' }).setLngLat([st.lon, st.lat]).addTo(map))
       }
+      declutterLabels(markersRef.current, map.getContainer())
     })()
     return () => {
       cancelled = true
@@ -245,7 +287,7 @@ export function ExplorerMap(props: ExplorerMapProps) {
     // Zoom is worked out flat, then the tilt is applied on top: fitting a
     // pitched view directly zooms out far enough to show the whole tilted
     // trapezoid, which left a ticked area as a small patch in the middle.
-    const cam = map.cameraForBounds(bounds, { padding: 28, maxZoom: 16, bearing: threeD ? -12 : 0 })
+    const cam = map.cameraForBounds(bounds, { padding: stations.length > 0 && pins.length > 0 ? 70 : 28, maxZoom: 16, bearing: threeD ? -12 : 0 })
     if (!cam) return
     map.flyTo({ center: cam.center, zoom: (cam.zoom ?? cityCamera.zoom) + (threeD ? 0.3 : 0), pitch: threeD ? 50 : 0, bearing: threeD ? -12 : 0, duration: 1400, essential: true })
   }, [pins, stations, centres, outlines, areas, threeD, cityCamera, mapReady])
