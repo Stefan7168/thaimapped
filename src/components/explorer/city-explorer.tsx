@@ -13,6 +13,7 @@ import { activeFilterCount, EMPTY_FILTERS, selectedPlaceCentres, selectedStation
 import { FilterPanel } from './filter-panel'
 import { TopSearch, type SearchHit } from './top-search'
 import { SiteFooter } from './site-footer'
+import { KindBar } from './kind-bar'
 
 const ExplorerMap = dynamic(() => import('@/components/map/explorer-map').then((m) => m.ExplorerMap), {
   ssr: false,
@@ -38,8 +39,11 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
   const pins = useMemo(() => visiblePins(bundle, filters), [bundle, filters])
   const stations = useMemo(() => selectedStations(bundle, filters), [bundle, filters])
   const centres = useMemo(() => selectedPlaceCentres(bundle, filters), [bundle, filters])
-  // Whole areas that are ticked draw their district border on the map.
-  const outlines = useMemo(() => areas.filter((a) => a.boundary && filters.areas.includes(a.id)), [areas, filters.areas])
+  // A ticked area, or any of its sub-areas, draws the area's district border on the map.
+  const outlines = useMemo(
+    () => areas.filter((a) => a.boundary && (filters.areas.includes(a.id) || filters.subareas.some((key) => key.startsWith(`${a.id}/`)))),
+    [areas, filters.areas, filters.subareas],
+  )
   const stationById = useMemo(() => new Map(bundle.stations.map((st) => [st.id, st])), [bundle])
   const count = activeFilterCount(filters)
 
@@ -116,6 +120,7 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
         </button>
         <Link href={`/${locale}/${city.id}/trip`} className="hidden shrink-0 rounded-full border border-line bg-white px-3 py-2 text-sm font-medium md:inline-block">{s.nav.trips}</Link>
       </header>
+      <KindBar locale={locale} filters={filters} onChange={update} />
 
       <div className="relative flex min-h-0 flex-1">
         {/* Wide screens: the guide, or the places found, at the left. */}

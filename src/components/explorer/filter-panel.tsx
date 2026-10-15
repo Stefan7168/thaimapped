@@ -1,9 +1,9 @@
 'use client'
 
 import type { ReactNode } from 'react'
-import type { CityBundle, Locale, PinKind } from '@/lib/content/types'
+import type { CityBundle, Locale } from '@/lib/content/types'
 import { strings } from '@/lib/i18n/strings'
-import { activeFilterCount, EMPTY_FILTERS, PIN_KINDS, TIERS, type FilterState, type Tier } from '@/lib/explorer/filters'
+import { activeFilterCount, EMPTY_FILTERS, TIERS, type FilterState, type Tier } from '@/lib/explorer/filters'
 import { TransitFilter } from './transit-filter'
 import { AreaFilter } from './area-filter'
 
@@ -18,7 +18,7 @@ function toggle<T>(list: T[], value: T): T[] {
   return list.includes(value) ? list.filter((x) => x !== value) : [...list, value]
 }
 
-/** The right-hand filter panel (a bottom sheet on phones), after Glaibaan's. */
+/** The right-hand filter panel (a bottom sheet on phones), after Glaibaan's. The kind chips live in KindBar under the header. */
 export function FilterPanel({ locale, bundle, filters, onChange }: FilterPanelProps) {
   const s = strings(locale)
   const count = activeFilterCount(filters)
@@ -51,19 +51,6 @@ export function FilterPanel({ locale, bundle, filters, onChange }: FilterPanelPr
           lines={filters.lines}
           onChange={({ stations, lines }) => onChange({ ...filters, stations, lines })}
         />
-      </Section>
-
-      <Section label={s.filters.kinds}>
-        <div className="flex flex-wrap gap-1.5">
-          {PIN_KINDS.map((k: PinKind) => {
-            const on = filters.kinds.includes(k)
-            return (
-              <button key={k} type="button" aria-pressed={on} onClick={() => onChange({ ...filters, kinds: toggle(filters.kinds, k) })} className={`min-h-9 rounded-full border px-3 text-sm ${on ? 'border-ink bg-white font-medium' : 'border-line bg-white/60'}`}>
-                {s.pin[k]}
-              </button>
-            )
-          })}
-        </div>
       </Section>
 
       <Section label={s.filters.tiers}>
