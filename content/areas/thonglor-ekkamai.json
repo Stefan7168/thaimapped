@@ -155,12 +155,12 @@
         "en": "The shrine of Bangkok's famous ghost story, by the canal at On Nut."
       },
       "location": {
-        "lon": 100.599,
-        "lat": 13.7152
+        "lon": 100.6071,
+        "lat": 13.7149
       },
       "walk": {
         "station": "bts-sukhumvit-e9",
-        "minutes": 15
+        "minutes": 17
       },
       "when": {
         "times": [

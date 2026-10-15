@@ -114,12 +114,12 @@
         "en": "The long lakeside park beside the market, a shady walk before the stalls."
       },
       "location": {
-        "lon": 100.553,
-        "lat": 13.803
+        "lon": 100.556,
+        "lat": 13.8085
       },
       "walk": {
         "station": "mrt-blue-bl13",
-        "minutes": 1
+        "minutes": 10
       },
       "when": {
         "times": [
@@ -140,12 +140,12 @@
         "en": "Isan food done well: som tam, grilled meats, a local favourite on the Ari sois."
       },
       "location": {
-        "lon": 100.5435,
-        "lat": 13.78
+        "lon": 100.5438,
+        "lat": 13.7817
       },
       "walk": {
         "station": "bts-sukhumvit-n5",
-        "minutes": 2
+        "minutes": 4
       },
       "when": {
         "times": [
