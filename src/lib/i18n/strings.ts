@@ -136,6 +136,8 @@ const en = {
     showing: (n: number) => (n === 1 ? '1 place on the map' : `${n} places on the map`),
     back: 'Back to the areas',
     hoverMeta: (places: number, hotels: number) => `${places === 1 ? '1 place' : `${places} places`} · ${hotels === 1 ? '1 hotel' : `${hotels} hotels`}, budget to luxury`,
+    tabs: { places: 'Places', trips: 'Trip planner', weekend: 'Weekend planner' } as Record<string, string>,
+    weekendNeedsArea: 'Pick one area to plan a weekend there.',
     weekend: (name: string) => `Your weekend in ${name}`,
     priceFrom: (price: string) => `from about ${price} a night`,
     priceEstimate: 'typical for its class, not checked',

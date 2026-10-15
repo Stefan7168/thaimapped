@@ -8,6 +8,7 @@ import { loadMaplibreGl } from '@/lib/map/load-maplibre'
 import { addAreaHover } from '@/lib/map/area-hover'
 import { addBuilding3DLayer } from '@/lib/map/buildings'
 import { isGestureActive } from '@/lib/map/gesture'
+import { fitPopupSoon, overlayInsets } from '@/lib/map/fit-popup'
 import { t } from '@/lib/i18n/locales'
 import { PAPER_STYLE_URL } from './explorer-map'
 import { STOP_COLORS } from './trip-map'
@@ -191,6 +192,7 @@ export function StageMap({ locale, camera, threeD, areas, route, routes = [], fo
     previous?.remove()
     if (!card) return
     let cancelled = false
+    let stopFit: (() => void) | null = null
     ;(async () => {
       const maplibregl = await loadMaplibreGl()
       if (cancelled) return
@@ -201,10 +203,13 @@ export function StageMap({ locale, camera, threeD, areas, route, routes = [], fo
         .setDOMContent(cardElement(locale, cityId, pin, area, station, [], () => closeRef.current?.(), () => {}))
         .addTo(map)
       popupRef.current = popup
-      if (!isGestureActive(map)) map.easeTo({ center: [pin.location.lon, pin.location.lat], offset: [0, 140], zoom: Math.max(map.getZoom(), 14.5), duration: 700, essential: true })
+      // Zoom in on the place, then measure the card and pan by what sticks out of the map.
+      if (!isGestureActive(map) && map.getZoom() < 14.5) map.easeTo({ center: [pin.location.lon, pin.location.lat], zoom: 14.5, duration: 700, essential: true })
+      stopFit = fitPopupSoon(map, popup, () => overlayInsets(map))
     })()
     return () => {
       cancelled = true
+      stopFit?.()
     }
   }, [card, stationById, locale, cityId, mapReady])
 

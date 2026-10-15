@@ -7,6 +7,7 @@ import { loadMaplibreGl } from '@/lib/map/load-maplibre'
 import { addAreaHover } from '@/lib/map/area-hover'
 import { addBuilding3DLayer, BUILDING_3D_LAYER_ID } from '@/lib/map/buildings'
 import { isGestureActive } from '@/lib/map/gesture'
+import { fitPopupSoon, overlayInsets } from '@/lib/map/fit-popup'
 import { t } from '@/lib/i18n/locales'
 import { cardElement } from './pin-card'
 import { WALK_RADIUS_M, nearbyPins, type VisiblePin } from '@/lib/explorer/filters'
@@ -257,6 +258,7 @@ export function ExplorerMap(props: ExplorerMapProps) {
       features: nearby.map((n) => ({ type: 'Feature', properties: {}, geometry: { type: 'LineString', coordinates: [[hit.pin.location.lon, hit.pin.location.lat], [n.pin.location.lon, n.pin.location.lat]] } })),
     })
     let cancelled = false
+    let stopFit: (() => void) | null = null
     ;(async () => {
       const maplibregl = await loadMaplibreGl()
       if (cancelled) return
@@ -272,20 +274,15 @@ export function ExplorerMap(props: ExplorerMapProps) {
         if (popupRef.current === popup) callbacks.current.onClosePin()
       })
       popupRef.current = popup
-      // Bring the pin to where the card has room: on a phone always (the
-      // places list covers the bottom of the map), on a wide screen only when
-      // the pin sits near an edge. Never during a gesture.
-      if (!isGestureActive(map)) {
-        const narrow = map.getContainer().clientWidth < 768
-        const pt = map.project([pin.location.lon, pin.location.lat])
-        const { clientWidth: w, clientHeight: h } = map.getContainer()
-        const nearEdge = pt.x < 170 || pt.x > w - 170 || pt.y < 260 || pt.y > h - 40
-        // Phone: the pin lands about 190 px below the middle, which leaves ~400 px above it for a card with a photo.
-        if (narrow || nearEdge) map.easeTo({ center: [pin.location.lon, pin.location.lat], offset: [0, narrow ? 190 : 120], duration: 500, essential: true })
-      }
+      // Keep the whole card on screen: measure the rendered card and pan by
+      // exactly what sticks out, allowing for the controls and, on a phone, the
+      // list handle or sheet over the bottom of the map. Measured, not guessed,
+      // so it holds for any card height, map size and pin position.
+      stopFit = fitPopupSoon(map, popup, () => overlayInsets(map))
     })()
     return () => {
       cancelled = true
+      stopFit?.()
     }
   }, [activePinId, pins, allPins, stationById, locale, cityId, mapReady])
 

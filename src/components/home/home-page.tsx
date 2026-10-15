@@ -78,10 +78,12 @@ export function HomePage({ locale, bundle, routes }: { locale: Locale; bundle: C
   }, [])
 
   // Every highlight of the area in view (or of the tapped card's area) is pinned at once.
+  // Keyed on the area id, not the card object, so opening a card does not re-frame the map.
+  const focusAreaId = cardPin?.area.id ?? activeArea
   const focusArea = useMemo(() => {
-    const area = cardPin?.area ?? areas.find((a) => a.id === activeArea)
+    const area = areas.find((a) => a.id === focusAreaId)
     return area ? { area, pins: area.pins.filter((p) => p.kind !== 'hotel').slice(0, 5) } : null
-  }, [areas, activeArea, cardPin])
+  }, [areas, focusAreaId])
 
   const setRow = useCallback((id: string) => (el: HTMLElement | null) => {
     if (el) rowsRef.current.set(id, el)
@@ -267,7 +269,7 @@ export function HomePage({ locale, bundle, routes }: { locale: Locale; bundle: C
 
         <div className="tm-stage__map" data-ui>
           <StageMap locale={locale} camera={camera} threeD={threeD} areas={areas} route={null} focus={focusArea} card={cardPin} onCloseCard={() => setCardPin(null)} cityId={city.id} stations={stations} onSelectArea={(id) => { setActiveArea(id); document.querySelector(`[data-area="${id}"]`)?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }} />
-          <div className="tm-stage__bar">
+          <div className="tm-stage__bar" data-map-overlay="bottom">
             <span>{s.home.facts(areas.length, stations.length, routes.length)}</span>
             <span className="tm-stage__showing">{s.home.showing(active ? t(active.name, locale) : cityName)}</span>
           </div>

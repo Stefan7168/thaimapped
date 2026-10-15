@@ -65,6 +65,8 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
   const [sheetOpen, setSheetOpen] = useState(false)
   // Phones: the place list starts as a one-line handle so the map stays visible.
   const [listOpen, setListOpen] = useState(false)
+  // The list column's tabs once something is picked: the places, the trips out of town, the weekend plan.
+  const [tab, setTab] = useState<'places' | 'trips' | 'weekend'>('places')
 
   const pins = useMemo(() => visiblePins(bundle, filters), [bundle, filters])
   const stations = useMemo(() => selectedStations(bundle, filters), [bundle, filters])
@@ -107,7 +109,9 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
   // One area picked, nothing narrower: the weekend plan sits above the list.
   const planArea = filters.areas.length === 1 && filters.subareas.length === 0 && filters.stations.length === 0 && filters.lines.length === 0 ? areas.find((a) => a.id === filters.areas[0]) : undefined
   const plan = useMemo(() => (planArea ? weekendPlan(planArea, filters.price) : null), [planArea, filters.price])
-  const weekend = planArea && plan && (
+  const weekend = !(planArea && plan) ? (
+    <p className="px-1 py-3 text-sm text-ink-2">{s.guide.weekendNeedsArea}</p>
+  ) : (
     <section className="tm-weekend" aria-labelledby="tm-weekend-heading" style={{ ['--pin' as string]: `var(--${planArea.color})` }}>
       <h2 id="tm-weekend-heading" className="tm-weekend__heading">{s.guide.weekend(t(planArea.name, locale))}</h2>
       <p className="tm-weekend__lead">{s.guide.weekendLead}</p>
@@ -156,7 +160,7 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
         const active = activePin?.id === pin.id
         return (
           <li key={pin.id}>
-            <button type="button" onClick={() => setActivePin(pin)} className={`w-full rounded-lg border px-3 py-2 text-left text-sm ${active ? 'border-ink bg-white' : 'border-line bg-white/70'}`}>
+            <button type="button" onClick={() => { setActivePin(pin); setListOpen(false) }} className={`w-full rounded-lg border px-3 py-2 text-left text-sm ${active ? 'border-ink bg-white' : 'border-line bg-white/70'}`}>
               <span className="flex items-center gap-2">
                 <span aria-hidden="true" className="size-2.5 rounded-full" style={{ background: `var(--${area.color})` }} />
                 <span className="text-[11px] font-semibold uppercase text-ink-2">{s.pin[pin.kind]}</span>
@@ -186,6 +190,24 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
     </ul>
   )
 
+  const tabs = (
+    <div className="tm-tabs" role="tablist">
+      {(['places', 'trips', 'weekend'] as const).map((k) => (
+        <button key={k} type="button" role="tab" aria-selected={tab === k} className="tm-tabs__tab" onClick={() => setTab(k)}>{s.guide.tabs[k]}</button>
+      ))}
+    </div>
+  )
+  const column = tab === 'weekend' ? weekend : tab === 'trips' ? (
+    <TripList locale={locale} cityId={city.id} routes={routes} />
+  ) : (
+    <>
+      <p className="px-1 pb-2 text-xs font-semibold uppercase tracking-wider text-ink-2">{s.guide.showing(pins.length)}</p>
+      {pins.length === 0 && <p className="px-1 pb-1 text-sm text-ink-2">{s.filters.noResults}</p>}
+      {placeList}
+    </>
+  )
+
+
   return (
     <div className="flex h-dvh flex-col">
       {/* Phones: brand and filter button on one line, the search on its own line under them. */}
@@ -199,7 +221,7 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
         <button
           type="button"
           onClick={() => setSheetOpen(true)}
-          className="ml-auto flex shrink-0 items-center gap-1.5 rounded-full border border-line bg-white px-3 py-2 text-sm font-medium md:hidden"
+          className="ml-auto flex shrink-0 items-center gap-1.5 rounded-full border border-line bg-white px-3 py-2 text-sm font-medium lg:hidden"
         >
           <SlidersHorizontal aria-hidden="true" className="size-4" />
           {s.filters.open}
@@ -207,7 +229,7 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
         </button>
         <Link href={`/${locale}/${city.id}/trip`} className="hidden shrink-0 rounded-full border border-line bg-white px-3 py-2 text-sm font-medium md:inline-block">{s.nav.trips}</Link>
       </header>
-      <KindBar locale={locale} filters={filters} onChange={update} />
+      <KindBar locale={locale} bundle={bundle} filters={filters} onChange={update} />
 
       <div className="relative flex min-h-0 flex-1">
         {/* Wide screens: the guide, or the places found, at the left. */}
@@ -220,10 +242,8 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
                 <ArrowLeft aria-hidden="true" className="size-4" />
                 {s.guide.back}
               </button>
-              {weekend}
-              <p className="px-1 pb-2 text-xs font-semibold uppercase tracking-wider text-ink-2">{s.guide.showing(pins.length)}</p>
-              {pins.length === 0 && <p className="px-1 pb-1 text-sm text-ink-2">{s.filters.noResults}</p>}
-              {placeList}
+              {tabs}
+              {column}
             </div>
           )}
         </aside>
@@ -255,43 +275,42 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
             />
           )}
           {threeD !== null && (
-            <button type="button" onClick={() => setOverride3D(!threeD)} className="absolute left-3 top-3 rounded-md border border-line bg-paper px-2.5 py-1 text-xs font-semibold shadow-sm">
+            <button type="button" data-map-overlay="top" onClick={() => setOverride3D(!threeD)} className="absolute left-3 top-3 rounded-md border border-line bg-paper px-2.5 py-1 text-xs font-semibold shadow-sm">
               {threeD ? s.city.flat : s.city.tilt}
             </button>
           )}
 
           {/* Phones: the places found float over the map. */}
           {count > 0 && (
-            <div className={`absolute inset-x-3 bottom-3 flex flex-col rounded-xl border border-line bg-paper/95 shadow-lg md:hidden ${listOpen ? 'max-h-[45%]' : ''}`}>
+            <div data-map-overlay="bottom" className={`absolute inset-x-3 bottom-3 flex flex-col rounded-xl border border-line bg-paper/95 shadow-lg md:hidden ${listOpen ? 'max-h-[45%]' : ''}`}>
               <button type="button" aria-expanded={listOpen} onClick={() => setListOpen((o) => !o)} className="flex min-h-11 items-center justify-between px-3 text-sm font-semibold">
                 <span>{s.filters.results(pins.length)}</span>
                 <span className="text-xs font-medium text-ink-2">{listOpen ? s.filters.hideList : s.filters.showList}</span>
               </button>
               {listOpen && (
                 <div className="overflow-y-auto px-2 pb-2">
-                  {weekend}
-                  {pins.length === 0 && <p className="px-1 pb-1 text-sm text-ink-2">{s.filters.noResults}</p>}
-                  {placeList}
+                  {tabs}
+                  {column}
                 </div>
               )}
             </div>
           )}
           {count === 0 && (
-            <p className="pointer-events-none absolute inset-x-3 bottom-3 rounded-xl border border-line bg-paper/95 px-3 py-2 text-center text-sm text-ink-2 shadow md:hidden">
+            <p data-map-overlay="bottom" className="pointer-events-none absolute inset-x-3 bottom-3 rounded-xl border border-line bg-paper/95 px-3 py-2 text-center text-sm text-ink-2 shadow md:hidden">
               {s.filters.emptyHint}
             </p>
           )}
         </div>
 
         {/* Wide screens: the panel sits on the right. */}
-        <aside className="hidden w-[22rem] shrink-0 overflow-y-auto border-l border-line bg-paper md:block">
+        <aside className="hidden w-[22rem] shrink-0 overflow-y-auto border-l border-line bg-paper lg:block">
           {panel}
           <SiteFooter locale={locale} cityId={city.id} compact />
         </aside>
 
         {/* Phones: the same panel as a bottom sheet. */}
         {sheetOpen && (
-          <div className="absolute inset-0 z-40 md:hidden">
+          <div className="absolute inset-0 z-40 lg:hidden">
             <button type="button" aria-label={s.filters.close} onClick={() => setSheetOpen(false)} className="absolute inset-0 bg-black/40" />
             <div role="dialog" aria-modal="true" aria-label={s.filters.title} className="absolute inset-x-0 bottom-0 flex h-[74dvh] flex-col rounded-t-2xl border-t border-line bg-paper shadow-2xl">
               <div className="flex items-center justify-between px-3 pt-2">
@@ -331,17 +350,7 @@ function AreaGuide({ locale, bundle, routes, onPickArea, onPickSubarea, onPickSt
       {routes.length > 0 && (
         <>
           <h2 className="mt-5 text-xs font-semibold uppercase tracking-wider text-ink-2">{s.guide.tripsHeading}</h2>
-          <ul className="mt-2 space-y-1">
-            {routes.map((r) => (
-              <li key={r.id}>
-                <Link href={`/${locale}/${city.id}/trip/${r.id}`} className="flex items-baseline justify-between gap-2 rounded-lg px-2 py-1.5 text-sm hover:bg-paper-2">
-                  <span className="font-medium">{t(r.name, locale)}</span>
-                  <span className="shrink-0 text-xs text-ink-2">{r.duration === 'multi-day' ? s.trip.days(r.days) : s.trip.duration[r.duration]}</span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-          <Link href={`/${locale}/${city.id}/trip`} className="mt-2 inline-block px-2 text-sm underline underline-offset-2">{s.guide.tripsLink}</Link>
+          <TripList locale={locale} cityId={city.id} routes={routes} />
         </>
       )}
     </div>
@@ -350,4 +359,24 @@ function AreaGuide({ locale, bundle, routes, onPickArea, onPickSubarea, onPickSt
 
 function noopSubscribe() {
   return () => {}
+}
+
+/** The trips out of town, one row each, with the link to the trips page. */
+function TripList({ locale, cityId, routes }: { locale: Locale; cityId: string; routes: TripRoute[] }) {
+  const s = strings(locale)
+  return (
+    <>
+      <ul className="mt-2 space-y-1">
+        {routes.map((r) => (
+          <li key={r.id}>
+            <Link href={`/${locale}/${cityId}/trip/${r.id}`} className="flex items-baseline justify-between gap-2 rounded-lg px-2 py-1.5 text-sm hover:bg-paper-2">
+              <span className="font-medium">{t(r.name, locale)}</span>
+              <span className="shrink-0 text-xs text-ink-2">{r.duration === 'multi-day' ? s.trip.days(r.days) : s.trip.duration[r.duration]}</span>
+            </Link>
+          </li>
+        ))}
+      </ul>
+      <Link href={`/${locale}/${cityId}/trip`} className="mt-2 inline-block px-2 text-sm underline underline-offset-2">{s.guide.tripsLink}</Link>
+    </>
+  )
 }
