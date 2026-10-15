@@ -69,7 +69,7 @@
     {
       "src": "/photos/areas/siam/siam-paragon.jpg",
       "alt": "The glass entrance of Siam Paragon with its fountains",
-      "credit": "\"Siam Paragon 06.23\" by This Photo was taken by Supanut Arunoprayote . Feel free to…",
+      "credit": "\"Siam Paragon 06.23\" by Supanut Arunoprayote",
       "licence": "CC BY 4.0",
       "source": "https://commons.wikimedia.org/wiki/File:Siam_Paragon_06.23.jpg"
     },
@@ -145,7 +145,30 @@
         "from": 1800,
         "currency": "THB",
         "basis": "tier-estimate"
-      }
+      },
+      "photo": {
+        "src": "/photos/pins/siam/siam-hotel-novotel-siam-square.jpg",
+        "alt": "The Novotel Bangkok on Siam Square hotel building",
+        "credit": "\"Novotel Bangkok On Siam Square 01\" by Abasaa",
+        "licence": "public domain",
+        "source": "https://commons.wikimedia.org/wiki/File:Novotel_Bangkok_On_Siam_Square_01.JPG"
+      },
+      "photos": [
+        {
+          "src": "/photos/pins/siam/siam-hotel-novotel-siam-square.jpg",
+          "alt": "The Novotel Bangkok on Siam Square hotel building",
+          "credit": "\"Novotel Bangkok On Siam Square 01\" by Abasaa",
+          "licence": "public domain",
+          "source": "https://commons.wikimedia.org/wiki/File:Novotel_Bangkok_On_Siam_Square_01.JPG"
+        },
+        {
+          "src": "/photos/pins/siam/siam-hotel-novotel-siam-square-2.jpg",
+          "alt": "The entrance of the Novotel Bangkok on Siam Square",
+          "credit": "\"Novotel Bangkok on Siam Square\" by Syced",
+          "licence": "CC0",
+          "source": "https://commons.wikimedia.org/wiki/File:Novotel_Bangkok_on_Siam_Square.jpg"
+        }
+      ]
     },
     {
       "id": "siam-hotel-lub-d-siam",
@@ -208,7 +231,30 @@
         "credit": "\"Baiyoke Tower (20250319120011)\" by MikSed",
         "licence": "CC BY-SA 4.0",
         "source": "https://commons.wikimedia.org/wiki/File:Baiyoke_Tower_(20250319120011).jpg"
-      }
+      },
+      "photos": [
+        {
+          "src": "/photos/pins/siam/baiyoke-sky-tower.jpg",
+          "alt": "Baiyoke Tower II rising over Pratunam, seen from the street",
+          "credit": "\"Baiyoke Tower (20250319120011)\" by MikSed",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Baiyoke_Tower_(20250319120011).jpg"
+        },
+        {
+          "src": "/photos/pins/siam/baiyoke-sky-tower-2.jpg",
+          "alt": "Central Bangkok seen from the top of Baiyoke Sky Tower",
+          "credit": "\"Bangkok Baiyoke 06\" by ErwinMeier",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Bangkok_Baiyoke_06.jpg"
+        },
+        {
+          "src": "/photos/pins/siam/baiyoke-sky-tower-3.jpg",
+          "alt": "Baiyoke Sky Tower rising behind Ratchaprarop Road",
+          "credit": "\"Baiyoke Sky Hotel, Ratchaprarop Road, Ratchathewi, Bangkok (6906983176)\" by David McKelvey from Brisbane, Australia",
+          "licence": "CC BY 2.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Baiyoke_Sky_Hotel,_Ratchaprarop_Road,_Ratchathewi,_Bangkok_(6906983176).jpg"
+        }
+      ]
     },
     {
       "id": "siam-paragon",
@@ -238,10 +284,33 @@
       "photo": {
         "src": "/photos/pins/siam/siam-paragon.jpg",
         "alt": "The glass entrance of Siam Paragon with its fountains",
-        "credit": "\"Siam Paragon 06.23\" by This Photo was taken by Supanut Arunoprayote . Feel free to…",
+        "credit": "\"Siam Paragon 06.23\" by Supanut Arunoprayote",
         "licence": "CC BY 4.0",
         "source": "https://commons.wikimedia.org/wiki/File:Siam_Paragon_06.23.jpg"
-      }
+      },
+      "photos": [
+        {
+          "src": "/photos/pins/siam/siam-paragon.jpg",
+          "alt": "The glass entrance of Siam Paragon with its fountains",
+          "credit": "\"Siam Paragon 06.23\" by Supanut Arunoprayote",
+          "licence": "CC BY 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Siam_Paragon_06.23.jpg"
+        },
+        {
+          "src": "/photos/pins/siam/siam-paragon-2.jpg",
+          "alt": "The glass front of Siam Paragon with shoppers on the forecourt",
+          "credit": "\"Siam Paragon Bangkok 2\" by Christian Henrich",
+          "licence": "CC BY-SA 2.5",
+          "source": "https://commons.wikimedia.org/wiki/File:Siam_Paragon_Bangkok_2.jpg"
+        },
+        {
+          "src": "/photos/pins/siam/siam-paragon-3.jpg",
+          "alt": "The cinema floor of Siam Paragon with escalators and a chandelier",
+          "credit": "\"Siam Paragon Level 5 Paragon Cinema 2011\" by Wpcpey",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Siam_Paragon_Level_5_Paragon_Cinema_2011.jpg"
+        }
+      ]
     },
     {
       "id": "mbk-center",
@@ -271,10 +340,33 @@
       "photo": {
         "src": "/photos/pins/siam/mbk-center.jpg",
         "alt": "MBK Center's new facade on Rama I Road, from the skywalk",
-        "credit": "\"MBK Center (New facade)\" by This Photo was taken by Supanut Arunoprayote . Feel free to…",
+        "credit": "\"MBK Center (New facade)\" by Supanut Arunoprayote",
         "licence": "CC BY 4.0",
         "source": "https://commons.wikimedia.org/wiki/File:MBK_Center_(New_facade).jpg"
-      }
+      },
+      "photos": [
+        {
+          "src": "/photos/pins/siam/mbk-center.jpg",
+          "alt": "MBK Center's new facade on Rama I Road, from the skywalk",
+          "credit": "\"MBK Center (New facade)\" by Supanut Arunoprayote",
+          "licence": "CC BY 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:MBK_Center_(New_facade).jpg"
+        },
+        {
+          "src": "/photos/pins/siam/mbk-center-2.jpg",
+          "alt": "MBK Center and its tower seen from the Pathum Wan junction",
+          "credit": "\"MBK CENTER,Pathumwan,Bangkok (12)\" by กสิณธร ราชโอรส",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:MBK_CENTER,Pathumwan,Bangkok_(12).jpg"
+        },
+        {
+          "src": "/photos/pins/siam/mbk-center-3.jpg",
+          "alt": "The white facade of MBK Center with the skywalk in front",
+          "credit": "\"MBK CENTER,Pathumwan,Bangkok (2)\" by กสิณธร ราชโอรส",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:MBK_CENTER,Pathumwan,Bangkok_(2).jpg"
+        }
+      ]
     },
     {
       "id": "central-world",
@@ -304,10 +396,33 @@
       "photo": {
         "src": "/photos/pins/siam/central-world.jpg",
         "alt": "CentralWorld's long glass front on Ratchaprasong",
-        "credit": "\"Central World (I)\" by This Photo was taken by Supanut Arunoprayote . Feel free to…",
+        "credit": "\"Central World (I)\" by Supanut Arunoprayote",
         "licence": "CC BY 4.0",
         "source": "https://commons.wikimedia.org/wiki/File:Central_World_(I).jpg"
-      }
+      },
+      "photos": [
+        {
+          "src": "/photos/pins/siam/central-world.jpg",
+          "alt": "CentralWorld's long glass front on Ratchaprasong",
+          "credit": "\"Central World (I)\" by Supanut Arunoprayote",
+          "licence": "CC BY 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Central_World_(I).jpg"
+        },
+        {
+          "src": "/photos/pins/siam/central-world-2.jpg",
+          "alt": "The glass front of CentralWorld from Ratchadamri Road",
+          "credit": "\"CentralWorld exterior\" by Christophe95",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:CentralWorld_exterior.jpg"
+        },
+        {
+          "src": "/photos/pins/siam/central-world-3.jpg",
+          "alt": "The CentralWorld forecourt lit up at night",
+          "credit": "\"CentralWorld Bangkok Thailand\" by Bcow",
+          "licence": "CC BY-SA 2.0",
+          "source": "https://commons.wikimedia.org/wiki/File:CentralWorld_Bangkok_Thailand.jpg"
+        }
+      ]
     },
     {
       "id": "erawan-shrine",
@@ -341,7 +456,37 @@
         "credit": "\"Erawan Shrine from pedestrian walkway\" by BrokenSphere",
         "licence": "CC BY-SA 3.0",
         "source": "https://commons.wikimedia.org/wiki/File:Erawan_Shrine_from_pedestrian_walkway.JPG"
-      }
+      },
+      "photos": [
+        {
+          "src": "/photos/pins/siam/erawan-shrine.jpg",
+          "alt": "The Erawan Shrine at the Ratchaprasong junction, under the Skytrain",
+          "credit": "\"Erawan Shrine from pedestrian walkway\" by BrokenSphere",
+          "licence": "CC BY-SA 3.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Erawan_Shrine_from_pedestrian_walkway.JPG"
+        },
+        {
+          "src": "/photos/pins/siam/erawan-shrine-2.jpg",
+          "alt": "Dancers in traditional dress performing an offering at the Erawan Shrine",
+          "credit": "\"Dance offering at Erawan Shrine, Bangkok (32844253793)\" by Ninara from Helsinki, Finland",
+          "licence": "CC BY 2.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Dance_offering_at_Erawan_Shrine,_Bangkok_(32844253793).jpg"
+        },
+        {
+          "src": "/photos/pins/siam/erawan-shrine-3.jpg",
+          "alt": "The Erawan Shrine lit up at night, heaped with marigold garlands",
+          "credit": "\"Erawan Shrine at Night\" by Zhou Guanhuai",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Erawan_Shrine_at_Night.jpg"
+        },
+        {
+          "src": "/photos/pins/siam/erawan-shrine-4.jpg",
+          "alt": "Visitors at the Erawan Shrine on the Ratchaprasong corner",
+          "credit": "\"Erawan Shrine Bangkok 2021 May\" by Chainwit.",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Erawan_Shrine_Bangkok_2021_May.jpg"
+        }
+      ]
     },
     {
       "id": "jim-thompson-house",
@@ -374,7 +519,37 @@
         "credit": "\"Main House of Jim Thompson photo Don Ramey Logan\" by Don Ramey Logan",
         "licence": "CC BY-SA 3.0",
         "source": "https://commons.wikimedia.org/wiki/File:Main_House_of_Jim_Thompson_photo_Don_Ramey_Logan.jpg"
-      }
+      },
+      "photos": [
+        {
+          "src": "/photos/pins/siam/jim-thompson-house.jpg",
+          "alt": "The red teak main house of the Jim Thompson House in its garden",
+          "credit": "\"Main House of Jim Thompson photo Don Ramey Logan\" by Don Ramey Logan",
+          "licence": "CC BY-SA 3.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Main_House_of_Jim_Thompson_photo_Don_Ramey_Logan.jpg"
+        },
+        {
+          "src": "/photos/pins/siam/jim-thompson-house-2.jpg",
+          "alt": "A red teak house in the garden of the Jim Thompson House",
+          "credit": "\"Service Home Jim Thompson House photo Don Ramey Logan\" by Don Ramey Logan",
+          "licence": "CC BY-SA 3.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Service_Home_Jim_Thompson_House_photo_Don_Ramey_Logan.jpg"
+        },
+        {
+          "src": "/photos/pins/siam/jim-thompson-house-3.jpg",
+          "alt": "The courtyard of the Jim Thompson House among tall tropical trees",
+          "credit": "\"Jim Thompson House courtyard 1\" by BrokenSphere",
+          "licence": "CC BY-SA 3.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Jim_Thompson_House_courtyard_1.JPG"
+        },
+        {
+          "src": "/photos/pins/siam/jim-thompson-house-4.jpg",
+          "alt": "One of the teak buildings half hidden in the Jim Thompson House garden",
+          "credit": "\"Building at Jim Thompson House photo Don Ramey Logan\" by Don Ramey Logan",
+          "licence": "CC BY-SA 3.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Building_at_Jim_Thompson_House_photo_Don_Ramey_Logan.jpg"
+        }
+      ]
     },
     {
       "id": "bacc",
@@ -405,7 +580,7 @@
       "photo": {
         "src": "/photos/pins/siam/bacc.jpg",
         "alt": "The round white Bangkok Art and Culture Centre at Pathum Wan junction",
-        "credit": "\"BKK Art and Culture Centre\" by This Photo was taken by Supanut Arunoprayote . Feel free to…",
+        "credit": "\"BKK Art and Culture Centre\" by Supanut Arunoprayote",
         "licence": "CC BY 4.0",
         "source": "https://commons.wikimedia.org/wiki/File:BKK_Art_and_Culture_Centre.jpg"
       }
@@ -434,7 +609,30 @@
         ]
       },
       "subarea": "pratunam",
-      "links": {}
+      "links": {},
+      "photo": {
+        "src": "/photos/pins/siam/pratunam-market.jpg",
+        "alt": "A covered aisle of clothing stalls at Pratunam Market",
+        "credit": "\"Pratunam\" by Biyu Lau",
+        "licence": "CC BY 2.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Pratunam.jpg"
+      },
+      "photos": [
+        {
+          "src": "/photos/pins/siam/pratunam-market.jpg",
+          "alt": "A covered aisle of clothing stalls at Pratunam Market",
+          "credit": "\"Pratunam\" by Biyu Lau",
+          "licence": "CC BY 2.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Pratunam.jpg"
+        },
+        {
+          "src": "/photos/pins/siam/pratunam-market-2.jpg",
+          "alt": "The street through Pratunam with Baiyoke Tower behind",
+          "credit": "\"Pratunam 2020-2-15\" by Sry85",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Pratunam_2020-2-15.jpg"
+        }
+      ]
     },
     {
       "id": "siam-square-sois",
@@ -461,7 +659,37 @@
         ]
       },
       "subarea": "siam-square",
-      "links": {}
+      "links": {},
+      "photo": {
+        "src": "/photos/pins/siam/siam-square-sois.jpg",
+        "alt": "The pedestrianised Soi 7 in Siam Square, lined with trees",
+        "credit": "\"Pedestrianized Soi Siam Square 7\" by Tree Lightbulb",
+        "licence": "CC BY-SA 4.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Pedestrianized_Soi_Siam_Square_7.jpg"
+      },
+      "photos": [
+        {
+          "src": "/photos/pins/siam/siam-square-sois.jpg",
+          "alt": "The pedestrianised Soi 7 in Siam Square, lined with trees",
+          "credit": "\"Pedestrianized Soi Siam Square 7\" by Tree Lightbulb",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Pedestrianized_Soi_Siam_Square_7.jpg"
+        },
+        {
+          "src": "/photos/pins/siam/siam-square-sois-2.jpg",
+          "alt": "The terraced steps and walkways of Siam Square One",
+          "credit": "\"Present SiamSquare\" by Fabio Achilli",
+          "licence": "CC BY 2.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Present_SiamSquare.jpg"
+        },
+        {
+          "src": "/photos/pins/siam/siam-square-sois-3.jpg",
+          "alt": "A busy lane of stalls in Siam Square",
+          "credit": "\"Siam Square - Allée\" by Éclusette",
+          "licence": "CC BY-SA 3.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Siam_Square_-_All%C3%A9e.JPG"
+        }
+      ]
     }
   ]
 }
