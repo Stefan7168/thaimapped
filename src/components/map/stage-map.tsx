@@ -1,8 +1,9 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
-import type { Map as MaplibreMap, Marker } from 'maplibre-gl'
-import type { Area, Camera, Locale, TripRoute } from '@/lib/content/types'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import type { Map as MaplibreMap, Marker, Popup } from 'maplibre-gl'
+import type { Area, Camera, Locale, Pin, Station, TripRoute } from '@/lib/content/types'
+import { cardElement } from './pin-card'
 import { loadMaplibreGl } from '@/lib/map/load-maplibre'
 import { addBuilding3DLayer } from '@/lib/map/buildings'
 import { isGestureActive } from '@/lib/map/gesture'
@@ -23,6 +24,14 @@ export interface StageMapProps {
   route: TripRoute | null
   /** Every trip, drawn as quiet lines while no single one is active. */
   routes?: TripRoute[]
+  /** The highlight in view on the home page: its pin is shown in front of the area labels. */
+  focus?: { pin: Pin; area: Area } | null
+  /** A highlight the reader tapped: its card opens on the map. */
+  card?: { pin: Pin; area: Area } | null
+  onCloseCard?: () => void
+  /** For the card's walk line and outbound links. */
+  cityId?: string
+  stations?: Station[]
 }
 
 function labelElement(text: string, color: string, minor: boolean): HTMLElement {
@@ -67,10 +76,16 @@ function routesBounds(routes: TripRoute[]): [[number, number], [number, number]]
  * It only follows the page: the camera prop moves it, a route prop draws a
  * trip on it. Wheel zoom is off so the page keeps scrolling over it.
  */
-export function StageMap({ locale, camera, threeD, areas, route, routes = [] }: StageMapProps) {
+export function StageMap({ locale, camera, threeD, areas, route, routes = [], focus = null, card = null, onCloseCard, cityId = '', stations = [] }: StageMapProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const mapRef = useRef<MaplibreMap | null>(null)
   const markersRef = useRef<Marker[]>([])
+  const popupRef = useRef<Popup | null>(null)
+  const closeRef = useRef(onCloseCard)
+  useEffect(() => {
+    closeRef.current = onCloseCard
+  }, [onCloseCard])
+  const stationById = useMemo(() => new Map(stations.map((st) => [st.id, st])), [stations])
   const [mapReady, setMapReady] = useState(0)
 
   useEffect(() => {
@@ -114,6 +129,8 @@ export function StageMap({ locale, camera, threeD, areas, route, routes = [] }: 
       ro?.disconnect()
       markersRef.current.forEach((m) => m.remove())
       markersRef.current = []
+      popupRef.current?.remove()
+      popupRef.current = null
       mapRef.current = null
       map?.remove()
     }
@@ -139,14 +156,45 @@ export function StageMap({ locale, camera, threeD, areas, route, routes = [] }: 
         return
       }
       for (const a of areas) {
-        const el = labelElement(t(a.name, locale), `var(--${a.color})`, false)
+        const el = labelElement(t(a.name, locale), `var(--${a.color})`, !!focus && a.id !== focus.area.id)
         markersRef.current.push(new maplibregl.Marker({ element: el, anchor: 'left' }).setLngLat(a.camera.center).addTo(map))
+      }
+      if (focus) {
+        const el = labelElement(t(focus.pin.name, locale), `var(--${focus.area.color})`, false)
+        el.classList.add('tm-pin--active')
+        markersRef.current.push(new maplibregl.Marker({ element: el, anchor: 'left' }).setLngLat([focus.pin.location.lon, focus.pin.location.lat]).addTo(map))
       }
     })()
     return () => {
       cancelled = true
     }
-  }, [areas, route, locale, mapReady])
+  }, [areas, route, focus, locale, mapReady])
+
+  // The card of a tapped highlight.
+  useEffect(() => {
+    const map = mapRef.current
+    if (!map) return
+    const previous = popupRef.current
+    popupRef.current = null
+    previous?.remove()
+    if (!card) return
+    let cancelled = false
+    ;(async () => {
+      const maplibregl = await loadMaplibreGl()
+      if (cancelled) return
+      const { pin, area } = card
+      const station = pin.walk ? stationById.get(pin.walk.station) : undefined
+      const popup = new maplibregl.Popup({ closeButton: false, closeOnClick: false, offset: 14, maxWidth: '300px', className: 'tm-card-popup' })
+        .setLngLat([pin.location.lon, pin.location.lat])
+        .setDOMContent(cardElement(locale, cityId, pin, area, station, [], () => closeRef.current?.(), () => {}))
+        .addTo(map)
+      popupRef.current = popup
+      if (!isGestureActive(map)) map.easeTo({ center: [pin.location.lon, pin.location.lat], offset: [0, 140], zoom: Math.max(map.getZoom(), 14.5), duration: 700, essential: true })
+    })()
+    return () => {
+      cancelled = true
+    }
+  }, [card, stationById, locale, cityId, mapReady])
 
   // The route line.
   useEffect(() => {

@@ -54,13 +54,13 @@ export interface Pin {
   tier?: 'budget' | 'mid' | 'luxury'
   name: Localized
   why: Localized
-  location: { lon: number; lat: number   /** One real, credited photograph for the card and the home highlights. Optional until fetched. */
-  photo?: AreaPhoto
-}
+  location: { lon: number; lat: number }
   walk?: { station: string; minutes: number }
   /** Sub-area id within the pin's area, when it sits inside a named one. */
   subarea?: string
   links: PinLinks
+  /** One real, credited photograph for the card and the home highlights. Optional until fetched. */
+  photo?: AreaPhoto
 }
 
 export interface Subarea {

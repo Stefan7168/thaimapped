@@ -1,9 +1,10 @@
 'use client'
 
 import dynamic from 'next/dynamic'
+import Image from 'next/image'
 import Link from 'next/link'
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
-import type { Camera, CityBundle, Locale, Pin, TripRoute } from '@/lib/content/types'
+import type { Area, Camera, CityBundle, Locale, Pin, TripRoute } from '@/lib/content/types'
 import { t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
 import { supports3D } from '@/lib/map/device'
@@ -32,6 +33,9 @@ export function HomePage({ locale, bundle, routes }: { locale: Locale; bundle: C
   const detected3D = useSyncExternalStore(noopSubscribe, supports3D, () => null)
   const threeD = detected3D ?? false
   const [activeArea, setActiveArea] = useState<string | null>(null)
+  // The highlight card nearest the middle of the screen, and the one the reader tapped open.
+  const [focusPin, setFocusPin] = useState<{ pin: Pin; area: Area } | null>(null)
+  const [cardPin, setCardPin] = useState<{ pin: Pin; area: Area } | null>(null)
   const rowsRef = useRef<Map<string, HTMLElement>>(new Map())
   // While the pointer is over the list, the hovered row leads and the scroll
   // observer stays quiet: opening a row shifts the rows below it, and the
@@ -49,14 +53,21 @@ export function HomePage({ locale, bundle, routes }: { locale: Locale; bundle: C
     const io = new IntersectionObserver(
       (entries) => {
         for (const e of entries) {
-          if (e.isIntersecting && !hoveringRef.current) setActiveArea((e.target as HTMLElement).dataset.area ?? null)
+          if (!e.isIntersecting || hoveringRef.current) continue
+          const el = e.target as HTMLElement
+          const areaId = el.dataset.area ?? null
+          setActiveArea(areaId)
+          const pinId = el.dataset.highlight
+          const area = areas.find((a) => a.id === areaId)
+          const pin = pinId ? area?.pins.find((p) => p.id === pinId) : undefined
+          setFocusPin(pin && area ? { pin, area } : null)
         }
       },
       { rootMargin: '-45% 0px -45% 0px', threshold: 0 },
     )
     rowsRef.current.forEach((el) => io.observe(el))
     return () => io.disconnect()
-  }, [])
+  }, [areas])
 
   const setRow = useCallback((id: string) => (el: HTMLElement | null) => {
     if (el) rowsRef.current.set(id, el)
@@ -122,19 +133,45 @@ export function HomePage({ locale, bundle, routes }: { locale: Locale; bundle: C
               {areas.map((a, i) => {
                 const on = a.id === activeArea
                 const name = t(a.name, locale)
+                const highlights = a.pins.filter((p) => p.kind !== 'hotel').slice(0, 5)
                 return (
-                  <li key={a.id} ref={setRow(a.id)} data-area={a.id} className={`tm-row${on ? ' tm-row--on' : ''}`}>
-                    <div data-reveal style={{ ['--i' as string]: i }}>
-                    <button type="button" className="tm-row__head" aria-expanded={on} onMouseEnter={() => setActiveArea(a.id)} onFocus={() => setActiveArea(a.id)} onClick={() => setActiveArea(a.id)}>
-                      <span className="tm-row__dot" style={{ background: `var(--${a.color})` }} aria-hidden="true" />
-                      <span className="tm-row__name">{name}</span>
-                      <span className="tm-row__meta">{s.home.areaMeta(a.stations.length, a.pins.length)}</span>
-                    </button>
-                    <div className="tm-row__body" hidden={!on}>
-                      <p>{t(a.tagline, locale)} {s.home.areaFits(a.fits.join(', '))}</p>
-                      <Link href={mapHref} className="tm-link tm-link--under">{s.home.areaLink(name)}</Link>
+                  <li key={a.id} className={`tm-row${on ? ' tm-row--on' : ''}`}>
+                    <div ref={setRow(a.id)} data-area={a.id} data-reveal style={{ ['--i' as string]: i }}>
+                      <button type="button" className="tm-row__head" onMouseEnter={() => setActiveArea(a.id)} onFocus={() => setActiveArea(a.id)} onClick={() => setActiveArea(a.id)}>
+                        <span className="tm-row__dot" style={{ background: `var(--${a.color})` }} aria-hidden="true" />
+                        <span className="tm-row__name">{name}</span>
+                        <span className="tm-row__meta">{s.home.areaMeta(a.stations.length, a.pins.length)}</span>
+                      </button>
+                      <div className="tm-row__body">
+                        <p>{t(a.tagline, locale)} {s.home.areaFits(a.fits.map((f) => s.guide.fits[f] ?? f).join(', '))}</p>
+                      </div>
                     </div>
-                    </div>
+                    {highlights.length > 0 && (
+                      <ol className="tm-hl">
+                        {highlights.map((p) => {
+                          const picked = cardPin?.pin.id === p.id
+                          return (
+                            <li key={p.id} ref={setRow(`${a.id}:${p.id}`)} data-area={a.id} data-highlight={p.id} className={`tm-hl__item${focusPin?.pin.id === p.id ? ' tm-hl__item--on' : ''}`}>
+                              <button type="button" className="tm-hl__card" aria-pressed={picked} onClick={() => setCardPin(picked ? null : { pin: p, area: a })} style={{ ['--pin' as string]: `var(--${a.color})` }}>
+                                {p.photo ? (
+                                  <span className="tm-hl__photo">
+                                    <Image src={p.photo.src} alt={p.photo.alt} fill sizes="(max-width: 1023px) 100vw, 420px" />
+                                  </span>
+                                ) : (
+                                  <span className="tm-hl__photo tm-hl__photo--none" aria-hidden="true" />
+                                )}
+                                <span className="tm-hl__text">
+                                  <span className="tm-hl__kind">{s.pin[p.kind]}</span>
+                                  <span className="tm-hl__name">{t(p.name, locale)}</span>
+                                  <span className="tm-hl__why">{t(p.why, locale)}</span>
+                                </span>
+                              </button>
+                            </li>
+                          )
+                        })}
+                      </ol>
+                    )}
+                    <p className="tm-hl__link"><Link href={mapHref} className="tm-link tm-link--under">{s.home.areaLink(name)}</Link></p>
                   </li>
                 )
               })}
@@ -169,7 +206,7 @@ export function HomePage({ locale, bundle, routes }: { locale: Locale; bundle: C
         </div>
 
         <div className="tm-stage__map" data-ui>
-          <StageMap locale={locale} camera={camera} threeD={threeD} areas={areas} route={null} />
+          <StageMap locale={locale} camera={camera} threeD={threeD} areas={areas} route={null} focus={cardPin ?? focusPin} card={cardPin} onCloseCard={() => setCardPin(null)} cityId={city.id} stations={stations} />
           <div className="tm-stage__bar">
             <span>{s.home.facts(areas.length, stations.length, routes.length)}</span>
             <span className="tm-stage__showing">{s.home.showing(active ? t(active.name, locale) : cityName)}</span>
