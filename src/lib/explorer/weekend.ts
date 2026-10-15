@@ -1,12 +1,12 @@
 import type { Area, Pin, TimeOfDay } from '@/lib/content/types'
-import type { Tier } from './filters'
+import { fitsPrice, type PriceRange } from './filters'
 
 export const WEEKEND_SLOTS = ['fridayNight', 'saturdayMorning', 'saturdayAfternoon', 'saturdayNight', 'sunday'] as const
 export type WeekendSlot = (typeof WEEKEND_SLOTS)[number]
 
 export interface WeekendPlan {
   slots: Record<WeekendSlot, Pin[]>
-  /** The area's hotels, in the chosen budget if one is set. */
+  /** The area's hotels, inside the price range if one is set. */
   hotels: Pin[]
 }
 
@@ -28,7 +28,7 @@ const PER_SLOT = 2
  * overlap fills the gaps. Weekend-only places are kept for Sunday; a place
  * with no `when` goes to Saturday afternoon. A slot with nothing stays empty.
  */
-export function weekendPlan(area: Area, tier: Tier | null = null): WeekendPlan {
+export function weekendPlan(area: Area, price: PriceRange | null = null): WeekendPlan {
   const places = area.pins.filter((p) => p.kind !== 'hotel')
   const used = new Set<string>()
   const slots: Record<WeekendSlot, Pin[]> = { fridayNight: [], saturdayMorning: [], saturdayAfternoon: [], saturdayNight: [], sunday: [] }
@@ -50,6 +50,6 @@ export function weekendPlan(area: Area, tier: Tier | null = null): WeekendPlan {
   for (const slot of WEEKEND_SLOTS) fill(slot, good(slot))
   fill('saturdayAfternoon', (p) => !p.when)
   for (const slot of WEEKEND_SLOTS) fill(slot, (p) => fit(p, slot) > 0)
-  const hotels = area.pins.filter((p) => p.kind === 'hotel' && (!tier || p.tier === tier))
+  const hotels = area.pins.filter((p) => p.kind === 'hotel' && fitsPrice(p, price))
   return { slots, hotels }
 }

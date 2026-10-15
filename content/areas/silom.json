@@ -113,7 +113,12 @@
         "agoda": "https://www.agoda.com/the-sukhothai-bangkok/hotel/bangkok-th.html",
         "booking": "https://www.booking.com/hotel/th/the-sukhothai.html"
       },
-      "subarea": "sathorn"
+      "subarea": "sathorn",
+      "price": {
+        "from": 5500,
+        "currency": "THB",
+        "basis": "tier-estimate"
+      }
     },
     {
       "id": "silom-hotel-holiday-inn-silom",
@@ -137,7 +142,12 @@
         "agoda": "https://www.agoda.com/holiday-inn-bangkok-silom/hotel/bangkok-th.html",
         "booking": "https://www.booking.com/hotel/th/holiday-inn-silom-bangkok.html"
       },
-      "subarea": "silom-road"
+      "subarea": "silom-road",
+      "price": {
+        "from": 1800,
+        "currency": "THB",
+        "basis": "tier-estimate"
+      }
     },
     {
       "id": "silom-hotel-hq-hostel",
@@ -160,7 +170,12 @@
       "links": {
         "booking": "https://www.booking.com/searchresults.html?ss=HQ+Hostel+Bangkok"
       },
-      "subarea": "silom-road"
+      "subarea": "silom-road",
+      "price": {
+        "from": 600,
+        "currency": "THB",
+        "basis": "tier-estimate"
+      }
     },
     {
       "id": "king-power-mahanakhon",

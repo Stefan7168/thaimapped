@@ -153,6 +153,17 @@
               "luxury"
             ]
           },
+          "price": {
+            "type": "object",
+            "properties": {
+              "from": { "type": "integer", "minimum": 100 },
+              "currency": { "enum": ["THB"] },
+              "basis": { "enum": ["tier-estimate", "checked"] },
+              "checkedOn": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" }
+            },
+            "required": ["from", "currency", "basis"],
+            "additionalProperties": false
+          },
           "name": {
             "$ref": "common.schema.json#/$defs/localized"
           },

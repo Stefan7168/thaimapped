@@ -112,7 +112,12 @@
         "agoda": "https://www.agoda.com/hotel-nikko-bangkok/hotel/bangkok-th.html",
         "booking": "https://www.booking.com/hotel/th/nikko-bangkok.html"
       },
-      "subarea": "thonglor"
+      "subarea": "thonglor",
+      "price": {
+        "from": 5500,
+        "currency": "THB",
+        "basis": "tier-estimate"
+      }
     },
     {
       "id": "thonglor-ekkamai-hotel-wyndham-garden-sukhumvit-42",
@@ -136,7 +141,12 @@
         "agoda": "https://www.agoda.com/wyndham-garden-bangkok-sukhumvit-42/hotel/bangkok-th.html",
         "booking": "https://www.booking.com/hotel/th/wyndham-garden-bangkok-sukhumvit-42.html"
       },
-      "subarea": "phra-khanong"
+      "subarea": "phra-khanong",
+      "price": {
+        "from": 1800,
+        "currency": "THB",
+        "basis": "tier-estimate"
+      }
     },
     {
       "id": "thonglor-ekkamai-hotel-ibis-styles-phra-khanong",
@@ -160,7 +170,12 @@
         "agoda": "https://www.agoda.com/ibis-styles-bangkok-sukhumvit-phra-khanong/hotel/bangkok-th.html",
         "booking": "https://www.booking.com/hotel/th/ibis-styles-bangkok-sukhumvit-phra-khanong.html"
       },
-      "subarea": "phra-khanong"
+      "subarea": "phra-khanong",
+      "price": {
+        "from": 600,
+        "currency": "THB",
+        "basis": "tier-estimate"
+      }
     },
     {
       "id": "thonglor-soi-bars",

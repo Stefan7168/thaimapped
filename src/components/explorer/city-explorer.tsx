@@ -12,7 +12,8 @@ import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
 import { trackOutbound } from '@/lib/links/track'
 import { whenLine } from '@/lib/explorer/when'
 import { WEEKEND_SLOTS, weekendPlan } from '@/lib/explorer/weekend'
-import { activeFilterCount, allPins, EMPTY_FILTERS, selectedPlaceCentres, selectedStations, subareaKey, TIERS, visiblePins, type FilterState, type Tier } from '@/lib/explorer/filters'
+import { activeFilterCount, allPins, EMPTY_FILTERS, isFullRange, PRICE_RANGE, selectedPlaceCentres, selectedStations, subareaKey, TIER_PRICE, TIERS, visiblePins, type FilterState, type PriceRange, type Tier } from '@/lib/explorer/filters'
+import { thb } from '@/lib/explorer/price'
 import type { Outline } from '@/components/map/explorer-map'
 import { FilterPanel } from './filter-panel'
 import { TopSearch, type SearchHit } from './top-search'
@@ -38,15 +39,19 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
   const [override3D, setOverride3D] = useState<boolean | null>(null)
   const threeD = override3D ?? detected3D
   const [filters, setFilters] = useState<FilterState>(EMPTY_FILTERS)
-  // A link from the home page quiz carries "#area=<id>&tier=<tier>". The hash never reaches the
+  // A link from the home page quiz carries "#area=<id>&price=<min>-<max>" (an older "tier=" still works). The hash never reaches the
   // server, so it is read once the page is live, in a frame callback rather than straight in the effect.
   useEffect(() => {
     const apply = () => {
       const h = new URLSearchParams(window.location.hash.replace(/^#/, ''))
       const area = h.get('area')
       const tier = h.get('tier')
-      if (!area && !tier) return
-      const next: FilterState = { ...EMPTY_FILTERS, areas: area && areas.some((a) => a.id === area) ? [area] : [], tiers: tier && (TIERS as readonly string[]).includes(tier) ? [tier as Tier] : [] }
+      const priceParam = h.get('price')
+      if (!area && !tier && !priceParam) return
+      const m = priceParam?.match(/^(\d+)-(\d+)$/)
+      const fromParam: PriceRange | null = m ? { min: Math.max(PRICE_RANGE.min, Number(m[1])), max: Math.min(PRICE_RANGE.max, Number(m[2])) } : null
+      const price = fromParam && fromParam.min < fromParam.max ? fromParam : tier && (TIERS as readonly string[]).includes(tier) ? TIER_PRICE[tier as Tier] : null
+      const next: FilterState = { ...EMPTY_FILTERS, areas: area && areas.some((a) => a.id === area) ? [area] : [], price: isFullRange(price) ? null : price }
       setFilters(next)
     }
     const id = window.requestAnimationFrame(apply)
@@ -101,7 +106,7 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
 
   // One area picked, nothing narrower: the weekend plan sits above the list.
   const planArea = filters.areas.length === 1 && filters.subareas.length === 0 && filters.stations.length === 0 && filters.lines.length === 0 ? areas.find((a) => a.id === filters.areas[0]) : undefined
-  const plan = useMemo(() => (planArea ? weekendPlan(planArea, filters.tiers.length === 1 ? filters.tiers[0] : null) : null), [planArea, filters.tiers])
+  const plan = useMemo(() => (planArea ? weekendPlan(planArea, filters.price) : null), [planArea, filters.price])
   const weekend = planArea && plan && (
     <section className="tm-weekend" aria-labelledby="tm-weekend-heading" style={{ ['--pin' as string]: `var(--${planArea.color})` }}>
       <h2 id="tm-weekend-heading" className="tm-weekend__heading">{s.guide.weekend(t(planArea.name, locale))}</h2>
@@ -159,6 +164,7 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
               </span>
               <span className="block text-ink-2">{t(pin.why, locale)}</span>
               {whenLine(pin, locale) && <span className="block text-xs font-medium text-accent">{whenLine(pin, locale)}</span>}
+              {pin.price && <span className="block text-xs text-ink-2">{s.guide.priceFrom(thb(pin.price.from, locale))}{pin.price.basis === 'tier-estimate' ? ` (${s.guide.priceEstimate})` : ''}</span>}
               {pin.walk && walkStation && (
                 <span className="block text-xs text-ink-2">
                   {s.city.walkMinutes(pin.walk.minutes)} {s.city.from(`${walkStation.code ? walkStation.code + ' ' : ''}${t(walkStation.name, locale)}`)}

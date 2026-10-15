@@ -111,7 +111,12 @@
         "agoda": "https://www.agoda.com/mandarin-oriental-bangkok_12/hotel/bangkok-th.html",
         "booking": "https://www.booking.com/hotel/th/mandarin-oriental-bangkok.html"
       },
-      "subarea": "charoen-krung"
+      "subarea": "charoen-krung",
+      "price": {
+        "from": 5500,
+        "currency": "THB",
+        "basis": "tier-estimate"
+      }
     },
     {
       "id": "riverside-hotel-chatrium-riverside",
@@ -135,7 +140,12 @@
         "agoda": "https://www.agoda.com/chatrium-hotel-riverside-bangkok/hotel/bangkok-th.html",
         "booking": "https://www.booking.com/hotel/th/chatrium-hotel-riverside-bangkok.html"
       },
-      "subarea": "charoen-krung"
+      "subarea": "charoen-krung",
+      "price": {
+        "from": 1800,
+        "currency": "THB",
+        "basis": "tier-estimate"
+      }
     },
     {
       "id": "riverside-hotel-ibis-riverside",
@@ -159,7 +169,12 @@
         "agoda": "https://www.agoda.com/ibis-bangkok-riverside/hotel/bangkok-th.html",
         "booking": "https://www.booking.com/hotel/th/ibis-bangkok-reverside.html"
       },
-      "subarea": "khlong-san"
+      "subarea": "khlong-san",
+      "price": {
+        "from": 600,
+        "currency": "THB",
+        "basis": "tier-estimate"
+      }
     },
     {
       "id": "iconsiam",

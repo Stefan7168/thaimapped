@@ -2,6 +2,7 @@ import type { Area, Locale, Pin, Station } from '@/lib/content/types'
 import { t } from '@/lib/i18n/locales'
 import { whenLine } from '@/lib/explorer/when'
 import { strings } from '@/lib/i18n/strings'
+import { thb } from '@/lib/explorer/price'
 import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
 import { trackOutbound } from '@/lib/links/track'
 import type { NearbyPin } from '@/lib/explorer/filters'
@@ -35,6 +36,12 @@ export function cardElement(locale: Locale, cityId: string, pin: Pin, area: Area
   const kind = document.createElement('span')
   kind.className = 'tm-card__kind'
   kind.textContent = pin.tier ? `${s.pin[pin.kind]} · ${s.filters.tier[pin.tier]}` : s.pin[pin.kind]
+  if (pin.price) {
+    const price = document.createElement('p')
+    price.className = 'tm-card__price'
+    price.textContent = s.guide.priceFrom(thb(pin.price.from, locale)) + (pin.price.basis === 'tier-estimate' ? ` (${s.guide.priceEstimate})` : '')
+    kind.after(price)
+  }
   const close = document.createElement('button')
   close.type = 'button'
   close.className = 'tm-card__close'

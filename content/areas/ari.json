@@ -101,7 +101,12 @@
         "agoda": "https://www.agoda.com/the-quarter-ari-by-uhg/hotel/bangkok-th.html",
         "booking": "https://www.booking.com/searchresults.html?ss=The+Quarter+Hotel+Bangkok"
       },
-      "subarea": "ari-sois"
+      "subarea": "ari-sois",
+      "price": {
+        "from": 1800,
+        "currency": "THB",
+        "basis": "tier-estimate"
+      }
     },
     {
       "id": "ari-hotel-iconic-hotel-ari",
@@ -124,7 +129,12 @@
       "links": {
         "booking": "https://www.booking.com/searchresults.html?ss=The+Iconic+Hotel+Ari+-+Jatujak+Bangkok"
       },
-      "subarea": "saphan-khwai"
+      "subarea": "saphan-khwai",
+      "price": {
+        "from": 1800,
+        "currency": "THB",
+        "basis": "tier-estimate"
+      }
     },
     {
       "id": "ari-hotel-the-yard-hostel",
@@ -148,7 +158,12 @@
         "agoda": "https://www.agoda.com/the-yard-hostel-bangkok/hotel/bangkok-th.html",
         "booking": "https://www.booking.com/hotel/th/the-yard-hostel.html"
       },
-      "subarea": "ari-sois"
+      "subarea": "ari-sois",
+      "price": {
+        "from": 600,
+        "currency": "THB",
+        "basis": "tier-estimate"
+      }
     },
     {
       "id": "chatuchak-market",

@@ -113,7 +113,12 @@
         "agoda": "https://www.agoda.com/sheraton-grande-sukhumvit-a-luxury-collection-hotel-bangkok/hotel/bangkok-th.html",
         "booking": "https://www.booking.com/hotel/th/sheraton-grande-sukhumvit-a-luxury-collection.html"
       },
-      "subarea": "asok"
+      "subarea": "asok",
+      "price": {
+        "from": 5500,
+        "currency": "THB",
+        "basis": "tier-estimate"
+      }
     },
     {
       "id": "sukhumvit-hotel-grande-centre-point-terminal-21",
@@ -137,7 +142,12 @@
         "agoda": "https://www.agoda.com/grande-centre-point-hotel-terminal-21/hotel/bangkok-th.html",
         "booking": "https://www.booking.com/hotel/th/grande-centre-point.html"
       },
-      "subarea": "nana"
+      "subarea": "nana",
+      "price": {
+        "from": 1800,
+        "currency": "THB",
+        "basis": "tier-estimate"
+      }
     },
     {
       "id": "sukhumvit-hotel-oneday-hostel",
@@ -160,7 +170,12 @@
       "links": {
         "booking": "https://www.booking.com/searchresults.html?ss=Oneday+Hostel+Bangkok"
       },
-      "subarea": "phrom-phong"
+      "subarea": "phrom-phong",
+      "price": {
+        "from": 600,
+        "currency": "THB",
+        "basis": "tier-estimate"
+      }
     },
     {
       "id": "terminal-21",

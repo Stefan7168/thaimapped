@@ -111,7 +111,12 @@
         "agoda": "https://www.agoda.com/shanghai-mansion-bangkok/hotel/bangkok-th.html",
         "booking": "https://www.booking.com/hotel/th/shanghai-inn.html"
       },
-      "subarea": "yaowarat"
+      "subarea": "yaowarat",
+      "price": {
+        "from": 5500,
+        "currency": "THB",
+        "basis": "tier-estimate"
+      }
     },
     {
       "id": "chinatown-hotel-hotel-royal-chinatown",
@@ -135,7 +140,12 @@
         "agoda": "https://www.agoda.com/hotel-royal-bangkok-h3093614/hotel/bangkok-th.html",
         "booking": "https://www.booking.com/searchresults.html?ss=Hotel+Royal+Bangkok+%40+Chinatown"
       },
-      "subarea": "yaowarat"
+      "subarea": "yaowarat",
+      "price": {
+        "from": 1800,
+        "currency": "THB",
+        "basis": "tier-estimate"
+      }
     },
     {
       "id": "chinatown-hotel-loftel-22",
@@ -159,7 +169,12 @@
         "agoda": "https://www.agoda.com/loftel-22-hostel/hotel/bangkok-th.html",
         "booking": "https://www.booking.com/hotel/th/loftel-22-hostel.html"
       },
-      "subarea": "talat-noi"
+      "subarea": "talat-noi",
+      "price": {
+        "from": 600,
+        "currency": "THB",
+        "basis": "tier-estimate"
+      }
     },
     {
       "id": "wat-traimit",

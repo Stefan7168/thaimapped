@@ -5,6 +5,22 @@ export const TIERS = ['budget', 'mid', 'luxury'] as const
 export const TIMES: TimeOfDay[] = ['morning', 'afternoon', 'evening', 'night']
 export const DAYS: DayKind[] = ['weekday', 'weekend']
 export type Tier = (typeof TIERS)[number]
+/** The price-per-night slider, THB. */
+export const PRICE_RANGE = { min: 500, max: 15000, step: 100 } as const
+export interface PriceRange {
+  min: number
+  max: number
+}
+/** What each quiz budget answer means on the slider. */
+export const TIER_PRICE: Record<Tier, PriceRange> = { budget: { min: PRICE_RANGE.min, max: 1500 }, mid: { min: 1500, max: 4000 }, luxury: { min: 4000, max: PRICE_RANGE.max } }
+/** Rough, for the label next to the slider only. Update now and then. */
+export const THB_PER_USD = 36
+export const isFullRange = (r: PriceRange | null) => !r || (r.min <= PRICE_RANGE.min && r.max >= PRICE_RANGE.max)
+/** A hotel passes when it has no price or its "from" price sits inside the range; places always pass. */
+export function fitsPrice(pin: Pin, r: PriceRange | null): boolean {
+  if (isFullRange(r) || pin.kind !== 'hotel' || !pin.price) return true
+  return pin.price.from >= r!.min && pin.price.from <= r!.max
+}
 
 /** Walking radius used for "near a station". 800 m is about 10 minutes. */
 export const WALK_RADIUS_M = 800
@@ -19,19 +35,21 @@ export interface FilterState {
   lines: string[]
   kinds: PinKind[]
   tiers: Tier[]
+  /** Price per night, THB, hotels only; null or the full range means off. */
+  price: PriceRange | null
   /** When: a place with no `when` passes; one with it must fit every picked time and day. */
   times: TimeOfDay[]
   days: DayKind[]
 }
 
-export const EMPTY_FILTERS: FilterState = { areas: [], subareas: [], stations: [], lines: [], kinds: [], tiers: [], times: [], days: [] }
+export const EMPTY_FILTERS: FilterState = { areas: [], subareas: [], stations: [], lines: [], kinds: [], tiers: [], price: null, times: [], days: [] }
 
 export function subareaKey(areaId: string, subId: string): string {
   return `${areaId}/${subId}`
 }
 
 export function activeFilterCount(f: FilterState): number {
-  return f.areas.length + f.subareas.length + f.stations.length + f.lines.length + f.kinds.length + f.tiers.length + f.times.length + f.days.length
+  return f.areas.length + f.subareas.length + f.stations.length + f.lines.length + f.kinds.length + f.tiers.length + (isFullRange(f.price) ? 0 : 1) + f.times.length + f.days.length
 }
 
 export function lineKey(s: { system: string; line: string }): string {
@@ -107,6 +125,7 @@ export function visiblePins(bundle: CityBundle, f: FilterState): VisiblePin[] {
       if (kinds.size > 0 && !kinds.has(pin.kind)) continue
       // The budget is a hotel budget: it narrows the hotels and leaves the places alone.
       if (tiers.size > 0 && pin.kind === 'hotel' && (!pin.tier || !tiers.has(pin.tier))) continue
+      if (!fitsPrice(pin, f.price)) continue
       if (!fitsWhen(pin, f)) continue
       if (stations.length > 0) {
         const near = stations.some((st) => distanceM(st.lon, st.lat, pin.location.lon, pin.location.lat) <= WALK_RADIUS_M)

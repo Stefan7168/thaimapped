@@ -5,7 +5,8 @@ import type { DayKind, TimeOfDay } from '@/lib/content/types'
 import type { CityBundle, Locale } from '@/lib/content/types'
 import { strings } from '@/lib/i18n/strings'
 import { bangkokNow } from '@/lib/explorer/when'
-import { activeFilterCount, DAYS, EMPTY_FILTERS, TIERS, TIMES, type FilterState, type Tier } from '@/lib/explorer/filters'
+import { activeFilterCount, DAYS, EMPTY_FILTERS, isFullRange, PRICE_RANGE, TIMES, type FilterState, type PriceRange } from '@/lib/explorer/filters'
+import { thb, usd } from '@/lib/explorer/price'
 import { TransitFilter } from './transit-filter'
 import { AreaFilter } from './area-filter'
 
@@ -88,17 +89,8 @@ export function FilterPanel({ locale, bundle, filters, onChange }: FilterPanelPr
           })}
         </div>
       </Section>
-      <Section label={s.filters.tiers}>
-        <div className="flex flex-wrap gap-1.5">
-          {TIERS.map((tier: Tier) => {
-            const on = filters.tiers.includes(tier)
-            return (
-              <button key={tier} type="button" aria-pressed={on} onClick={() => onChange({ ...filters, tiers: toggle(filters.tiers, tier) })} className={`min-h-9 rounded-full border px-3 text-sm ${on ? 'border-ink bg-white font-medium' : 'border-line bg-white/60'}`}>
-                {s.filters.tier[tier]}
-              </button>
-            )
-          })}
-        </div>
+      <Section label={s.filters.price}>
+        <PriceSlider locale={locale} value={filters.price} onChange={(price) => onChange({ ...filters, price })} />
       </Section>
     </div>
   )
@@ -110,5 +102,31 @@ function Section({ label, children }: { label: string; children: ReactNode }) {
       <h3 className="text-xs font-semibold uppercase tracking-wider text-ink-2">{label}</h3>
       {children}
     </section>
+  )
+}
+
+/**
+ * Two handles on one track: the lowest and highest price per night. Two
+ * native range inputs sit on top of each other, so keyboards and screen
+ * readers get the real control; the coloured band between them is drawn
+ * with CSS from the two values. Null means the full range (off).
+ */
+function PriceSlider({ locale, value, onChange }: { locale: Locale; value: PriceRange | null; onChange: (r: PriceRange | null) => void }) {
+  const s = strings(locale)
+  const min = value?.min ?? PRICE_RANGE.min
+  const max = value?.max ?? PRICE_RANGE.max
+  const pct = (n: number) => ((n - PRICE_RANGE.min) / (PRICE_RANGE.max - PRICE_RANGE.min)) * 100
+  const set = (next: PriceRange) => onChange(isFullRange(next) ? null : next)
+  return (
+    <div className="tm-range" style={{ ['--lo' as string]: `${pct(min)}%`, ['--hi' as string]: `${pct(max)}%` }}>
+      <div className="tm-range__track">
+        <input type="range" aria-label={s.filters.priceMin} min={PRICE_RANGE.min} max={PRICE_RANGE.max} step={PRICE_RANGE.step} value={min} onChange={(e) => set({ min: Math.min(Number(e.target.value), max - PRICE_RANGE.step), max })} />
+        <input type="range" aria-label={s.filters.priceMax} min={PRICE_RANGE.min} max={PRICE_RANGE.max} step={PRICE_RANGE.step} value={max} onChange={(e) => set({ min, max: Math.max(Number(e.target.value), min + PRICE_RANGE.step) })} />
+      </div>
+      <p className="tm-range__value">
+        <strong>{s.filters.priceRange(thb(min, locale), max >= PRICE_RANGE.max ? `${thb(max, locale)}+` : thb(max, locale))}</strong>
+        <span>{s.filters.priceUsd(usd(min, locale), usd(max, locale))}</span>
+      </p>
+    </div>
   )
 }

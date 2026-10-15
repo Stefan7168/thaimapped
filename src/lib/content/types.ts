@@ -54,6 +54,12 @@ export interface Pin {
   id: string
   kind: PinKind
   tier?: 'budget' | 'mid' | 'luxury'
+  /**
+   * A hotel's price per night, THB. `basis` says where the number comes from:
+   * 'tier-estimate' is a typical figure for its class, not checked against
+   * the hotel; 'checked' was read from a booking site on `checkedOn`.
+   */
+  price?: { from: number; currency: 'THB'; basis: 'tier-estimate' | 'checked'; checkedOn?: string }
   name: Localized
   why: Localized
   location: { lon: number; lat: number }

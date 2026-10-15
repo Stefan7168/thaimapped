@@ -111,7 +111,12 @@
         "agoda": "https://www.agoda.com/riva-arun-bangkok/hotel/bangkok-th.html",
         "booking": "https://www.booking.com/hotel/th/riva-arun-bangkok.html"
       },
-      "subarea": "grand-palace"
+      "subarea": "grand-palace",
+      "price": {
+        "from": 5500,
+        "currency": "THB",
+        "basis": "tier-estimate"
+      }
     },
     {
       "id": "old-town-hotel-arun-residence",
@@ -135,7 +140,12 @@
         "agoda": "https://www.agoda.com/arun-residence/hotel/bangkok-th.html",
         "booking": "https://www.booking.com/hotel/th/arun-residence.html"
       },
-      "subarea": "grand-palace"
+      "subarea": "grand-palace",
+      "price": {
+        "from": 1800,
+        "currency": "THB",
+        "basis": "tier-estimate"
+      }
     },
     {
       "id": "old-town-hotel-nappark-hostel",
@@ -159,7 +169,12 @@
         "agoda": "https://www.agoda.com/nappark-hostel/hotel/bangkok-th.html",
         "booking": "https://www.booking.com/hotel/th/nappark-hostel-khao-san.html"
       },
-      "subarea": "khao-san"
+      "subarea": "khao-san",
+      "price": {
+        "from": 600,
+        "currency": "THB",
+        "basis": "tier-estimate"
+      }
     },
     {
       "id": "grand-palace",

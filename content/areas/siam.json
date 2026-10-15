@@ -111,7 +111,12 @@
         "agoda": "https://www.agoda.com/siam-kempinski-hotel-bangkok/hotel/bangkok-th.html",
         "booking": "https://www.booking.com/hotel/th/siam-kempinski-bangkok.html"
       },
-      "subarea": "siam-square"
+      "subarea": "siam-square",
+      "price": {
+        "from": 5500,
+        "currency": "THB",
+        "basis": "tier-estimate"
+      }
     },
     {
       "id": "siam-hotel-novotel-siam-square",
@@ -135,7 +140,12 @@
         "agoda": "https://www.agoda.com/novotel-bangkok-on-siam-square-hotel/hotel/bangkok-th.html",
         "booking": "https://www.booking.com/hotel/th/novotelbangkok.html"
       },
-      "subarea": "siam-square"
+      "subarea": "siam-square",
+      "price": {
+        "from": 1800,
+        "currency": "THB",
+        "basis": "tier-estimate"
+      }
     },
     {
       "id": "siam-hotel-lub-d-siam",
@@ -159,7 +169,12 @@
         "agoda": "https://www.agoda.com/lub-d-bangkok-siam-hostel/hotel/bangkok-th.html",
         "booking": "https://www.booking.com/hotel/th/lub-d-bangkok-siam-square.html"
       },
-      "subarea": "siam-square"
+      "subarea": "siam-square",
+      "price": {
+        "from": 600,
+        "currency": "THB",
+        "basis": "tier-estimate"
+      }
     },
     {
       "id": "baiyoke-sky-tower",

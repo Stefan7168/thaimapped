@@ -5,7 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
 import type { Area, Camera, CityBundle, Locale, Pin, TripRoute } from '@/lib/content/types'
-import { TIERS } from '@/lib/explorer/filters'
+import { TIER_PRICE, TIERS } from '@/lib/explorer/filters'
 import { QUIZ_PACES, QUIZ_PURPOSES, rankAreas, type Pace, type QuizAnswers } from '@/lib/explorer/quiz'
 import { t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
@@ -181,7 +181,7 @@ export function HomePage({ locale, bundle, routes }: { locale: Locale; bundle: C
                     <p className="tm-quiz__hotel">{s.home.quiz.noHotel}</p>
                   ))}
                   {runnersUp.length > 0 && <p className="tm-quiz__also">{s.home.quiz.alsoFits(runnersUp.map((r) => t(r.area.name, locale)).join(', '))}</p>}
-                  <Link href={`${mapHref}#area=${best.area.id}${answers.tier ? `&tier=${answers.tier}` : ''}`} className="tm-button">{s.home.quiz.open(t(best.area.name, locale))}</Link>
+                  <Link href={`${mapHref}#area=${best.area.id}${answers.tier ? `&price=${TIER_PRICE[answers.tier].min}-${TIER_PRICE[answers.tier].max}` : ''}`} className="tm-button">{s.home.quiz.open(t(best.area.name, locale))}</Link>
                 </div>
               )}
             </div>
