@@ -12,7 +12,7 @@ Stefan's rule (2026-10-15): do not raise setup or launch items with him before g
 
 ## Can be done without Stefan (before go-live)
 
-- [ ] `/credits` page listing every photo credit and licence; a content test that every photo file exists and every licence is on the allowed list.
+- [x] `/credits` page and the photo file + licence check in `scripts/validate-content.mjs` (done 2026-10-15).
 - [ ] Verify the `when` hours of every place against the venue's own page (first pass is editorial).
 - [ ] Open Graph image and metadata per page.
 - [ ] Sitemap and robots: confirm every static route is listed.

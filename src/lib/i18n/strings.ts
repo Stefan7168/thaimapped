@@ -6,7 +6,11 @@ import type { Locale } from '@/lib/content/types'
  */
 const en = {
   brand: 'ThaiMapped',
-  nav: { cities: 'Cities', map: 'Map', trips: 'Trips' },
+  nav: { cities: 'Cities', map: 'Map', trips: 'Trips', credits: 'Photo credits' },
+  credits: {
+    title: 'Photo credits',
+    lead: (n: number) => `${n} photographs on this site come from open collections, each by a named photographer under a licence that allows reuse with credit. Every picture shows the place it stands for.`,
+  },
   home: {
     headline: 'Bangkok, mapped before you book.',
     sentence: 'See the city before you pick a hotel.',

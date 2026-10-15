@@ -3,13 +3,20 @@
 // cross references (city -> areas, area -> stations, pin walk -> station).
 // Runs before build and in CI. Content is the product, so a broken file
 // must fail loudly, never render as a blank spot.
-import { readFileSync, readdirSync } from 'node:fs'
+import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import Ajv2020 from 'ajv/dist/2020.js'
 import addFormats from 'ajv-formats'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..', 'content')
+const publicRoot = join(dirname(fileURLToPath(import.meta.url)), '..', 'public')
+// Every licence a photograph may carry: free to reuse with a credit, or free outright. Anything else must not ship.
+const ALLOWED_LICENCES = /^(CC0|Public domain|CC BY(-SA)? \d\.\d)$/i
+function checkPhoto(photo, label) {
+  if (!existsSync(join(publicRoot, photo.src))) errors.push(`${label}: photo file ${photo.src} is missing under public/`)
+  if (!ALLOWED_LICENCES.test(photo.licence)) errors.push(`${label}: licence "${photo.licence}" is not on the allowed list`)
+}
 const read = (p) => JSON.parse(readFileSync(join(root, p), 'utf8'))
 
 const ajv = new Ajv2020({ allErrors: true, strict: true })
@@ -94,10 +101,14 @@ for (const { id: cityId } of country.cities) {
       if (subIds.has(sub.id)) errors.push(`${label}: duplicate sub-area ${sub.id}`)
       subIds.add(sub.id)
     }
+    for (const [i, photo] of (area.photos ?? []).entries()) checkPhoto(photo, `${label} photos[${i}]`)
     const pinIds = new Set()
     for (const pin of area.pins ?? []) {
       if (pinIds.has(pin.id)) errors.push(`${label}: duplicate pin ${pin.id}`)
       pinIds.add(pin.id)
+      if (pin.photo) checkPhoto(pin.photo, `${label} pin ${pin.id} photo`)
+      for (const [i, photo] of (pin.photos ?? []).entries()) checkPhoto(photo, `${label} pin ${pin.id} photos[${i}]`)
+      if (pin.photos?.length && pin.photo && pin.photos[0].src !== pin.photo.src) errors.push(`${label}: pin ${pin.id} photos[0] must be the same picture as photo`)
       if (pin.kind === 'hotel' && !pin.tier) errors.push(`${label}: hotel pin ${pin.id} needs a tier`)
       if (pin.subarea && !subIds.has(pin.subarea)) errors.push(`${label}: pin ${pin.id} names unknown sub-area ${pin.subarea}`)
       if (pin.walk && !stationIds.has(pin.walk.station)) errors.push(`${label}: pin ${pin.id} walks to unknown station ${pin.walk.station}`)
