@@ -116,6 +116,13 @@
         "from": 5500,
         "currency": "THB",
         "basis": "tier-estimate"
+      },
+      "photo": {
+        "src": "/photos/pins/chinatown/chinatown-hotel-shanghai-mansion.jpg",
+        "alt": "The lantern-lit front of Shanghai Mansion on Yaowarat Road at night",
+        "credit": "\"Shanghai Mansion, China Town, Bangkok\" by Deepak-nsk",
+        "licence": "CC0",
+        "source": "https://commons.wikimedia.org/wiki/File:Shanghai_Mansion,_China_Town,_Bangkok.jpg"
       }
     },
     {
@@ -145,6 +152,13 @@
         "from": 1800,
         "currency": "THB",
         "basis": "tier-estimate"
+      },
+      "photo": {
+        "src": "/photos/pins/chinatown/chinatown-hotel-hotel-royal-chinatown.jpg",
+        "alt": "The street entrance of Hotel Royal Bangkok in Chinatown",
+        "credit": "\"Hotel Royal Bangkok\" by Syced",
+        "licence": "CC0",
+        "source": "https://commons.wikimedia.org/wiki/File:Hotel_Royal_Bangkok.jpg"
       }
     },
     {
@@ -207,7 +221,37 @@
         "credit": "\"Wat Traimit 20240917\" by Suicasmo",
         "licence": "CC BY-SA 4.0",
         "source": "https://commons.wikimedia.org/wiki/File:Wat_Traimit_20240917.jpg"
-      }
+      },
+      "photos": [
+        {
+          "src": "/photos/pins/chinatown/wat-traimit.jpg",
+          "alt": "Wat Traimit's white and gold hall of the Golden Buddha",
+          "credit": "\"Wat Traimit 20240917\" by Suicasmo",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Wat_Traimit_20240917.jpg"
+        },
+        {
+          "src": "/photos/pins/chinatown/wat-traimit-2.jpg",
+          "alt": "The white-and-gold hall of Wat Traimit with its tiered roofs",
+          "credit": "\"2016 Bangkok, Dystrykt Samphanthawong, Wat Traimit Witthayaram (08)\" by Marcin Konsek",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:2016_Bangkok,_Dystrykt_Samphanthawong,_Wat_Traimit_Witthayaram_(08).jpg"
+        },
+        {
+          "src": "/photos/pins/chinatown/wat-traimit-3.jpg",
+          "alt": "The Golden Buddha inside Wat Traimit, with visitors in front",
+          "credit": "\"Bangkok Wat Traimit 01\" by ErwinMeier",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Bangkok_Wat_Traimit_01.jpg"
+        },
+        {
+          "src": "/photos/pins/chinatown/wat-traimit-4.jpg",
+          "alt": "The gilded, carved ceiling inside Wat Traimit",
+          "credit": "\"Wat Traimit Witthayaram in Bangkok (8)\" by Krzysztof Golik",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Wat_Traimit_Witthayaram_in_Bangkok_(8).jpg"
+        }
+      ]
     },
     {
       "id": "yaowarat-road",
@@ -247,7 +291,37 @@
         "credit": "\"Yaowarat Road at night\" by Christophe95",
         "licence": "CC BY-SA 4.0",
         "source": "https://commons.wikimedia.org/wiki/File:Yaowarat_Road_at_night.jpg"
-      }
+      },
+      "photos": [
+        {
+          "src": "/photos/pins/chinatown/yaowarat-road.jpg",
+          "alt": "Yaowarat Road at night under its neon shop signs",
+          "credit": "\"Yaowarat Road at night\" by Christophe95",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Yaowarat_Road_at_night.jpg"
+        },
+        {
+          "src": "/photos/pins/chinatown/yaowarat-road-2.jpg",
+          "alt": "Fruit carts and shoppers crowding a Yaowarat street",
+          "credit": "\"2016 Bangkok, Dystrykt Samphanthawong, Ulica Yaowarat (12)\" by Marcin Konsek",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:2016_Bangkok,_Dystrykt_Samphanthawong,_Ulica_Yaowarat_(12).jpg"
+        },
+        {
+          "src": "/photos/pins/chinatown/yaowarat-road-3.jpg",
+          "alt": "Traffic under the Chinese shop signs of Yaowarat Road",
+          "credit": "\"The Chinatown Bustle\" by Prmod Bafna",
+          "licence": "CC BY 3.0",
+          "source": "https://commons.wikimedia.org/wiki/File:The_Chinatown_Bustle_(24574853).jpeg"
+        },
+        {
+          "src": "/photos/pins/chinatown/yaowarat-road-4.jpg",
+          "alt": "Spring rolls and fried snacks piled high on a Yaowarat food stall",
+          "credit": "\"2016 Bangkok, Dystrykt Samphanthawong, Ulica Yaowarat, Uliczne jedzenie (01)\" by Marcin Konsek",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:2016_Bangkok,_Dystrykt_Samphanthawong,_Ulica_Yaowarat,_Uliczne_jedzenie_(01).jpg"
+        }
+      ]
     },
     {
       "id": "sampeng-lane",
@@ -276,7 +350,37 @@
         }
       },
       "subarea": "yaowarat",
-      "links": {}
+      "links": {},
+      "photo": {
+        "src": "/photos/pins/chinatown/sampeng-lane.jpg",
+        "alt": "Shoppers squeezing through the narrow, stall-lined Sampeng Lane",
+        "credit": "\"Sampeng Lane, Chinatown (7997015791)\" by Fabio Achilli from Milano, Italy",
+        "licence": "CC BY 2.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Sampeng_Lane,_Chinatown_(7997015791).jpg"
+      },
+      "photos": [
+        {
+          "src": "/photos/pins/chinatown/sampeng-lane.jpg",
+          "alt": "Shoppers squeezing through the narrow, stall-lined Sampeng Lane",
+          "credit": "\"Sampeng Lane, Chinatown (7997015791)\" by Fabio Achilli from Milano, Italy",
+          "licence": "CC BY 2.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Sampeng_Lane,_Chinatown_(7997015791).jpg"
+        },
+        {
+          "src": "/photos/pins/chinatown/sampeng-lane-2.jpg",
+          "alt": "Wholesale stalls stacked with goods along Sampeng Lane",
+          "credit": "\"Sampeng Lane in Samphanthawong District, Bangkok, Thailand\" by Globe-trotter",
+          "licence": "CC BY-SA 3.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Sampeng_Lane_in_Samphanthawong_District,_Bangkok,_Thailand.jpg"
+        },
+        {
+          "src": "/photos/pins/chinatown/sampeng-lane-3.jpg",
+          "alt": "Bolts of brightly coloured fabric in a Sampeng Lane shop",
+          "credit": "\"Fabric store in Sampeng Lane, Samphanthawong District, Bangkok, Thailand\" by Globe-trotter",
+          "licence": "CC BY-SA 3.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Fabric_store_in_Sampeng_Lane,_Samphanthawong_District,_Bangkok,_Thailand.jpg"
+        }
+      ]
     },
     {
       "id": "wat-mangkon",
@@ -302,7 +406,37 @@
         ]
       },
       "subarea": "yaowarat",
-      "links": {}
+      "links": {},
+      "photo": {
+        "src": "/photos/pins/chinatown/wat-mangkon.jpg",
+        "alt": "The ornate Chinese gate of Wat Mangkon Kamalawat",
+        "credit": "\"Wat Mangkon Kamalawat\" by Christophe95",
+        "licence": "CC BY-SA 4.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Wat_Mangkon_Kamalawat.jpg"
+      },
+      "photos": [
+        {
+          "src": "/photos/pins/chinatown/wat-mangkon.jpg",
+          "alt": "The ornate Chinese gate of Wat Mangkon Kamalawat",
+          "credit": "\"Wat Mangkon Kamalawat\" by Christophe95",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Wat_Mangkon_Kamalawat.jpg"
+        },
+        {
+          "src": "/photos/pins/chinatown/wat-mangkon-2.jpg",
+          "alt": "Three golden Buddhas in the main hall of Wat Mangkon Kamalawat",
+          "credit": "\"The Three Buddhas, Wat Leng Noei Yi\" by Supanut Arunoprayote",
+          "licence": "CC BY 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:The_Three_Buddhas,_Wat_Leng_Noei_Yi.jpg"
+        },
+        {
+          "src": "/photos/pins/chinatown/wat-mangkon-3.jpg",
+          "alt": "Lanterns and altars inside the courtyard of Wat Mangkon Kamalawat",
+          "credit": "\"Wat Mangkon Kamalawat 1\" by Christophe95",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Wat_Mangkon_Kamalawat_1.jpg"
+        }
+      ]
     },
     {
       "id": "talat-noi",
@@ -330,7 +464,37 @@
         }
       },
       "subarea": "talat-noi",
-      "links": {}
+      "links": {},
+      "photo": {
+        "src": "/photos/pins/chinatown/talat-noi.jpg",
+        "alt": "A colourful street-art mural on a building in Talat Noi",
+        "credit": "\"Talat Noi Street Art\" by Phoebus 28",
+        "licence": "CC BY-SA 4.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Talat_Noi_Street_Art.jpg"
+      },
+      "photos": [
+        {
+          "src": "/photos/pins/chinatown/talat-noi.jpg",
+          "alt": "A colourful street-art mural on a building in Talat Noi",
+          "credit": "\"Talat Noi Street Art\" by Phoebus 28",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Talat_Noi_Street_Art.jpg"
+        },
+        {
+          "src": "/photos/pins/chinatown/talat-noi-2.jpg",
+          "alt": "The red Rong Kuak Shrine by the river in Talat Noi",
+          "credit": "\"Rong Kuak Shrine Talat Noi ศาลเจ้าโรงเกือก ตลาดน้อย 2021 June\" by Chainwit.",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Rong_Kuak_Shrine_Talat_Noi_%E0%B8%A8%E0%B8%B2%E0%B8%A5%E0%B9%80%E0%B8%88%E0%B9%89%E0%B8%B2%E0%B9%82%E0%B8%A3%E0%B8%87%E0%B9%80%E0%B8%81%E0%B8%B7%E0%B8%AD%E0%B8%81_%E0%B8%95%E0%B8%A5%E0%B8%B2%E0%B8%94%E0%B8%99%E0%B9%89%E0%B8%AD%E0%B8%A2_2021_June.jpg"
+        },
+        {
+          "src": "/photos/pins/chinatown/talat-noi-3.jpg",
+          "alt": "The Chao Phraya River and the skyline seen from Talat Noi",
+          "credit": "\"View of Chao Phraya River from Talat Noi, Bangkok, Thailand\" by Linh Anh Moreau",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:View_of_Chao_Phraya_River_from_Talat_Noi,_Bangkok,_Thailand.jpg"
+        }
+      ]
     },
     {
       "id": "song-wat-road",
@@ -356,7 +520,37 @@
         ]
       },
       "subarea": "song-wat",
-      "links": {}
+      "links": {},
+      "photo": {
+        "src": "/photos/pins/chinatown/song-wat-road.jpg",
+        "alt": "An old corner shophouse building on Song Wat Road",
+        "credit": "\"ตึกแขกถนนทรงวาด 2\" by Dharmadana",
+        "licence": "CC BY-SA 4.0",
+        "source": "https://commons.wikimedia.org/wiki/File:%E0%B8%95%E0%B8%B6%E0%B8%81%E0%B9%81%E0%B8%82%E0%B8%81%E0%B8%96%E0%B8%99%E0%B8%99%E0%B8%97%E0%B8%A3%E0%B8%87%E0%B8%A7%E0%B8%B2%E0%B8%94_2.jpg"
+      },
+      "photos": [
+        {
+          "src": "/photos/pins/chinatown/song-wat-road.jpg",
+          "alt": "An old corner shophouse building on Song Wat Road",
+          "credit": "\"ตึกแขกถนนทรงวาด 2\" by Dharmadana",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:%E0%B8%95%E0%B8%B6%E0%B8%81%E0%B9%81%E0%B8%82%E0%B8%81%E0%B8%96%E0%B8%99%E0%B8%99%E0%B8%97%E0%B8%A3%E0%B8%87%E0%B8%A7%E0%B8%B2%E0%B8%94_2.jpg"
+        },
+        {
+          "src": "/photos/pins/chinatown/song-wat-road-2.jpg",
+          "alt": "Song Wat Road lined with old warehouses and shopfronts",
+          "credit": "\"ถนนทรงวาด1\" by Phoebus 28",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:%E0%B8%96%E0%B8%99%E0%B8%99%E0%B8%97%E0%B8%A3%E0%B8%87%E0%B8%A7%E0%B8%B2%E0%B8%941.jpg"
+        },
+        {
+          "src": "/photos/pins/chinatown/song-wat-road-3.jpg",
+          "alt": "Riverside houses on stilts behind Song Wat Road",
+          "credit": "\"Riverside housing at Song Wat Road in Bangkok, Thailand (28102251760)\" by Thomas Woodtli from Zürich, Switzerland",
+          "licence": "CC BY-SA 2.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Riverside_housing_at_Song_Wat_Road_in_Bangkok,_Thailand_(28102251760).jpg"
+        }
+      ]
     }
   ]
 }
