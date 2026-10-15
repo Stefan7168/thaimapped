@@ -138,7 +138,7 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
         {/* Wide screens: the guide, or the places found, at the left. */}
         <aside className="hidden w-[22rem] shrink-0 flex-col overflow-y-auto border-r border-line bg-paper md:flex">
           {count === 0 ? (
-            <AreaGuide locale={locale} bundle={bundle} routes={routes} onPickArea={(id) => update({ ...filters, areas: [id] })} />
+            <AreaGuide locale={locale} bundle={bundle} routes={routes} onPickArea={(id) => update({ ...filters, areas: [id] })} onPickSubarea={(areaId, subId) => onPick({ kind: 'subarea', id: subareaKey(areaId, subId) } as SearchHit)} onPickStation={(id) => onPick({ kind: 'station', id } as SearchHit)} />
           ) : (
             <div className="p-3">
               <button type="button" onClick={() => update(EMPTY_FILTERS)} className="mb-2 flex items-center gap-1.5 text-sm text-ink-2 hover:text-ink">
@@ -231,7 +231,7 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
 }
 
 /** The left column while nothing is picked: the areas as cards, then the trips. */
-function AreaGuide({ locale, bundle, routes, onPickArea }: { locale: Locale; bundle: CityBundle; routes: TripRoute[]; onPickArea: (id: string) => void }) {
+function AreaGuide({ locale, bundle, routes, onPickArea, onPickSubarea, onPickStation }: { locale: Locale; bundle: CityBundle; routes: TripRoute[]; onPickArea: (id: string) => void; onPickSubarea: (areaId: string, subId: string) => void; onPickStation: (id: string) => void }) {
   const s = strings(locale)
   const { city, areas } = bundle
   const stationById = new Map(bundle.stations.map((st) => [st.id, st]))
@@ -241,7 +241,7 @@ function AreaGuide({ locale, bundle, routes, onPickArea }: { locale: Locale; bun
       <p className="mt-1 text-sm text-ink-2">{s.guide.intro}</p>
       <ul className="mt-3 space-y-3">
         {areas.map((a) => (
-          <AreaCard key={a.id} locale={locale} area={a} stations={a.stations.map((id) => stationById.get(id)).filter((st): st is Station => !!st)} onPick={onPickArea} />
+          <AreaCard key={a.id} locale={locale} area={a} stations={a.stations.map((id) => stationById.get(id)).filter((st): st is Station => !!st)} onPick={onPickArea} onPickSubarea={onPickSubarea} onPickStation={onPickStation} />
         ))}
       </ul>
       {routes.length > 0 && (

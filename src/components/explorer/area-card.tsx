@@ -12,7 +12,7 @@ import { strings } from '@/lib/i18n/strings'
  * and the fits, and a toggle that opens the longer text, the parts of the
  * area and its stations. The whole head is the "show on the map" action.
  */
-export function AreaCard({ locale, area, stations, onPick }: { locale: Locale; area: Area; stations: Station[]; onPick: (id: string) => void }) {
+export function AreaCard({ locale, area, stations, onPick, onPickSubarea, onPickStation }: { locale: Locale; area: Area; stations: Station[]; onPick: (id: string) => void; onPickSubarea: (areaId: string, subId: string) => void; onPickStation: (id: string) => void }) {
   const s = strings(locale)
   const [open, setOpen] = useState(false)
   const [photo, setPhoto] = useState(0)
@@ -67,7 +67,9 @@ export function AreaCard({ locale, area, stations, onPick }: { locale: Locale; a
         <p className="tm-acard__label">{s.guide.subareas}</p>
         <ul className="tm-acard__list">
           {area.subareas.map((sub) => (
-            <li key={sub.id}>{t(sub.name, locale)}</li>
+            <li key={sub.id}>
+              <button type="button" className="tm-acard__chip" onClick={() => onPickSubarea(area.id, sub.id)}>{t(sub.name, locale)}</button>
+            </li>
           ))}
         </ul>
         {stations.length > 0 && (
@@ -75,7 +77,9 @@ export function AreaCard({ locale, area, stations, onPick }: { locale: Locale; a
             <p className="tm-acard__label">{s.guide.stations}</p>
             <ul className="tm-acard__list">
               {stations.map((st) => (
-                <li key={st.id}>{st.code ? `${st.code} ` : ''}{t(st.name, locale)}</li>
+                <li key={st.id}>
+                  <button type="button" className="tm-acard__chip" onClick={() => onPickStation(st.id)}>{st.code ? `${st.code} ` : ''}{t(st.name, locale)}</button>
+                </li>
               ))}
             </ul>
           </>
