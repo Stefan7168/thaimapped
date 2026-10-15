@@ -146,6 +146,7 @@ export function SavedPage({ locale, cityId, entries, stations }: { locale: Local
           <section className="tm-saved__group">
             <h2 className="tm-wk__time">{s.saved.compare}</h2>
             <p className="tm-saved__note">{s.saved.compareLead}</p>
+            <StayPicker locale={locale} />
             <div className="tm-cmp__wrap">
               <table className="tm-cmp">
                 <thead>
@@ -197,7 +198,7 @@ export function SavedPage({ locale, cityId, entries, stations }: { locale: Local
         {hotelRows.length > 0 && (
           <section className="tm-saved__group">
             <h2 className="tm-wk__time">{s.stationPage.hotels}</h2>
-            <StayPicker locale={locale} />
+            {hotelRows.length < 2 && <StayPicker locale={locale} />}
             <ol className="tm-wk__stops tm-saved__list">{hotelRows.map(row)}</ol>
           </section>
         )}

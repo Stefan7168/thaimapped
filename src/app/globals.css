@@ -573,6 +573,7 @@ a.tm-wk__stop { text-decoration: none; }
 
 /* Saved page: the hotels side by side. Scrolls sideways on a phone; the row names stay put. */
 .tm-stay { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; margin: 2px 0 14px; }
+.tm-wk__time + .tm-stay, .tm-saved__note + .tm-stay { margin-top: 12px; }
 .tm-stay__label { flex-basis: 100%; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-2); margin-right: 2px; }
 .tm-stay__dates { display: flex; align-items: center; gap: 8px; }
 .tm-stay input[type='date'] { width: 148px; min-height: 40px; padding: 0 10px; font: inherit; font-size: var(--step-small); color: var(--ink); background: var(--paper-2); border: 0; border-radius: 0; }
