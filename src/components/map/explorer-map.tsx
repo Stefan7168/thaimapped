@@ -21,6 +21,8 @@ export interface ExplorerMapProps {
   pins: VisiblePin[]
   /** Stations that draw a walking circle. */
   stations: Station[]
+  /** Centres of picked areas and sub-areas, framed even when no pin matches. */
+  centres: [number, number][]
   /** Pin to highlight, if any. */
   activePinId: string | null
   onSelectArea: (id: string) => void
@@ -52,8 +54,8 @@ function pinElement(label: string, color: string, minor: boolean, active: boolea
 }
 
 /** Bounds around every pin and station circle, or null when there is nothing to frame. */
-function focusBounds(pins: VisiblePin[], stations: Station[]): LngLatBoundsLike | null {
-  const pts: [number, number][] = []
+function focusBounds(pins: VisiblePin[], stations: Station[], centres: [number, number][]): LngLatBoundsLike | null {
+  const pts: [number, number][] = [...centres]
   for (const { pin } of pins) pts.push([pin.location.lon, pin.location.lat])
   for (const st of stations) {
     const dLat = WALK_RADIUS_M / 111_320
@@ -71,7 +73,7 @@ function focusBounds(pins: VisiblePin[], stations: Station[]): LngLatBoundsLike 
 }
 
 export function ExplorerMap(props: ExplorerMapProps) {
-  const { locale, cityCamera, threeD, areas, pins, stations, activePinId, onSelectArea, onSelectPin } = props
+  const { locale, cityCamera, threeD, areas, pins, stations, centres, activePinId, onSelectArea, onSelectPin } = props
   const containerRef = useRef<HTMLDivElement>(null)
   const mapRef = useRef<MaplibreMap | null>(null)
   const markersRef = useRef<Marker[]>([])
@@ -133,7 +135,7 @@ export function ExplorerMap(props: ExplorerMapProps) {
       if (cancelled) return
       markersRef.current.forEach((m) => m.remove())
       markersRef.current = []
-      if (pins.length === 0 && stations.length === 0) {
+      if (pins.length === 0 && stations.length === 0 && centres.length === 0) {
         for (const a of areas) {
           const el = pinElement(t(a.name, locale), `var(--${a.color})`, false, false)
           el.addEventListener('click', () => callbacks.current.onSelectArea(a.id))
@@ -154,19 +156,19 @@ export function ExplorerMap(props: ExplorerMapProps) {
     return () => {
       cancelled = true
     }
-  }, [areas, pins, stations, activePinId, locale, mapReady])
+  }, [areas, pins, stations, centres, activePinId, locale, mapReady])
 
   // Camera: frame the pins and circles, or return to the city view.
   useEffect(() => {
     const map = mapRef.current
     if (!map || isGestureActive(map)) return
-    const bounds = focusBounds(pins, stations)
+    const bounds = focusBounds(pins, stations, centres)
     if (!bounds) {
       map.flyTo({ center: cityCamera.center, zoom: cityCamera.zoom, pitch: threeD ? cityCamera.pitch : 0, bearing: threeD ? cityCamera.bearing : 0, duration: 1400, essential: true })
       return
     }
     map.fitBounds(bounds, { padding: 60, maxZoom: 15.5, pitch: threeD ? 50 : 0, bearing: threeD ? -12 : 0, duration: 1400, essential: true })
-  }, [pins, stations, threeD, cityCamera, mapReady])
+  }, [pins, stations, centres, threeD, cityCamera, mapReady])
 
   useEffect(() => {
     const map = mapRef.current

@@ -26,6 +26,38 @@
     "mrt-blue-bl26",
     "bts-silom-s3"
   ],
+  "subareas": [
+    {
+      "id": "silom-road",
+      "name": {
+        "en": "Silom"
+      },
+      "center": [
+        100.532,
+        13.728
+      ]
+    },
+    {
+      "id": "sathorn",
+      "name": {
+        "en": "Sathorn"
+      },
+      "center": [
+        100.53,
+        13.722
+      ]
+    },
+    {
+      "id": "surasak",
+      "name": {
+        "en": "Surasak and Saint Louis"
+      },
+      "center": [
+        100.523,
+        13.72
+      ]
+    }
+  ],
   "video": null,
   "pins": [
     {
@@ -46,21 +78,67 @@
         "station": "bts-silom-s2",
         "minutes": 5
       },
-      "links": {}
+      "links": {},
+      "subarea": "silom-road"
     },
     {
-      "id": "silom-sight-1",
+      "id": "king-power-mahanakhon",
       "kind": "sight",
       "name": {
-        "en": "Placeholder sight"
+        "en": "King Power Mahanakhon"
       },
       "why": {
-        "en": "Placeholder. Real pick comes with the content pass."
+        "en": "The pixelated skyscraper with a glass skywalk on the 78th floor."
       },
       "location": {
         "lon": 100.528,
-        "lat": 13.728000000000002
+        "lat": 13.7236
       },
+      "walk": {
+        "station": "bts-silom-s3",
+        "minutes": 1
+      },
+      "subarea": "sathorn",
+      "links": {}
+    },
+    {
+      "id": "lumphini-park",
+      "kind": "sight",
+      "name": {
+        "en": "Lumphini Park"
+      },
+      "why": {
+        "en": "The central park: joggers at dawn, monitor lizards all day."
+      },
+      "location": {
+        "lon": 100.5417,
+        "lat": 13.731
+      },
+      "walk": {
+        "station": "mrt-blue-bl25",
+        "minutes": 2
+      },
+      "subarea": "silom-road",
+      "links": {}
+    },
+    {
+      "id": "patpong-night-market",
+      "kind": "nightlife",
+      "name": {
+        "en": "Patpong Night Market"
+      },
+      "why": {
+        "en": "Souvenir stalls between the go-go bars. Haggle hard."
+      },
+      "location": {
+        "lon": 100.5338,
+        "lat": 13.7284
+      },
+      "walk": {
+        "station": "bts-silom-s2",
+        "minutes": 3
+      },
+      "subarea": "silom-road",
       "links": {}
     }
   ]

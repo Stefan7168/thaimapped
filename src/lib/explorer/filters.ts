@@ -8,7 +8,10 @@ export type Tier = (typeof TIERS)[number]
 export const WALK_RADIUS_M = 800
 
 export interface FilterState {
+  /** Whole areas, like whole lines. */
   areas: string[]
+  /** Sub-areas, as `area/subarea`, like single stations. */
+  subareas: string[]
   stations: string[]
   /** Whole lines, as `SYSTEM/Line`. */
   lines: string[]
@@ -16,10 +19,14 @@ export interface FilterState {
   tiers: Tier[]
 }
 
-export const EMPTY_FILTERS: FilterState = { areas: [], stations: [], lines: [], kinds: [], tiers: [] }
+export const EMPTY_FILTERS: FilterState = { areas: [], subareas: [], stations: [], lines: [], kinds: [], tiers: [] }
+
+export function subareaKey(areaId: string, subId: string): string {
+  return `${areaId}/${subId}`
+}
 
 export function activeFilterCount(f: FilterState): number {
-  return f.areas.length + f.stations.length + f.lines.length + f.kinds.length + f.tiers.length
+  return f.areas.length + f.subareas.length + f.stations.length + f.lines.length + f.kinds.length + f.tiers.length
 }
 
 export function lineKey(s: { system: string; line: string }): string {
@@ -54,13 +61,19 @@ export function selectedStations(bundle: CityBundle, f: FilterState): Station[] 
 export function visiblePins(bundle: CityBundle, f: FilterState): VisiblePin[] {
   if (activeFilterCount(f) === 0) return []
   const areaSet = new Set(f.areas)
+  const subSet = new Set(f.subareas)
+  const placeFilterOn = areaSet.size > 0 || subSet.size > 0
   const kinds = new Set(f.kinds)
   const tiers = new Set<string>(f.tiers)
   const stations = selectedStations(bundle, f)
   const out: VisiblePin[] = []
   for (const area of bundle.areas) {
-    if (areaSet.size > 0 && !areaSet.has(area.id)) continue
     for (const pin of area.pins) {
+      if (placeFilterOn) {
+        const inArea = areaSet.has(area.id)
+        const inSub = pin.subarea !== undefined && subSet.has(subareaKey(area.id, pin.subarea))
+        if (!inArea && !inSub) continue
+      }
       if (kinds.size > 0 && !kinds.has(pin.kind)) continue
       if (tiers.size > 0 && (!pin.tier || !tiers.has(pin.tier))) continue
       if (stations.length > 0) {
@@ -102,4 +115,14 @@ export function groupBySystem(bundle: CityBundle): Map<string, LineGroup[]> {
 
 export function lineColor(bundle: CityBundle, st: { system: string; line: string }): string {
   return bundle.lines.find((l) => l.system === st.system && l.line === st.line)?.color ?? '#6f6a5f'
+}
+
+/** Centres of every selected sub-area and whole area, for framing when no pin matches. */
+export function selectedPlaceCentres(bundle: CityBundle, f: FilterState): [number, number][] {
+  const out: [number, number][] = []
+  for (const area of bundle.areas) {
+    if (f.areas.includes(area.id)) out.push(area.camera.center)
+    for (const sub of area.subareas) if (f.subareas.includes(subareaKey(area.id, sub.id))) out.push(sub.center)
+  }
+  return out
 }

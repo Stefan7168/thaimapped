@@ -6,9 +6,11 @@ import type { CityBundle, Locale } from '@/lib/content/types'
 import { t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
 import { stationLabel } from './transit-filter'
+import { subareaKey } from '@/lib/explorer/filters'
 
 export type SearchHit =
   | { kind: 'area'; id: string; label: string; color: string }
+  | { kind: 'subarea'; id: string; label: string; color: string; sub: string }
   | { kind: 'station'; id: string; label: string; color: string; sub: string }
   | { kind: 'pin'; id: string; areaId: string; label: string; sub: string }
 
@@ -24,6 +26,9 @@ export function TopSearch({ locale, bundle, onPick }: { locale: Locale; bundle: 
     const out: SearchHit[] = []
     for (const a of bundle.areas) {
       if (t(a.name, locale).toLowerCase().includes(q)) out.push({ kind: 'area', id: a.id, label: t(a.name, locale), color: `var(--${a.color})` })
+      for (const sub of a.subareas) {
+        if (t(sub.name, locale).toLowerCase().includes(q)) out.push({ kind: 'subarea', id: subareaKey(a.id, sub.id), label: t(sub.name, locale), color: `var(--${a.color})`, sub: s.search.kindSubarea(t(a.name, locale)) })
+      }
     }
     for (const st of bundle.stations) {
       if (st.name.en.toLowerCase().includes(q) || st.code.toLowerCase() === q) {
@@ -79,7 +84,7 @@ export function TopSearch({ locale, bundle, onPick }: { locale: Locale; bundle: 
               >
                 {h.kind !== 'pin' && <span aria-hidden="true" className="size-2.5 shrink-0 rounded-full" style={{ background: h.color }} />}
                 <span className="truncate">{h.label}</span>
-                <span className="ml-auto shrink-0 text-xs text-ink-2">{h.kind === 'area' ? s.search.kindArea : h.kind === 'station' ? h.sub : h.sub}</span>
+                <span className="ml-auto shrink-0 text-xs text-ink-2">{h.kind === 'area' ? s.search.kindArea : h.sub}</span>
               </button>
             </li>
           ))}

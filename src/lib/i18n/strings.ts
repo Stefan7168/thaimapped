@@ -13,6 +13,7 @@ const en = {
     noMatch: 'Nothing matches that.',
     kindArea: 'Area',
     kindStation: 'Station',
+    kindSubarea: (area: string) => `in ${area}`,
   },
   filters: {
     title: 'Filters',
@@ -27,6 +28,10 @@ const en = {
     addStation: 'Add station',
     allStations: 'All stations',
     areas: 'Areas',
+    areaSearch: 'Search areas',
+    areaNoMatch: 'No area matches that.',
+    removeArea: (label: string) => `Remove ${label}`,
+    wholeArea: 'All',
     kinds: 'What to show',
     tiers: 'Hotel budget',
     tier: { budget: 'Budget', mid: 'Mid-range', luxury: 'Luxury' } as Record<string, string>,

@@ -56,7 +56,15 @@ export interface Pin {
   why: Localized
   location: { lon: number; lat: number }
   walk?: { station: string; minutes: number }
+  /** Sub-area id within the pin's area, when it sits inside a named one. */
+  subarea?: string
   links: PinLinks
+}
+
+export interface Subarea {
+  id: string
+  name: Localized
+  center: [number, number]
 }
 
 export interface Video {
@@ -76,6 +84,7 @@ export interface Area {
   camera: Camera
   polygon?: string
   stations: string[]
+  subareas: Subarea[]
   video: Video | null
   pins: Pin[]
 }

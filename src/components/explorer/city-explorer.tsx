@@ -9,7 +9,7 @@ import { t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
 import { supports3D } from '@/lib/map/device'
 import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
-import { activeFilterCount, EMPTY_FILTERS, selectedStations, visiblePins, type FilterState } from '@/lib/explorer/filters'
+import { activeFilterCount, EMPTY_FILTERS, selectedPlaceCentres, selectedStations, visiblePins, type FilterState } from '@/lib/explorer/filters'
 import { FilterPanel } from './filter-panel'
 import { TopSearch, type SearchHit } from './top-search'
 import { SiteFooter } from './site-footer'
@@ -35,6 +35,7 @@ export function CityExplorer({ locale, bundle }: { locale: Locale; bundle: CityB
 
   const pins = useMemo(() => visiblePins(bundle, filters), [bundle, filters])
   const stations = useMemo(() => selectedStations(bundle, filters), [bundle, filters])
+  const centres = useMemo(() => selectedPlaceCentres(bundle, filters), [bundle, filters])
   const stationById = useMemo(() => new Map(bundle.stations.map((st) => [st.id, st])), [bundle])
   const count = activeFilterCount(filters)
 
@@ -44,6 +45,7 @@ export function CityExplorer({ locale, bundle }: { locale: Locale; bundle: CityB
   }
   function onPick(hit: SearchHit) {
     if (hit.kind === 'area') update({ ...filters, areas: filters.areas.includes(hit.id) ? filters.areas : [...filters.areas, hit.id] })
+    else if (hit.kind === 'subarea') update({ ...filters, subareas: filters.subareas.includes(hit.id) ? filters.subareas : [...filters.subareas, hit.id] })
     else if (hit.kind === 'station') update({ ...filters, stations: filters.stations.includes(hit.id) ? filters.stations : [...filters.stations, hit.id] })
     else {
       update({ ...EMPTY_FILTERS, areas: [hit.areaId] })
@@ -86,6 +88,7 @@ export function CityExplorer({ locale, bundle }: { locale: Locale; bundle: CityB
               areas={areas}
               pins={pins}
               stations={stations}
+              centres={centres}
               activePinId={activePin?.id ?? null}
               onSelectArea={(id) => update({ ...filters, areas: [id] })}
               onSelectPin={(pin) => setActivePin(pin)}

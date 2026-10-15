@@ -3,27 +3,86 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "type": "object",
   "properties": {
-    "id": { "$ref": "common.schema.json#/$defs/slug" },
-    "city": { "$ref": "common.schema.json#/$defs/slug" },
-    "name": { "$ref": "common.schema.json#/$defs/localized" },
-    "tagline": { "$ref": "common.schema.json#/$defs/localized" },
-    "fits": { "type": "array", "items": { "enum": ["first-time", "nightlife", "food", "shopping", "business", "romantic", "quiet", "luxury", "culture", "backpacker", "local", "family"] }, "minItems": 1 },
-    "color": { "type": "string", "pattern": "^area-[1-8]$" },
-    "camera": { "$ref": "common.schema.json#/$defs/camera" },
-    "polygon": { "type": "string" },
-    "stations": { "type": "array", "items": { "type": "string" } },
+    "id": {
+      "$ref": "common.schema.json#/$defs/slug"
+    },
+    "city": {
+      "$ref": "common.schema.json#/$defs/slug"
+    },
+    "name": {
+      "$ref": "common.schema.json#/$defs/localized"
+    },
+    "tagline": {
+      "$ref": "common.schema.json#/$defs/localized"
+    },
+    "fits": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "first-time",
+          "nightlife",
+          "food",
+          "shopping",
+          "business",
+          "romantic",
+          "quiet",
+          "luxury",
+          "culture",
+          "backpacker",
+          "local",
+          "family"
+        ]
+      },
+      "minItems": 1
+    },
+    "color": {
+      "type": "string",
+      "pattern": "^area-[1-8]$"
+    },
+    "camera": {
+      "$ref": "common.schema.json#/$defs/camera"
+    },
+    "polygon": {
+      "type": "string"
+    },
+    "stations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
     "video": {
       "oneOf": [
-        { "type": "null" },
+        {
+          "type": "null"
+        },
         {
           "type": "object",
           "properties": {
-            "platform": { "enum": ["instagram", "youtube", "tiktok"] },
-            "url": { "type": "string", "format": "uri" },
-            "creator": { "type": "string" },
-            "thumb": { "type": "string" }
+            "platform": {
+              "enum": [
+                "instagram",
+                "youtube",
+                "tiktok"
+              ]
+            },
+            "url": {
+              "type": "string",
+              "format": "uri"
+            },
+            "creator": {
+              "type": "string"
+            },
+            "thumb": {
+              "type": "string"
+            }
           },
-          "required": ["platform", "url", "creator", "thumb"],
+          "required": [
+            "platform",
+            "url",
+            "creator",
+            "thumb"
+          ],
           "additionalProperties": false
         }
       ]
@@ -33,35 +92,151 @@
       "items": {
         "type": "object",
         "properties": {
-          "id": { "$ref": "common.schema.json#/$defs/slug" },
-          "kind": { "enum": ["hotel", "sight", "food", "market", "nightlife", "transport"] },
-          "tier": { "enum": ["budget", "mid", "luxury"] },
-          "name": { "$ref": "common.schema.json#/$defs/localized" },
-          "why": { "$ref": "common.schema.json#/$defs/localized" },
+          "id": {
+            "$ref": "common.schema.json#/$defs/slug"
+          },
+          "kind": {
+            "enum": [
+              "hotel",
+              "sight",
+              "food",
+              "market",
+              "nightlife",
+              "transport"
+            ]
+          },
+          "tier": {
+            "enum": [
+              "budget",
+              "mid",
+              "luxury"
+            ]
+          },
+          "name": {
+            "$ref": "common.schema.json#/$defs/localized"
+          },
+          "why": {
+            "$ref": "common.schema.json#/$defs/localized"
+          },
           "location": {
             "type": "object",
-            "properties": { "lon": { "type": "number" }, "lat": { "type": "number" } },
-            "required": ["lon", "lat"],
+            "properties": {
+              "lon": {
+                "type": "number"
+              },
+              "lat": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "lon",
+              "lat"
+            ],
             "additionalProperties": false
           },
           "walk": {
             "type": "object",
-            "properties": { "station": { "type": "string" }, "minutes": { "type": "integer", "minimum": 1, "maximum": 30 } },
-            "required": ["station", "minutes"],
+            "properties": {
+              "station": {
+                "type": "string"
+              },
+              "minutes": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 30
+              }
+            },
+            "required": [
+              "station",
+              "minutes"
+            ],
             "additionalProperties": false
           },
           "links": {
             "type": "object",
             "description": "Plain destination URLs. The link builder adds the affiliate wrapper and sub-ID at render time; never store wrapped URLs here.",
-            "properties": { "agoda": { "type": "string", "format": "uri" }, "booking": { "type": "string", "format": "uri" }, "viator": { "type": "string", "format": "uri" }, "klook": { "type": "string", "format": "uri" }, "official": { "type": "string", "format": "uri" } },
+            "properties": {
+              "agoda": {
+                "type": "string",
+                "format": "uri"
+              },
+              "booking": {
+                "type": "string",
+                "format": "uri"
+              },
+              "viator": {
+                "type": "string",
+                "format": "uri"
+              },
+              "klook": {
+                "type": "string",
+                "format": "uri"
+              },
+              "official": {
+                "type": "string",
+                "format": "uri"
+              }
+            },
             "additionalProperties": false
+          },
+          "subarea": {
+            "$ref": "common.schema.json#/$defs/slug",
+            "description": "Which sub-area the pin belongs to. Optional: a pin can sit in the area but outside every named sub-area."
           }
         },
-        "required": ["id", "kind", "name", "why", "location", "links"],
+        "required": [
+          "id",
+          "kind",
+          "name",
+          "why",
+          "location",
+          "links"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "subareas": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/slug"
+          },
+          "name": {
+            "$ref": "common.schema.json#/$defs/localized"
+          },
+          "center": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 2,
+            "maxItems": 2
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "center"
+        ],
         "additionalProperties": false
       }
     }
   },
-  "required": ["id", "city", "name", "tagline", "fits", "color", "camera", "stations", "video", "pins"],
+  "required": [
+    "id",
+    "city",
+    "name",
+    "tagline",
+    "fits",
+    "color",
+    "camera",
+    "stations",
+    "subareas",
+    "video",
+    "pins"
+  ],
   "additionalProperties": false
 }

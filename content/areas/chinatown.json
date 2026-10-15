@@ -25,6 +25,38 @@
     "mrt-blue-bl29",
     "mrt-blue-bl28"
   ],
+  "subareas": [
+    {
+      "id": "yaowarat",
+      "name": {
+        "en": "Yaowarat"
+      },
+      "center": [
+        100.51,
+        13.74
+      ]
+    },
+    {
+      "id": "talat-noi",
+      "name": {
+        "en": "Talat Noi"
+      },
+      "center": [
+        100.515,
+        13.735
+      ]
+    },
+    {
+      "id": "song-wat",
+      "name": {
+        "en": "Song Wat"
+      },
+      "center": [
+        100.507,
+        13.738
+      ]
+    }
+  ],
   "video": null,
   "pins": [
     {
@@ -45,21 +77,47 @@
         "station": "mrt-blue-bl29",
         "minutes": 4
       },
+      "links": {},
+      "subarea": "yaowarat"
+    },
+    {
+      "id": "wat-traimit",
+      "kind": "sight",
+      "name": {
+        "en": "Wat Traimit"
+      },
+      "why": {
+        "en": "Home of the five-tonne solid gold Buddha, at the end of Yaowarat."
+      },
+      "location": {
+        "lon": 100.5135,
+        "lat": 13.7378
+      },
+      "walk": {
+        "station": "mrt-blue-bl28",
+        "minutes": 5
+      },
+      "subarea": "yaowarat",
       "links": {}
     },
     {
-      "id": "chinatown-sight-1",
-      "kind": "sight",
+      "id": "yaowarat-road",
+      "kind": "food",
       "name": {
-        "en": "Placeholder sight"
+        "en": "Yaowarat Road street food"
       },
       "why": {
-        "en": "Placeholder. Real pick comes with the content pass."
+        "en": "Come after dark. Seafood, noodles and the famous toast stall."
       },
       "location": {
-        "lon": 100.507,
-        "lat": 13.742
+        "lon": 100.509,
+        "lat": 13.7398
       },
+      "walk": {
+        "station": "mrt-blue-bl29",
+        "minutes": 2
+      },
+      "subarea": "yaowarat",
       "links": {}
     }
   ]

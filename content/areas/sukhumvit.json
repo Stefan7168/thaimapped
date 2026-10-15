@@ -26,6 +26,38 @@
     "bts-sukhumvit-e4",
     "mrt-blue-bl22"
   ],
+  "subareas": [
+    {
+      "id": "nana",
+      "name": {
+        "en": "Nana"
+      },
+      "center": [
+        100.555,
+        13.741
+      ]
+    },
+    {
+      "id": "asok",
+      "name": {
+        "en": "Asok"
+      },
+      "center": [
+        100.56,
+        13.737
+      ]
+    },
+    {
+      "id": "phrom-phong",
+      "name": {
+        "en": "Phrom Phong"
+      },
+      "center": [
+        100.569,
+        13.73
+      ]
+    }
+  ],
   "video": null,
   "pins": [
     {
@@ -46,21 +78,47 @@
         "station": "bts-sukhumvit-e4",
         "minutes": 3
       },
+      "links": {},
+      "subarea": "nana"
+    },
+    {
+      "id": "terminal-21",
+      "kind": "sight",
+      "name": {
+        "en": "Terminal 21"
+      },
+      "why": {
+        "en": "Mall at Asok with a floor per world city and a cheap top-floor food court."
+      },
+      "location": {
+        "lon": 100.5604,
+        "lat": 13.7375
+      },
+      "walk": {
+        "station": "bts-sukhumvit-e4",
+        "minutes": 1
+      },
+      "subarea": "asok",
       "links": {}
     },
     {
-      "id": "sukhumvit-sight-1",
+      "id": "emquartier",
       "kind": "sight",
       "name": {
-        "en": "Placeholder sight"
+        "en": "EmQuartier and Emporium"
       },
       "why": {
-        "en": "Placeholder. Real pick comes with the content pass."
+        "en": "The upscale malls at Phrom Phong, with a rooftop garden."
       },
       "location": {
-        "lon": 100.553,
-        "lat": 13.74
+        "lon": 100.5695,
+        "lat": 13.7318
       },
+      "walk": {
+        "station": "bts-sukhumvit-e5",
+        "minutes": 1
+      },
+      "subarea": "phrom-phong",
       "links": {}
     }
   ]

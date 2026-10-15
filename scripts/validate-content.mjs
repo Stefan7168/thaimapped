@@ -74,11 +74,17 @@ for (const { id: cityId } of country.cities) {
     if (seenColors.has(area.color)) errors.push(`${label}: color ${area.color} already used by ${seenColors.get(area.color)}`)
     seenColors.set(area.color, areaId)
     for (const st of area.stations ?? []) if (!stationIds.has(st)) errors.push(`${label}: unknown station ${st}`)
+    const subIds = new Set()
+    for (const sub of area.subareas ?? []) {
+      if (subIds.has(sub.id)) errors.push(`${label}: duplicate sub-area ${sub.id}`)
+      subIds.add(sub.id)
+    }
     const pinIds = new Set()
     for (const pin of area.pins ?? []) {
       if (pinIds.has(pin.id)) errors.push(`${label}: duplicate pin ${pin.id}`)
       pinIds.add(pin.id)
       if (pin.kind === 'hotel' && !pin.tier) errors.push(`${label}: hotel pin ${pin.id} needs a tier`)
+      if (pin.subarea && !subIds.has(pin.subarea)) errors.push(`${label}: pin ${pin.id} names unknown sub-area ${pin.subarea}`)
       if (pin.walk && !stationIds.has(pin.walk.station)) errors.push(`${label}: pin ${pin.id} walks to unknown station ${pin.walk.station}`)
     }
   }

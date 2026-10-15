@@ -25,6 +25,38 @@
     "bts-silom-cen",
     "bts-sukhumvit-e1"
   ],
+  "subareas": [
+    {
+      "id": "siam-square",
+      "name": {
+        "en": "Siam Square"
+      },
+      "center": [
+        100.533,
+        13.745
+      ]
+    },
+    {
+      "id": "ratchaprasong",
+      "name": {
+        "en": "Ratchaprasong"
+      },
+      "center": [
+        100.54,
+        13.744
+      ]
+    },
+    {
+      "id": "pratunam",
+      "name": {
+        "en": "Pratunam"
+      },
+      "center": [
+        100.54,
+        13.751
+      ]
+    }
+  ],
   "video": null,
   "pins": [
     {
@@ -45,21 +77,147 @@
         "station": "bts-silom-cen",
         "minutes": 4
       },
+      "links": {},
+      "subarea": "siam-square"
+    },
+    {
+      "id": "baiyoke-sky-tower",
+      "kind": "sight",
+      "name": {
+        "en": "Baiyoke Sky Tower"
+      },
+      "why": {
+        "en": "Tallest hotel tower in the city with an open-air deck. Pratunam market is at its feet."
+      },
+      "location": {
+        "lon": 100.5401,
+        "lat": 13.7544
+      },
+      "walk": {
+        "station": "bts-sukhumvit-n1",
+        "minutes": 12
+      },
+      "subarea": "pratunam",
       "links": {}
     },
     {
-      "id": "siam-sight-1",
+      "id": "siam-paragon",
       "kind": "sight",
       "name": {
-        "en": "Placeholder sight"
+        "en": "Siam Paragon"
       },
       "why": {
-        "en": "Placeholder. Real pick comes with the content pass."
+        "en": "The flagship mall, next to Siam BTS. Aquarium in the basement."
       },
       "location": {
-        "lon": 100.532,
-        "lat": 13.748000000000001
+        "lon": 100.5348,
+        "lat": 13.7466
       },
+      "walk": {
+        "station": "bts-silom-cen",
+        "minutes": 2
+      },
+      "subarea": "siam-square",
+      "links": {}
+    },
+    {
+      "id": "mbk-center",
+      "kind": "sight",
+      "name": {
+        "en": "MBK Center"
+      },
+      "why": {
+        "en": "Eight floors of phone shops, cheap clothes and food. The budget mall."
+      },
+      "location": {
+        "lon": 100.53,
+        "lat": 13.7446
+      },
+      "walk": {
+        "station": "bts-silom-w1",
+        "minutes": 2
+      },
+      "subarea": "siam-square",
+      "links": {}
+    },
+    {
+      "id": "central-world",
+      "kind": "sight",
+      "name": {
+        "en": "CentralWorld"
+      },
+      "why": {
+        "en": "Huge mall at Ratchaprasong. Erawan Shrine is across the road."
+      },
+      "location": {
+        "lon": 100.5392,
+        "lat": 13.7467
+      },
+      "walk": {
+        "station": "bts-sukhumvit-e1",
+        "minutes": 3
+      },
+      "subarea": "ratchaprasong",
+      "links": {}
+    },
+    {
+      "id": "erawan-shrine",
+      "kind": "sight",
+      "name": {
+        "en": "Erawan Shrine"
+      },
+      "why": {
+        "en": "Small Hindu shrine at the busiest crossing in town, with dancers for hire."
+      },
+      "location": {
+        "lon": 100.5404,
+        "lat": 13.7443
+      },
+      "walk": {
+        "station": "bts-sukhumvit-e1",
+        "minutes": 1
+      },
+      "subarea": "ratchaprasong",
+      "links": {}
+    },
+    {
+      "id": "jim-thompson-house",
+      "kind": "sight",
+      "name": {
+        "en": "Jim Thompson House"
+      },
+      "why": {
+        "en": "Teak house museum of the American silk trader who vanished in 1967."
+      },
+      "location": {
+        "lon": 100.5283,
+        "lat": 13.7493
+      },
+      "walk": {
+        "station": "bts-silom-w1",
+        "minutes": 5
+      },
+      "subarea": "siam-square",
+      "links": {}
+    },
+    {
+      "id": "bacc",
+      "kind": "sight",
+      "name": {
+        "en": "Bangkok Art and Culture Centre"
+      },
+      "why": {
+        "en": "Free contemporary art space on the Siam skywalk."
+      },
+      "location": {
+        "lon": 100.5302,
+        "lat": 13.7467
+      },
+      "walk": {
+        "station": "bts-silom-w1",
+        "minutes": 1
+      },
+      "subarea": "siam-square",
       "links": {}
     }
   ]

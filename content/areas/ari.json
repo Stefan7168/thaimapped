@@ -25,6 +25,28 @@
   "stations": [
     "bts-sukhumvit-n5"
   ],
+  "subareas": [
+    {
+      "id": "ari-sois",
+      "name": {
+        "en": "Ari sois"
+      },
+      "center": [
+        100.541,
+        13.78
+      ]
+    },
+    {
+      "id": "saphan-khwai",
+      "name": {
+        "en": "Saphan Khwai"
+      },
+      "center": [
+        100.549,
+        13.793
+      ]
+    }
+  ],
   "video": null,
   "pins": [
     {
@@ -45,21 +67,27 @@
         "station": "bts-sukhumvit-n5",
         "minutes": 5
       },
-      "links": {}
+      "links": {},
+      "subarea": "ari-sois"
     },
     {
-      "id": "ari-sight-1",
-      "kind": "sight",
+      "id": "chatuchak-market",
+      "kind": "market",
       "name": {
-        "en": "Placeholder sight"
+        "en": "Chatuchak Weekend Market"
       },
       "why": {
-        "en": "Placeholder. Real pick comes with the content pass."
+        "en": "Fifteen thousand stalls, Saturday and Sunday only. Go early."
       },
       "location": {
-        "lon": 100.538,
-        "lat": 13.781
+        "lon": 100.5494,
+        "lat": 13.7999
       },
+      "walk": {
+        "station": "bts-sukhumvit-n8",
+        "minutes": 5
+      },
+      "subarea": "saphan-khwai",
       "links": {}
     }
   ]

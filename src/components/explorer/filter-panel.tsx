@@ -2,10 +2,10 @@
 
 import type { ReactNode } from 'react'
 import type { CityBundle, Locale, PinKind } from '@/lib/content/types'
-import { t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
 import { activeFilterCount, EMPTY_FILTERS, PIN_KINDS, TIERS, type FilterState, type Tier } from '@/lib/explorer/filters'
 import { TransitFilter } from './transit-filter'
+import { AreaFilter } from './area-filter'
 
 export interface FilterPanelProps {
   locale: Locale
@@ -33,6 +33,16 @@ export function FilterPanel({ locale, bundle, filters, onChange }: FilterPanelPr
         )}
       </div>
 
+      <Section label={s.filters.areas}>
+        <AreaFilter
+          locale={locale}
+          bundle={bundle}
+          areas={filters.areas}
+          subareas={filters.subareas}
+          onChange={({ areas, subareas }) => onChange({ ...filters, areas, subareas })}
+        />
+      </Section>
+
       <Section label={s.filters.transit}>
         <TransitFilter
           locale={locale}
@@ -41,26 +51,6 @@ export function FilterPanel({ locale, bundle, filters, onChange }: FilterPanelPr
           lines={filters.lines}
           onChange={({ stations, lines }) => onChange({ ...filters, stations, lines })}
         />
-      </Section>
-
-      <Section label={s.filters.areas}>
-        <div className="flex flex-wrap gap-1.5">
-          {bundle.areas.map((a) => {
-            const on = filters.areas.includes(a.id)
-            return (
-              <button
-                key={a.id}
-                type="button"
-                aria-pressed={on}
-                onClick={() => onChange({ ...filters, areas: toggle(filters.areas, a.id) })}
-                className={`flex min-h-9 items-center gap-1.5 rounded-full border px-3 text-sm ${on ? 'border-ink bg-white font-medium' : 'border-line bg-white/60'}`}
-              >
-                <span aria-hidden="true" className="size-2.5 rounded-full" style={{ background: `var(--${a.color})` }} />
-                {t(a.name, locale)}
-              </button>
-            )
-          })}
-        </div>
       </Section>
 
       <Section label={s.filters.kinds}>

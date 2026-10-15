@@ -25,6 +25,38 @@
   "stations": [
     "bts-silom-s6"
   ],
+  "subareas": [
+    {
+      "id": "charoen-krung",
+      "name": {
+        "en": "Charoen Krung"
+      },
+      "center": [
+        100.514,
+        13.722
+      ]
+    },
+    {
+      "id": "bang-rak",
+      "name": {
+        "en": "Bang Rak"
+      },
+      "center": [
+        100.517,
+        13.726
+      ]
+    },
+    {
+      "id": "khlong-san",
+      "name": {
+        "en": "Khlong San (ICONSIAM side)"
+      },
+      "center": [
+        100.51,
+        13.727
+      ]
+    }
+  ],
   "video": null,
   "pins": [
     {
@@ -45,21 +77,47 @@
         "station": "bts-silom-s6",
         "minutes": 6
       },
+      "links": {},
+      "subarea": "charoen-krung"
+    },
+    {
+      "id": "iconsiam",
+      "kind": "sight",
+      "name": {
+        "en": "ICONSIAM"
+      },
+      "why": {
+        "en": "The big riverside mall with the floating-market food hall. Free shuttle boat from Sathorn pier."
+      },
+      "location": {
+        "lon": 100.5097,
+        "lat": 13.7266
+      },
+      "walk": {
+        "station": "bts-silom-s7",
+        "minutes": 10
+      },
+      "subarea": "khlong-san",
       "links": {}
     },
     {
-      "id": "riverside-sight-1",
-      "kind": "sight",
+      "id": "asiatique",
+      "kind": "market",
       "name": {
-        "en": "Placeholder sight"
+        "en": "Asiatique The Riverfront"
       },
       "why": {
-        "en": "Placeholder. Real pick comes with the content pass."
+        "en": "Night market by the river with a ferris wheel. Free boat from Saphan Taksin."
       },
       "location": {
-        "lon": 100.509,
-        "lat": 13.722000000000001
+        "lon": 100.5064,
+        "lat": 13.7047
       },
+      "walk": {
+        "station": "bts-silom-s6",
+        "minutes": 25
+      },
+      "subarea": "charoen-krung",
       "links": {}
     }
   ]

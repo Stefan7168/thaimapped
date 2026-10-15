@@ -25,6 +25,38 @@
     "mrt-blue-bl31",
     "mrt-blue-bl30"
   ],
+  "subareas": [
+    {
+      "id": "khao-san",
+      "name": {
+        "en": "Khao San"
+      },
+      "center": [
+        100.497,
+        13.759
+      ]
+    },
+    {
+      "id": "grand-palace",
+      "name": {
+        "en": "Grand Palace and Wat Pho"
+      },
+      "center": [
+        100.492,
+        13.748
+      ]
+    },
+    {
+      "id": "banglamphu",
+      "name": {
+        "en": "Banglamphu"
+      },
+      "center": [
+        100.498,
+        13.762
+      ]
+    }
+  ],
   "video": null,
   "pins": [
     {
@@ -45,21 +77,87 @@
         "station": "mrt-blue-bl31",
         "minutes": 8
       },
+      "links": {},
+      "subarea": "khao-san"
+    },
+    {
+      "id": "grand-palace",
+      "kind": "sight",
+      "name": {
+        "en": "Grand Palace and Wat Phra Kaew"
+      },
+      "why": {
+        "en": "The one everybody sees. Go at opening time, cover knees and shoulders."
+      },
+      "location": {
+        "lon": 100.4917,
+        "lat": 13.75
+      },
+      "walk": {
+        "station": "mrt-blue-bl31",
+        "minutes": 8
+      },
+      "subarea": "grand-palace",
       "links": {}
     },
     {
-      "id": "old-town-sight-1",
+      "id": "wat-pho",
       "kind": "sight",
       "name": {
-        "en": "Placeholder sight"
+        "en": "Wat Pho"
       },
       "why": {
-        "en": "Placeholder. Real pick comes with the content pass."
+        "en": "The reclining Buddha and the massage school, a short walk from the Palace."
       },
       "location": {
         "lon": 100.493,
-        "lat": 13.755
+        "lat": 13.7465
       },
+      "walk": {
+        "station": "mrt-blue-bl31",
+        "minutes": 5
+      },
+      "subarea": "grand-palace",
+      "links": {}
+    },
+    {
+      "id": "wat-arun",
+      "kind": "sight",
+      "name": {
+        "en": "Wat Arun"
+      },
+      "why": {
+        "en": "The Temple of Dawn across the river. Cross by the small ferry from Tha Tien."
+      },
+      "location": {
+        "lon": 100.4889,
+        "lat": 13.7437
+      },
+      "walk": {
+        "station": "mrt-blue-bl31",
+        "minutes": 12
+      },
+      "subarea": "grand-palace",
+      "links": {}
+    },
+    {
+      "id": "khao-san-road",
+      "kind": "nightlife",
+      "name": {
+        "en": "Khao San Road"
+      },
+      "why": {
+        "en": "The backpacker street: bars, pad thai carts, cheap tattoos."
+      },
+      "location": {
+        "lon": 100.4975,
+        "lat": 13.7588
+      },
+      "walk": {
+        "station": "mrt-blue-bl30",
+        "minutes": 20
+      },
+      "subarea": "khao-san",
       "links": {}
     }
   ]

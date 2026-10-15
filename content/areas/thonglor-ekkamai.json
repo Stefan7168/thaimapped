@@ -26,6 +26,38 @@
     "bts-sukhumvit-e6",
     "bts-sukhumvit-e7"
   ],
+  "subareas": [
+    {
+      "id": "thonglor",
+      "name": {
+        "en": "Thonglor"
+      },
+      "center": [
+        100.58,
+        13.733
+      ]
+    },
+    {
+      "id": "ekkamai",
+      "name": {
+        "en": "Ekkamai"
+      },
+      "center": [
+        100.585,
+        13.725
+      ]
+    },
+    {
+      "id": "phra-khanong",
+      "name": {
+        "en": "Phra Khanong"
+      },
+      "center": [
+        100.589,
+        13.716
+      ]
+    }
+  ],
   "video": null,
   "pins": [
     {
@@ -46,21 +78,27 @@
         "station": "bts-sukhumvit-e6",
         "minutes": 7
       },
-      "links": {}
+      "links": {},
+      "subarea": "thonglor"
     },
     {
-      "id": "thonglor-ekkamai-sight-1",
-      "kind": "sight",
+      "id": "thonglor-soi-bars",
+      "kind": "nightlife",
       "name": {
-        "en": "Placeholder sight"
+        "en": "Thonglor bar strip"
       },
       "why": {
-        "en": "Placeholder. Real pick comes with the content pass."
+        "en": "Cocktail bars and izakayas along Sukhumvit 55."
       },
       "location": {
-        "lon": 100.58,
-        "lat": 13.732000000000001
+        "lon": 100.5812,
+        "lat": 13.733
       },
+      "walk": {
+        "station": "bts-sukhumvit-e6",
+        "minutes": 8
+      },
+      "subarea": "thonglor",
       "links": {}
     }
   ]
