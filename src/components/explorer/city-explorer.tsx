@@ -9,6 +9,7 @@ import { t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
 import { supports3D } from '@/lib/map/device'
 import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
+import { trackOutbound } from '@/lib/links/track'
 import { whenLine } from '@/lib/explorer/when'
 import { activeFilterCount, allPins, EMPTY_FILTERS, selectedPlaceCentres, selectedStations, subareaKey, visiblePins, type FilterState } from '@/lib/explorer/filters'
 import type { Outline } from '@/components/map/explorer-map'
@@ -38,6 +39,8 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
   const [filters, setFilters] = useState<FilterState>(EMPTY_FILTERS)
   const [activePin, setActivePin] = useState<Pin | null>(null)
   const [sheetOpen, setSheetOpen] = useState(false)
+  // Phones: the place list starts as a one-line handle so the map stays visible.
+  const [listOpen, setListOpen] = useState(false)
 
   const pins = useMemo(() => visiblePins(bundle, filters), [bundle, filters])
   const stations = useMemo(() => selectedStations(bundle, filters), [bundle, filters])
@@ -102,7 +105,7 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
             {active && partners.length > 0 && (
               <div className="mt-1 flex gap-2 px-1">
                 {partners.map((p) => (
-                  <a key={p} href={buildOutboundUrl(p, pin.links[p]!, subIdFor(`${city.id}-${area.id}`, pin.id))} target="_blank" rel="noopener sponsored" className="rounded bg-accent px-2 py-1 text-xs font-semibold text-white">
+                  <a key={p} href={buildOutboundUrl(p, pin.links[p]!, subIdFor(`${city.id}-${area.id}`, pin.id))} onClick={() => trackOutbound(p, subIdFor(`${city.id}-${area.id}`, pin.id))} target="_blank" rel="noopener sponsored" className="rounded bg-accent px-2 py-1 text-xs font-semibold text-white">
                     {p}
                   </a>
                 ))}
@@ -116,17 +119,18 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
 
   return (
     <div className="flex h-dvh flex-col">
-      <header className="flex items-center gap-3 border-b border-line bg-paper px-3 py-2 md:px-4">
+      {/* Phones: brand and filter button on one line, the search on its own line under them. */}
+      <header className="flex flex-wrap items-center gap-x-3 gap-y-2 border-b border-line bg-paper px-3 py-2 md:flex-nowrap md:px-4">
         <Link href={`/${locale}`} className="shrink-0 font-display text-xl font-semibold tracking-tight">
           {s.brand}
         </Link>
-        <div className="mx-auto w-full max-w-xl">
+        <div className="order-last w-full md:order-none md:mx-auto md:w-full md:max-w-xl">
           <TopSearch locale={locale} bundle={bundle} onPick={onPick} />
         </div>
         <button
           type="button"
           onClick={() => setSheetOpen(true)}
-          className="flex shrink-0 items-center gap-1.5 rounded-full border border-line bg-white px-3 py-2 text-sm font-medium md:hidden"
+          className="ml-auto flex shrink-0 items-center gap-1.5 rounded-full border border-line bg-white px-3 py-2 text-sm font-medium md:hidden"
         >
           <SlidersHorizontal aria-hidden="true" className="size-4" />
           {s.filters.open}
@@ -188,10 +192,17 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
 
           {/* Phones: the places found float over the map. */}
           {count > 0 && (
-            <div className="absolute inset-x-3 bottom-3 max-h-[40%] overflow-y-auto rounded-xl border border-line bg-paper/95 p-2 shadow-lg md:hidden">
-              <p className="px-1 pb-1 text-xs font-semibold uppercase tracking-wider text-ink-2">{s.filters.results(pins.length)}</p>
-              {pins.length === 0 && <p className="px-1 pb-1 text-sm text-ink-2">{s.filters.noResults}</p>}
-              {placeList}
+            <div className={`absolute inset-x-3 bottom-3 flex flex-col rounded-xl border border-line bg-paper/95 shadow-lg md:hidden ${listOpen ? 'max-h-[45%]' : ''}`}>
+              <button type="button" aria-expanded={listOpen} onClick={() => setListOpen((o) => !o)} className="flex min-h-11 items-center justify-between px-3 text-sm font-semibold">
+                <span>{s.filters.results(pins.length)}</span>
+                <span className="text-xs font-medium text-ink-2">{listOpen ? s.filters.hideList : s.filters.showList}</span>
+              </button>
+              {listOpen && (
+                <div className="overflow-y-auto px-2 pb-2">
+                  {pins.length === 0 && <p className="px-1 pb-1 text-sm text-ink-2">{s.filters.noResults}</p>}
+                  {placeList}
+                </div>
+              )}
             </div>
           )}
           {count === 0 && (

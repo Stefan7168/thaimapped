@@ -75,6 +75,8 @@ const en = {
     open: 'Filters',
     close: 'Done',
     clearAll: 'Clear all',
+    showList: 'Show list',
+    hideList: 'Hide list',
     transit: 'Near a station',
     transitSearch: 'Search stations',
     transitClear: 'Clear station search',

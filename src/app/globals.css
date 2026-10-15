@@ -58,12 +58,14 @@ body {
 .tm-pin--minor .tm-pin__label { font-weight: 500; color: var(--ink-2); }
 .tm-pin--active .tm-pin__dot { box-shadow: 0 0 0 3px rgba(200,85,61,0.35), 0 1px 3px rgba(0,0,0,0.3); } /* taste-skill-ignore: map marker halo */
 .tm-pin--active .tm-pin__label { border-color: var(--ink); }
+.tm-map--dots .tm-pin:not(.tm-pin--active) .tm-pin__label { display: none; }
 
 /* The card on a tapped pin. */
 .tm-card-popup .maplibregl-popup-content { padding: 0; background: transparent; box-shadow: none; border-radius: 0; }
 .tm-card-popup .maplibregl-popup-tip { border-top-color: var(--paper); border-bottom-color: var(--paper); }
 .tm-card { width: min(300px, 80vw); background: var(--paper); border-radius: 12px; border: 1px solid var(--line); border-top: 4px solid var(--pin, var(--accent)); box-shadow: 0 8px 24px rgba(43,42,38,0.18); padding: 10px 12px 12px; font-family: var(--font-sans), system-ui, sans-serif; color: var(--ink); } /* taste-skill-ignore: map card over tiles */
 .tm-card__photo { position: relative; margin: -10px -12px 8px; aspect-ratio: 16 / 9; overflow: hidden; border-radius: 8px 8px 0 0; background: var(--paper-2); }
+.tm-card__photo figcaption a { color: inherit; text-decoration: underline; }
 .tm-card__photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .tm-card__photo figcaption { position: absolute; left: 0; right: 0; bottom: 0; padding: 3px 8px; font-size: 10px; color: #fff; background: linear-gradient(to top, rgba(43,42,38,0.6), rgba(43,42,38,0)); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } /* taste-skill-ignore: photo credit over a picture */
 .tm-card__head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }

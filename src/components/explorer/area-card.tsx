@@ -43,7 +43,7 @@ export function AreaCard({ locale, area, stations, onPick, onPickSubarea, onPick
               </span>
             </>
           )}
-          <span className="tm-acard__credit">{s.guide.photoCredit(current.credit, current.licence)}</span>
+          <a className="tm-acard__credit" href={current.source} target="_blank" rel="noopener">{s.guide.photoCredit(current.credit, current.licence)}</a>
         </div>
       )}
       <button type="button" onClick={() => onPick(area.id)} className="tm-acard__head" aria-label={s.guide.show(name)}>

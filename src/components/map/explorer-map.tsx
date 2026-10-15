@@ -155,6 +155,11 @@ export function ExplorerMap(props: ExplorerMapProps) {
         map.addLayer({ id: `${NEARBY_SOURCE}-line`, type: 'line', source: NEARBY_SOURCE, paint: { 'line-color': '#2b2a26', 'line-width': 1.5, 'line-opacity': 0.5, 'line-dasharray': [1.5, 2] } })
         map.addLayer({ id: `${OUTLINE_SOURCE}-line`, type: 'line', source: OUTLINE_SOURCE, layout: { 'line-join': 'round' }, paint: { 'line-color': ['get', 'color'], 'line-width': 2.5, 'line-opacity': 0.9 } })
         mapRef.current = map
+        // Narrow screens at city zoom: dots only, the label comes on tap. Sixteen labels in a 100 px band read as broken.
+        const dotsOnly = () => map!.getContainer().classList.toggle('tm-map--dots', window.innerWidth < 768 && map!.getZoom() < 13)
+        dotsOnly()
+        map.on('zoomend', dotsOnly)
+        map.on('resize', dotsOnly)
         setMapReady((n) => n + 1)
       })
     })()
@@ -253,7 +258,9 @@ export function ExplorerMap(props: ExplorerMapProps) {
       if (cancelled) return
       const { pin, area } = hit
       const station = pin.walk ? stationById.get(pin.walk.station) : undefined
-      const popup = new maplibregl.Popup({ closeButton: false, closeOnClick: false, offset: 14, maxWidth: '300px', className: 'tm-card-popup' })
+      // On a phone the card always hangs above the pin (the pin is eased down to make room); a wide screen lets MapLibre pick the side.
+      const narrowScreen = map.getContainer().clientWidth < 768
+      const popup = new maplibregl.Popup({ closeButton: false, closeOnClick: false, offset: 14, maxWidth: '300px', className: 'tm-card-popup', anchor: narrowScreen ? 'bottom' : undefined })
         .setLngLat([pin.location.lon, pin.location.lat])
         .setDOMContent(cardElement(locale, cityId, pin, area, station, nearby, () => callbacks.current.onClosePin(), (next) => callbacks.current.onSelectPin(next)))
         .addTo(map)
@@ -269,7 +276,8 @@ export function ExplorerMap(props: ExplorerMapProps) {
         const pt = map.project([pin.location.lon, pin.location.lat])
         const { clientWidth: w, clientHeight: h } = map.getContainer()
         const nearEdge = pt.x < 170 || pt.x > w - 170 || pt.y < 260 || pt.y > h - 40
-        if (narrow || nearEdge) map.easeTo({ center: [pin.location.lon, pin.location.lat], offset: [0, narrow ? 30 : 120], duration: 500, essential: true })
+        // Phone: the pin lands about 190 px below the middle, which leaves ~400 px above it for a card with a photo.
+        if (narrow || nearEdge) map.easeTo({ center: [pin.location.lon, pin.location.lat], offset: [0, narrow ? 190 : 120], duration: 500, essential: true })
       }
     })()
     return () => {

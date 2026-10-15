@@ -3,6 +3,7 @@ import { t } from '@/lib/i18n/locales'
 import { whenLine } from '@/lib/explorer/when'
 import { strings } from '@/lib/i18n/strings'
 import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
+import { trackOutbound } from '@/lib/links/track'
 import type { NearbyPin } from '@/lib/explorer/filters'
 
 /** The card that opens on a pin: what it is, why it is here, how far from the train, where to book. */
@@ -15,11 +16,17 @@ export function cardElement(locale: Locale, cityId: string, pin: Pin, area: Area
     const fig = document.createElement('figure')
     fig.className = 'tm-card__photo'
     const img = document.createElement('img')
-    img.src = pin.photo.src
+    // The optimiser serves a 640 px copy: the card is 300 px wide and the file is 1600 px.
+    img.src = `/_next/image?url=${encodeURIComponent(pin.photo.src)}&w=640&q=75`
     img.alt = pin.photo.alt
     img.loading = 'lazy'
     const cap = document.createElement('figcaption')
-    cap.textContent = `${pin.photo.credit} (${pin.photo.licence})`
+    const credit = document.createElement('a')
+    credit.href = pin.photo.source
+    credit.target = '_blank'
+    credit.rel = 'noopener'
+    credit.textContent = pin.photo.credit
+    cap.append(credit, ` (${pin.photo.licence})`)
     fig.append(img, cap)
     el.append(fig)
   }
@@ -62,7 +69,9 @@ export function cardElement(locale: Locale, cityId: string, pin: Pin, area: Area
     for (const partner of partners) {
       const a = document.createElement('a')
       a.className = partner === 'official' ? 'tm-card__link tm-card__link--quiet' : 'tm-card__link'
-      a.href = buildOutboundUrl(partner, pin.links[partner]!, subIdFor(`${cityId}-${area.id}`, pin.id))
+      const subId = subIdFor(`${cityId}-${area.id}`, pin.id)
+      a.href = buildOutboundUrl(partner, pin.links[partner]!, subId)
+      if (partner !== 'official') a.addEventListener('click', () => trackOutbound(partner, subId))
       a.target = '_blank'
       a.rel = partner === 'official' ? 'noopener' : 'noopener sponsored'
       a.textContent = partner === 'official' ? s.card.official : s.card.open(partner.charAt(0).toUpperCase() + partner.slice(1))

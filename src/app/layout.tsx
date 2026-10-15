@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter, Fraunces } from 'next/font/google'
 import './globals.css'
+import { env } from '@/lib/env'
 
 const inter = Inter({ variable: '--font-sans', subsets: ['latin'] })
 const fraunces = Fraunces({ variable: '--font-display', subsets: ['latin'], weight: ['500', '600'] })
@@ -16,6 +17,8 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
       <head>
         {/* Entrances hide nothing unless this runs: no script, no hidden content. */}
         <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
+        {/* Analytics only when a Plausible domain is set; the outbound_click event is sent from the booking links. */}
+        {env.plausibleDomain && <script defer data-domain={env.plausibleDomain} src="https://plausible.io/js/script.js" />}
       </head>
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
