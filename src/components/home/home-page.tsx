@@ -33,8 +33,7 @@ export function HomePage({ locale, bundle, routes }: { locale: Locale; bundle: C
   const detected3D = useSyncExternalStore(noopSubscribe, supports3D, () => null)
   const threeD = detected3D ?? false
   const [activeArea, setActiveArea] = useState<string | null>(null)
-  // The highlight card nearest the middle of the screen, and the one the reader tapped open.
-  const [focusPin, setFocusPin] = useState<{ pin: Pin; area: Area } | null>(null)
+  // The highlight the reader tapped open.
   const [cardPin, setCardPin] = useState<{ pin: Pin; area: Area } | null>(null)
   const rowsRef = useRef<Map<string, HTMLElement>>(new Map())
   // While the pointer is over the list, the hovered row leads and the scroll
@@ -54,20 +53,20 @@ export function HomePage({ locale, bundle, routes }: { locale: Locale; bundle: C
       (entries) => {
         for (const e of entries) {
           if (!e.isIntersecting || hoveringRef.current) continue
-          const el = e.target as HTMLElement
-          const areaId = el.dataset.area ?? null
-          setActiveArea(areaId)
-          const pinId = el.dataset.highlight
-          const area = areas.find((a) => a.id === areaId)
-          const pin = pinId ? area?.pins.find((p) => p.id === pinId) : undefined
-          setFocusPin(pin && area ? { pin, area } : null)
+          setActiveArea((e.target as HTMLElement).dataset.area ?? null)
         }
       },
       { rootMargin: '-45% 0px -45% 0px', threshold: 0 },
     )
     rowsRef.current.forEach((el) => io.observe(el))
     return () => io.disconnect()
-  }, [areas])
+  }, [])
+
+  // Every highlight of the area in view (or of the tapped card's area) is pinned at once.
+  const focusArea = useMemo(() => {
+    const area = cardPin?.area ?? areas.find((a) => a.id === activeArea)
+    return area ? { area, pins: area.pins.filter((p) => p.kind !== 'hotel').slice(0, 5) } : null
+  }, [areas, activeArea, cardPin])
 
   const setRow = useCallback((id: string) => (el: HTMLElement | null) => {
     if (el) rowsRef.current.set(id, el)
@@ -151,7 +150,7 @@ export function HomePage({ locale, bundle, routes }: { locale: Locale; bundle: C
                         {highlights.map((p) => {
                           const picked = cardPin?.pin.id === p.id
                           return (
-                            <li key={p.id} ref={setRow(`${a.id}:${p.id}`)} data-area={a.id} data-highlight={p.id} className={`tm-hl__item${focusPin?.pin.id === p.id ? ' tm-hl__item--on' : ''}`}>
+                            <li key={p.id} className="tm-hl__item">
                               <button type="button" className="tm-hl__card" aria-pressed={picked} onClick={() => setCardPin(picked ? null : { pin: p, area: a })} style={{ ['--pin' as string]: `var(--${a.color})` }}>
                                 {p.photo ? (
                                   <span className="tm-hl__photo">
@@ -206,7 +205,7 @@ export function HomePage({ locale, bundle, routes }: { locale: Locale; bundle: C
         </div>
 
         <div className="tm-stage__map" data-ui>
-          <StageMap locale={locale} camera={camera} threeD={threeD} areas={areas} route={null} focus={cardPin ?? focusPin} card={cardPin} onCloseCard={() => setCardPin(null)} cityId={city.id} stations={stations} />
+          <StageMap locale={locale} camera={camera} threeD={threeD} areas={areas} route={null} focus={focusArea} card={cardPin} onCloseCard={() => setCardPin(null)} cityId={city.id} stations={stations} />
           <div className="tm-stage__bar">
             <span>{s.home.facts(areas.length, stations.length, routes.length)}</span>
             <span className="tm-stage__showing">{s.home.showing(active ? t(active.name, locale) : cityName)}</span>

@@ -24,8 +24,8 @@ export interface StageMapProps {
   route: TripRoute | null
   /** Every trip, drawn as quiet lines while no single one is active. */
   routes?: TripRoute[]
-  /** The highlight in view on the home page: its pin is shown in front of the area labels. */
-  focus?: { pin: Pin; area: Area } | null
+  /** The area in view on the home page: all of its highlights are pinned at once. */
+  focus?: { pins: Pin[]; area: Area } | null
   /** A highlight the reader tapped: its card opens on the map. */
   card?: { pin: Pin; area: Area } | null
   onCloseCard?: () => void
@@ -156,13 +156,15 @@ export function StageMap({ locale, camera, threeD, areas, route, routes = [], fo
         return
       }
       for (const a of areas) {
+        // The area whose highlights are pinned drops its own label: the pins say where it is.
+        if (focus?.pins.length && a.id === focus.area.id) continue
         const el = labelElement(t(a.name, locale), `var(--${a.color})`, !!focus && a.id !== focus.area.id)
         markersRef.current.push(new maplibregl.Marker({ element: el, anchor: 'left' }).setLngLat(a.camera.center).addTo(map))
       }
-      if (focus) {
-        const el = labelElement(t(focus.pin.name, locale), `var(--${focus.area.color})`, false)
+      for (const pin of focus?.pins ?? []) {
+        const el = labelElement(t(pin.name, locale), `var(--${focus!.area.color})`, false)
         el.classList.add('tm-pin--active')
-        markersRef.current.push(new maplibregl.Marker({ element: el, anchor: 'left' }).setLngLat([focus.pin.location.lon, focus.pin.location.lat]).addTo(map))
+        markersRef.current.push(new maplibregl.Marker({ element: el, anchor: 'left' }).setLngLat([pin.location.lon, pin.location.lat]).addTo(map))
       }
     })()
     return () => {
@@ -216,8 +218,17 @@ export function StageMap({ locale, camera, threeD, areas, route, routes = [], fo
       map.fitBounds(routesBounds(list), { padding: 56, maxZoom: 15, pitch: 0, bearing: 0, duration: 1600, essential: true })
       return
     }
+    if (focus?.pins.length) {
+      // Frame every pinned highlight (and the area's centre) so no label is cut off at the edge.
+      const pts: [number, number][] = [camera.center, ...focus.pins.map((p): [number, number] => [p.location.lon, p.location.lat])]
+      const lons = pts.map((c) => c[0]), lats = pts.map((c) => c[1])
+      map.fitBounds([[Math.min(...lons), Math.min(...lats)], [Math.max(...lons), Math.max(...lats)]], {
+        padding: { top: 80, bottom: 80, left: 80, right: 160 }, maxZoom: camera.zoom, pitch: threeD ? camera.pitch : 0, bearing: threeD ? camera.bearing : 0, duration: 1600, essential: true,
+      })
+      return
+    }
     map.flyTo({ center: camera.center, zoom: camera.zoom, pitch: threeD ? camera.pitch : 0, bearing: threeD ? camera.bearing : 0, duration: 1600, essential: true })
-  }, [camera, route, routes, threeD, mapReady])
+  }, [camera, route, routes, threeD, focus, mapReady])
 
   return <div ref={containerRef} className="h-full w-full bg-paper" aria-label="Map" role="region" />
 }
