@@ -1,8 +1,10 @@
 'use client'
 
-import type { ReactNode } from 'react'
+import { useSyncExternalStore, type ReactNode } from 'react'
+import type { DayKind, TimeOfDay } from '@/lib/content/types'
 import type { CityBundle, Locale } from '@/lib/content/types'
 import { strings } from '@/lib/i18n/strings'
+import { bangkokNow } from '@/lib/explorer/when'
 import { activeFilterCount, DAYS, EMPTY_FILTERS, TIERS, TIMES, type FilterState, type Tier } from '@/lib/explorer/filters'
 import { TransitFilter } from './transit-filter'
 import { AreaFilter } from './area-filter'
@@ -14,12 +16,18 @@ export interface FilterPanelProps {
   onChange: (next: FilterState) => void
 }
 
+const subscribeNever = () => () => {}
+
 function toggle<T>(list: T[], value: T): T[] {
   return list.includes(value) ? list.filter((x) => x !== value) : [...list, value]
 }
 
 /** The right-hand filter panel (a bottom sheet on phones), after Glaibaan's. The kind chips live in KindBar under the header. */
 export function FilterPanel({ locale, bundle, filters, onChange }: FilterPanelProps) {
+  // "Now in Bangkok": one tap picks the current time slot and day kind. The clock is read on the client only (the server snapshot is empty, so the chip appears once the page is live).
+  const nowKey = useSyncExternalStore(subscribeNever, () => { const n = bangkokNow(); return `${n.time}/${n.day}` }, () => '')
+  const now = nowKey ? { time: nowKey.split('/')[0] as TimeOfDay, day: nowKey.split('/')[1] as DayKind } : null
+  const nowOn = !!now && filters.times.length === 1 && filters.times[0] === now.time && filters.days.length === 1 && filters.days[0] === now.day
   const s = strings(locale)
   const count = activeFilterCount(filters)
   return (
@@ -55,6 +63,11 @@ export function FilterPanel({ locale, bundle, filters, onChange }: FilterPanelPr
 
       <Section label={s.filters.when}>
         <div className="flex flex-wrap gap-1.5">
+          {now && (
+            <button type="button" aria-pressed={nowOn} onClick={() => onChange({ ...filters, times: nowOn ? [] : [now.time], days: nowOn ? [] : [now.day] })} className={`min-h-9 rounded-full border px-3 text-sm ${nowOn ? 'border-ink bg-white font-medium' : 'border-line bg-white/60'}`}>
+              {s.filters.now(s.filters.time[now.time].toLowerCase())}
+            </button>
+          )}
           {TIMES.map((time) => {
             const on = filters.times.includes(time)
             return (

@@ -92,6 +92,7 @@ const en = {
     kinds: 'What to show',
     tiers: 'Hotel budget',
     when: 'When',
+    now: (slot: string) => `Now in Bangkok (${slot})`,
     time: { morning: 'Morning', afternoon: 'Afternoon', evening: 'Evening', night: 'Night' } as Record<string, string>,
     day: { weekday: 'Weekdays', weekend: 'Weekend' } as Record<string, string>,
     tier: { budget: 'Budget', mid: 'Mid-range', luxury: 'Luxury' } as Record<string, string>,
