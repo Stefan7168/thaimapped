@@ -12,6 +12,8 @@ const OFF = 'tm-label--off'
 const LEFT = 'tm-pin--left'
 const STACK = 'tm-pin--stack'
 const UP = 'tm-pin--up'
+const SIDE_R = 'tm-pin--sr'
+const SIDE_L = 'tm-pin--sl'
 
 function rank(el: HTMLElement): number {
   if (el.classList.contains('tm-pin--active') || el.classList.contains('tm-stop--active')) return 0
@@ -39,23 +41,54 @@ export function declutterLabels(markers: Marker[], container: HTMLElement | null
   const rects = labels.map((l) => l.getBoundingClientRect())
   // The picked area's name pill (area-hover.ts) has the spot first.
   const kept: DOMRect[] = [...(container?.querySelectorAll<HTMLElement>('.tm-area-pill') ?? [])].map((el) => el.getBoundingClientRect()).filter((r) => r.width > 0)
-  const hits = (r: DOMRect) => kept.some((k) => r.left < k.right + 2 && r.right > k.left - 2 && r.top < k.bottom + 2 && r.bottom > k.top - 2)
+  const hits = (r: DOMRect) => kept.some((k) => r.left < k.right + 1 && r.right > k.left - 1 && r.top < k.bottom + 1 && r.bottom > k.top - 1)
+  const outside = (r: DOMRect) => !!bounds && (r.left < bounds.left + 4 || r.right > bounds.right - 4 || r.top < bounds.top + 4)
   labels.forEach((l, i) => {
     let r = rects[i]
     if (r.width === 0) return
     const pin = l.closest<HTMLElement>('.tm-pin')
-    pin?.classList.remove(UP)
+    pin?.classList.remove(UP, SIDE_R, SIDE_L)
     let hit = hits(r)
-    // A stacked name that would cover a neighbour tries the spot above its dot before giving up.
+    // A stacked name that would cover a neighbour tries above its dot, then
+    // beside it (right, then left), before giving up; a spot off the map does not count.
     if (hit && pin?.classList.contains(STACK)) {
-      pin.classList.add(UP)
-      r = l.getBoundingClientRect()
-      hit = hits(r)
-      if (hit) pin.classList.remove(UP)
+      for (const cls of [UP, SIDE_R, SIDE_L]) {
+        pin.classList.add(cls)
+        r = l.getBoundingClientRect()
+        hit = hits(r) || outside(r)
+        if (!hit) break
+        pin.classList.remove(cls)
+      }
     }
     if (hit) l.classList.add(OFF)
     else kept.push(r)
   })
+  // A stacked name still hidden by exactly one neighbour on the same row: lift
+  // that neighbour above its own dot and try again (Thonglor beside Sukhumvit on a narrow phone).
+  const overlaps = (a: DOMRect, b: DOMRect) => a.left < b.right + 1 && a.right > b.left - 1 && a.top < b.bottom + 1 && a.bottom > b.top - 1
+  const moved = (pin: HTMLElement) => pin.classList.contains(UP) || pin.classList.contains(SIDE_R) || pin.classList.contains(SIDE_L)
+  for (const l of labels) {
+    const pin = l.closest<HTMLElement>('.tm-pin')
+    if (!l.classList.contains(OFF) || !pin?.classList.contains(STACK)) continue
+    const r = l.getBoundingClientRect()
+    const blockers = labels.filter((o) => o !== l && !o.classList.contains(OFF) && overlaps(r, o.getBoundingClientRect()))
+    if (blockers.length !== 1 || kept.some((k) => !labels.some((o) => !o.classList.contains(OFF) && o.getBoundingClientRect().left === k.left && o.getBoundingClientRect().top === k.top) && overlaps(r, k))) continue
+    const other = blockers[0]
+    const otherPin = other.closest<HTMLElement>('.tm-pin')
+    if (!otherPin?.classList.contains(STACK) || moved(otherPin)) continue
+    const before = other.getBoundingClientRect()
+    otherPin.classList.add(UP)
+    const after = other.getBoundingClientRect()
+    const idx = kept.findIndex((k) => k.left === before.left && k.top === before.top)
+    const rest = kept.filter((_, i) => i !== idx)
+    if (outside(after) || rest.some((k) => overlaps(after, k)) || outside(r) || rest.some((k) => overlaps(r, k))) {
+      otherPin.classList.remove(UP)
+      continue
+    }
+    if (idx >= 0) kept[idx] = after
+    kept.push(r)
+    l.classList.remove(OFF)
+  }
 }
 
 type Projecting = { project: (lngLat: [number, number]) => { x: number; y: number } }

@@ -66,7 +66,9 @@ body {
 @media (max-width: 767px) { .tm-pin--area .tm-pin__label { font-size: 12px; padding: 1px 6px; } }
 .tm-pin--stack { flex-direction: column; gap: 2px; }
 .tm-pin--stack .tm-pin__dot { margin-top: -6px; }
-.tm-pin--stack.tm-pin--up .tm-pin__label { position: absolute; bottom: calc(100% - 2px); left: 50%; transform: translateX(-50%); }
+.tm-pin--stack.tm-pin--up .tm-pin__label { position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); }
+.tm-pin--stack.tm-pin--sr .tm-pin__label { position: absolute; top: 0; left: 50%; margin-left: 9px; transform: translateY(-50%); }
+.tm-pin--stack.tm-pin--sl .tm-pin__label { position: absolute; top: 0; right: 50%; margin-right: 9px; transform: translateY(-50%); }
 
 /* The card on a tapped pin. */
 .tm-card-popup .maplibregl-popup-content { padding: 0; background: transparent; box-shadow: none; border-radius: 0; }
