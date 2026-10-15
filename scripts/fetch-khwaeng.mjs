@@ -14,9 +14,23 @@ const BBOX = '13.62,100.44,13.84,100.66'
 const QUERY = `[out:json][timeout:180];rel["boundary"="administrative"]["admin_level"="8"](${BBOX});out geom;`
 const out = join(dirname(fileURLToPath(import.meta.url)), '..', 'content', 'sources', 'bangkok-khwaeng.geojson')
 
-const res = await fetch('https://overpass-api.de/api/interpreter', { method: 'POST', body: 'data=' + encodeURIComponent(QUERY), headers: { 'content-type': 'application/x-www-form-urlencoded' } })
-if (!res.ok) throw new Error(`overpass ${res.status}: ${(await res.text()).slice(0, 300)}`)
-const data = await res.json()
+// Overpass refuses a bare "node" user agent (406) and answers 429/502/503/504 under load.
+async function query(attempt = 1) {
+  const res = await fetch('https://overpass-api.de/api/interpreter', {
+    method: 'POST',
+    body: 'data=' + encodeURIComponent(QUERY),
+    headers: { 'content-type': 'application/x-www-form-urlencoded', 'user-agent': 'thaimapped-fetch/1.0 (github.com/Stefan7168/thaimapped)' },
+  })
+  if (res.ok) return res.json()
+  const body = (await res.text()).slice(0, 300)
+  if ([429, 502, 503, 504].includes(res.status) && attempt < 4) {
+    console.error(`overpass ${res.status}, retrying in 30 s (attempt ${attempt} of 3)`)
+    await new Promise((r) => setTimeout(r, 30_000))
+    return query(attempt + 1)
+  }
+  throw new Error(`overpass ${res.status}: ${body}`)
+}
+const data = await query()
 
 const round = (n) => Math.round(n * 1e5) / 1e5
 const key = (p) => `${p[0]},${p[1]}`
