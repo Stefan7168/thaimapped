@@ -196,9 +196,16 @@ export function ExplorerMap(props: ExplorerMapProps) {
       markersRef.current = []
       if (pins.length === 0 && stations.length === 0 && centres.length === 0) {
         for (const a of areas) {
-          const el = pinElement(t(a.name, locale), `var(--${a.color})`, false, false)
+          // Phones get the short name (before "and" or a bracket); the full name is in the guide.
+          const full = t(a.name, locale)
+          const el = pinElement(window.innerWidth < 768 ? full.split(/ and | \(/)[0] : full, `var(--${a.color})`, false, false)
+          // The area names are the way in; they stay on at city zoom, where the place labels go.
+          el.classList.add('tm-pin--area')
           el.addEventListener('click', () => callbacks.current.onSelectArea(a.id))
-          markersRef.current.push(new maplibregl.Marker({ element: el, anchor: 'left' }).setLngLat(a.camera.center).addTo(map))
+          // Phones stack the name under its dot, centred, so neighbouring areas do not run into each other.
+          const stacked = window.innerWidth < 768
+          if (stacked) el.classList.add('tm-pin--stack')
+          markersRef.current.push(new maplibregl.Marker({ element: el, anchor: stacked ? 'top' : 'left' }).setLngLat(a.camera.center).addTo(map))
         }
         return
       }
@@ -223,6 +230,15 @@ export function ExplorerMap(props: ExplorerMapProps) {
     if (!map || isGestureActive(map)) return
     const bounds = focusBounds(pins, stations, centres, outlines)
     if (!bounds) {
+      // A phone is tall and narrow: the city camera is set for a wide screen, so frame the eight area labels instead.
+      if (window.innerWidth < 768 && areas.length > 0) {
+        const pts = areas.map((a) => a.camera.center)
+        const cam = map.cameraForBounds([[Math.min(...pts.map((p) => p[0])), Math.min(...pts.map((p) => p[1]))], [Math.max(...pts.map((p) => p[0])), Math.max(...pts.map((p) => p[1]))]], { padding: { top: 60, bottom: 120, left: 36, right: 36 }, maxZoom: 13 })
+        if (cam) {
+          map.flyTo({ center: cam.center, zoom: cam.zoom, pitch: 0, bearing: 0, duration: 1400, essential: true })
+          return
+        }
+      }
       map.flyTo({ center: cityCamera.center, zoom: cityCamera.zoom, pitch: threeD ? cityCamera.pitch : 0, bearing: threeD ? cityCamera.bearing : 0, duration: 1400, essential: true })
       return
     }
@@ -232,7 +248,7 @@ export function ExplorerMap(props: ExplorerMapProps) {
     const cam = map.cameraForBounds(bounds, { padding: 28, maxZoom: 16, bearing: threeD ? -12 : 0 })
     if (!cam) return
     map.flyTo({ center: cam.center, zoom: (cam.zoom ?? cityCamera.zoom) + (threeD ? 0.3 : 0), pitch: threeD ? 50 : 0, bearing: threeD ? -12 : 0, duration: 1400, essential: true })
-  }, [pins, stations, centres, outlines, threeD, cityCamera, mapReady])
+  }, [pins, stations, centres, outlines, areas, threeD, cityCamera, mapReady])
 
   useEffect(() => {
     const map = mapRef.current
