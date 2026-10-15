@@ -5,7 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useMemo, useState, useSyncExternalStore } from 'react'
 import { ArrowLeft, SlidersHorizontal, X } from 'lucide-react'
-import type { CityBundle, DayKind, Locale, Pin, Station, TimeOfDay, TripRoute } from '@/lib/content/types'
+import type { CityBundle, DayKind, Locale, Pin, PinKind, Station, TimeOfDay, TripRoute } from '@/lib/content/types'
 import { t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
 import { supports3D } from '@/lib/map/device'
@@ -13,7 +13,7 @@ import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
 import { trackOutbound } from '@/lib/links/track'
 import { whenLine } from '@/lib/explorer/when'
 import { WEEKEND_SLOTS, weekendPlan } from '@/lib/explorer/weekend'
-import { activeFilterCount, allPins, DAYS, distanceM, EMPTY_FILTERS, isFullRange, PRICE_RANGE, TIMES, selectedPlaceCentres, selectedStations, subareaKey, TIER_PRICE, TIERS, visiblePins, WALK_PACE_M_PER_MIN, type FilterState, type PriceRange, type Tier } from '@/lib/explorer/filters'
+import { activeFilterCount, allPins, DAYS, KIND_CHIPS, distanceM, EMPTY_FILTERS, isFullRange, PRICE_RANGE, TIMES, selectedPlaceCentres, selectedStations, subareaKey, TIER_PRICE, TIERS, visiblePins, WALK_PACE_M_PER_MIN, type FilterState, type PriceRange, type Tier } from '@/lib/explorer/filters'
 import { thb } from '@/lib/explorer/price'
 import { stationPages } from '@/lib/explorer/stations'
 import type { Outline } from '@/components/map/explorer-map'
@@ -57,15 +57,16 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
       const station = stationList[0] ?? null
       const times = (h.get('time') ?? '').split(',').filter((x): x is TimeOfDay => (TIMES as readonly string[]).includes(x))
       const days = (h.get('day') ?? '').split(',').filter((x): x is DayKind => (DAYS as readonly string[]).includes(x))
+      const kinds = (h.get('kind') ?? '').split(',').filter((x): x is PinKind => (KIND_CHIPS as readonly string[]).includes(x))
       // "#pin=<id>" (from the saved list) opens that place: its area filtered, its card open.
       const pinId = h.get('pin')
       const pinHit = pinId ? areas.flatMap((a) => a.pins.map((pin) => ({ pin, area: a }))).find((x) => x.pin.id === pinId) : undefined
       if (pinHit && areaList.length === 0) areaList.push(pinHit.area.id)
-      if (!area && !pinHit && !tier && !priceParam && !station && times.length === 0 && days.length === 0) return
+      if (!area && !pinHit && !tier && !priceParam && !station && times.length === 0 && days.length === 0 && kinds.length === 0) return
       const m = priceParam?.match(/^(\d+)-(\d+)$/)
       const fromParam: PriceRange | null = m ? { min: Math.max(PRICE_RANGE.min, Number(m[1])), max: Math.min(PRICE_RANGE.max, Number(m[2])) } : null
       const price = fromParam && fromParam.min < fromParam.max ? fromParam : tier && (TIERS as readonly string[]).includes(tier) ? TIER_PRICE[tier as Tier] : null
-      const next: FilterState = { ...EMPTY_FILTERS, areas: areaList, stations: stationList, price: isFullRange(price) ? null : price, times, days }
+      const next: FilterState = { ...EMPTY_FILTERS, areas: areaList, stations: stationList, price: isFullRange(price) ? null : price, times, days, kinds }
       setFilters(next)
       if (pinHit) setActivePin(pinHit.pin)
     }
@@ -409,8 +410,8 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
 
 /**
  * The address carries the filters the home and station pages can send (areas,
- * stations, budget, time, day), so a view can be bookmarked or sent on.
- * Sub-areas, lines and kinds stay out: nothing links in with them.
+ * stations, budget, time, day, kind), so a view can be bookmarked or sent on.
+ * Sub-areas and lines stay out: nothing links in with them.
  */
 function writeHash(f: FilterState) {
   const h = new URLSearchParams()
@@ -419,6 +420,7 @@ function writeHash(f: FilterState) {
   if (f.price && !isFullRange(f.price)) h.set('price', `${f.price.min}-${f.price.max}`)
   if (f.times.length) h.set('time', f.times.join(','))
   if (f.days.length) h.set('day', f.days.join(','))
+  if (f.kinds.length) h.set('kind', f.kinds.join(','))
   const next = h.toString().replace(/%2C/g, ',')
   const url = `${window.location.pathname}${window.location.search}${next ? `#${next}` : ''}`
   if (url !== `${window.location.pathname}${window.location.search}${window.location.hash}`) window.history.replaceState(null, '', url)
