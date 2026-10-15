@@ -90,24 +90,72 @@
   ],
   "pins": [
     {
-      "id": "siam-hotel-1",
+      "id": "siam-hotel-siam-kempinski",
       "kind": "hotel",
-      "tier": "mid",
+      "tier": "luxury",
       "name": {
-        "en": "Placeholder hotel near Siam"
+        "en": "Siam Kempinski Hotel Bangkok"
       },
       "why": {
-        "en": "Placeholder. Real pick comes with the content pass."
+        "en": "In Siam Square, a 5-minute walk from BTS Siam."
       },
       "location": {
-        "lon": 100.53699999999999,
-        "lat": 13.745000000000001
+        "lon": 100.53482,
+        "lat": 13.74854
       },
       "walk": {
         "station": "bts-silom-cen",
-        "minutes": 4
+        "minutes": 5
       },
-      "links": {},
+      "links": {
+        "booking": "https://www.booking.com/searchresults.html?ss=Siam+Kempinski+Hotel+Bangkok"
+      },
+      "subarea": "siam-square"
+    },
+    {
+      "id": "siam-hotel-novotel-siam-square",
+      "kind": "hotel",
+      "tier": "mid",
+      "name": {
+        "en": "Novotel Bangkok on Siam Square"
+      },
+      "why": {
+        "en": "In Siam Square, a 2-minute walk from BTS Siam."
+      },
+      "location": {
+        "lon": 100.53479,
+        "lat": 13.74465
+      },
+      "walk": {
+        "station": "bts-silom-cen",
+        "minutes": 2
+      },
+      "links": {
+        "booking": "https://www.booking.com/searchresults.html?ss=Novotel+Bangkok+on+Siam+Square"
+      },
+      "subarea": "siam-square"
+    },
+    {
+      "id": "siam-hotel-lub-d-siam",
+      "kind": "hotel",
+      "tier": "budget",
+      "name": {
+        "en": "Lub d Bangkok Siam"
+      },
+      "why": {
+        "en": "In Siam Square, a 9-minute walk from BTS Siam."
+      },
+      "location": {
+        "lon": 100.52863,
+        "lat": 13.74696
+      },
+      "walk": {
+        "station": "bts-silom-cen",
+        "minutes": 9
+      },
+      "links": {
+        "booking": "https://www.booking.com/searchresults.html?ss=Lub+d+Bangkok+Siam"
+      },
       "subarea": "siam-square"
     },
     {

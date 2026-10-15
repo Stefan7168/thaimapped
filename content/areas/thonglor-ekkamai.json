@@ -91,25 +91,73 @@
   ],
   "pins": [
     {
-      "id": "thonglor-ekkamai-hotel-1",
+      "id": "thonglor-ekkamai-hotel-hotel-nikko",
       "kind": "hotel",
-      "tier": "mid",
+      "tier": "luxury",
       "name": {
-        "en": "Placeholder hotel near Thong Lo"
+        "en": "Hotel Nikko Bangkok"
       },
       "why": {
-        "en": "Placeholder. Real pick comes with the content pass."
+        "en": "In Thonglor, a 2-minute walk from BTS Thong Lo."
       },
       "location": {
-        "lon": 100.585,
-        "lat": 13.729000000000001
+        "lon": 100.57876,
+        "lat": 13.72526
       },
       "walk": {
         "station": "bts-sukhumvit-e6",
-        "minutes": 7
+        "minutes": 2
       },
-      "links": {},
+      "links": {
+        "booking": "https://www.booking.com/searchresults.html?ss=Hotel+Nikko+Bangkok"
+      },
       "subarea": "thonglor"
+    },
+    {
+      "id": "thonglor-ekkamai-hotel-wyndham-garden-sukhumvit-42",
+      "kind": "hotel",
+      "tier": "mid",
+      "name": {
+        "en": "Wyndham Garden Bangkok Sukhumvit 42"
+      },
+      "why": {
+        "en": "In Phra Khanong, a 5-minute walk from BTS Ekkamai."
+      },
+      "location": {
+        "lon": 100.58495,
+        "lat": 13.71667
+      },
+      "walk": {
+        "station": "bts-sukhumvit-e7",
+        "minutes": 5
+      },
+      "links": {
+        "booking": "https://www.booking.com/searchresults.html?ss=Wyndham+Garden+Bangkok+Sukhumvit+42"
+      },
+      "subarea": "phra-khanong"
+    },
+    {
+      "id": "thonglor-ekkamai-hotel-ibis-styles-phra-khanong",
+      "kind": "hotel",
+      "tier": "budget",
+      "name": {
+        "en": "ibis Styles Bangkok Sukhumvit Phra Khanong"
+      },
+      "why": {
+        "en": "In Phra Khanong, a 17-minute walk from BTS Ekkamai."
+      },
+      "location": {
+        "lon": 100.59437,
+        "lat": 13.71242
+      },
+      "walk": {
+        "station": "bts-sukhumvit-e7",
+        "minutes": 17
+      },
+      "links": {
+        "booking": "https://www.booking.com/searchresults.html?ss=ibis+Styles+Bangkok+Sukhumvit+Phra+Khanong"
+      },
+      "subarea": "phra-khanong"
     },
     {
       "id": "thonglor-soi-bars",

@@ -90,25 +90,73 @@
   ],
   "pins": [
     {
-      "id": "riverside-hotel-1",
+      "id": "riverside-hotel-mandarin-oriental",
       "kind": "hotel",
-      "tier": "mid",
+      "tier": "luxury",
       "name": {
-        "en": "Placeholder hotel at Saphan Taksin"
+        "en": "Mandarin Oriental, Bangkok"
       },
       "why": {
-        "en": "Placeholder. Real pick comes with the content pass."
+        "en": "In Charoen Krung, an 8-minute walk from BTS Saphan Taksin."
       },
       "location": {
-        "lon": 100.514,
-        "lat": 13.719000000000001
+        "lon": 100.51415,
+        "lat": 13.72389
       },
       "walk": {
         "station": "bts-silom-s6",
-        "minutes": 6
+        "minutes": 8
       },
-      "links": {},
+      "links": {
+        "booking": "https://www.booking.com/searchresults.html?ss=Mandarin+Oriental%2C+Bangkok"
+      },
       "subarea": "charoen-krung"
+    },
+    {
+      "id": "riverside-hotel-chatrium-riverside",
+      "kind": "hotel",
+      "tier": "mid",
+      "name": {
+        "en": "Chatrium Hotel Riverside Bangkok"
+      },
+      "why": {
+        "en": "In Charoen Krung, a 14-minute walk from BTS Saphan Taksin."
+      },
+      "location": {
+        "lon": 100.5102,
+        "lat": 13.7108
+      },
+      "walk": {
+        "station": "bts-silom-s6",
+        "minutes": 14
+      },
+      "links": {
+        "booking": "https://www.booking.com/searchresults.html?ss=Chatrium+Hotel+Riverside+Bangkok"
+      },
+      "subarea": "charoen-krung"
+    },
+    {
+      "id": "riverside-hotel-ibis-riverside",
+      "kind": "hotel",
+      "tier": "budget",
+      "name": {
+        "en": "ibis Bangkok Riverside"
+      },
+      "why": {
+        "en": "In Khlong San (ICONSIAM side), a 7-minute walk from BTS Saphan Taksin."
+      },
+      "location": {
+        "lon": 100.50969,
+        "lat": 13.71738
+      },
+      "walk": {
+        "station": "bts-silom-s6",
+        "minutes": 7
+      },
+      "links": {
+        "booking": "https://www.booking.com/searchresults.html?ss=ibis+Bangkok+Riverside"
+      },
+      "subarea": "khlong-san"
     },
     {
       "id": "iconsiam",

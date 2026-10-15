@@ -91,25 +91,73 @@
   ],
   "pins": [
     {
-      "id": "sukhumvit-hotel-1",
+      "id": "sukhumvit-hotel-sheraton-grande-sukhumvit",
       "kind": "hotel",
-      "tier": "mid",
+      "tier": "luxury",
       "name": {
-        "en": "Placeholder hotel near Asok"
+        "en": "Sheraton Grande Sukhumvit"
       },
       "why": {
-        "en": "Placeholder. Real pick comes with the content pass."
+        "en": "In Asok, a 2-minute walk from BTS Asok."
       },
       "location": {
-        "lon": 100.55799999999999,
-        "lat": 13.737
+        "lon": 100.55909,
+        "lat": 13.73738
       },
       "walk": {
         "station": "bts-sukhumvit-e4",
-        "minutes": 3
+        "minutes": 2
       },
-      "links": {},
+      "links": {
+        "booking": "https://www.booking.com/searchresults.html?ss=Sheraton+Grande+Sukhumvit+Bangkok"
+      },
+      "subarea": "asok"
+    },
+    {
+      "id": "sukhumvit-hotel-grande-centre-point-terminal-21",
+      "kind": "hotel",
+      "tier": "mid",
+      "name": {
+        "en": "Grande Centre Point Terminal 21"
+      },
+      "why": {
+        "en": "In Nana, a 2-minute walk from MRT Sukhumvit."
+      },
+      "location": {
+        "lon": 100.56068,
+        "lat": 13.73819
+      },
+      "walk": {
+        "station": "mrt-blue-bl22",
+        "minutes": 2
+      },
+      "links": {
+        "booking": "https://www.booking.com/searchresults.html?ss=Grande+Centre+Point+Terminal+21+Bangkok"
+      },
       "subarea": "nana"
+    },
+    {
+      "id": "sukhumvit-hotel-oneday-hostel",
+      "kind": "hotel",
+      "tier": "budget",
+      "name": {
+        "en": "Oneday Hostel"
+      },
+      "why": {
+        "en": "In Phrom Phong, a 21-minute walk from MRT Sukhumvit."
+      },
+      "location": {
+        "lon": 100.5703,
+        "lat": 13.72654
+      },
+      "walk": {
+        "station": "mrt-blue-bl22",
+        "minutes": 21
+      },
+      "links": {
+        "booking": "https://www.booking.com/searchresults.html?ss=Oneday+Hostel+Bangkok"
+      },
+      "subarea": "phrom-phong"
     },
     {
       "id": "terminal-21",

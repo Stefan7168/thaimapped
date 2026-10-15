@@ -91,24 +91,72 @@
   ],
   "pins": [
     {
-      "id": "silom-hotel-1",
+      "id": "silom-hotel-the-sukhothai",
+      "kind": "hotel",
+      "tier": "luxury",
+      "name": {
+        "en": "The Sukhothai Bangkok"
+      },
+      "why": {
+        "en": "In Sathorn, an 11-minute walk from MRT Si Lom."
+      },
+      "location": {
+        "lon": 100.54109,
+        "lat": 13.72321
+      },
+      "walk": {
+        "station": "mrt-blue-bl26",
+        "minutes": 11
+      },
+      "links": {
+        "booking": "https://www.booking.com/searchresults.html?ss=The+Sukhothai+Bangkok"
+      },
+      "subarea": "sathorn"
+    },
+    {
+      "id": "silom-hotel-holiday-inn-silom",
       "kind": "hotel",
       "tier": "mid",
       "name": {
-        "en": "Placeholder hotel near Sala Daeng"
+        "en": "Holiday Inn Bangkok Silom"
       },
       "why": {
-        "en": "Placeholder. Real pick comes with the content pass."
+        "en": "In Silom, a 14-minute walk from BTS Chong Nonsi."
       },
       "location": {
-        "lon": 100.533,
-        "lat": 13.725000000000001
+        "lon": 100.51969,
+        "lat": 13.72266
       },
       "walk": {
-        "station": "bts-silom-s2",
+        "station": "bts-silom-s3",
+        "minutes": 14
+      },
+      "links": {
+        "booking": "https://www.booking.com/searchresults.html?ss=Holiday+Inn+Bangkok+Silom"
+      },
+      "subarea": "silom-road"
+    },
+    {
+      "id": "silom-hotel-hq-hostel",
+      "kind": "hotel",
+      "tier": "budget",
+      "name": {
+        "en": "HQ Hostel"
+      },
+      "why": {
+        "en": "In Silom, a 5-minute walk from BTS Chong Nonsi."
+      },
+      "location": {
+        "lon": 100.53104,
+        "lat": 13.72662
+      },
+      "walk": {
+        "station": "bts-silom-s3",
         "minutes": 5
       },
-      "links": {},
+      "links": {
+        "booking": "https://www.booking.com/searchresults.html?ss=HQ+Hostel+Bangkok"
+      },
       "subarea": "silom-road"
     },
     {

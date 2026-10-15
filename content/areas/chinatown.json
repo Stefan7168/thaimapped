@@ -90,25 +90,73 @@
   ],
   "pins": [
     {
-      "id": "chinatown-hotel-1",
+      "id": "chinatown-hotel-shanghai-mansion",
       "kind": "hotel",
-      "tier": "mid",
+      "tier": "luxury",
       "name": {
-        "en": "Placeholder hotel near Wat Mangkon"
+        "en": "Shanghai Mansion Bangkok"
       },
       "why": {
-        "en": "Placeholder. Real pick comes with the content pass."
+        "en": "In Yaowarat, a 5-minute walk from MRT Wat Mangkon."
       },
       "location": {
-        "lon": 100.512,
-        "lat": 13.739
+        "lon": 100.51121,
+        "lat": 13.73971
       },
       "walk": {
         "station": "mrt-blue-bl29",
-        "minutes": 4
+        "minutes": 5
       },
-      "links": {},
+      "links": {
+        "booking": "https://www.booking.com/searchresults.html?ss=Shanghai+Mansion+Bangkok"
+      },
       "subarea": "yaowarat"
+    },
+    {
+      "id": "chinatown-hotel-hotel-royal-chinatown",
+      "kind": "hotel",
+      "tier": "mid",
+      "name": {
+        "en": "Hotel Royal Bangkok @ Chinatown"
+      },
+      "why": {
+        "en": "In Yaowarat, a 3-minute walk from MRT Wat Mangkon."
+      },
+      "location": {
+        "lon": 100.51,
+        "lat": 13.74064
+      },
+      "walk": {
+        "station": "mrt-blue-bl29",
+        "minutes": 3
+      },
+      "links": {
+        "booking": "https://www.booking.com/searchresults.html?ss=Hotel+Royal+Bangkok+%40+Chinatown"
+      },
+      "subarea": "yaowarat"
+    },
+    {
+      "id": "chinatown-hotel-loftel-22",
+      "kind": "hotel",
+      "tier": "budget",
+      "name": {
+        "en": "Loftel 22 Hostel"
+      },
+      "why": {
+        "en": "In Talat Noi, an 8-minute walk from MRT Hua Lamphong."
+      },
+      "location": {
+        "lon": 100.51436,
+        "lat": 13.73325
+      },
+      "walk": {
+        "station": "mrt-blue-bl28",
+        "minutes": 8
+      },
+      "links": {
+        "booking": "https://www.booking.com/searchresults.html?ss=Loftel+22+Hostel+Bangkok"
+      },
+      "subarea": "talat-noi"
     },
     {
       "id": "wat-traimit",

@@ -79,24 +79,72 @@
   ],
   "pins": [
     {
-      "id": "ari-hotel-1",
+      "id": "ari-hotel-the-quarter-ari",
       "kind": "hotel",
       "tier": "mid",
       "name": {
-        "en": "Placeholder hotel near Ari"
+        "en": "The Quarter Hotel"
       },
       "why": {
-        "en": "Placeholder. Real pick comes with the content pass."
+        "en": "In the Ari sois, an 18-minute walk from BTS Ari."
       },
       "location": {
-        "lon": 100.54299999999999,
-        "lat": 13.778
+        "lon": 100.54209,
+        "lat": 13.79157
       },
       "walk": {
         "station": "bts-sukhumvit-n5",
-        "minutes": 5
+        "minutes": 18
       },
-      "links": {},
+      "links": {
+        "booking": "https://www.booking.com/searchresults.html?ss=The+Quarter+Hotel+Bangkok"
+      },
+      "subarea": "ari-sois"
+    },
+    {
+      "id": "ari-hotel-iconic-hotel-ari",
+      "kind": "hotel",
+      "tier": "mid",
+      "name": {
+        "en": "The Iconic Hotel Ari - Jatujak"
+      },
+      "why": {
+        "en": "In Saphan Khwai, a 22-minute walk from BTS Ari."
+      },
+      "location": {
+        "lon": 100.55273,
+        "lat": 13.79169
+      },
+      "walk": {
+        "station": "bts-sukhumvit-n5",
+        "minutes": 22
+      },
+      "links": {
+        "booking": "https://www.booking.com/searchresults.html?ss=The+Iconic+Hotel+Ari+-+Jatujak+Bangkok"
+      },
+      "subarea": "saphan-khwai"
+    },
+    {
+      "id": "ari-hotel-the-yard-hostel",
+      "kind": "hotel",
+      "tier": "budget",
+      "name": {
+        "en": "The Yard Hostel"
+      },
+      "why": {
+        "en": "In the Ari sois, a 7-minute walk from BTS Ari."
+      },
+      "location": {
+        "lon": 100.54173,
+        "lat": 13.7767
+      },
+      "walk": {
+        "station": "bts-sukhumvit-n5",
+        "minutes": 7
+      },
+      "links": {
+        "booking": "https://www.booking.com/searchresults.html?ss=The+Yard+Hostel+Bangkok"
+      },
       "subarea": "ari-sois"
     },
     {

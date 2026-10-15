@@ -90,24 +90,72 @@
   ],
   "pins": [
     {
-      "id": "old-town-hotel-1",
+      "id": "old-town-hotel-riva-arun",
       "kind": "hotel",
-      "tier": "mid",
+      "tier": "luxury",
       "name": {
-        "en": "Placeholder guesthouse near Sanam Chai"
+        "en": "Riva Arun Bangkok"
       },
       "why": {
-        "en": "Placeholder. Real pick comes with the content pass."
+        "en": "Near the Grand Palace and Wat Pho, a 5-minute walk from MRT Sanam Chai."
       },
       "location": {
-        "lon": 100.49799999999999,
-        "lat": 13.752
+        "lon": 100.49178,
+        "lat": 13.74426
       },
       "walk": {
         "station": "mrt-blue-bl31",
-        "minutes": 8
+        "minutes": 5
       },
-      "links": {},
+      "links": {
+        "booking": "https://www.booking.com/searchresults.html?ss=Riva+Arun+Bangkok"
+      },
+      "subarea": "grand-palace"
+    },
+    {
+      "id": "old-town-hotel-arun-residence",
+      "kind": "hotel",
+      "tier": "mid",
+      "name": {
+        "en": "Arun Residence"
+      },
+      "why": {
+        "en": "Near the Grand Palace and Wat Pho, a 5-minute walk from MRT Sanam Chai."
+      },
+      "location": {
+        "lon": 100.49127,
+        "lat": 13.74483
+      },
+      "walk": {
+        "station": "mrt-blue-bl31",
+        "minutes": 5
+      },
+      "links": {
+        "booking": "https://www.booking.com/searchresults.html?ss=Arun+Residence+Bangkok"
+      },
+      "subarea": "grand-palace"
+    },
+    {
+      "id": "old-town-hotel-nappark-hostel",
+      "kind": "hotel",
+      "tier": "budget",
+      "name": {
+        "en": "NapPark Hostel @ Khao San"
+      },
+      "why": {
+        "en": "In Khao San, a 22-minute walk from MRT Sam Yot."
+      },
+      "location": {
+        "lon": 100.49763,
+        "lat": 13.76078
+      },
+      "walk": {
+        "station": "mrt-blue-bl30",
+        "minutes": 22
+      },
+      "links": {
+        "booking": "https://www.booking.com/searchresults.html?ss=NapPark+Hostel+%40+Khao+San+Bangkok"
+      },
       "subarea": "khao-san"
     },
     {
