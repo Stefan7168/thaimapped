@@ -9,8 +9,9 @@ import { addBuilding3DLayer, BUILDING_3D_LAYER_ID } from '@/lib/map/buildings'
 import { isGestureActive } from '@/lib/map/gesture'
 import { fitPopupSoon, overlayInsets } from '@/lib/map/fit-popup'
 import { t } from '@/lib/i18n/locales'
+import { strings } from '@/lib/i18n/strings'
 import { cardElement } from './pin-card'
-import { WALK_RADIUS_M, nearbyPins, type VisiblePin } from '@/lib/explorer/filters'
+import { NEAR_RADIUS_M, WALK_RADIUS_M, nearbyPins, type VisiblePin } from '@/lib/explorer/filters'
 import { declutterLabels, watchDeclutter } from '@/lib/map/declutter'
 
 export const PAPER_STYLE_URL = '/map/paper.json'
@@ -45,6 +46,8 @@ export interface ExplorerMapProps {
   stations: Station[]
   /** Centres of picked areas and sub-areas, framed even when no pin matches. */
   centres: [number, number][]
+  /** The visitor's own position, for the "near me" circle and dot. */
+  near?: [number, number] | null
   /** Borders drawn and framed: ticked areas and sub-areas. */
   outlines: Outline[]
   /** Pin to highlight and open a card on, if any. */
@@ -80,8 +83,13 @@ function pinElement(label: string, color: string, minor: boolean, active: boolea
 }
 
 /** Bounds around every pin and station circle, or null when there is nothing to frame. */
-function focusBounds(pins: VisiblePin[], stations: Station[], centres: [number, number][], outlines: Outline[]): LngLatBoundsLike | null {
+function focusBounds(pins: VisiblePin[], stations: Station[], centres: [number, number][], outlines: Outline[], near: [number, number] | null): LngLatBoundsLike | null {
   const pts: [number, number][] = [...centres]
+  if (near) {
+    const dLat = NEAR_RADIUS_M / 111_320
+    const dLon = NEAR_RADIUS_M / (111_320 * Math.cos((near[1] * Math.PI) / 180))
+    pts.push([near[0] - dLon, near[1] - dLat], [near[0] + dLon, near[1] + dLat])
+  }
   for (const o of outlines) for (const poly of o.boundary.coordinates) for (const [lon, lat] of poly[0]) pts.push([lon, lat])
   for (const { pin } of pins) pts.push([pin.location.lon, pin.location.lat])
   for (const st of stations) {
@@ -108,7 +116,7 @@ function focusBounds(pins: VisiblePin[], stations: Station[], centres: [number, 
 }
 
 export function ExplorerMap(props: ExplorerMapProps) {
-  const { locale, cityId, cityCamera, threeD, areas, pins, allPins, allStations, stations, centres, outlines, activePinId, onSelectArea, onSelectPin, onClosePin } = props
+  const { locale, cityId, cityCamera, threeD, areas, pins, allPins, allStations, stations, centres, near = null, outlines, activePinId, onSelectArea, onSelectPin, onClosePin } = props
   const containerRef = useRef<HTMLDivElement>(null)
   const mapRef = useRef<MaplibreMap | null>(null)
   const markersRef = useRef<Marker[]>([])
@@ -203,7 +211,7 @@ export function ExplorerMap(props: ExplorerMapProps) {
       if (cancelled) return
       markersRef.current.forEach((m) => m.remove())
       markersRef.current = []
-      if (pins.length === 0 && stations.length === 0 && centres.length === 0) {
+      if (pins.length === 0 && stations.length === 0 && centres.length === 0 && !near) {
         for (const a of areas) {
           // Phones get the short name (before "and" or a bracket); the full name is in the guide.
           const full = t(a.name, locale)
@@ -229,18 +237,23 @@ export function ExplorerMap(props: ExplorerMapProps) {
         el.classList.add('tm-pin--station')
         markersRef.current.push(new maplibregl.Marker({ element: el, anchor: 'left' }).setLngLat([st.lon, st.lat]).addTo(map))
       }
+      if (near) {
+        const el = pinElement(strings(locale).near.you, '#2b2a26', false, false)
+        el.classList.add('tm-pin--station', 'tm-pin--you')
+        markersRef.current.push(new maplibregl.Marker({ element: el, anchor: 'left' }).setLngLat(near).addTo(map))
+      }
       declutterLabels(markersRef.current, map.getContainer())
     })()
     return () => {
       cancelled = true
     }
-  }, [areas, pins, stations, centres, activePinId, locale, mapReady])
+  }, [areas, pins, stations, centres, near, activePinId, locale, mapReady])
 
   // Camera: frame the pins and circles, or return to the city view.
   useEffect(() => {
     const map = mapRef.current
     if (!map || isGestureActive(map)) return
-    const bounds = focusBounds(pins, stations, centres, outlines)
+    const bounds = focusBounds(pins, stations, centres, outlines, near)
     if (!bounds) {
       // A phone is tall and narrow: the city camera is set for a wide screen, so frame the eight area labels instead.
       if (window.innerWidth < 768 && areas.length > 0) {
@@ -260,14 +273,14 @@ export function ExplorerMap(props: ExplorerMapProps) {
     const cam = map.cameraForBounds(bounds, { padding: stations.length > 0 && pins.length > 0 ? 70 : 28, maxZoom: 16, bearing: threeD ? -12 : 0 })
     if (!cam) return
     map.flyTo({ center: cam.center, zoom: (cam.zoom ?? cityCamera.zoom) + (threeD ? 0.3 : 0), pitch: threeD ? 50 : 0, bearing: threeD ? -12 : 0, duration: 1400, essential: true })
-  }, [pins, stations, centres, outlines, areas, threeD, cityCamera, mapReady])
+  }, [pins, stations, centres, outlines, near, areas, threeD, cityCamera, mapReady])
 
   useEffect(() => {
     const map = mapRef.current
     if (!map) return
     const src = map.getSource(WALK_CIRCLE_SOURCE) as { setData?: (d: GeoJSON.GeoJSON) => void } | undefined
-    src?.setData?.({ type: 'FeatureCollection', features: stations.map((st) => circlePolygon(st.lon, st.lat, WALK_RADIUS_M)) })
-  }, [stations, mapReady])
+    src?.setData?.({ type: 'FeatureCollection', features: [...stations.map((st) => circlePolygon(st.lon, st.lat, WALK_RADIUS_M)), ...(near ? [circlePolygon(near[0], near[1], NEAR_RADIUS_M)] : [])] })
+  }, [stations, near, mapReady])
 
   // The card on the active pin. One popup, replaced whenever the pin changes.
   useEffect(() => {

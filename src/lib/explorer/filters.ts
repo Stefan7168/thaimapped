@@ -42,16 +42,21 @@ export interface FilterState {
   /** When: a place with no `when` passes; one with it must fit every picked time and day. */
   times: TimeOfDay[]
   days: DayKind[]
+  /** The visitor's own position (lon, lat) from the browser, for "near me"; never written to the address. */
+  near: [number, number] | null
 }
 
-export const EMPTY_FILTERS: FilterState = { areas: [], subareas: [], stations: [], lines: [], kinds: [], tiers: [], price: null, times: [], days: [] }
+export const EMPTY_FILTERS: FilterState = { areas: [], subareas: [], stations: [], lines: [], kinds: [], tiers: [], price: null, times: [], days: [], near: null }
+
+/** "Near me" reaches a little further than a station's walk circle: 1,200 m is about a 15-minute walk. */
+export const NEAR_RADIUS_M = 1200
 
 export function subareaKey(areaId: string, subId: string): string {
   return `${areaId}/${subId}`
 }
 
 export function activeFilterCount(f: FilterState): number {
-  return f.areas.length + f.subareas.length + f.stations.length + f.lines.length + f.kinds.length + f.tiers.length + (isFullRange(f.price) ? 0 : 1) + f.times.length + f.days.length
+  return f.areas.length + f.subareas.length + f.stations.length + f.lines.length + f.kinds.length + f.tiers.length + (isFullRange(f.price) ? 0 : 1) + f.times.length + f.days.length + (f.near ? 1 : 0)
 }
 
 export function lineKey(s: { system: string; line: string }): string {
@@ -135,8 +140,13 @@ export function visiblePins(bundle: CityBundle, f: FilterState): VisiblePin[] {
         const near = stations.some((st) => distanceM(st.lon, st.lat, pin.location.lon, pin.location.lat) <= WALK_RADIUS_M)
         if (!near) continue
       }
+      if (f.near && distanceM(f.near[0], f.near[1], pin.location.lon, pin.location.lat) > NEAR_RADIUS_M) continue
       out.push({ pin, area })
     }
+  }
+  if (f.near) {
+    const [lon, lat] = f.near
+    out.sort((a, b) => distanceM(lon, lat, a.pin.location.lon, a.pin.location.lat) - distanceM(lon, lat, b.pin.location.lon, b.pin.location.lat))
   }
   return out
 }

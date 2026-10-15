@@ -534,3 +534,8 @@ a.tm-wk__stop { text-decoration: none; }
 .tm-ar__section { margin-top: 22px; }
 .tm-ar__parts { margin-top: 6px; font-size: 14px; color: var(--ink); }
 @media (max-width: 480px) { .tm-ar__photos { grid-template-columns: repeat(2, 1fr); } .tm-ar__photo:nth-child(3) { display: none; } }
+
+/* Near me: the chip at the end of the What-to-show bar, the note under it, the visitor's own dot. */
+.tm-kind--near { margin-left: auto; }
+.tm-near__note { margin: 0; padding: 6px 12px; border-bottom: 1px solid var(--line); background: var(--paper-2); font-size: 13px; color: var(--ink); }
+.tm-pin--you .tm-pin__dot, .tm-pin--you .tm-pin__num { background: var(--ink); box-shadow: 0 0 0 4px rgba(43,42,38,0.18); }

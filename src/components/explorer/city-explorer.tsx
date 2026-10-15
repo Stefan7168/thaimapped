@@ -13,7 +13,7 @@ import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
 import { trackOutbound } from '@/lib/links/track'
 import { whenLine } from '@/lib/explorer/when'
 import { WEEKEND_SLOTS, weekendPlan } from '@/lib/explorer/weekend'
-import { activeFilterCount, allPins, DAYS, EMPTY_FILTERS, isFullRange, PRICE_RANGE, TIMES, selectedPlaceCentres, selectedStations, subareaKey, TIER_PRICE, TIERS, visiblePins, type FilterState, type PriceRange, type Tier } from '@/lib/explorer/filters'
+import { activeFilterCount, allPins, DAYS, distanceM, EMPTY_FILTERS, isFullRange, PRICE_RANGE, TIMES, selectedPlaceCentres, selectedStations, subareaKey, TIER_PRICE, TIERS, visiblePins, WALK_PACE_M_PER_MIN, type FilterState, type PriceRange, type Tier } from '@/lib/explorer/filters'
 import { thb } from '@/lib/explorer/price'
 import { stationPages } from '@/lib/explorer/stations'
 import type { Outline } from '@/components/map/explorer-map'
@@ -83,6 +83,32 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
   const [tab, setTab] = useState<'places' | 'trips' | 'weekend'>('places')
 
   const pins = useMemo(() => visiblePins(bundle, filters), [bundle, filters])
+  // "Near me": the browser's position, kept in state only (never in the address). Outside the city it is refused with a note.
+  const [locating, setLocating] = useState(false)
+  const [nearNote, setNearNote] = useState<string | null>(null)
+  const locate = () => {
+    if (!('geolocation' in navigator)) return
+    setLocating(true)
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setLocating(false)
+        const here: [number, number] = [pos.coords.longitude, pos.coords.latitude]
+        const [cx, cy] = city.camera2d.center
+        if (distanceM(cx, cy, here[0], here[1]) > 60_000) {
+          setNearNote(s.near.away)
+          window.setTimeout(() => setNearNote(null), 6000)
+          return
+        }
+        update({ ...filters, areas: [], subareas: [], stations: [], lines: [], near: here })
+      },
+      () => {
+        setLocating(false)
+        setNearNote(s.near.denied)
+        window.setTimeout(() => setNearNote(null), 6000)
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 },
+    )
+  }
   const stations = useMemo(() => selectedStations(bundle, filters), [bundle, filters])
   const centres = useMemo(() => selectedPlaceCentres(bundle, filters), [bundle, filters])
   // Outlines: a ticked area draws its border; a ticked sub-area draws its own, unless its whole area is ticked already.
@@ -203,6 +229,7 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
                   {s.city.walkMinutes(pin.walk.minutes)} {s.city.from(`${walkStation.code ? walkStation.code + ' ' : ''}${t(walkStation.name, locale)}`)}
                 </span>
               )}
+              {filters.near && <span className="block text-xs font-medium text-ink">{s.near.from(Math.max(1, Math.ceil(distanceM(filters.near[0], filters.near[1], pin.location.lon, pin.location.lat) / WALK_PACE_M_PER_MIN)))}</span>}
               </span>
             </button>
             {active && partners.length > 0 && (
@@ -260,7 +287,8 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
         <Link href={`/${locale}/${city.id}/trip`} className="hidden shrink-0 rounded-full border border-line bg-white px-3 py-2 text-sm font-medium md:inline-block">{s.nav.trips}</Link>
         <SavedLink locale={locale} className="tm-saved-link hidden shrink-0 items-center gap-1.5 rounded-full border border-line bg-white px-3 py-2 text-sm font-medium md:inline-flex" />
       </header>
-      <KindBar locale={locale} bundle={bundle} filters={filters} onChange={update} />
+      <KindBar locale={locale} bundle={bundle} filters={filters} onChange={update} onNear={locate} locating={locating} />
+      {nearNote && <p role="status" className="tm-near__note">{nearNote}</p>}
 
       <div className="relative flex min-h-0 flex-1">
         {/* Wide screens: the guide, or the places found, at the left. */}
@@ -270,7 +298,7 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
           ) : (
             <div className="p-3">
               {/* Back leaves the place (areas, sub-areas, stations); the budget, time and kind preferences stay. */}
-              <button type="button" onClick={() => update({ ...filters, areas: [], subareas: [], stations: [], lines: [] })} className="mb-2 flex items-center gap-1.5 text-sm text-ink-2 hover:text-ink">
+              <button type="button" onClick={() => update({ ...filters, areas: [], subareas: [], stations: [], lines: [], near: null })} className="mb-2 flex items-center gap-1.5 text-sm text-ink-2 hover:text-ink">
                 <ArrowLeft aria-hidden="true" className="size-4" />
                 {s.guide.back}
               </button>
@@ -299,6 +327,7 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
               allStations={bundle.stations}
               stations={stations}
               centres={centres}
+              near={filters.near}
               outlines={outlines}
               activePinId={activePin?.id ?? null}
               onSelectArea={(id) => update({ ...filters, areas: [id] })}

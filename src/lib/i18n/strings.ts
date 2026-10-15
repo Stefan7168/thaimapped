@@ -45,6 +45,14 @@ const en = {
   explorerPage: {
     title: (city: string) => `${city} map`,
   },
+  near: {
+    chip: 'Near me',
+    you: 'You are here',
+    from: (n: number) => `${n} min walk from you`,
+    away: 'You are not in Bangkok right now, so the map stays on the city.',
+    denied: 'Location not shared. Pick a station or an area instead.',
+    locating: 'Finding you',
+  },
   areaPage: {
     title: (area: string, city: string) => `${area}, ${city}: where to stay and what is there`,
     description: (tagline: string, hotels: number, places: number, stations: number) => `${tagline} ${hotels === 1 ? '1 hotel' : `${hotels} hotels`}, ${places === 1 ? '1 place' : `${places} places`} and ${stations === 1 ? '1 station' : `${stations} stations`}, each placed where it really stands.`,

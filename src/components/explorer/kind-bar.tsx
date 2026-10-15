@@ -1,6 +1,6 @@
 'use client'
 
-import { BedDouble, Landmark, Martini, ShoppingBag, TrainFront, Utensils, X } from 'lucide-react'
+import { BedDouble, Landmark, LocateFixed, Martini, ShoppingBag, TrainFront, Utensils, X } from 'lucide-react'
 import type { CityBundle, Locale } from '@/lib/content/types'
 import { strings } from '@/lib/i18n/strings'
 import { KIND_CHIPS, visiblePins, type FilterState } from '@/lib/explorer/filters'
@@ -18,7 +18,7 @@ export const KIND_ICONS = { hotel: BedDouble, sight: Landmark, food: Utensils, m
  * are; a picked chip is tinted, outlined and ends in an x to unpick it.
  * Scrolls sideways on phones.
  */
-export function KindBar({ locale, bundle, filters, onChange }: { locale: Locale; bundle: CityBundle; filters: FilterState; onChange: (next: FilterState) => void }) {
+export function KindBar({ locale, bundle, filters, onChange, onNear, locating = false }: { locale: Locale; bundle: CityBundle; filters: FilterState; onChange: (next: FilterState) => void; onNear?: () => void; locating?: boolean }) {
   const s = strings(locale)
   return (
     <div className="flex items-center gap-2 overflow-x-auto border-b border-line bg-paper px-3 py-2 md:px-4">
@@ -36,6 +36,13 @@ export function KindBar({ locale, bundle, filters, onChange }: { locale: Locale;
           </button>
         )
       })}
+      {onNear && (
+        <button type="button" aria-pressed={!!filters.near} aria-busy={locating} onClick={() => (filters.near ? onChange({ ...filters, near: null }) : onNear())} className={`tm-kind tm-kind--near${filters.near ? ' tm-kind--on' : ''}`}>
+          <span className="tm-kind__icon"><LocateFixed aria-hidden="true" className="size-4" /></span>
+          {locating ? s.near.locating : s.near.chip}
+          {filters.near && <X aria-hidden="true" className="tm-kind__x size-4" />}
+        </button>
+      )}
     </div>
   )
 }
