@@ -120,10 +120,12 @@ body {
 .tm-kind--on { background: rgba(200, 85, 61, 0.1); border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); font-weight: 600; }
 .tm-kind--on .tm-kind__icon { background: rgba(200, 85, 61, 0.16); color: var(--accent-strong); }
 .tm-kind--on .tm-kind__count { color: var(--ink); }
+.tm-kind--small { min-height: 32px; gap: 6px; padding: 2px 10px; font-size: 13px; }
+.tm-kind--small .tm-kind__count { font-size: 11px; }
 .tm-kind:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
 @media (hover: hover) and (pointer: fine) { .tm-kind:hover { background: #fff; border-color: var(--ink-2); } .tm-kind--on:hover { background: rgba(200, 85, 61, 0.16); border-color: var(--accent); } }
 .tm-tabs { display: flex; gap: 2px; margin: 0 0 12px; border-bottom: 1px solid var(--line); }
-.tm-tabs__tab { flex: 1 1 0; min-height: 40px; padding: 6px 4px; border: 0; border-bottom: 2px solid transparent; margin-bottom: -1px; background: none; color: var(--ink-2); font: inherit; font-size: 14px; font-weight: 500; cursor: pointer; transition: color var(--t-hover) ease, border-color var(--t-hover) ease; }
+.tm-tabs__tab { flex: 1 1 0; min-height: 40px; padding: 6px 2px; border: 0; border-bottom: 2px solid transparent; margin-bottom: -1px; background: none; color: var(--ink-2); font: inherit; font-size: 13px; white-space: nowrap; font-weight: 500; cursor: pointer; transition: color var(--t-hover) ease, border-color var(--t-hover) ease; }
 .tm-tabs__tab[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); font-weight: 600; }
 .tm-tabs__tab:focus-visible { outline: 3px solid var(--ink); outline-offset: -3px; }
 .tm-weekend { margin: 0 0 14px; padding: 12px 14px 14px; background: var(--paper-2); border-left: 3px solid var(--pin, var(--accent)); }

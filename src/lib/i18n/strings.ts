@@ -137,6 +137,8 @@ const en = {
     back: 'Back to the areas',
     hoverMeta: (places: number, hotels: number) => `${places === 1 ? '1 place' : `${places} places`} · ${hotels === 1 ? '1 hotel' : `${hotels} hotels`}, budget to luxury`,
     tabs: { places: 'Places', trips: 'Trip planner', weekend: 'Weekend planner' } as Record<string, string>,
+    tripLength: { morning: 'Morning', afternoon: 'Afternoon', '1': '1 day', '2': '2 days', '3': '3 days', '4': '4 days', '5': '5 days', '7': '7 days' } as Record<string, string>,
+    noTripsOfLength: 'No trip of that length yet.',
     weekendNeedsArea: 'Pick one area to plan a weekend there.',
     weekend: (name: string) => `Your weekend in ${name}`,
     priceFrom: (price: string) => `from about ${price} a night`,

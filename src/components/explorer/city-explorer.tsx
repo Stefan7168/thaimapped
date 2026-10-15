@@ -361,13 +361,40 @@ function noopSubscribe() {
   return () => {}
 }
 
-/** The trips out of town, one row each, with the link to the trips page. */
+const TRIP_LENGTHS = ['morning', 'afternoon', '1', '2', '3', '4', '5', '7'] as const
+type TripLength = (typeof TRIP_LENGTHS)[number]
+
+/** Whether a trip is of the picked length: a part of a day, or a number of days. */
+function tripFits(r: TripRoute, len: TripLength | null): boolean {
+  if (!len) return true
+  if (len === 'morning' || len === 'afternoon') return r.duration === len
+  const days = r.duration === 'multi-day' ? r.days : 1
+  return days === Number(len)
+}
+
+/** The trips out of town, one row each, behind length pills, with the link to the trips page. */
 function TripList({ locale, cityId, routes }: { locale: Locale; cityId: string; routes: TripRoute[] }) {
   const s = strings(locale)
+  const [len, setLen] = useState<TripLength | null>(null)
+  const shown = routes.filter((r) => tripFits(r, len))
   return (
     <>
+      <div className="mb-2 flex flex-wrap gap-1.5">
+        {TRIP_LENGTHS.map((k) => {
+          const on = len === k
+          const n = routes.filter((r) => tripFits(r, k)).length
+          return (
+            <button key={k} type="button" aria-pressed={on} onClick={() => setLen(on ? null : k)} className={`tm-kind tm-kind--small${on ? ' tm-kind--on' : ''}`}>
+              {s.guide.tripLength[k]}
+              <span className="tm-kind__count">{n}</span>
+              {on && <X aria-hidden="true" className="tm-kind__x size-3.5" />}
+            </button>
+          )
+        })}
+      </div>
+      {shown.length === 0 && <p className="px-2 py-2 text-sm text-ink-2">{s.guide.noTripsOfLength}</p>}
       <ul className="mt-2 space-y-1">
-        {routes.map((r) => (
+        {shown.map((r) => (
           <li key={r.id}>
             <Link href={`/${locale}/${cityId}/trip/${r.id}`} className="flex items-baseline justify-between gap-2 rounded-lg px-2 py-1.5 text-sm hover:bg-paper-2">
               <span className="font-medium">{t(r.name, locale)}</span>
