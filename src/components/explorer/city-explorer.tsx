@@ -181,8 +181,8 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
         const KindIcon = KIND_ICONS[pin.kind]
         return (
           <li key={pin.id} className="relative">
-            {pin.kind === 'hotel' && <SaveButton id={pin.id} locale={locale} className="absolute right-2 top-2" />}
-            <button type="button" onClick={() => { setActivePin(pin); setListOpen(false) }} className={`tm-place${pin.kind === 'hotel' ? ' tm-place--save' : ''} ${active ? 'border-ink bg-white' : 'border-line bg-white/70'}`}>
+            {<SaveButton id={pin.id} locale={locale} className="absolute right-2 top-2" />}
+            <button type="button" onClick={() => { setActivePin(pin); setListOpen(false) }} className={`tm-place tm-place--save ${active ? 'border-ink bg-white' : 'border-line bg-white/70'}`}>
               {/* A square picture on the left: the place's first photo, or its kind's icon on paper until one is fetched. */}
               {thumb ? (
                 <Image src={thumb.src} alt="" width={72} height={72} sizes="72px" className="tm-place__thumb" />

@@ -28,9 +28,9 @@ export default async function SavedRoute(props: PageProps<'/[locale]/saved'>) {
   const cityId = liveCityIds()[0]
   const bundle = cityId ? loadCityBundle(cityId) : null
   if (!bundle) notFound()
-  // Every hotel, with only what the row shows: no outlines, no street shapes, one photo.
+  // Every hotel and place, with only what the row shows: no outlines, no street shapes, one photo.
   const entries: SavedEntry[] = bundle.areas.flatMap((a) =>
-    a.pins.filter((p) => p.kind === 'hotel').map((pin) => ({ pin: { ...pin, photos: pin.photos?.slice(0, 1), shape: undefined }, area: { id: a.id, name: a.name, color: a.color } })),
+    a.pins.map((pin) => ({ pin: { ...pin, photos: pin.photos?.slice(0, 1), shape: undefined }, area: { id: a.id, name: a.name, color: a.color } })),
   )
   return <SavedPage locale={locale} cityId={bundle.city.id} entries={entries} stations={stationsFor(bundle.stations, entries.map((e) => e.pin))} />
 }

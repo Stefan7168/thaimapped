@@ -14,7 +14,7 @@ Stefan's rule (2026-10-15): do not raise setup or launch items with him before g
 
 - [x] `/credits` page and the photo file + licence check in `scripts/validate-content.mjs` (done 2026-10-15).
 - [ ] Verify the `when` hours of every place against the venue's own page (first pass is editorial).
-- [ ] Open Graph image and metadata per page.
-- [ ] Sitemap and robots: confirm every static route is listed.
+- [x] Open Graph image and metadata per page (done 2026-10-15: `src/lib/seo/page-meta.ts`, default card at `/opengraph-image`).
+- [x] Sitemap and robots (done 2026-10-15: `src/app/sitemap.ts` lists every static route except `/saved`, which is personal and noindex).
 - [ ] Phone home page: the map band sits behind the scrolling text (backlog item 4).
 - [ ] Set `NEXT_PUBLIC_SITE_URL` on Vercel to the real domain once it is connected; until then the sitemap and robots.txt point at the Vercel address.

@@ -61,7 +61,7 @@ export function StationPage({ locale, cityId, page, areas, stations, others }: {
     const partners = pin.kind === 'hotel' ? (Object.keys(pin.links) as Partner[]) : []
     return (
       <li key={pin.id} className="tm-wk__item">
-        {pin.kind === 'hotel' && <SaveButton id={pin.id} locale={locale} className="tm-wk__save" />}
+        {<SaveButton id={pin.id} locale={locale} className="tm-wk__save" />}
         <button type="button" aria-pressed={on} onClick={() => { setCard(on ? null : { pin, area }); if (!on) showMap() }} className={`tm-wk__stop${on ? ' tm-wk__stop--on' : ''}`} style={{ ['--pin' as string]: `var(--${area.color})` }}>
           {photo ? (
             <Image src={photo.src} alt="" width={72} height={72} sizes="72px" className="tm-wk__thumb" />

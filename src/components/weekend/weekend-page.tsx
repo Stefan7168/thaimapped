@@ -18,6 +18,7 @@ import { supports3D } from '@/lib/map/device'
 import { SiteHeader } from '@/components/explorer/site-header'
 import { SiteFooter } from '@/components/explorer/site-footer'
 import { SaveButton } from '@/components/saved/save-button'
+import { useSaved } from '@/lib/saved/store'
 import { KIND_ICONS } from '@/components/explorer/kind-bar'
 
 const StageMap = dynamic(() => import('@/components/map/stage-map').then((m) => m.StageMap), {
@@ -54,7 +55,10 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes }: {
   const [shared, setShared] = useState<'idle' | 'copied' | 'failed'>('idle')
   const stationById = useMemo(() => new Map(stations.map((st) => [st.id, st])), [stations])
   const stops = useMemo(() => WEEKEND_SLOTS.flatMap((slot) => plan.slots[slot]), [plan])
-  const pinned = useMemo(() => [...stops, ...plan.hotels], [stops, plan.hotels])
+  // A hotel the reader saved comes first under "Where to sleep".
+  const saved = useSaved()
+  const hotels = useMemo(() => [...plan.hotels].sort((a, b) => Number(saved.includes(b.id)) - Number(saved.includes(a.id))), [plan.hotels, saved])
+  const pinned = useMemo(() => [...stops, ...hotels], [stops, hotels])
   const priceQuery = price ? `price=${price.min}-${price.max}` : ''
   const explorerHref = `/${locale}/${cityId}#area=${area.id}${priceQuery ? `&${priceQuery}` : ''}`
 
@@ -82,7 +86,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes }: {
     const on = card?.pin.id === pin.id
     return (
       <li key={pin.id} className="tm-wk__item">
-        {pin.kind === 'hotel' && <SaveButton id={pin.id} locale={locale} className="tm-wk__save" />}
+        {<SaveButton id={pin.id} locale={locale} className="tm-wk__save" />}
         <button type="button" aria-pressed={on} onClick={() => { setCard(on ? null : { pin, area }); if (!on) showMap() }} className={`tm-wk__stop${on ? ' tm-wk__stop--on' : ''}`}>
           {photo ? (
             <Image src={photo.src} alt="" width={72} height={72} sizes="72px" className="tm-wk__thumb" />
@@ -148,7 +152,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes }: {
             ))}
             <li className="tm-wk__slot tm-wk__slot--stay">
               <h2 className="tm-wk__time">{s.guide.stay}</h2>
-              {plan.hotels.length === 0 ? <p className="tm-wk__empty">{s.guide.stayNone}</p> : <ul className="tm-wk__stops">{plan.hotels.map(stop)}</ul>}
+              {hotels.length === 0 ? <p className="tm-wk__empty">{s.guide.stayNone}</p> : <ul className="tm-wk__stops">{hotels.map(stop)}</ul>}
             </li>
           </ol>
           {dayTrips.length > 0 && (

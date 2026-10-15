@@ -10,6 +10,7 @@ import { strings } from '@/lib/i18n/strings'
 import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
 import { trackOutbound } from '@/lib/links/track'
 import { thb } from '@/lib/explorer/price'
+import { whenLine } from '@/lib/explorer/when'
 import { addSaved, clearSaved, toggleSaved, useSaved } from '@/lib/saved/store'
 import { SiteHeader } from '@/components/explorer/site-header'
 import { SiteFooter } from '@/components/explorer/site-footer'
@@ -44,6 +45,8 @@ export function SavedPage({ locale, cityId, entries, stations }: { locale: Local
   const ids = sentIds ?? mine
   const rows = ids.map((id) => byId.get(id)).filter((e): e is SavedEntry => !!e)
   const missing = ids.length - rows.length
+  const hotelRows = rows.filter((e) => e.pin.kind === 'hotel')
+  const placeRows = rows.filter((e) => e.pin.kind !== 'hotel')
 
   const share = async () => {
     const url = `${window.location.origin}/${locale}/saved?ids=${encodeURIComponent(ids.join(','))}`
@@ -64,6 +67,50 @@ export function SavedPage({ locale, cityId, entries, stations }: { locale: Local
     addSaved(rows.map((e) => e.pin.id))
     setShared('kept')
     window.setTimeout(() => setShared('idle'), 2500)
+  }
+
+  const row = ({ pin, area }: SavedEntry) => {
+        const photo = pin.photos?.[0] ?? pin.photo
+        const KindIcon = KIND_ICONS[pin.kind]
+        const walkStation = pin.walk ? stationById.get(pin.walk.station) : undefined
+        const partners = Object.keys(pin.links) as Partner[]
+        return (
+          <li key={pin.id} className="tm-wk__item">
+            {!sentIds && (
+              <button type="button" onClick={() => toggleSaved(pin.id)} aria-label={s.saved.remove} title={s.saved.remove} className="tm-save tm-wk__save">
+                <X aria-hidden="true" className="size-4" />
+              </button>
+            )}
+            <Link href={`/${locale}/${cityId}#pin=${pin.id}`} className="tm-wk__stop" style={{ ['--pin' as string]: `var(--${area.color})` }}>
+              {photo ? (
+                <Image src={photo.src} alt="" width={72} height={72} sizes="72px" className="tm-wk__thumb" />
+              ) : (
+                <span aria-hidden="true" className="tm-wk__thumb tm-wk__thumb--empty"><KindIcon className="size-6" /></span>
+              )}
+              <span className="tm-wk__text">
+                <span className="tm-wk__kind">{pin.kind === 'hotel' && pin.tier ? s.filters.tier[pin.tier] : s.pin[pin.kind]} · {t(area.name, locale)}</span>
+                <span className="tm-wk__name">{t(pin.name, locale)}</span>
+                <span className="tm-wk__why">{t(pin.why, locale)}</span>
+                {whenLine(pin, locale) && <span className="tm-wk__when">{whenLine(pin, locale)}</span>}
+                {pin.price && <span className="tm-wk__meta">{s.guide.priceFrom(thb(pin.price.from, locale))}{pin.price.basis === 'tier-estimate' ? ` (${s.guide.priceEstimate})` : ''}</span>}
+                {pin.walk && walkStation && <span className="tm-wk__meta">{s.city.walkMinutes(pin.walk.minutes)} {s.city.from(`${walkStation.code ? walkStation.code + ' ' : ''}${t(walkStation.name, locale)}`)}</span>}
+                <span className="tm-wk__meta tm-saved__map">{s.saved.showOnMap}</span>
+              </span>
+            </Link>
+            {pin.kind === 'hotel' && partners.length > 0 && (
+              <div className="tm-wk__links">
+                {partners.map((p) => {
+                  const subId = subIdFor(`${cityId}-${area.id}`, pin.id)
+                  return (
+                    <a key={p} href={buildOutboundUrl(p, pin.links[p]!, subId)} onClick={() => p !== 'official' && trackOutbound(p, subId)} target="_blank" rel={p === 'official' ? 'noopener' : 'noopener sponsored'} className={p === 'official' ? 'tm-card__link tm-card__link--quiet' : 'tm-card__link'}>
+                      {p === 'official' ? s.card.official : s.card.open(p.charAt(0).toUpperCase() + p.slice(1))}
+                    </a>
+                  )
+                })}
+              </div>
+            )}
+          </li>
+        )
   }
 
   return (
@@ -87,50 +134,18 @@ export function SavedPage({ locale, cityId, entries, stations }: { locale: Local
           {rows.length > 0 && !sentIds && <button type="button" onClick={clearSaved} className="tm-link">{s.saved.clear}</button>}
         </div>
         {missing > 0 && <p className="tm-saved__note">{s.saved.unknown(missing)}</p>}
-        <ol className="tm-wk__stops tm-saved__list">
-          {rows.map(({ pin, area }) => {
-            const photo = pin.photos?.[0] ?? pin.photo
-            const KindIcon = KIND_ICONS[pin.kind]
-            const walkStation = pin.walk ? stationById.get(pin.walk.station) : undefined
-            const partners = Object.keys(pin.links) as Partner[]
-            return (
-              <li key={pin.id} className="tm-wk__item">
-                {!sentIds && (
-                  <button type="button" onClick={() => toggleSaved(pin.id)} aria-label={s.saved.remove} title={s.saved.remove} className="tm-save tm-wk__save">
-                    <X aria-hidden="true" className="size-4" />
-                  </button>
-                )}
-                <Link href={`/${locale}/${cityId}#pin=${pin.id}`} className="tm-wk__stop" style={{ ['--pin' as string]: `var(--${area.color})` }}>
-                  {photo ? (
-                    <Image src={photo.src} alt="" width={72} height={72} sizes="72px" className="tm-wk__thumb" />
-                  ) : (
-                    <span aria-hidden="true" className="tm-wk__thumb tm-wk__thumb--empty"><KindIcon className="size-6" /></span>
-                  )}
-                  <span className="tm-wk__text">
-                    <span className="tm-wk__kind">{pin.tier ? s.filters.tier[pin.tier] : s.pin[pin.kind]} · {t(area.name, locale)}</span>
-                    <span className="tm-wk__name">{t(pin.name, locale)}</span>
-                    <span className="tm-wk__why">{t(pin.why, locale)}</span>
-                    {pin.price && <span className="tm-wk__meta">{s.guide.priceFrom(thb(pin.price.from, locale))}{pin.price.basis === 'tier-estimate' ? ` (${s.guide.priceEstimate})` : ''}</span>}
-                    {pin.walk && walkStation && <span className="tm-wk__meta">{s.city.walkMinutes(pin.walk.minutes)} {s.city.from(`${walkStation.code ? walkStation.code + ' ' : ''}${t(walkStation.name, locale)}`)}</span>}
-                    <span className="tm-wk__meta tm-saved__map">{s.saved.showOnMap}</span>
-                  </span>
-                </Link>
-                {partners.length > 0 && (
-                  <div className="tm-wk__links">
-                    {partners.map((p) => {
-                      const subId = subIdFor(`${cityId}-${area.id}`, pin.id)
-                      return (
-                        <a key={p} href={buildOutboundUrl(p, pin.links[p]!, subId)} onClick={() => p !== 'official' && trackOutbound(p, subId)} target="_blank" rel={p === 'official' ? 'noopener' : 'noopener sponsored'} className={p === 'official' ? 'tm-card__link tm-card__link--quiet' : 'tm-card__link'}>
-                          {p === 'official' ? s.card.official : s.card.open(p.charAt(0).toUpperCase() + p.slice(1))}
-                        </a>
-                      )
-                    })}
-                  </div>
-                )}
-              </li>
-            )
-          })}
-        </ol>
+        {hotelRows.length > 0 && (
+          <section className="tm-saved__group">
+            <h2 className="tm-wk__time">{s.stationPage.hotels}</h2>
+            <ol className="tm-wk__stops tm-saved__list">{hotelRows.map(row)}</ol>
+          </section>
+        )}
+        {placeRows.length > 0 && (
+          <section className="tm-saved__group">
+            <h2 className="tm-wk__time">{s.stationPage.places}</h2>
+            <ol className="tm-wk__stops tm-saved__list">{placeRows.map(row)}</ol>
+          </section>
+        )}
       </main>
       <SiteFooter locale={locale} cityId={cityId} />
     </>

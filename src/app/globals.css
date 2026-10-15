@@ -520,7 +520,8 @@ body {
 .tm-saved-link { display: inline-flex; align-items: center; gap: 6px; }
 .tm-saved-link__count { min-width: 18px; padding: 0 5px; border-radius: 999px; background: var(--accent); color: #fff; font-size: 11px; font-weight: 700; line-height: 18px; text-align: center; }
 .tm-saved .tm-wk__actions { margin-top: 14px; }
-.tm-saved__list { margin-top: 20px; }
+.tm-saved__list { margin-top: 8px; }
+.tm-saved__group { margin-top: 24px; }
 .tm-saved__note { margin-top: 12px; font-size: 13px; color: var(--ink-2); }
 .tm-saved__map { color: var(--accent); font-weight: 600; }
 a.tm-wk__stop { text-decoration: none; }
