@@ -144,7 +144,7 @@ const en = {
       pace: 'The pace',
       paces: { lively: 'Lively', calm: 'Calm and local' } as Record<string, string>,
       result: (name: string) => `Stay in ${name}`,
-      alsoFits: (names: string) => `Also fits: ${names}`,
+      alsoFitsLead: 'Also fits:',
       hotelPick: 'Your hotel pick',
       noHotel: 'No hotel in this budget listed here yet.',
       open: (name: string) => `Open ${name} with these filters`,
