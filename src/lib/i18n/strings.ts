@@ -87,6 +87,7 @@ const en = {
   },
   weekendPage: {
     eyebrow: 'A weekend plan',
+    showAllHotels: 'Show every hotel here',
     fromHotel: (n: number, hotel: string) => `about ${n} min on foot from ${hotel}`,
     pickHotelHint: 'Tap the heart on a hotel and every stop above says how far it is from that door.',
     hotelPicked: (hotel: string) => `Your hotel is ${hotel}: each stop above says how far it is on foot (straight line, not checked).`,

@@ -219,7 +219,17 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes }: {
             <li className="tm-wk__slot tm-wk__slot--stay">
               <h2 className="tm-wk__time">{s.guide.stay}</h2>
               {hotels.length > 0 && <p className={myHotel ? 'tm-wk__empty' : 'tm-wk__empty tm-wk__hint'}>{myHotel ? s.weekendPage.hotelPicked(t(myHotel.name, locale)) : s.weekendPage.pickHotelHint}</p>}
-              {hotels.length === 0 ? <p className="tm-wk__empty">{s.guide.stayNone}</p> : <ul className="tm-wk__stops">{hotels.map(stop)}</ul>}
+              {hotels.length === 0 ? (
+                <p className="tm-wk__empty">
+                  {s.guide.stayNone}
+                  {price && area.pins.some((p) => p.kind === 'hotel') && (
+                    <>
+                      {' '}
+                      <button type="button" className="tm-link tm-link--under" onClick={() => { setPrice(null); window.history.replaceState(null, '', window.location.pathname + window.location.hash) }}>{s.weekendPage.showAllHotels}</button>
+                    </>
+                  )}
+                </p>
+              ) : <ul className="tm-wk__stops">{hotels.map(stop)}</ul>}
               {hotels.length > 1 && (
                 <div className="tm-ar__cmp">
                   <h3 className="tm-wk__time">{s.areaPage.compare}</h3>
