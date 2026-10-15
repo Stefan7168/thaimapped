@@ -5,7 +5,7 @@
     "en": "Thonglor and Ekkamai"
   },
   "tagline": {
-    "en": "Bangkok’s trendiest bars and restaurants, pricier, less walkable."
+    "en": "Bangkok\u2019s trendiest bars and restaurants, pricier, less walkable."
   },
   "fits": [
     "nightlife",
@@ -36,7 +36,8 @@
       "center": [
         100.58,
         13.733
-      ]
+      ],
+      "polygon": "boundaries/thonglor-ekkamai/thonglor.geojson"
     },
     {
       "id": "ekkamai",
@@ -46,7 +47,8 @@
       "center": [
         100.585,
         13.725
-      ]
+      ],
+      "polygon": "boundaries/thonglor-ekkamai/ekkamai.geojson"
     },
     {
       "id": "phra-khanong",
@@ -56,7 +58,8 @@
       "center": [
         100.589,
         13.716
-      ]
+      ],
+      "polygon": "boundaries/thonglor-ekkamai/phra-khanong.geojson"
     }
   ],
   "video": null,

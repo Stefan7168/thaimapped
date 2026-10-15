@@ -35,7 +35,8 @@
       "center": [
         100.497,
         13.759
-      ]
+      ],
+      "polygon": "boundaries/old-town/khao-san.geojson"
     },
     {
       "id": "grand-palace",
@@ -45,7 +46,8 @@
       "center": [
         100.492,
         13.748
-      ]
+      ],
+      "polygon": "boundaries/old-town/grand-palace.geojson"
     },
     {
       "id": "banglamphu",
@@ -55,7 +57,8 @@
       "center": [
         100.498,
         13.762
-      ]
+      ],
+      "polygon": "boundaries/old-town/banglamphu.geojson"
     }
   ],
   "video": null,

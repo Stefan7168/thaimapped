@@ -1,68 +1,100 @@
 #!/usr/bin/env node
-// Builds content/boundaries/<area>.geojson: the outline of each area as the
-// union of the Bangkok districts (khet) it sits in. The shapes are never
-// drawn by hand. They come from geoBoundaries (gbOpen, THA ADM2, built from
-// Royal Thai Survey Department data via OCHA, CC BY 3.0 IGO):
-//   https://github.com/wmgeolab/geoBoundaries/tree/main/releaseData/gbOpen/THA/ADM2
-// Usage: node scripts/area-boundaries.mjs <geoBoundaries-THA-ADM2.geojson>
-// The source file is 265 MB (one feature per line) and stays out of the repo.
-import { createReadStream, writeFileSync } from 'node:fs'
-import { createInterface } from 'node:readline'
+// Builds the outlines the explorer draws:
+//   content/boundaries/<area>/<subarea>.geojson  one per sub-area
+//   content/boundaries/<area>.geojson            the area, as the union of its sub-areas
+// Every shape is an official sub-district (khwaeng, OpenStreetMap admin level
+// 8) or a union of them, read from content/sources/bangkok-khwaeng.geojson
+// (fetched by scripts/fetch-khwaeng.mjs; © OpenStreetMap contributors, ODbL).
+// Nothing is drawn by hand. The table below is the one place that says which
+// sub-districts make up each sub-area; docs/boundaries.md explains the choices.
+// Usage: node scripts/area-boundaries.mjs
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { union } from 'polyclip-ts'
 
-/**
- * Which districts make up each area. Where an area is a district, the line is
- * that district's border. Where an area is a neighbourhood that spans
- * districts, the line is the border of the districts it sits in, so two
- * areas can share a district (Silom and Riverside share Bang Rak; Sukhumvit
- * and Thonglor-Ekkamai share Vadhana).
- */
-const AREAS = {
-  'old-town': ['Phra Nakhon'],
-  chinatown: ['Samphanthawong'],
-  silom: ['Bang Rak', 'Sathon'],
-  riverside: ['Bang Rak', 'Khlong San'],
-  siam: ['Pathum Wan', 'Ratchathewi'],
-  sukhumvit: ['Vadhana', 'Khlong Toei'],
-  'thonglor-ekkamai': ['Vadhana', 'Phra Khanong'],
-  ari: ['Phaya Thai'],
+/** Sub-area -> sub-districts (English OSM names, without " Subdistrict"). */
+const SUBAREAS = {
+  'old-town': {
+    'khao-san': ['Talat Yot'],
+    'grand-palace': ['Phra Borom Maha Ratchawang', 'Wang Burapha Phirom', 'Wat Ratchabophit', 'Samran Rat', 'San Chao Pho Suea', 'Sao Chingcha'],
+    banglamphu: ['Chana Songkhram', 'Bowon Niwet', 'Ban Phan Thom', 'Bang Khun Phrom', 'Wat Sam Phraya'],
+  },
+  chinatown: {
+    yaowarat: ['Samphanthawong'],
+    'talat-noi': ['Talat Noi'],
+    'song-wat': ['Chakkrawat'],
+  },
+  silom: {
+    'silom-road': ['Si Lom', 'Suriyawong'],
+    sathorn: ['Thung Maha Mek', 'Thung Wat Don'],
+    surasak: ['Yan Nawa'],
+  },
+  riverside: {
+    'charoen-krung': ['Bang Rak', 'Wat Phraya Krai'],
+    'bang-rak': ['Si Phraya'],
+    'khlong-san': ['Khlong Ton Sai', 'Khlong San', 'Somdet Chao Phraya', 'Bang Lamphu Lang'],
+  },
+  siam: {
+    'siam-square': ['Wang Mai', 'Pathum Wan'],
+    ratchaprasong: ['Lumphini'],
+    pratunam: ['Thanon Phaya Thai', 'Thanon Phetchaburi'],
+  },
+  sukhumvit: {
+    nana: ['Khlong Toei Nuea'],
+    asok: ['Khlong Toei'],
+    'phrom-phong': ['Khlong Tan Nuea', 'Khlong Tan'],
+  },
+  'thonglor-ekkamai': {
+    thonglor: ['Khlong Tan Nuea'],
+    ekkamai: ['Phra Khanong Nuea'],
+    'phra-khanong': ['Phra Khanong', 'Phra Khanong Tai'],
+  },
+  ari: {
+    'ari-sois': ['Phaya Thai'],
+    'saphan-khwai': ['Sam Sen Nai', 'Chatuchak'],
+  },
 }
 
-const SOURCE = 'geoBoundaries gbOpen THA ADM2 (Royal Thai Survey Department via OCHA ROAP, boundaries of 2019), CC BY 3.0 IGO'
+const SOURCE = 'OpenStreetMap sub-districts (khwaeng, admin level 8) via Overpass, © OpenStreetMap contributors, ODbL 1.0'
 
-const src = process.argv[2]
-if (!src) {
-  console.error('usage: node scripts/area-boundaries.mjs <geoBoundaries-THA-ADM2.geojson>')
-  process.exit(1)
+const root = join(dirname(fileURLToPath(import.meta.url)), '..', 'content')
+const src = JSON.parse(readFileSync(join(root, 'sources', 'bangkok-khwaeng.geojson'), 'utf8'))
+// Bangkok's own sub-districts are "แขวง …"; the box also caught "ตำบล …" of the next provinces.
+const byName = new Map()
+for (const f of src.features) {
+  if (!f.properties.name.startsWith('แขวง')) continue
+  const name = f.properties.nameEn.replace(/ Subdistrict$/, '')
+  if (byName.has(name)) byName.set(name, null) // ambiguous: Bang Chak and Bang Mot exist twice inside Bangkok
+  else byName.set(name, f)
 }
-const out = join(dirname(fileURLToPath(import.meta.url)), '..', 'content', 'boundaries')
-const wanted = new Set(Object.values(AREAS).flat())
-const found = new Map()
-
-const rl = createInterface({ input: createReadStream(src, { encoding: 'utf8' }) })
-for await (const line of rl) {
-  const m = line.match(/"shapeName": "([^"]+)"/)
-  if (!m || !wanted.has(m[1])) continue
-  const feature = JSON.parse(line.replace(/,\s*$/, ''))
-  if (found.has(m[1])) throw new Error(`district ${m[1]} appears twice in the source`)
-  found.set(m[1], feature.geometry)
+function shape(name) {
+  const f = byName.get(name)
+  if (f === undefined) throw new Error(`sub-district "${name}" not in the source`)
+  if (f === null) throw new Error(`sub-district "${name}" is ambiguous; key it another way`)
+  return f
 }
-for (const name of wanted) if (!found.has(name)) throw new Error(`district ${name} not found in ${src}`)
 
 const round = (n) => Math.round(n * 1e5) / 1e5
-const asMulti = (g) => (g.type === 'MultiPolygon' ? g.coordinates : [g.coordinates])
+const clean = (multi) => multi.map((poly) => poly.map((ring) => ring.map(([lon, lat]) => [round(lon), round(lat)])))
+const count = (multi) => multi.reduce((n, poly) => n + poly.reduce((m, ring) => m + ring.length, 0), 0)
 
-for (const [areaId, districts] of Object.entries(AREAS)) {
-  const merged = union(...districts.map((d) => asMulti(found.get(d))))
-  const coordinates = merged.map((poly) => poly.map((ring) => ring.map(([lon, lat]) => [round(lon), round(lat)])))
-  const feature = {
-    type: 'Feature',
-    properties: { area: areaId, districts, source: SOURCE },
-    geometry: { type: 'MultiPolygon', coordinates },
+function write(relPath, props, coordinates) {
+  const file = join(root, 'boundaries', relPath)
+  mkdirSync(dirname(file), { recursive: true })
+  writeFileSync(file, JSON.stringify({ type: 'Feature', properties: { ...props, source: SOURCE }, geometry: { type: 'MultiPolygon', coordinates } }) + '\n')
+}
+
+for (const [areaId, subs] of Object.entries(SUBAREAS)) {
+  const areaParts = []
+  for (const [subId, names] of Object.entries(subs)) {
+    const parts = names.map((n) => shape(n))
+    const merged = clean(union(...parts.map((f) => f.geometry.coordinates)))
+    write(`${areaId}/${subId}.geojson`, { area: areaId, subarea: subId, districts: names, osmIds: parts.map((f) => f.properties.osmId) }, merged)
+    areaParts.push(...parts.map((f) => f.geometry.coordinates))
+    console.log(`${areaId}/${subId}: ${names.join(' + ')} -> ${count(merged)} points`)
   }
-  writeFileSync(join(out, `${areaId}.geojson`), JSON.stringify(feature) + '\n')
-  const points = coordinates.reduce((n, poly) => n + poly.reduce((m, ring) => m + ring.length, 0), 0)
-  console.log(`${areaId}: ${districts.join(' + ')} -> ${coordinates.length} polygon(s), ${points} points`)
+  const merged = clean(union(...areaParts))
+  write(`${areaId}.geojson`, { area: areaId, districts: Object.values(subs).flat() }, merged)
+  console.log(`${areaId}: ${merged.length} polygon(s), ${count(merged)} points`)
 }

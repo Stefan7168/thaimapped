@@ -9,7 +9,8 @@ import { t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
 import { supports3D } from '@/lib/map/device'
 import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
-import { activeFilterCount, allPins, EMPTY_FILTERS, selectedPlaceCentres, selectedStations, visiblePins, type FilterState } from '@/lib/explorer/filters'
+import { activeFilterCount, allPins, EMPTY_FILTERS, selectedPlaceCentres, selectedStations, subareaKey, visiblePins, type FilterState } from '@/lib/explorer/filters'
+import type { Outline } from '@/components/map/explorer-map'
 import { FilterPanel } from './filter-panel'
 import { TopSearch, type SearchHit } from './top-search'
 import { SiteFooter } from './site-footer'
@@ -40,11 +41,20 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
   const pins = useMemo(() => visiblePins(bundle, filters), [bundle, filters])
   const stations = useMemo(() => selectedStations(bundle, filters), [bundle, filters])
   const centres = useMemo(() => selectedPlaceCentres(bundle, filters), [bundle, filters])
-  // A ticked area, or any of its sub-areas, draws the area's district border on the map.
-  const outlines = useMemo(
-    () => areas.filter((a) => a.boundary && (filters.areas.includes(a.id) || filters.subareas.some((key) => key.startsWith(`${a.id}/`)))),
-    [areas, filters.areas, filters.subareas],
-  )
+  // Outlines: a ticked area draws its border; a ticked sub-area draws its own, unless its whole area is ticked already.
+  const outlines = useMemo<Outline[]>(() => {
+    const out: Outline[] = []
+    for (const a of areas) {
+      if (filters.areas.includes(a.id)) {
+        if (a.boundary) out.push({ id: a.id, color: a.color, boundary: a.boundary })
+        continue
+      }
+      for (const sub of a.subareas) {
+        if (sub.boundary && filters.subareas.includes(subareaKey(a.id, sub.id))) out.push({ id: `${a.id}/${sub.id}`, color: a.color, boundary: sub.boundary })
+      }
+    }
+    return out
+  }, [areas, filters.areas, filters.subareas])
   const stationById = useMemo(() => new Map(bundle.stations.map((st) => [st.id, st])), [bundle])
   const everyPin = useMemo(() => allPins(bundle), [bundle])
   const count = activeFilterCount(filters)

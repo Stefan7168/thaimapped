@@ -255,6 +255,10 @@
             },
             "minItems": 2,
             "maxItems": 2
+          },
+          "polygon": {
+            "type": "string",
+            "description": "Path under content/ of the sub-area's outline file (built by scripts/area-boundaries.mjs)."
           }
         },
         "required": [

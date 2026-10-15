@@ -12,6 +12,13 @@ import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
 import { WALK_RADIUS_M, nearbyPins, type NearbyPin, type VisiblePin } from '@/lib/explorer/filters'
 
 export const PAPER_STYLE_URL = '/map/paper.json'
+
+/** A border to draw: an area or a sub-area, in its area's colour. */
+export interface Outline {
+  id: string
+  color: Area['color']
+  boundary: GeoJSON.MultiPolygon
+}
 const WALK_CIRCLE_SOURCE = 'tm-walk-circle'
 const OUTLINE_SOURCE = 'tm-area-outline'
 const NEARBY_SOURCE = 'tm-nearby'
@@ -33,8 +40,8 @@ export interface ExplorerMapProps {
   stations: Station[]
   /** Centres of picked areas and sub-areas, framed even when no pin matches. */
   centres: [number, number][]
-  /** Ticked areas whose district border is drawn and framed. */
-  outlines: Area[]
+  /** Borders drawn and framed: ticked areas and sub-areas. */
+  outlines: Outline[]
   /** Pin to highlight and open a card on, if any. */
   activePinId: string | null
   onSelectArea: (id: string) => void
@@ -146,9 +153,9 @@ function cardElement(locale: Locale, cityId: string, pin: Pin, area: Area, stati
 }
 
 /** Bounds around every pin and station circle, or null when there is nothing to frame. */
-function focusBounds(pins: VisiblePin[], stations: Station[], centres: [number, number][], outlines: Area[]): LngLatBoundsLike | null {
+function focusBounds(pins: VisiblePin[], stations: Station[], centres: [number, number][], outlines: Outline[]): LngLatBoundsLike | null {
   const pts: [number, number][] = [...centres]
-  for (const a of outlines) for (const poly of a.boundary?.coordinates ?? []) for (const [lon, lat] of poly[0]) pts.push([lon, lat])
+  for (const o of outlines) for (const poly of o.boundary.coordinates) for (const [lon, lat] of poly[0]) pts.push([lon, lat])
   for (const { pin } of pins) pts.push([pin.location.lon, pin.location.lat])
   for (const st of stations) {
     const dLat = WALK_RADIUS_M / 111_320
@@ -337,9 +344,7 @@ export function ExplorerMap(props: ExplorerMapProps) {
     if (!map) return
     const src = map.getSource(OUTLINE_SOURCE) as { setData?: (d: GeoJSON.GeoJSON) => void } | undefined
     const styles = getComputedStyle(document.documentElement)
-    const features: GeoJSON.Feature[] = outlines.flatMap((a) =>
-      a.boundary ? [{ type: 'Feature', properties: { color: styles.getPropertyValue(`--${a.color}`).trim() || '#c8553d' }, geometry: a.boundary }] : [],
-    )
+    const features: GeoJSON.Feature[] = outlines.map((o) => ({ type: 'Feature', properties: { color: styles.getPropertyValue(`--${o.color}`).trim() || '#c8553d' }, geometry: o.boundary }))
     src?.setData?.({ type: 'FeatureCollection', features })
   }, [outlines, mapReady])
 

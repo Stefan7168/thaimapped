@@ -35,7 +35,8 @@
       "center": [
         100.533,
         13.745
-      ]
+      ],
+      "polygon": "boundaries/siam/siam-square.geojson"
     },
     {
       "id": "ratchaprasong",
@@ -45,7 +46,8 @@
       "center": [
         100.54,
         13.744
-      ]
+      ],
+      "polygon": "boundaries/siam/ratchaprasong.geojson"
     },
     {
       "id": "pratunam",
@@ -55,7 +57,8 @@
       "center": [
         100.54,
         13.751
-      ]
+      ],
+      "polygon": "boundaries/siam/pratunam.geojson"
     }
   ],
   "video": null,

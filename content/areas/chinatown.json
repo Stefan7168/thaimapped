@@ -35,7 +35,8 @@
       "center": [
         100.51,
         13.74
-      ]
+      ],
+      "polygon": "boundaries/chinatown/yaowarat.geojson"
     },
     {
       "id": "talat-noi",
@@ -45,7 +46,8 @@
       "center": [
         100.515,
         13.735
-      ]
+      ],
+      "polygon": "boundaries/chinatown/talat-noi.geojson"
     },
     {
       "id": "song-wat",
@@ -55,7 +57,8 @@
       "center": [
         100.507,
         13.738
-      ]
+      ],
+      "polygon": "boundaries/chinatown/song-wat.geojson"
     }
   ],
   "video": null,
@@ -98,7 +101,7 @@
         "station": "mrt-blue-bl28",
         "minutes": 5
       },
-      "subarea": "yaowarat",
+      "subarea": "talat-noi",
       "links": {}
     },
     {

@@ -65,6 +65,9 @@ export interface Subarea {
   id: string
   name: Localized
   center: [number, number]
+  /** Path under content/ of the outline file; `boundary` is read from it at load time. */
+  polygon?: string
+  boundary?: GeoJSON.MultiPolygon
 }
 
 export interface Video {

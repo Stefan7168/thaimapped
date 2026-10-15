@@ -35,7 +35,8 @@
       "center": [
         100.541,
         13.78
-      ]
+      ],
+      "polygon": "boundaries/ari/ari-sois.geojson"
     },
     {
       "id": "saphan-khwai",
@@ -45,7 +46,8 @@
       "center": [
         100.549,
         13.793
-      ]
+      ],
+      "polygon": "boundaries/ari/saphan-khwai.geojson"
     }
   ],
   "video": null,

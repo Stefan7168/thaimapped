@@ -5,7 +5,7 @@
 // contributors, ODbL. Needs network access, so it runs from a machine that
 // can reach overpass-api.de, not from a sandboxed session.
 // Usage: node scripts/fetch-khwaeng.mjs
-import { writeFileSync } from 'node:fs'
+import { mkdirSync, writeFileSync } from 'node:fs'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -87,6 +87,7 @@ const fc = {
   properties: { source: 'OpenStreetMap via Overpass API', licence: 'ODbL 1.0', query: QUERY, fetched: new Date().toISOString().slice(0, 10) },
   features,
 }
+mkdirSync(dirname(out), { recursive: true })
 writeFileSync(out, JSON.stringify(fc) + '\n')
 console.log(`${features.length} sub-districts -> ${out}`)
 for (const f of features) console.log(`  ${f.properties.nameEn || '(no name:en)'} / ${f.properties.name}`)

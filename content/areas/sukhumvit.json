@@ -36,7 +36,8 @@
       "center": [
         100.555,
         13.741
-      ]
+      ],
+      "polygon": "boundaries/sukhumvit/nana.geojson"
     },
     {
       "id": "asok",
@@ -46,7 +47,8 @@
       "center": [
         100.56,
         13.737
-      ]
+      ],
+      "polygon": "boundaries/sukhumvit/asok.geojson"
     },
     {
       "id": "phrom-phong",
@@ -56,7 +58,8 @@
       "center": [
         100.569,
         13.73
-      ]
+      ],
+      "polygon": "boundaries/sukhumvit/phrom-phong.geojson"
     }
   ],
   "video": null,
