@@ -85,7 +85,7 @@
     {
       "src": "/photos/areas/silom/lumphini-park.jpg",
       "alt": "Lumphini Park lake with the Silom skyline behind it",
-      "credit": "\"Lumphini Park (I)\" by This Photo was taken by Supanut Arunoprayote . Feel free to…",
+      "credit": "\"Lumphini Park (I)\" by Supanut Arunoprayote",
       "licence": "CC BY 4.0",
       "source": "https://commons.wikimedia.org/wiki/File:Lumphini_Park_(I).jpg"
     }
@@ -213,7 +213,30 @@
         "credit": "\"King Power Maha Nakhon 2\" by Welcome to Thailand",
         "licence": "CC0",
         "source": "https://commons.wikimedia.org/w/index.php?curid=158386175"
-      }
+      },
+      "photos": [
+        {
+          "src": "/photos/pins/silom/king-power-mahanakhon.jpg",
+          "alt": "King Power MahaNakhon tower seen from below at dusk",
+          "credit": "\"King Power Maha Nakhon 2\" by Welcome to Thailand",
+          "licence": "CC0",
+          "source": "https://commons.wikimedia.org/w/index.php?curid=158386175"
+        },
+        {
+          "src": "/photos/pins/silom/king-power-mahanakhon-2.jpg",
+          "alt": "King Power Mahanakhon rising above the street",
+          "credit": "\"Mahanakhon Building ตึกมหานคร Photographed by Trisorn Triboon\" by Tris_T7",
+          "licence": "CC BY 3.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Mahanakhon_Building_%E0%B8%95%E0%B8%B6%E0%B8%81%E0%B8%A1%E0%B8%AB%E0%B8%B2%E0%B8%99%E0%B8%84%E0%B8%A3_Photographed_by_Trisorn_Triboon.JPG"
+        },
+        {
+          "src": "/photos/pins/silom/king-power-mahanakhon-3.jpg",
+          "alt": "Bangkok at night from the Mahanakhon rooftop at 314 metres",
+          "credit": "\"King Power Mahanakhon Rooftop View of Bangkok\" by Shivashanky",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:King_Power_Mahanakhon_Rooftop_View_of_Bangkok.jpg"
+        }
+      ]
     },
     {
       "id": "lumphini-park",
@@ -246,10 +269,40 @@
       "photo": {
         "src": "/photos/pins/silom/lumphini-park.jpg",
         "alt": "Lumphini Park lake with the Silom skyline behind it",
-        "credit": "\"Lumphini Park (I)\" by This Photo was taken by Supanut Arunoprayote . Feel free to…",
+        "credit": "\"Lumphini Park (I)\" by Supanut Arunoprayote",
         "licence": "CC BY 4.0",
         "source": "https://commons.wikimedia.org/wiki/File:Lumphini_Park_(I).jpg"
-      }
+      },
+      "photos": [
+        {
+          "src": "/photos/pins/silom/lumphini-park.jpg",
+          "alt": "Lumphini Park lake with the Silom skyline behind it",
+          "credit": "\"Lumphini Park (I)\" by Supanut Arunoprayote",
+          "licence": "CC BY 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Lumphini_Park_(I).jpg"
+        },
+        {
+          "src": "/photos/pins/silom/lumphini-park-2.jpg",
+          "alt": "The lake in Lumphini Park reflecting the Silom towers",
+          "credit": "\"Parque Lumphini, Bangkok, Tailandia, 2013-08-22, DD 01\" by Diego Delso",
+          "licence": "CC BY-SA 3.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Parque_Lumphini,_Bangkok,_Tailandia,_2013-08-22,_DD_01.jpg"
+        },
+        {
+          "src": "/photos/pins/silom/lumphini-park-3.jpg",
+          "alt": "A bronze water monitor sculpture beside a pond in Lumphini Park",
+          "credit": "\"Asian water monitor sculpture in Lumphini Park Bangkok\" by Tree Lightbulb",
+          "licence": "CC BY 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Asian_water_monitor_sculpture_in_Lumphini_Park_Bangkok.jpg"
+        },
+        {
+          "src": "/photos/pins/silom/lumphini-park-4.jpg",
+          "alt": "The King Rama VI statue at the entrance to Lumphini Park",
+          "credit": "\"Estatua de Rama VI, Parque Lumphini, Bangkok, Tailandia, 2013-08-22, DD 03\" by Diego Delso",
+          "licence": "CC BY-SA 3.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Estatua_de_Rama_VI,_Parque_Lumphini,_Bangkok,_Tailandia,_2013-08-22,_DD_03.jpg"
+        }
+      ]
     },
     {
       "id": "patpong-night-market",
@@ -286,7 +339,30 @@
         "credit": "\"Patpong\"",
         "licence": "Public domain",
         "source": "https://commons.wikimedia.org/wiki/File:Patpong.JPG"
-      }
+      },
+      "photos": [
+        {
+          "src": "/photos/pins/silom/patpong-night-market.jpg",
+          "alt": "Patpong in the evening, with its bar signs and stalls",
+          "credit": "\"Patpong\"",
+          "licence": "Public domain",
+          "source": "https://commons.wikimedia.org/wiki/File:Patpong.JPG"
+        },
+        {
+          "src": "/photos/pins/silom/patpong-night-market-2.jpg",
+          "alt": "Shoppers walking past bag stalls in the Patpong market",
+          "credit": "\"Patpong, Bangkok (44491197965)\" by Blemished Paradise",
+          "licence": "CC BY-SA 2.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Patpong,_Bangkok_(44491197965).jpg"
+        },
+        {
+          "src": "/photos/pins/silom/patpong-night-market-3.jpg",
+          "alt": "A stallholder folding T-shirts under printed art at the Patpong market",
+          "credit": "\"Patpong, Bangkok (45354501982)\" by Blemished Paradise",
+          "licence": "CC BY-SA 2.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Patpong,_Bangkok_(45354501982).jpg"
+        }
+      ]
     },
     {
       "id": "sri-maha-mariamman",
@@ -316,7 +392,37 @@
         }
       },
       "subarea": "surasak",
-      "links": {}
+      "links": {},
+      "photo": {
+        "src": "/photos/pins/silom/sri-maha-mariamman.jpg",
+        "alt": "The colourful gopuram tower of Sri Maha Mariamman Temple over Silom Road",
+        "credit": "\"Street Scene at Sri Maha Mariamman\" by Adam Jones",
+        "licence": "CC BY-SA 2.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Street_Scene_at_Sri_Maha_Mariamman.jpg"
+      },
+      "photos": [
+        {
+          "src": "/photos/pins/silom/sri-maha-mariamman.jpg",
+          "alt": "The colourful gopuram tower of Sri Maha Mariamman Temple over Silom Road",
+          "credit": "\"Street Scene at Sri Maha Mariamman\" by Adam Jones",
+          "licence": "CC BY-SA 2.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Street_Scene_at_Sri_Maha_Mariamman.jpg"
+        },
+        {
+          "src": "/photos/pins/silom/sri-maha-mariamman-2.jpg",
+          "alt": "Painted deities on the domes of Sri Maha Mariamman Temple",
+          "credit": "\"วัดพระศรีมหาอุมาเทวี เขตบางรัก กรุงเทพมหานคร (6)\" by กสิณธร ราชโอรส",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:%E0%B8%A7%E0%B8%B1%E0%B8%94%E0%B8%9E%E0%B8%A3%E0%B8%B0%E0%B8%A8%E0%B8%A3%E0%B8%B5%E0%B8%A1%E0%B8%AB%E0%B8%B2%E0%B8%AD%E0%B8%B8%E0%B8%A1%E0%B8%B2%E0%B9%80%E0%B8%97%E0%B8%A7%E0%B8%B5_%E0%B9%80%E0%B8%82%E0%B8%95%E0%B8%9A%E0%B8%B2%E0%B8%87%E0%B8%A3%E0%B8%B1%E0%B8%81_%E0%B8%81%E0%B8%A3%E0%B8%B8%E0%B8%87%E0%B9%80%E0%B8%97%E0%B8%9E%E0%B8%A1%E0%B8%AB%E0%B8%B2%E0%B8%99%E0%B8%84%E0%B8%A3_(6).jpg"
+        },
+        {
+          "src": "/photos/pins/silom/sri-maha-mariamman-3.jpg",
+          "alt": "The temple corner on Silom Road with traffic in front",
+          "credit": "\"Sri Maha Mariamman Koyil Bangkok (Wat Khaek Silom) 2019 04\" by Chainwit.",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Sri_Maha_Mariamman_Koyil_Bangkok_(Wat_Khaek_Silom)_2019_04.jpg"
+        }
+      ]
     },
     {
       "id": "silom-soi-20",
@@ -348,7 +454,14 @@
         }
       },
       "subarea": "silom-road",
-      "links": {}
+      "links": {},
+      "photo": {
+        "src": "/photos/pins/silom/silom-soi-20.jpg",
+        "alt": "Food stalls and shoppers along the morning market on Silom Soi 20",
+        "credit": "\"Return trip -4 to Silom Soi 20 - this time for a jar full of chickenheads. (4272943421)\" by eric molina from New York City, United States",
+        "licence": "CC BY 2.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Return_trip_-4_to_Silom_Soi_20_-_this_time_for_a_jar_full_of_chickenheads._(4272943421).jpg"
+      }
     },
     {
       "id": "silom-soi-4",
