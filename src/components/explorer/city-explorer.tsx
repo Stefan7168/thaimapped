@@ -24,6 +24,7 @@ import { SiteFooter } from './site-footer'
 import { KindBar, KIND_ICONS } from './kind-bar'
 import { AreaCard } from './area-card'
 import { SaveButton } from '@/components/saved/save-button'
+import { useSaved } from '@/lib/saved/store'
 import { SavedLink } from '@/components/saved/saved-link'
 
 const ExplorerMap = dynamic(() => import('@/components/map/explorer-map').then((m) => m.ExplorerMap), {
@@ -86,6 +87,10 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
   const [tab, setTab] = useState<'places' | 'trips' | 'weekend'>('places')
 
   const pins = useMemo(() => visiblePins(bundle, filters), [bundle, filters])
+  // The hotel the reader hearted (the first saved one on this map): places within a 45-minute walk say how far they are from that door.
+  const saved = useSaved()
+  const myHotel = useMemo(() => allPins(bundle).map((x) => x.pin).find((p) => p.kind === 'hotel' && saved.includes(p.id)) ?? null, [bundle, saved])
+  const fromHotel = (pin: Pin) => (myHotel ? Math.max(1, Math.round(distanceM(myHotel.location.lon, myHotel.location.lat, pin.location.lon, pin.location.lat) / WALK_PACE_M_PER_MIN)) : null)
   // "Near me": the browser's position, kept in state only (never in the address). Outside the city it is refused with a note.
   const [locating, setLocating] = useState(false)
   const [nearNote, setNearNote] = useState<string | null>(null)
@@ -248,6 +253,7 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
                   {s.city.walkMinutes(pin.walk.minutes)} {s.city.from(`${walkStation.code ? walkStation.code + ' ' : ''}${t(walkStation.name, locale)}`)}
                 </span>
               )}
+              {pin.kind !== 'hotel' && myHotel && fromHotel(pin)! <= 45 && <span className="tm-wk__from block text-xs">{s.weekendPage.fromHotel(fromHotel(pin)!, t(myHotel.name, locale))}</span>}
               {filters.near && <span className="block text-xs font-medium text-ink">{s.near.from(Math.max(1, Math.ceil(distanceM(filters.near[0], filters.near[1], pin.location.lon, pin.location.lat) / WALK_PACE_M_PER_MIN)))}</span>}
               </span>
             </button>
