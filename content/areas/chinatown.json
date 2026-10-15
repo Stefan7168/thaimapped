@@ -219,6 +219,10 @@
       },
       "subarea": "yaowarat",
       "links": {},
+      "shape": {
+        "kind": "street",
+        "path": "shapes/chinatown/yaowarat-road.geojson"
+      },
       "photo": {
         "src": "/photos/pins/chinatown/yaowarat-road.jpg",
         "alt": "Yaowarat Road at night under its neon shop signs",

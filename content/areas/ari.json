@@ -178,6 +178,10 @@
       },
       "subarea": "saphan-khwai",
       "links": {},
+      "shape": {
+        "kind": "zone",
+        "path": "shapes/ari/chatuchak-market.geojson"
+      },
       "photo": {
         "src": "/photos/pins/ari/chatuchak-market.jpg",
         "alt": "A lane of stalls at Chatuchak Weekend Market",
