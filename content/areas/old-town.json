@@ -210,7 +210,37 @@
         "credit": "\"วัดพระศรีรัตนศาสดาราม วัดพระแก้ว กรุงเทพมหานคร - Wat Phra Kaew, Temple of Emerald Buddha…\" by Basile Morin",
         "licence": "CC BY-SA 4.0",
         "source": "https://commons.wikimedia.org/wiki/File:%E0%B8%A7%E0%B8%B1%E0%B8%94%E0%B8%9E%E0%B8%A3%E0%B8%B0%E0%B8%A8%E0%B8%A3%E0%B8%B5%E0%B8%A3%E0%B8%B1%E0%B8%95%E0%B8%99%E0%B8%A8%E0%B8%B2%E0%B8%AA%E0%B8%94%E0%B8%B2%E0%B8%A3%E0%B8%B2%E0%B8%A1_%E0%B8%A7%E0%B8%B1%E0%B8%94%E0%B8%9E%E0%B8%A3%E0%B8%B0%E0%B9%81%E0%B8%81%E0%B9%89%E0%B8%A7_%E0%B8%81%E0%B8%A3%E0%B8%B8%E0%B8%87%E0%B9%80%E0%B8%97%E0%B8%9E%E0%B8%A1%E0%B8%AB%E0%B8%B2%E0%B8%99%E0%B8%84%E0%B8%A3_-_Wat_Phra_Kaew,_Temple_of_Emerald_Buddha,_Bangkok,_Thailand.jpg"
-      }
+      },
+      "photos": [
+        {
+          "src": "/photos/pins/old-town/grand-palace.jpg",
+          "alt": "Wat Phra Kaew inside the Grand Palace grounds, with the two golden chedis",
+          "credit": "\"วัดพระศรีรัตนศาสดาราม วัดพระแก้ว กรุงเทพมหานคร - Wat Phra Kaew, Temple of Emerald Buddha…\" by Basile Morin",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:%E0%B8%A7%E0%B8%B1%E0%B8%94%E0%B8%9E%E0%B8%A3%E0%B8%B0%E0%B8%A8%E0%B8%A3%E0%B8%B5%E0%B8%A3%E0%B8%B1%E0%B8%95%E0%B8%99%E0%B8%A8%E0%B8%B2%E0%B8%AA%E0%B8%94%E0%B8%B2%E0%B8%A3%E0%B8%B2%E0%B8%A1_%E0%B8%A7%E0%B8%B1%E0%B8%94%E0%B8%9E%E0%B8%A3%E0%B8%B0%E0%B9%81%E0%B8%81%E0%B9%89%E0%B8%A7_%E0%B8%81%E0%B8%A3%E0%B8%B8%E0%B8%87%E0%B9%80%E0%B8%97%E0%B8%9E%E0%B8%A1%E0%B8%AB%E0%B8%B2%E0%B8%99%E0%B8%84%E0%B8%A3_-_Wat_Phra_Kaew,_Temple_of_Emerald_Buddha,_Bangkok,_Thailand.jpg"
+        },
+        {
+          "src": "/photos/pins/old-town/grand-palace-2.jpg",
+          "alt": "Golden chedi and temple roofs of Wat Phra Kaew inside the Grand Palace",
+          "credit": "\"Wat Phra Kaew by Ninara TSP edit crop\" by Original image: Ninara from Helsinki, Finland. Edit: TSP",
+          "licence": "CC BY 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Wat_Phra_Kaew_by_Ninara_TSP_edit_crop.jpg"
+        },
+        {
+          "src": "/photos/pins/old-town/grand-palace-3.jpg",
+          "alt": "The Grand Palace walls and spires reflected in a puddle after rain",
+          "credit": "\"Temple of the Emerald Buddha\" by Nawit science",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Temple_of_the_Emerald_Buddha.jpg"
+        },
+        {
+          "src": "/photos/pins/old-town/grand-palace-4.jpg",
+          "alt": "Demon guardian statues holding up a golden chedi at Wat Phra Kaew",
+          "credit": "\"20160727 - Wat Phra Kaew - Bangkok - 5318\" by Jakub Hałun",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:20160727_-_Wat_Phra_Kaew_-_Bangkok_-_5318.jpg"
+        }
+      ]
     },
     {
       "id": "wat-pho",
@@ -243,7 +273,37 @@
         "credit": "\"Reclining Buddha Statue, Wat Pho, Bangkok a064\" by Michael Gunther",
         "licence": "CC BY-SA 4.0",
         "source": "https://commons.wikimedia.org/w/index.php?curid=35496260"
-      }
+      },
+      "photos": [
+        {
+          "src": "/photos/pins/old-town/wat-pho.jpg",
+          "alt": "The gold Reclining Buddha inside Wat Pho",
+          "credit": "\"Reclining Buddha Statue, Wat Pho, Bangkok a064\" by Michael Gunther",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/w/index.php?curid=35496260"
+        },
+        {
+          "src": "/photos/pins/old-town/wat-pho-2.jpg",
+          "alt": "A Wat Pho hall reflected in wet paving at dusk",
+          "credit": "\"0010-Wat Phra Chettuphon Wimon Mangkhalaram Ratchaworamahawihan\" by Nawit science",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:0010-Wat_Phra_Chettuphon_Wimon_Mangkhalaram_Ratchaworamahawihan.jpg"
+        },
+        {
+          "src": "/photos/pins/old-town/wat-pho-3.jpg",
+          "alt": "The gilded Reclining Buddha inside Wat Pho",
+          "credit": "\"021-Wat Phra Chettuphon Wimon Mangkhalaram Ratchaworamahawihan\" by Nawit science",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:021-Wat_Phra_Chettuphon_Wimon_Mangkhalaram_Ratchaworamahawihan.jpg"
+        },
+        {
+          "src": "/photos/pins/old-town/wat-pho-4.jpg",
+          "alt": "Tall tiled chedis rising over the courtyards of Wat Pho",
+          "credit": "\"019-Wat Phra Chettuphon Wimon Mangkhalaram Ratchaworamahawihan\" by Nawit science",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:019-Wat_Phra_Chettuphon_Wimon_Mangkhalaram_Ratchaworamahawihan.jpg"
+        }
+      ]
     },
     {
       "id": "wat-arun",
@@ -280,7 +340,37 @@
         "credit": "\"Wat Arun Ratchawararam Ratchawaramahawihan\" by KOSIN SUKHUM",
         "licence": "CC BY-SA 4.0",
         "source": "https://commons.wikimedia.org/wiki/File:Wat_Arun_Ratchawararam_Ratchawaramahawihan.jpg"
-      }
+      },
+      "photos": [
+        {
+          "src": "/photos/pins/old-town/wat-arun.jpg",
+          "alt": "Wat Arun lit up at dusk, seen across the Chao Phraya",
+          "credit": "\"Wat Arun Ratchawararam Ratchawaramahawihan\" by KOSIN SUKHUM",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Wat_Arun_Ratchawararam_Ratchawaramahawihan.jpg"
+        },
+        {
+          "src": "/photos/pins/old-town/wat-arun-2.jpg",
+          "alt": "Wat Arun's central prang lit up at night",
+          "credit": "\"Templo Wat Arun, Bangkok, Tailandia, 2013-08-22, DD 37\" by Diego Delso",
+          "licence": "CC BY-SA 3.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Templo_Wat_Arun,_Bangkok,_Tailandia,_2013-08-22,_DD_37.jpg"
+        },
+        {
+          "src": "/photos/pins/old-town/wat-arun-3.jpg",
+          "alt": "Demon figures and porcelain mosaic on the base of Wat Arun's prang",
+          "credit": "\"20171201 Wat Arun Bangkok 6444 DxO\" by Jakub Hałun",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:20171201_Wat_Arun_Bangkok_6444_DxO.jpg"
+        },
+        {
+          "src": "/photos/pins/old-town/wat-arun-4.jpg",
+          "alt": "Two giant guardian statues at the lit entrance of Wat Arun's ordination hall",
+          "credit": "\"The sculptures of two mythical giant demons, Thotsakan and Sahatsadecha, guarding the eastern gate of the main chapel of Wat Arun, Bangkok\" by BerryJ",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:The_sculptures_of_two_mythical_giant_demons,_Thotsakan_and_Sahatsadecha,_guarding_the_eastern_gate_of_the_main_chapel_of_Wat_Arun,_Bangkok.jpg"
+        }
+      ]
     },
     {
       "id": "khao-san-road",
@@ -317,7 +407,37 @@
         "credit": "\"Khao San Road (3646762370)\" by nakhon100",
         "licence": "CC BY 2.0",
         "source": "https://commons.wikimedia.org/wiki/File:Khao_San_Road_(3646762370).jpg"
-      }
+      },
+      "photos": [
+        {
+          "src": "/photos/pins/old-town/khao-san-road.jpg",
+          "alt": "Khao San Road with tuk-tuks, shop signs and guesthouses",
+          "credit": "\"Khao San Road (3646762370)\" by nakhon100",
+          "licence": "CC BY 2.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Khao_San_Road_(3646762370).jpg"
+        },
+        {
+          "src": "/photos/pins/old-town/khao-san-road-2.jpg",
+          "alt": "Backpackers walking down Khao San Road in the afternoon",
+          "credit": "\"Bangkok, Thailand, March 2023 - Thanon Khao San (Khaosan Road)\" by Sharon Hahn Darlin",
+          "licence": "CC BY 2.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Bangkok,_Thailand,_March_2023_-_Thanon_Khao_San_(Khaosan_Road).jpg"
+        },
+        {
+          "src": "/photos/pins/old-town/khao-san-road-3.jpg",
+          "alt": "Khao San Road at night, packed with stalls and people",
+          "credit": "\"ถนนข้าวสารในเวลากลางคืน ๑ - Khaosan Road at night 1\" by Random username 083794703875938",
+          "licence": "CC0",
+          "source": "https://commons.wikimedia.org/wiki/File:%E0%B8%96%E0%B8%99%E0%B8%99%E0%B8%82%E0%B9%89%E0%B8%B2%E0%B8%A7%E0%B8%AA%E0%B8%B2%E0%B8%A3%E0%B9%83%E0%B8%99%E0%B9%80%E0%B8%A7%E0%B8%A5%E0%B8%B2%E0%B8%81%E0%B8%A5%E0%B8%B2%E0%B8%87%E0%B8%84%E0%B8%B7%E0%B8%99_%E0%B9%91_-_Khaosan_Road_at_night_1.jpg"
+        },
+        {
+          "src": "/photos/pins/old-town/khao-san-road-4.jpg",
+          "alt": "Shop signs and tuk-tuks along Khao San Road by day",
+          "credit": "\"2016 Bangkok, Dystrykt Phra Nakhon, Ulica Khaosan (08)\" by Marcin Konsek",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:2016_Bangkok,_Dystrykt_Phra_Nakhon,_Ulica_Khaosan_(08).jpg"
+        }
+      ]
     },
     {
       "id": "wat-saket",
@@ -347,7 +467,37 @@
         }
       },
       "subarea": "banglamphu",
-      "links": {}
+      "links": {},
+      "photo": {
+        "src": "/photos/pins/old-town/wat-saket.jpg",
+        "alt": "The golden chedi of the Golden Mount above the roofs of Wat Saket",
+        "credit": "\"Wat Saket, Golden Mount, Bangkok, Thailand\" by Vyacheslav Argenberg",
+        "licence": "CC BY 4.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Wat_Saket,_Golden_Mount,_Bangkok,_Thailand.jpg"
+      },
+      "photos": [
+        {
+          "src": "/photos/pins/old-town/wat-saket.jpg",
+          "alt": "The golden chedi of the Golden Mount above the roofs of Wat Saket",
+          "credit": "\"Wat Saket, Golden Mount, Bangkok, Thailand\" by Vyacheslav Argenberg",
+          "licence": "CC BY 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Wat_Saket,_Golden_Mount,_Bangkok,_Thailand.jpg"
+        },
+        {
+          "src": "/photos/pins/old-town/wat-saket-2.jpg",
+          "alt": "The terrace around the golden chedi at the top of the Golden Mount",
+          "credit": "\"Wat Saket, Bangkok, Thailand\" by Vyacheslav Argenberg",
+          "licence": "CC BY 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Wat_Saket,_Bangkok,_Thailand.jpg"
+        },
+        {
+          "src": "/photos/pins/old-town/wat-saket-3.jpg",
+          "alt": "The Golden Mount seen from afar against the Bangkok skyline",
+          "credit": "\"Wat Saket in Bangkok city\" by Preecha.MJ",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Wat_Saket_in_Bangkok_city.jpg"
+        }
+      ]
     },
     {
       "id": "thipsamai",
@@ -376,7 +526,14 @@
         }
       },
       "subarea": "banglamphu",
-      "links": {}
+      "links": {},
+      "photo": {
+        "src": "/photos/pins/old-town/thipsamai.jpg",
+        "alt": "Cooks frying pad thai at the Thipsamai shopfront at night",
+        "credit": "\"Thipsamai (September 2016)\" by LWYang from USA",
+        "licence": "CC BY 2.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Thipsamai_(September_2016).jpeg"
+      }
     },
     {
       "id": "giant-swing",
@@ -402,7 +559,37 @@
         ]
       },
       "subarea": "grand-palace",
-      "links": {}
+      "links": {},
+      "photo": {
+        "src": "/photos/pins/old-town/giant-swing.jpg",
+        "alt": "The red Giant Swing in front of Wat Suthat",
+        "credit": "\"Giant Swing 1\" by Rangan Datta Wiki",
+        "licence": "CC BY-SA 4.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Giant_Swing_1.jpg"
+      },
+      "photos": [
+        {
+          "src": "/photos/pins/old-town/giant-swing.jpg",
+          "alt": "The red Giant Swing in front of Wat Suthat",
+          "credit": "\"Giant Swing 1\" by Rangan Datta Wiki",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Giant_Swing_1.jpg"
+        },
+        {
+          "src": "/photos/pins/old-town/giant-swing-2.jpg",
+          "alt": "The Giant Swing and the main hall of Wat Suthat",
+          "credit": "\"The Giant Swing (เสาชิงช้า, Sao Ching Cha)\" by Chusak Vijakkhana - Chusak50",
+          "licence": "CC BY-SA 3.0",
+          "source": "https://commons.wikimedia.org/wiki/File:The_Giant_Swing_(%E0%B9%80%E0%B8%AA%E0%B8%B2%E0%B8%8A%E0%B8%B4%E0%B8%87%E0%B8%8A%E0%B9%89%E0%B8%B2,_Sao_Ching_Cha).jpg"
+        },
+        {
+          "src": "/photos/pins/old-town/giant-swing-3.jpg",
+          "alt": "The Giant Swing and Wat Suthat lit up at night",
+          "credit": "\"Sao Ching Cha at night เสาชิงช้า ยามค่ำคืน (2022 Feb)\" by Chainwit.",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Sao_Ching_Cha_at_night_%E0%B9%80%E0%B8%AA%E0%B8%B2%E0%B8%8A%E0%B8%B4%E0%B8%87%E0%B8%8A%E0%B9%89%E0%B8%B2_%E0%B8%A2%E0%B8%B2%E0%B8%A1%E0%B8%84%E0%B9%88%E0%B8%B3%E0%B8%84%E0%B8%B7%E0%B8%99_(2022_Feb).jpg"
+        }
+      ]
     },
     {
       "id": "phra-athit-road",
@@ -428,7 +615,30 @@
         ]
       },
       "subarea": "khao-san",
-      "links": {}
+      "links": {},
+      "photo": {
+        "src": "/photos/pins/old-town/phra-athit-road.jpg",
+        "alt": "Phra Sumen Fort, the white fortress at the end of Phra Athit Road",
+        "credit": "\"Phra Sumen Fort Bangkok - Day\" by Supanut Arunoprayote",
+        "licence": "CC BY-SA 4.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Phra_Sumen_Fort_Bangkok_-_Day.jpg"
+      },
+      "photos": [
+        {
+          "src": "/photos/pins/old-town/phra-athit-road.jpg",
+          "alt": "Phra Sumen Fort, the white fortress at the end of Phra Athit Road",
+          "credit": "\"Phra Sumen Fort Bangkok - Day\" by Supanut Arunoprayote",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Phra_Sumen_Fort_Bangkok_-_Day.jpg"
+        },
+        {
+          "src": "/photos/pins/old-town/phra-athit-road-2.jpg",
+          "alt": "Phra Sumen Fort and Santichaiprakan Park at sunset",
+          "credit": "\"ย่ำตรอก 2\" by Pipit Tanarak",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:%E0%B8%A2%E0%B9%88%E0%B8%B3%E0%B8%95%E0%B8%A3%E0%B8%AD%E0%B8%81_2.jpg"
+        }
+      ]
     },
     {
       "id": "amulet-market",
@@ -454,7 +664,30 @@
         ]
       },
       "subarea": "grand-palace",
-      "links": {}
+      "links": {},
+      "photo": {
+        "src": "/photos/pins/old-town/amulet-market.jpg",
+        "alt": "Shelves of amulets and Buddha figures at the Amulet Market",
+        "credit": "\"Amuletmarket\" by Flickr user: Chris Brown https://www.flickr.com/people/zoonabar/",
+        "licence": "CC BY 2.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Amuletmarket.jpg"
+      },
+      "photos": [
+        {
+          "src": "/photos/pins/old-town/amulet-market.jpg",
+          "alt": "Shelves of amulets and Buddha figures at the Amulet Market",
+          "credit": "\"Amuletmarket\" by Flickr user: Chris Brown https://www.flickr.com/people/zoonabar/",
+          "licence": "CC BY 2.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Amuletmarket.jpg"
+        },
+        {
+          "src": "/photos/pins/old-town/amulet-market-2.jpg",
+          "alt": "A cat sitting among bronze Buddha statues for sale at the Amulet Market",
+          "credit": "\"Citizen of Amulet Market-1\" by Alexey Komarov",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Citizen_of_Amulet_Market-1.jpg"
+        }
+      ]
     }
   ]
 }
