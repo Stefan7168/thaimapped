@@ -74,7 +74,7 @@ export function TripPage({ locale, cityId, cityName, route }: { locale: Locale; 
                     return (
                       <li key={stop.id}>
                         <button type="button" onClick={() => setActiveStop(active ? null : stop.id)} className={`tm-stoprow${active ? ' tm-stoprow--on' : ''}`}>
-                          <span className="mt-0.5 inline-flex size-6 shrink-0 items-center justify-center rounded-full text-[13px] font-bold text-white" style={{ background: STOP_COLORS[stop.kind] }}>{i + 1}</span>
+                          <span className="tm-stoprow__num" style={{ ['--lc' as string]: STOP_COLORS[stop.kind] }}>{i + 1}</span>
                           <span className="min-w-0">
                             <span className="flex items-center gap-2">
                               <span className="text-[15px] text-ink-2">{s.stop[stop.kind]}</span>
