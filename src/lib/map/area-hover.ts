@@ -2,7 +2,7 @@ import type { ExpressionSpecification, Map as MaplibreMap, MapMouseEvent } from 
 
 type LayerMouseEvent = MapMouseEvent & { features?: GeoJSON.Feature[] }
 type MarkerLike = { setLngLat: (l: [number, number]) => MarkerLike; addTo: (m: MaplibreMap) => MarkerLike; remove: () => void }
-type MarkerCtor = new (o: { element: HTMLElement; anchor: 'left' }) => MarkerLike
+type MarkerCtor = new (o: { element: HTMLElement; anchor: 'left' | 'center' }) => MarkerLike
 const TOP_PINS = 3
 /** The area's places, the ones with a photograph first: those are its highlights. */
 const topPlaces = (a: Area) => a.pins.filter((p) => p.kind !== 'hotel').sort((x, y) => Number(Boolean(y.photo)) - Number(Boolean(x.photo))).slice(0, TOP_PINS)
@@ -20,7 +20,30 @@ const HIT_LAYER = `${SOURCE}-hit`
  * there is no hover) hands the area to `onSelect`. Call once after the
  * style has loaded; `beforeId` puts the layers under the caller's own.
  */
-export function addAreaHover(map: MaplibreMap, areas: Area[], locale: Locale, onSelect: (areaId: string) => void, beforeId: string | undefined, Marker: MarkerCtor): () => void {
+export interface AreaHover {
+  /** The areas already picked: no hover card for them, their name sits as a pill at their centre instead. */
+  setSelected: (ids: string[]) => void
+  remove: () => void
+}
+
+/** The centre of an outline: the centroid of its largest ring, so the pill sits inside the shape, not in a bounding-box corner. */
+function centreOf(boundary: GeoJSON.MultiPolygon): [number, number] {
+  let best: [number, number] = [0, 0]
+  let bestArea = -1
+  for (const poly of boundary.coordinates) {
+    const ring = poly[0]
+    let area = 0, cx = 0, cy = 0
+    for (let i = 0; i < ring.length - 1; i++) {
+      const [x0, y0] = ring[i], [x1, y1] = ring[i + 1]
+      const f = x0 * y1 - x1 * y0
+      area += f; cx += (x0 + x1) * f; cy += (y0 + y1) * f
+    }
+    if (Math.abs(area) > bestArea) { bestArea = Math.abs(area); best = area ? [cx / (3 * area), cy / (3 * area)] : [ring[0][0], ring[0][1]] }
+  }
+  return best
+}
+
+export function addAreaHover(map: MaplibreMap, areas: Area[], locale: Locale, onSelect: (areaId: string) => void, beforeId: string | undefined, Marker: MarkerCtor): AreaHover {
   const s = strings(locale)
   const styles = getComputedStyle(document.documentElement)
   const features: GeoJSON.Feature[] = areas
@@ -37,6 +60,8 @@ export function addAreaHover(map: MaplibreMap, areas: Area[], locale: Locale, on
   map.getContainer().append(label)
   const byId = new Map(areas.map((a) => [a.id, a]))
   let current: string | null = null
+  const selected = new Set<string>()
+  let pills: MarkerLike[] = []
 
   let topMarkers: MarkerLike[] = []
   const clearTopPins = () => {
@@ -103,7 +128,9 @@ export function addAreaHover(map: MaplibreMap, areas: Area[], locale: Locale, on
     map.getCanvas().style.cursor = ''
   }
   const move = (e: LayerMouseEvent) => {
-    const id = (e.features?.[0]?.id as string | undefined) ?? null
+    // Outlines overlap (Thonglor shares a sub-district with Sukhumvit), so a picked area under the pointer wins: nothing lights up there.
+    const under = (e.features ?? []).map((f) => f.id as string)
+    const id = under.some((f) => selected.has(f)) ? null : (under[0] ?? null)
     if (id !== current) {
       if (current) map.setFeatureState({ source: SOURCE, id: current }, { hover: false })
       current = id
@@ -135,11 +162,31 @@ export function addAreaHover(map: MaplibreMap, areas: Area[], locale: Locale, on
   map.on('mousemove', HIT_LAYER, move)
   map.on('mouseleave', HIT_LAYER, leave)
   map.on('click', HIT_LAYER, click)
-  return () => {
-    map.off('mousemove', HIT_LAYER, move)
-    map.off('mouseleave', HIT_LAYER, leave)
-    map.off('click', HIT_LAYER, click)
-    clearTopPins()
-    label.remove()
+  const setSelected = (ids: string[]) => {
+    selected.clear()
+    for (const id of ids) selected.add(id)
+    if (current && selected.has(current)) leave()
+    pills.forEach((m) => m.remove())
+    pills = []
+    for (const id of ids) {
+      const a = byId.get(id)
+      if (!a?.boundary) continue
+      const el = document.createElement('div')
+      el.className = 'tm-area-pill'
+      el.style.setProperty('--pin', `var(--${a.color})`)
+      el.textContent = t(a.name, locale)
+      pills.push(new Marker({ element: el, anchor: 'center' }).setLngLat(centreOf(a.boundary)).addTo(map))
+    }
+  }
+  return {
+    setSelected,
+    remove: () => {
+      map.off('mousemove', HIT_LAYER, move)
+      map.off('mouseleave', HIT_LAYER, leave)
+      map.off('click', HIT_LAYER, click)
+      clearTopPins()
+      pills.forEach((m) => m.remove())
+      label.remove()
+    },
   }
 }

@@ -151,6 +151,7 @@ body {
 @keyframes tm-pop { from { transform: scale(0); } to { transform: scale(1); } }
 @media (prefers-reduced-motion: reduce) { .tm-pin--hover .tm-pin__dot { animation: none; } }
 .tm-pin--hover { pointer-events: none; }
+.tm-area-pill { pointer-events: none; padding: 5px 14px; border-radius: 9999px; background: var(--paper); border: 1.5px solid var(--pin, var(--accent)); color: var(--ink); font-size: 14px; font-weight: 600; white-space: nowrap; box-shadow: 0 2px 8px rgba(43, 42, 38, 0.18); }
 @media (hover: none) { .tm-area-hover { display: none; } }
 .tm-range { padding: 6px 0 2px; }
 .tm-range__track { position: relative; height: 28px; }

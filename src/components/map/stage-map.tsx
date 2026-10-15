@@ -100,7 +100,7 @@ export function StageMap({ locale, camera, threeD, areas, route, routes = [], fo
     let cancelled = false
     let map: MaplibreMap | null = null
     let ro: ResizeObserver | null = null
-    let removeHover: (() => void) | null = null
+    let hover: { remove: () => void } | null = null
     ;(async () => {
       const maplibregl = await loadMaplibreGl()
       if (cancelled || !containerRef.current) return
@@ -123,7 +123,7 @@ export function StageMap({ locale, camera, threeD, areas, route, routes = [], fo
         map.addSource(ROUTE_SOURCE, { type: 'geojson', data: { type: 'FeatureCollection', features: [] } })
         map.addLayer({ id: `${ROUTE_SOURCE}-casing`, type: 'line', source: ROUTE_SOURCE, layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#ffffff', 'line-width': 7, 'line-opacity': 0.9 } })
         map.addLayer({ id: `${ROUTE_SOURCE}-line`, type: 'line', source: ROUTE_SOURCE, layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#c8553d', 'line-width': 4, 'line-dasharray': ['case', ['get', 'dashed'], ['literal', [2, 1.5]], ['literal', [1, 0]]] } })
-        removeHover = addAreaHover(map, areas, locale, (id) => onSelectAreaRef.current?.(id), `${ROUTE_SOURCE}-casing`, maplibregl.Marker)
+        hover = addAreaHover(map, areas, locale, (id) => onSelectAreaRef.current?.(id), `${ROUTE_SOURCE}-casing`, maplibregl.Marker)
         mapRef.current = map
         setMapReady((n) => n + 1)
       })
@@ -139,7 +139,7 @@ export function StageMap({ locale, camera, threeD, areas, route, routes = [], fo
       ro?.disconnect()
       markersRef.current.forEach((m) => m.remove())
       markersRef.current = []
-      removeHover?.()
+      hover?.remove()
       popupRef.current?.remove()
       popupRef.current = null
       mapRef.current = null
