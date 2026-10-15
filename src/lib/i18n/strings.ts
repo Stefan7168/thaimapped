@@ -22,6 +22,9 @@ const en = {
     others: 'Other stations',
     all: 'All stations',
   },
+  explorerPage: {
+    title: (city: string) => `${city} map`,
+  },
   weekendPage: {
     eyebrow: 'A weekend plan',
     title: (area: string) => `Your weekend in ${area}`,

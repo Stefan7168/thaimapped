@@ -1,4 +1,6 @@
 import { notFound } from 'next/navigation'
+import type { Metadata } from 'next'
+import { pageMeta } from '@/lib/seo/page-meta'
 import Image from 'next/image'
 import { liveCityIds, loadCityBundle } from '@/lib/content/load'
 import type { AreaPhoto, Locale } from '@/lib/content/types'
@@ -11,6 +13,13 @@ export const ensureStatic = 'navigation'
 
 export function generateStaticParams() {
   return LOCALES.map((locale) => ({ locale }))
+}
+
+export async function generateMetadata(props: PageProps<'/[locale]/credits'>): Promise<Metadata> {
+  const { locale } = await props.params
+  if (!isLocale(locale)) return {}
+  const s = strings(locale)
+  return pageMeta({ locale, title: s.credits.title, path: `/${locale}/credits` })
 }
 
 interface Credit {

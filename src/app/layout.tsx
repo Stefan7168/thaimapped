@@ -7,8 +7,11 @@ const inter = Inter({ variable: '--font-sans', subsets: ['latin'] })
 const fraunces = Fraunces({ variable: '--font-display', subsets: ['latin'], weight: ['500', '600'] })
 
 export const metadata: Metadata = {
+  metadataBase: new URL(env.siteUrl),
   title: 'ThaiMapped',
   description: 'See where everything is in Thailand before you book anything.',
+  openGraph: { siteName: 'ThaiMapped', type: 'website' },
+  twitter: { card: 'summary_large_image' },
 }
 
 export default function RootLayout({ children }: LayoutProps<'/'>) {

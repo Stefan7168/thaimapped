@@ -5,6 +5,7 @@ import { liveCityIds, loadCityBundle } from '@/lib/content/load'
 import { stationPages } from '@/lib/explorer/stations'
 import { LOCALES, isLocale, t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
+import { pageMeta } from '@/lib/seo/page-meta'
 import { SiteHeader } from '@/components/explorer/site-header'
 import { SiteFooter } from '@/components/explorer/site-footer'
 
@@ -15,10 +16,12 @@ export function generateStaticParams() {
 }
 
 export async function generateMetadata(props: PageProps<'/[locale]/[city]/station'>): Promise<Metadata> {
-  const { locale } = await props.params
+  const { locale, city } = await props.params
   if (!isLocale(locale)) return {}
+  const bundle = loadCityBundle(city)
+  if (!bundle) return {}
   const s = strings(locale)
-  return { title: `${s.stationPage.indexTitle} · ${s.brand}` }
+  return pageMeta({ locale, title: s.stationPage.indexTitle, description: s.stationPage.indexLead(stationPages(bundle).length), path: `/${locale}/${city}/station` })
 }
 
 /** The stations with a page: grouped by line, in the order the lines are listed. */
