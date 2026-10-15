@@ -111,15 +111,15 @@
         "en": "Chatuchak Park"
       },
       "why": {
-        "en": "The long lakeside park beside the market, a shady walk before the stalls."
+        "en": "The long lakeside park beside the market; the gate is right at MRT Chatuchak Park."
       },
       "location": {
-        "lon": 100.556,
-        "lat": 13.8085
+        "lon": 100.553,
+        "lat": 13.803
       },
       "walk": {
         "station": "mrt-blue-bl13",
-        "minutes": 10
+        "minutes": 1
       },
       "when": {
         "times": [
