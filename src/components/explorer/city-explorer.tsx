@@ -87,6 +87,22 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
   // "Near me": the browser's position, kept in state only (never in the address). Outside the city it is refused with a note.
   const [locating, setLocating] = useState(false)
   const [nearNote, setNearNote] = useState<string | null>(null)
+  // "Share this view": the address already carries the filters, so sharing is the page's own link.
+  const [shared, setShared] = useState<'idle' | 'copied' | 'failed'>('idle')
+  const shareView = async () => {
+    const url = window.location.href
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: document.title, url })
+        return
+      }
+      await navigator.clipboard.writeText(url)
+      setShared('copied')
+    } catch {
+      setShared('failed')
+    }
+    window.setTimeout(() => setShared('idle'), 2500)
+  }
   const locate = () => {
     if (!('geolocation' in navigator)) return
     setLocating(true)
@@ -259,7 +275,14 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
     <TripList locale={locale} cityId={city.id} routes={routes} />
   ) : (
     <>
-      <p className="px-1 pb-2 text-xs font-semibold uppercase tracking-wider text-ink-2">{s.guide.showing(pins.length)}</p>
+      <p className="tm-list__head px-1 pb-2 text-xs font-semibold uppercase tracking-wider text-ink-2">
+        <span>{s.guide.showing(pins.length)}</span>
+        {activeFilterCount(filters) > 0 && pins.length > 0 && (
+          <button type="button" className="tm-list__share" onClick={shareView}>
+            {shared === 'copied' ? s.guide.viewCopied : shared === 'failed' ? s.guide.viewCopyFailed : s.guide.shareView}
+          </button>
+        )}
+      </p>
       {pins.length === 0 && (
         <div className="tm-empty">
           <p className="text-sm text-ink-2">{s.filters.noResults}</p>
