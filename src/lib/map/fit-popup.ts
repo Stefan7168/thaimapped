@@ -12,7 +12,8 @@ export interface Insets {
  * (plus the insets, for controls and overlays), so the whole card is on
  * screen. Measured from the rendered card, not guessed from the pin, so it
  * holds for any card height and any map size. A card taller than the room
- * goes compact (no photo); if it still does not fit, its top edge wins.
+ * first loses its nearby list, then its photos; if it still does not fit,
+ * its top edge wins.
  */
 export function fitPopup(map: MaplibreMap, popup: Popup, insets: Insets, duration = 300): boolean {
   const el = popup.getElement()
@@ -24,8 +25,14 @@ export function fitPopup(map: MaplibreMap, popup: Popup, insets: Insets, duratio
   let minY = box.top + insets.top
   let maxY = box.bottom - insets.bottom
   let r = card.getBoundingClientRect()
-  // Taller than the room: drop the photo and the walkable tip (the compact
-  // card) and measure again, so the name, the line and the links stay whole.
+  // Taller than the room: first drop the nearby list (the short card), so the
+  // photos stay; only if it is still too tall drop the photos as well (the
+  // compact card). Measured after each step, so the name, the line and the
+  // links stay whole.
+  if (r.height > maxY - minY - 24) {
+    card.querySelector('.tm-card')?.classList.add('tm-card--short')
+    r = card.getBoundingClientRect()
+  }
   if (r.height > maxY - minY - 24) {
     card.querySelector('.tm-card')?.classList.add('tm-card--compact')
     r = card.getBoundingClientRect()

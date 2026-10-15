@@ -68,6 +68,7 @@ body {
 .tm-card__photo figcaption a { color: inherit; text-decoration: underline; }
 /* A short screen (a phone on its side) has no room for the photo and the text: the text wins. */
 @media (max-height: 520px) { .tm-card__photo { display: none; } .tm-card__nearby { display: none; } }
+.tm-card--short .tm-card__nearby { display: none; }
 .tm-card--compact .tm-card__photo, .tm-card--compact .tm-card__nearby { display: none; }
 .tm-card__photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .tm-card__track { display: flex; height: 100%; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
