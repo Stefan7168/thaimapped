@@ -122,6 +122,7 @@ const en = {
     areaMeta: (stations: number, places: number) => `${stations === 1 ? '1 station' : `${stations} stations`} · ${places === 1 ? '1 place' : `${places} places`}`,
     areaFits: (fits: string) => `Fits: ${fits}.`,
     areaLink: (name: string) => `See ${name} on the map`,
+    areaPageLink: (name: string) => `All about ${name}`,
     highlightHint: 'Tap a card to open it on the map.',
     howHeading: 'How a booking goes here',
     how: [

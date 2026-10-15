@@ -381,7 +381,8 @@ body {
 .tm-hl__card[aria-pressed="true"] .tm-hl__kind, .tm-hl__card[aria-pressed="true"] .tm-hl__why { color: var(--paper); opacity: 0.85; }
 .tm-hl__name { font-family: var(--font-display), Georgia, serif; font-weight: 600; font-size: var(--step-row); line-height: 1.15; }
 .tm-hl__why { font-size: 16px; line-height: 1.5; }
-.tm-hl__link { margin: 4px 0 28px 26px; font-size: 16px; }
+.tm-hl__link { margin: 4px 0 28px 26px; font-size: 16px; display: flex; flex-wrap: wrap; gap: 4px 8px; }
+.tm-hl__sep { color: var(--ink-2); }
 @media (hover: hover) and (pointer: fine) {
   .tm-hl__card:hover { background: #fff; }
   .tm-hl__card[aria-pressed="true"]:hover { background: var(--ink); }
@@ -539,3 +540,7 @@ a.tm-wk__stop { text-decoration: none; }
 .tm-kind--near { margin-left: auto; }
 .tm-near__note { margin: 0; padding: 6px 12px; border-bottom: 1px solid var(--line); background: var(--paper-2); font-size: 13px; color: var(--ink); }
 .tm-pin--you .tm-pin__dot, .tm-pin--you .tm-pin__num { background: var(--ink); box-shadow: 0 0 0 4px rgba(43,42,38,0.18); }
+
+@media (max-width: 480px) {
+  .tm-hl__sep { display: none; }
+}

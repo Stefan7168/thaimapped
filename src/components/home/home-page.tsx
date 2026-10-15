@@ -259,7 +259,11 @@ export function HomePage({ locale, bundle, routes }: { locale: Locale; bundle: C
                         })}
                       </ol>
                     )}
-                    <p className="tm-hl__link"><Link href={mapHref} className="tm-link tm-link--under">{s.home.areaLink(name)}</Link></p>
+                    <p className="tm-hl__link">
+                      <Link href={`/${locale}/${city.id}/area/${a.id}`} className="tm-link tm-link--under">{s.home.areaPageLink(name)}</Link>
+                      <span className="tm-hl__sep" aria-hidden="true"> · </span>
+                      <Link href={`${mapHref}#area=${a.id}`} className="tm-link tm-link--under">{s.home.areaLink(name)}</Link>
+                    </p>
                   </li>
                 )
               })}
