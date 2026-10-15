@@ -289,6 +289,10 @@
       },
       "subarea": "khao-san",
       "links": {},
+      "shape": {
+        "kind": "street",
+        "path": "shapes/old-town/khao-san-road.geojson"
+      },
       "photo": {
         "src": "/photos/pins/old-town/khao-san-road.jpg",
         "alt": "Khao San Road with tuk-tuks, shop signs and guesthouses",

@@ -258,6 +258,10 @@
       },
       "subarea": "silom-road",
       "links": {},
+      "shape": {
+        "kind": "street",
+        "path": "shapes/silom/patpong-night-market.geojson"
+      },
       "photo": {
         "src": "/photos/pins/silom/patpong-night-market.jpg",
         "alt": "Patpong in the evening, with its bar signs and stalls",
