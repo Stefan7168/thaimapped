@@ -583,7 +583,30 @@
         "credit": "\"BKK Art and Culture Centre\" by Supanut Arunoprayote",
         "licence": "CC BY 4.0",
         "source": "https://commons.wikimedia.org/wiki/File:BKK_Art_and_Culture_Centre.jpg"
-      }
+      },
+      "photos": [
+        {
+          "src": "/photos/pins/siam/bacc.jpg",
+          "alt": "The round white Bangkok Art and Culture Centre at Pathum Wan junction",
+          "credit": "\"BKK Art and Culture Centre\" by Supanut Arunoprayote",
+          "licence": "CC BY 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:BKK_Art_and_Culture_Centre.jpg"
+        },
+        {
+          "src": "/photos/pins/siam/bacc-2.jpg",
+          "alt": "The spiral atrium and escalators inside the Bangkok Art and Culture Centre",
+          "credit": "\"Bangkok Art and Culture Centre 2\" by Christophe95",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Bangkok_Art_and_Culture_Centre_2.jpg"
+        },
+        {
+          "src": "/photos/pins/siam/bacc-3.jpg",
+          "alt": "The curved white front of the Bangkok Art and Culture Centre",
+          "credit": "\"Bangkok Art and Culture Centre\" by Christophe95",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Bangkok_Art_and_Culture_Centre.jpg"
+        }
+      ]
     },
     {
       "id": "pratunam-market",

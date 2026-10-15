@@ -650,5 +650,53 @@
   "credit": "\"Novotel Bangkok on Siam Square\" by Syced, CC0, via Wikimedia Commons",
   "notes": [],
   "saved": "2026-10-15T16:55:48.400Z"
+ },
+ {
+  "file": "public/photos/pins/siam/bacc-2.jpg",
+  "media": "image",
+  "ref": "commons:90925127",
+  "title": "Bangkok Art and Culture Centre 2",
+  "creator": "Christophe95",
+  "creatorUrl": null,
+  "date": "2018-05-09",
+  "license": "CC BY-SA 4.0",
+  "licenseCode": "by-sa",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+  "creditRequired": true,
+  "page": "https://commons.wikimedia.org/wiki/File:Bangkok_Art_and_Culture_Centre_2.jpg",
+  "via": "Wikimedia Commons",
+  "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f1/Bangkok_Art_and_Culture_Centre_2.jpg/1920px-Bangkok_Art_and_Culture_Centre_2.jpg",
+  "width": 1600,
+  "height": 1200,
+  "bytes": 357357,
+  "credit": "\"Bangkok Art and Culture Centre 2\" by Christophe95, CC BY-SA 4.0, via Wikimedia Commons",
+  "notes": [
+   "Share-alike: an altered version (recoloured, combined with other pictures) must be shared under the same licence."
+  ],
+  "saved": "2026-10-15T17:07:11.798Z"
+ },
+ {
+  "file": "public/photos/pins/siam/bacc-3.jpg",
+  "media": "image",
+  "ref": "commons:90926299",
+  "title": "Bangkok Art and Culture Centre",
+  "creator": "Christophe95",
+  "creatorUrl": null,
+  "date": "2018-05-09",
+  "license": "CC BY-SA 4.0",
+  "licenseCode": "by-sa",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+  "creditRequired": true,
+  "page": "https://commons.wikimedia.org/wiki/File:Bangkok_Art_and_Culture_Centre.jpg",
+  "via": "Wikimedia Commons",
+  "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/85/Bangkok_Art_and_Culture_Centre.jpg/1920px-Bangkok_Art_and_Culture_Centre.jpg",
+  "width": 1600,
+  "height": 1200,
+  "bytes": 305886,
+  "credit": "\"Bangkok Art and Culture Centre\" by Christophe95, CC BY-SA 4.0, via Wikimedia Commons",
+  "notes": [
+   "Share-alike: an altered version (recoloured, combined with other pictures) must be shared under the same licence."
+  ],
+  "saved": "2026-10-15T17:07:13.067Z"
  }
 ]
