@@ -18,6 +18,7 @@ import { supports3D } from '@/lib/map/device'
 import { SiteHeader } from '@/components/explorer/site-header'
 import { SiteFooter } from '@/components/explorer/site-footer'
 import { SaveButton } from '@/components/saved/save-button'
+import { useSaved } from '@/lib/saved/store'
 import { StayPicker } from '@/components/stay/stay-picker'
 import { HotelCompare } from '@/components/stay/hotel-compare'
 import { KIND_ICONS } from '@/components/explorer/kind-bar'
@@ -45,6 +46,10 @@ export function AreaPage({ locale, cityId, area, areas, stations, stationSlugs }
     return order.map((kind) => ({ kind, pins: area.pins.filter((p) => p.kind === kind) })).filter((g) => g.pins.length > 0)
   }, [area])
   const hotels = useMemo(() => area.pins.filter((p) => p.kind === 'hotel'), [area])
+  // The hotel the reader hearted in this area: every place then says how far it is from that door.
+  const saved = useSaved()
+  const myHotel = useMemo(() => hotels.find((h) => saved.includes(h.id)) ?? null, [hotels, saved])
+  const fromHotel = (pin: Pin) => (myHotel ? Math.max(1, Math.round(distanceM(myHotel.location.lon, myHotel.location.lat, pin.location.lon, pin.location.lat) / WALK_PACE_M_PER_MIN)) : null)
   const pinned = useMemo(() => [...kinds.flatMap((g) => g.pins), ...hotels], [kinds, hotels])
   // Places (not hotels) of this area inside a ten-minute walk of a hotel, straight-line at walking pace.
   const nearbyCount = (hotel: Pin) => area.pins.filter((p) => p.kind !== 'hotel' && distanceM(hotel.location.lon, hotel.location.lat, p.location.lon, p.location.lat) <= WALK_PACE_M_PER_MIN * 10).length
@@ -84,6 +89,7 @@ export function AreaPage({ locale, cityId, area, areas, stations, stationSlugs }
             {pin.price && <span className="tm-wk__meta">{s.guide.priceFrom(thb(pin.price.from, locale))}{pin.price.basis === 'tier-estimate' ? ` (${s.guide.priceEstimate})` : ''}</span>}
             {pin.price && stay && <span className="tm-wk__meta tm-wk__stay">{s.guide.stayTotal(thb(pin.price.from * nights(stay), locale), nights(stay))}</span>}
             {pin.walk && walkStation && <span className="tm-wk__meta">{s.city.walkMinutes(pin.walk.minutes)} {s.city.from(`${walkStation.code ? walkStation.code + ' ' : ''}${t(walkStation.name, locale)}`)}</span>}
+            {pin.kind !== 'hotel' && myHotel && <span className="tm-wk__meta tm-wk__from">{s.weekendPage.fromHotel(fromHotel(pin)!, t(myHotel.name, locale))}</span>}
           </span>
         </button>
         <div className="tm-wk__links">
@@ -161,6 +167,7 @@ export function AreaPage({ locale, cityId, area, areas, stations, stationSlugs }
             <li className="tm-wk__slot tm-wk__slot--stay">
               <h2 className="tm-wk__time">{s.guide.stay}</h2>
               {hotels.length > 0 && <StayPicker locale={locale} />}
+              {hotels.length > 0 && <p className="tm-wk__empty">{myHotel ? s.weekendPage.hotelPicked(t(myHotel.name, locale)) : s.weekendPage.pickHotelHint}</p>}
               {hotels.length === 0 ? <p className="tm-wk__empty">{s.guide.stayNone}</p> : <ul className="tm-wk__stops">{hotels.map(row)}</ul>}
               {hotels.length > 1 && (
                 <div className="tm-ar__cmp">
