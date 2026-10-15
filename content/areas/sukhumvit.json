@@ -150,27 +150,28 @@
       }
     },
     {
-      "id": "sukhumvit-hotel-oneday-hostel",
+      "id": "sukhumvit-hotel-h-district-poshotel",
       "kind": "hotel",
       "tier": "budget",
       "name": {
-        "en": "Oneday Hostel"
+        "en": "H-District Boutique Poshotel"
       },
       "why": {
-        "en": "In Phrom Phong, a 6-minute walk from BTS Phrom Phong."
+        "en": "In Asok, a 9-minute walk from BTS Nana."
       },
       "location": {
-        "lon": 100.5703,
-        "lat": 13.72654
+        "lon": 100.55193,
+        "lat": 13.73625
       },
       "walk": {
-        "station": "bts-sukhumvit-e5",
-        "minutes": 6
+        "station": "bts-sukhumvit-e3",
+        "minutes": 9
       },
       "links": {
-        "booking": "https://www.booking.com/searchresults.html?ss=Oneday+Hostel+Bangkok"
+        "agoda": "https://www.agoda.com/h-district-boutique-hotel/hotel/bangkok-th.html",
+        "booking": "https://www.booking.com/hotel/th/h-district-boutique.html"
       },
-      "subarea": "phrom-phong",
+      "subarea": "asok",
       "price": {
         "from": 600,
         "currency": "THB",

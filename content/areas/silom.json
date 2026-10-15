@@ -150,25 +150,26 @@
       }
     },
     {
-      "id": "silom-hotel-hq-hostel",
+      "id": "silom-hotel-kinnon-hostel",
       "kind": "hotel",
       "tier": "budget",
       "name": {
-        "en": "HQ Hostel"
+        "en": "Kinnon Deluxe Hostel"
       },
       "why": {
-        "en": "In Silom, a 5-minute walk from BTS Chong Nonsi."
+        "en": "In Silom, a 7-minute walk from BTS Chong Nonsi."
       },
       "location": {
-        "lon": 100.53104,
-        "lat": 13.72662
+        "lon": 100.52971,
+        "lat": 13.72827
       },
       "walk": {
         "station": "bts-silom-s3",
-        "minutes": 5
+        "minutes": 7
       },
       "links": {
-        "booking": "https://www.booking.com/searchresults.html?ss=HQ+Hostel+Bangkok"
+        "agoda": "https://www.agoda.com/kinnon-deluxe-hostel-coworking-cafe/hotel/bangkok-th.html",
+        "booking": "https://www.booking.com/hotel/th/kinnon-hostel.html"
       },
       "subarea": "silom-road",
       "price": {

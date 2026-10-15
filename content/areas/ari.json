@@ -186,25 +186,26 @@
       }
     },
     {
-      "id": "ari-hotel-iconic-hotel-ari",
+      "id": "ari-hotel-best-western-chatuchak",
       "kind": "hotel",
       "tier": "mid",
       "name": {
-        "en": "The Iconic Hotel Ari - Jatujak"
+        "en": "Best Western Chatuchak"
       },
       "why": {
-        "en": "In Saphan Khwai, a 6-minute walk from BTS Saphan Khwai."
+        "en": "In Saphan Khwai, a 2-minute walk from MRT Kamphaeng Phet."
       },
       "location": {
-        "lon": 100.55273,
-        "lat": 13.79169
+        "lon": 100.54663,
+        "lat": 13.79788
       },
       "walk": {
-        "station": "bts-sukhumvit-n7",
-        "minutes": 6
+        "station": "mrt-blue-bl12",
+        "minutes": 2
       },
       "links": {
-        "booking": "https://www.booking.com/searchresults.html?ss=The+Iconic+Hotel+Ari+-+Jatujak+Bangkok"
+        "agoda": "https://www.agoda.com/best-western-chatuchak/hotel/bangkok-th.html",
+        "booking": "https://www.booking.com/hotel/th/best-western-chatuchak.html"
       },
       "subarea": "saphan-khwai",
       "price": {
