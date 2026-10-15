@@ -8,6 +8,7 @@ Stefan's rule (2026-10-15): do not raise setup or launch items with him before g
 - [ ] Analytics: set `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` (or pick another provider). The outbound-click event is already wired in `src/lib/links/track.ts` and sends nothing until the domain is set.
 - [ ] Domain: point thaimapped.com at the Vercel project and add it under the project's domains.
 - [ ] Hotel deep links: swap name searches for exact hotel pages once the affiliate marker exists (lookup of exact pages is a content task and can run earlier).
+- [ ] Hotel photos: 19 hotels have no picture (Commons and Openverse have none of the building); check the Agoda and Booking.com affiliate terms on reusing their hotel images before adding any.
 
 ## Can be done without Stefan (before go-live)
 
