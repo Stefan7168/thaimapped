@@ -143,7 +143,30 @@
         ]
       },
       "subarea": "ekkamai",
-      "links": {}
+      "links": {},
+      "photo": {
+        "src": "/photos/pins/thonglor-ekkamai/gateway-ekamai.jpg",
+        "alt": "The curved, layered facade of Gateway Ekamai with its name sign",
+        "credit": "\"2017-01-09泰國-snow town (32399911245)\" by fullfen666",
+        "licence": "CC BY-SA 2.0",
+        "source": "https://commons.wikimedia.org/wiki/File:2017-01-09%E6%B3%B0%E5%9C%8B-snow_town_(32399911245).jpg"
+      },
+      "photos": [
+        {
+          "src": "/photos/pins/thonglor-ekkamai/gateway-ekamai.jpg",
+          "alt": "The curved, layered facade of Gateway Ekamai with its name sign",
+          "credit": "\"2017-01-09泰國-snow town (32399911245)\" by fullfen666",
+          "licence": "CC BY-SA 2.0",
+          "source": "https://commons.wikimedia.org/wiki/File:2017-01-09%E6%B3%B0%E5%9C%8B-snow_town_(32399911245).jpg"
+        },
+        {
+          "src": "/photos/pins/thonglor-ekkamai/gateway-ekamai-2.jpg",
+          "alt": "The covered skywalk linking Gateway Ekamai to the BTS station",
+          "credit": "\"2017-01-09泰國-snow town (32360549696)\" by fullfen666",
+          "licence": "CC BY-SA 2.0",
+          "source": "https://commons.wikimedia.org/wiki/File:2017-01-09%E6%B3%B0%E5%9C%8B-snow_town_(32360549696).jpg"
+        }
+      ]
     },
     {
       "id": "wat-mahabut",
@@ -169,7 +192,37 @@
         ]
       },
       "subarea": "phra-khanong",
-      "links": {}
+      "links": {},
+      "photo": {
+        "src": "/photos/pins/thonglor-ekkamai/wat-mahabut.jpg",
+        "alt": "The main ordination hall of Wat Mahabut with its tiered red roof",
+        "credit": "\"วัดมหาบุศย์ เขตสวนหลวง กรุงเทพมหานคร (6)\" by กสิณธร ราชโอรส",
+        "licence": "CC BY-SA 4.0",
+        "source": "https://commons.wikimedia.org/wiki/File:%E0%B8%A7%E0%B8%B1%E0%B8%94%E0%B8%A1%E0%B8%AB%E0%B8%B2%E0%B8%9A%E0%B8%B8%E0%B8%A8%E0%B8%A2%E0%B9%8C_%E0%B9%80%E0%B8%82%E0%B8%95%E0%B8%AA%E0%B8%A7%E0%B8%99%E0%B8%AB%E0%B8%A5%E0%B8%A7%E0%B8%87_%E0%B8%81%E0%B8%A3%E0%B8%B8%E0%B8%87%E0%B9%80%E0%B8%97%E0%B8%9E%E0%B8%A1%E0%B8%AB%E0%B8%B2%E0%B8%99%E0%B8%84%E0%B8%A3_(6).jpg"
+      },
+      "photos": [
+        {
+          "src": "/photos/pins/thonglor-ekkamai/wat-mahabut.jpg",
+          "alt": "The main ordination hall of Wat Mahabut with its tiered red roof",
+          "credit": "\"วัดมหาบุศย์ เขตสวนหลวง กรุงเทพมหานคร (6)\" by กสิณธร ราชโอรส",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:%E0%B8%A7%E0%B8%B1%E0%B8%94%E0%B8%A1%E0%B8%AB%E0%B8%B2%E0%B8%9A%E0%B8%B8%E0%B8%A8%E0%B8%A2%E0%B9%8C_%E0%B9%80%E0%B8%82%E0%B8%95%E0%B8%AA%E0%B8%A7%E0%B8%99%E0%B8%AB%E0%B8%A5%E0%B8%A7%E0%B8%87_%E0%B8%81%E0%B8%A3%E0%B8%B8%E0%B8%87%E0%B9%80%E0%B8%97%E0%B8%9E%E0%B8%A1%E0%B8%AB%E0%B8%B2%E0%B8%99%E0%B8%84%E0%B8%A3_(6).jpg"
+        },
+        {
+          "src": "/photos/pins/thonglor-ekkamai/wat-mahabut-2.jpg",
+          "alt": "A shrine with statues and offerings in the grounds of Wat Mahabut",
+          "credit": "\"วัดมหาบุศย์ เขตสวนหลวง กรุงเทพมหานคร (4)\" by กสิณธร ราชโอรส",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:%E0%B8%A7%E0%B8%B1%E0%B8%94%E0%B8%A1%E0%B8%AB%E0%B8%B2%E0%B8%9A%E0%B8%B8%E0%B8%A8%E0%B8%A2%E0%B9%8C_%E0%B9%80%E0%B8%82%E0%B8%95%E0%B8%AA%E0%B8%A7%E0%B8%99%E0%B8%AB%E0%B8%A5%E0%B8%A7%E0%B8%87_%E0%B8%81%E0%B8%A3%E0%B8%B8%E0%B8%87%E0%B9%80%E0%B8%97%E0%B8%9E%E0%B8%A1%E0%B8%AB%E0%B8%B2%E0%B8%99%E0%B8%84%E0%B8%A3_(4).jpg"
+        },
+        {
+          "src": "/photos/pins/thonglor-ekkamai/wat-mahabut-3.jpg",
+          "alt": "The canal running past Wat Mahabut, with a yellow boat moored",
+          "credit": "\"วัดมหาบุศย์ เขตสวนหลวง กรุงเทพมหานคร (9)\" by กสิณธร ราชโอรส",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:%E0%B8%A7%E0%B8%B1%E0%B8%94%E0%B8%A1%E0%B8%AB%E0%B8%B2%E0%B8%9A%E0%B8%B8%E0%B8%A8%E0%B8%A2%E0%B9%8C_%E0%B9%80%E0%B8%82%E0%B8%95%E0%B8%AA%E0%B8%A7%E0%B8%99%E0%B8%AB%E0%B8%A5%E0%B8%A7%E0%B8%87_%E0%B8%81%E0%B8%A3%E0%B8%B8%E0%B8%87%E0%B9%80%E0%B8%97%E0%B8%9E%E0%B8%A1%E0%B8%AB%E0%B8%B2%E0%B8%99%E0%B8%84%E0%B8%A3_(9).jpg"
+        }
+      ]
     },
     {
       "id": "thonglor-ekkamai-hotel-hotel-nikko",
@@ -370,7 +423,30 @@
         ]
       },
       "subarea": "phra-khanong",
-      "links": {}
+      "links": {},
+      "photo": {
+        "src": "/photos/pins/thonglor-ekkamai/w-district.jpg",
+        "alt": "Lit sculptures in the courtyard of W District at night",
+        "credit": "\"W District - panoramio (2)\" by mohigan",
+        "licence": "CC BY-SA 3.0",
+        "source": "https://commons.wikimedia.org/wiki/File:W_District_-_panoramio_(2).jpg"
+      },
+      "photos": [
+        {
+          "src": "/photos/pins/thonglor-ekkamai/w-district.jpg",
+          "alt": "Lit sculptures in the courtyard of W District at night",
+          "credit": "\"W District - panoramio (2)\" by mohigan",
+          "licence": "CC BY-SA 3.0",
+          "source": "https://commons.wikimedia.org/wiki/File:W_District_-_panoramio_(2).jpg"
+        },
+        {
+          "src": "/photos/pins/thonglor-ekkamai/w-district-2.jpg",
+          "alt": "Bars and food stalls under the lights of W District",
+          "credit": "\"W District - panoramio (1)\" by mohigan",
+          "licence": "CC BY-SA 3.0",
+          "source": "https://commons.wikimedia.org/wiki/File:W_District_-_panoramio_(1).jpg"
+        }
+      ]
     }
   ]
 }
