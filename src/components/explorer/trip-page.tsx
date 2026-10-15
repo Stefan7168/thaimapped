@@ -35,7 +35,7 @@ export function TripPage({ locale, cityId, cityName, route }: { locale: Locale; 
           {cityName}
         </Link>
       </header>
-      <div className="flex min-h-0 flex-1 flex-col md:flex-row">
+      <main className="flex min-h-0 flex-1 flex-col md:flex-row">
         <div className="relative order-1 min-h-[45dvh] flex-1 md:min-h-0" data-ui>
           <TripMap locale={locale} route={route} day={day} activeStopId={activeStop} onSelectStop={(id) => setActiveStop(id)} />
           {!route.path && (
@@ -102,7 +102,7 @@ export function TripPage({ locale, cityId, cityName, route }: { locale: Locale; 
           </div>
           <SiteFooter locale={locale} cityId={cityId} compact />
         </aside>
-      </div>
+      </main>
     </div>
   )
 }
