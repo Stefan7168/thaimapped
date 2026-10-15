@@ -10,6 +10,7 @@ import { strings } from '@/lib/i18n/strings'
 import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
 import { trackOutbound } from '@/lib/links/track'
 import { thb } from '@/lib/explorer/price'
+import { distanceM, WALK_PACE_M_PER_MIN } from '@/lib/explorer/filters'
 import { whenLine } from '@/lib/explorer/when'
 import { addSaved, clearSaved, toggleSaved, useSaved } from '@/lib/saved/store'
 import { SiteHeader } from '@/components/explorer/site-header'
@@ -43,6 +44,8 @@ export function SavedPage({ locale, cityId, entries, stations }: { locale: Local
   }, [])
 
   const ids = sentIds ?? mine
+  // Places (not hotels) inside a ten-minute walk of a hotel, straight-line at walking pace.
+  const nearbyCount = (hotel: Pin) => entries.filter((e) => e.pin.kind !== 'hotel' && distanceM(hotel.location.lon, hotel.location.lat, e.pin.location.lon, e.pin.location.lat) <= WALK_PACE_M_PER_MIN * 10).length
   const rows = ids.map((id) => byId.get(id)).filter((e): e is SavedEntry => !!e)
   const missing = ids.length - rows.length
   const hotelRows = rows.filter((e) => e.pin.kind === 'hotel')
@@ -134,6 +137,52 @@ export function SavedPage({ locale, cityId, entries, stations }: { locale: Local
           {rows.length > 0 && !sentIds && <button type="button" onClick={clearSaved} className="tm-link">{s.saved.clear}</button>}
         </div>
         {missing > 0 && <p className="tm-saved__note">{s.saved.unknown(missing)}</p>}
+        {hotelRows.length > 1 && (
+          <section className="tm-saved__group">
+            <h2 className="tm-wk__time">{s.saved.compare}</h2>
+            <p className="tm-saved__note">{s.saved.compareLead}</p>
+            <div className="tm-cmp__wrap">
+              <table className="tm-cmp">
+                <thead>
+                  <tr>
+                    <th scope="col"><span className="sr-only">{s.saved.compareWhat}</span></th>
+                    {hotelRows.map((e) => <th key={e.pin.id} scope="col">{t(e.pin.name, locale)}</th>)}
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">{s.saved.cmpArea}</th>
+                    {hotelRows.map((e) => <td key={e.pin.id}><Link href={`/${locale}/${cityId}/area/${e.area.id}`} className="tm-link">{t(e.area.name, locale)}</Link></td>)}
+                  </tr>
+                  <tr>
+                    <th scope="row">{s.saved.cmpPrice}</th>
+                    {hotelRows.map((e) => <td key={e.pin.id}>{e.pin.price ? `${s.guide.priceFrom(thb(e.pin.price.from, locale))}${e.pin.price.basis === 'tier-estimate' ? '*' : ''}` : (e.pin.tier ? s.filters.tier[e.pin.tier] : '')}</td>)}
+                  </tr>
+                  <tr>
+                    <th scope="row">{s.saved.cmpStation}</th>
+                    {hotelRows.map((e) => { const st = e.pin.walk ? stationById.get(e.pin.walk.station) : undefined; return <td key={e.pin.id}>{st && e.pin.walk ? `${s.city.walkMinutes(e.pin.walk.minutes)}, ${st.code ? st.code + ' ' : ''}${t(st.name, locale)}` : ''}</td> })}
+                  </tr>
+                  <tr>
+                    <th scope="row">{s.saved.cmpNearby}</th>
+                    {hotelRows.map((e) => <td key={e.pin.id}>{s.saved.cmpPlaces(nearbyCount(e.pin))}</td>)}
+                  </tr>
+                  <tr>
+                    <th scope="row">{s.saved.cmpBook}</th>
+                    {hotelRows.map((e) => (
+                      <td key={e.pin.id} className="tm-cmp__links">
+                        {(Object.keys(e.pin.links) as Partner[]).filter((p) => p !== 'official').map((p) => {
+                          const subId = subIdFor(`${cityId}-${e.area.id}`, e.pin.id)
+                          return <a key={p} href={buildOutboundUrl(p, e.pin.links[p]!, subId)} onClick={() => trackOutbound(p, subId)} target="_blank" rel="noopener sponsored" className="tm-link">{p.charAt(0).toUpperCase() + p.slice(1)}</a>
+                        })}
+                      </td>
+                    ))}
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p className="tm-saved__note">* {s.guide.priceEstimate}</p>
+          </section>
+        )}
         {hotelRows.length > 0 && (
           <section className="tm-saved__group">
             <h2 className="tm-wk__time">{s.stationPage.hotels}</h2>

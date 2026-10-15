@@ -567,3 +567,11 @@ a.tm-wk__stop { text-decoration: none; }
 .tm-list__head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
 .tm-list__share { font: inherit; text-transform: none; letter-spacing: 0; font-weight: 600; color: var(--accent-text); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
 @media (max-width: 480px) { .tm-wk__links { margin-left: 0; } }
+
+/* Saved page: the hotels side by side. Scrolls sideways on a phone; the row names stay put. */
+.tm-cmp__wrap { overflow-x: auto; margin-top: 10px; -webkit-overflow-scrolling: touch; }
+.tm-cmp { border-collapse: collapse; font-size: 14px; min-width: 100%; }
+.tm-cmp th, .tm-cmp td { text-align: left; vertical-align: top; padding: 8px 12px 8px 0; border-top: 1px solid var(--line); min-width: 150px; }
+.tm-cmp thead th { border-top: 0; font-family: var(--font-display), Georgia, serif; font-size: 16px; font-weight: 600; }
+.tm-cmp tbody th { font-weight: 600; color: var(--ink-2); font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; min-width: 92px; position: sticky; left: 0; background: var(--paper); }
+.tm-cmp__links a { margin-right: 10px; }
