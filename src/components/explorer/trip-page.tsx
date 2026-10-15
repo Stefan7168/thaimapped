@@ -2,14 +2,14 @@
 
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
-import { useState } from 'react'
-import { ArrowLeft } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { ArrowLeft, Share2 } from 'lucide-react'
 import type { Locale, TripRoute } from '@/lib/content/types'
 import { t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
 import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
 import { directionsUrl } from '@/lib/links/directions'
-import { useStay } from '@/lib/stay/store'
+import { adoptStayFromUrl, stayParam, useStay } from '@/lib/stay/store'
 import { STOP_COLORS } from '@/components/map/trip-map'
 import { SiteFooter } from './site-footer'
 
@@ -25,6 +25,27 @@ export function TripPage({ locale, cityId, cityName, route }: { locale: Locale; 
   const [day, setDay] = useState<number | null>(null)
   const [activeStop, setActiveStop] = useState<string | null>(null)
   const days = Array.from({ length: route.days }, (_, i) => i + 1)
+  const [shared, setShared] = useState<'idle' | 'copied' | 'failed'>('idle')
+  useEffect(() => { adoptStayFromUrl() }, [])
+
+  const share = async () => {
+    // The link carries the dates, so the booking links open on the same nights for the other person.
+    const u = new URL(window.location.href)
+    if (stay) u.searchParams.set('stay', stayParam(stay))
+    else u.searchParams.delete('stay')
+    const url = u.toString()
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: t(route.name, locale), url })
+        return
+      }
+      await navigator.clipboard.writeText(url)
+      setShared('copied')
+    } catch {
+      setShared('failed')
+    }
+    window.setTimeout(() => setShared('idle'), 2500)
+  }
 
   return (
     <div className="flex h-dvh flex-col">
@@ -51,6 +72,12 @@ export function TripPage({ locale, cityId, cityName, route }: { locale: Locale; 
               {route.duration === 'multi-day' && <span className="bg-paper-2 px-2 py-0.5">{s.trip.days(route.days)}</span>}
               <span className="bg-paper-2 px-2 py-0.5">{s.trip.mode[route.mode]}</span>
               {route.distanceKm !== undefined && <span className="bg-paper-2 px-2 py-0.5">{s.trip.km(route.distanceKm)}</span>}
+            </p>
+            <p className="mt-3">
+              <button type="button" onClick={share} className="tm-button tm-button--small tm-button--quiet">
+                <Share2 aria-hidden="true" className="size-4" />
+                {shared === 'copied' ? s.trip.copied : shared === 'failed' ? s.trip.copyFailed : s.trip.share}
+              </button>
             </p>
             {route.days > 1 && (
             <div className="mt-4 flex gap-1.5">
