@@ -28,6 +28,8 @@ export interface StageMapProps {
   routes?: TripRoute[]
   /** The area in view on the home page: all of its highlights are pinned at once. */
   focus?: { pins: Pin[]; area: Area; /** Number the pins 1, 2, 3 in list order instead of naming them: for a plan whose list carries the names. */ numbered?: boolean } | null
+  /** One fixed, named point such as a station: a labelled marker in the line's colour, on top of the numbered pins. */
+  marker?: { lon: number; lat: number; label: string; color: string } | null
   /** A highlight the reader tapped: its card opens on the map. */
   card?: { pin: Pin; area: Area } | null
   onCloseCard?: () => void
@@ -89,7 +91,7 @@ function routesBounds(routes: TripRoute[]): [[number, number], [number, number]]
  * It only follows the page: the camera prop moves it, a route prop draws a
  * trip on it. Wheel zoom is off so the page keeps scrolling over it.
  */
-export function StageMap({ locale, camera, threeD, areas, route, routes = [], focus = null, card = null, onCloseCard, cityId = '', stations = [], onSelectArea }: StageMapProps) {
+export function StageMap({ locale, camera, threeD, areas, route, routes = [], focus = null, marker = null, card = null, onCloseCard, cityId = '', stations = [], onSelectArea }: StageMapProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const onSelectAreaRef = useRef(onSelectArea)
   useEffect(() => {
@@ -186,11 +188,16 @@ export function StageMap({ locale, camera, threeD, areas, route, routes = [], fo
         el.classList.add('tm-pin--active')
         markersRef.current.push(new maplibregl.Marker({ element: el, anchor: focus!.numbered ? 'center' : 'left' }).setLngLat([pin.location.lon, pin.location.lat]).addTo(map))
       })
+      if (marker) {
+        const el = labelElement(marker.label, marker.color, false)
+        el.classList.add('tm-pin--station')
+        markersRef.current.push(new maplibregl.Marker({ element: el, anchor: 'left' }).setLngLat([marker.lon, marker.lat]).addTo(map))
+      }
     })()
     return () => {
       cancelled = true
     }
-  }, [areas, route, focus, locale, mapReady])
+  }, [areas, route, focus, marker, locale, mapReady])
 
   // The card of a tapped highlight.
   useEffect(() => {
@@ -245,6 +252,7 @@ export function StageMap({ locale, camera, threeD, areas, route, routes = [], fo
     if (focus?.pins.length) {
       // Frame every pinned highlight (and the area's centre) so no label is cut off at the edge.
       const pts: [number, number][] = [camera.center, ...focus.pins.map((p): [number, number] => [p.location.lon, p.location.lat])]
+      if (marker) pts.push([marker.lon, marker.lat])
       const lons = pts.map((c) => c[0]), lats = pts.map((c) => c[1])
       // The labels hang to the right of their dots, so the right padding is the widest label; a phone's narrow band gets tighter margins.
       const narrow = map.getContainer().clientWidth < 600
@@ -254,7 +262,7 @@ export function StageMap({ locale, camera, threeD, areas, route, routes = [], fo
       return
     }
     map.flyTo({ center: camera.center, zoom: camera.zoom, pitch: threeD ? camera.pitch : 0, bearing: threeD ? camera.bearing : 0, duration: 1600, essential: true })
-  }, [camera, route, routes, threeD, focus, mapReady])
+  }, [camera, route, routes, threeD, focus, marker, mapReady])
 
   return <div ref={containerRef} className="h-full w-full bg-paper" aria-label="Map" role="region" />
 }

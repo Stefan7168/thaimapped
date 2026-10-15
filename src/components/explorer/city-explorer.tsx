@@ -48,11 +48,12 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
       const area = h.get('area')
       const tier = h.get('tier')
       const priceParam = h.get('price')
-      if (!area && !tier && !priceParam) return
+      const station = h.get('station')
+      if (!area && !tier && !priceParam && !station) return
       const m = priceParam?.match(/^(\d+)-(\d+)$/)
       const fromParam: PriceRange | null = m ? { min: Math.max(PRICE_RANGE.min, Number(m[1])), max: Math.min(PRICE_RANGE.max, Number(m[2])) } : null
       const price = fromParam && fromParam.min < fromParam.max ? fromParam : tier && (TIERS as readonly string[]).includes(tier) ? TIER_PRICE[tier as Tier] : null
-      const next: FilterState = { ...EMPTY_FILTERS, areas: area && areas.some((a) => a.id === area) ? [area] : [], price: isFullRange(price) ? null : price }
+      const next: FilterState = { ...EMPTY_FILTERS, areas: area && areas.some((a) => a.id === area) ? [area] : [], stations: station && bundle.stations.some((st) => st.id === station) ? [station] : [], price: isFullRange(price) ? null : price }
       setFilters(next)
     }
     const id = window.requestAnimationFrame(apply)
@@ -61,7 +62,7 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
       window.cancelAnimationFrame(id)
       window.removeEventListener('hashchange', apply)
     }
-  }, [areas])
+  }, [areas, bundle.stations])
   const [activePin, setActivePin] = useState<Pin | null>(null)
   const [sheetOpen, setSheetOpen] = useState(false)
   // Phones: the place list starts as a one-line handle so the map stays visible.

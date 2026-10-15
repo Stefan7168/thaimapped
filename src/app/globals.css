@@ -173,6 +173,16 @@ body {
 .tm-wk__text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .tm-pin--num { width: 24px; height: 24px; border-radius: 9999px; justify-content: center; background: var(--pin, var(--accent)); color: #fff; font-size: 12px; font-weight: 700; border: 2px solid #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.3); } /* taste-skill-ignore: map marker over tiles */
 .tm-wk__num { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; margin-right: 4px; border-radius: 9999px; background: var(--pin, var(--accent)); color: #fff; font-size: 11px; font-weight: 700; vertical-align: middle; }
+.tm-st__badge { display: inline-block; margin: 0 6px 4px 0; padding: 2px 8px; border-radius: 6px; color: #fff; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; }
+.tm-st__code { font-size: 12px; min-width: 30px; padding: 1px 6px; border-radius: 5px; color: #fff; font-weight: 700; text-align: center; }
+.tm-st__line { display: inline-block; width: 14px; height: 14px; margin-right: 8px; border-radius: 4px; vertical-align: baseline; }
+.tm-st__index { list-style: none; margin: 10px 0 0; padding: 0; }
+.tm-st__index-row { display: flex; align-items: center; gap: 12px; min-height: 44px; padding: 4px 0; border-top: 1px solid var(--line); color: var(--ink); text-decoration: none; }
+.tm-st__index-row:hover .tm-st__index-name { text-decoration: underline; }
+.tm-st__index-name { flex: 1; font-size: 16px; font-weight: 600; }
+.tm-st__index-meta { font-size: 13px; color: var(--ink-2); }
+.tm-pin--station .tm-pin__dot { width: 16px; height: 16px; }
+.tm-pin--station .tm-pin__label { font-weight: 700; border-color: var(--ink); }
 .tm-wk__kind { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--pin, var(--accent)); }
 .tm-wk__name { font-family: var(--font-display), Georgia, serif; font-weight: 600; font-size: 18px; line-height: 1.15; }
 .tm-wk__why { font-size: 14px; line-height: 1.4; }

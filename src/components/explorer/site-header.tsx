@@ -11,6 +11,7 @@ export function SiteHeader({ locale, cityId }: { locale: Locale; cityId: string 
       <nav className="tm-bar__links">
         <Link href={`/${locale}/${cityId}`} className="tm-link">{s.nav.map}</Link>
         <Link href={`/${locale}/${cityId}/trip`} className="tm-link">{s.nav.trips}</Link>
+          <Link href={`/${locale}/${cityId}/station`} className="tm-link">{s.nav.stations}</Link>
       </nav>
     </header>
   )

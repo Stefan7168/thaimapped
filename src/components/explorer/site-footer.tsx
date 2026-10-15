@@ -15,6 +15,7 @@ export function SiteFooter({ locale, cityId, compact = false }: { locale: Locale
         <nav className="tm-footer__links">
           <Link href={`/${locale}/${cityId}`} className="tm-link">{s.nav.map}</Link>
           <Link href={`/${locale}/${cityId}/trip`} className="tm-link">{s.nav.trips}</Link>
+          <Link href={`/${locale}/${cityId}/station`} className="tm-link">{s.nav.stations}</Link>
           <Link href={`/${locale}/credits`} className="tm-link">{s.nav.credits}</Link>
         </nav>
       )}
