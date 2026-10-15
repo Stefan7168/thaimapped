@@ -13,7 +13,7 @@ import { WEEKEND_SLOTS, weekendPlan } from '@/lib/explorer/weekend'
 import { whenLine } from '@/lib/explorer/when'
 import { thb } from '@/lib/explorer/price'
 import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
-import { useStay } from '@/lib/stay/store'
+import { nights, useStay } from '@/lib/stay/store'
 import { trackOutbound } from '@/lib/links/track'
 import { supports3D } from '@/lib/map/device'
 import { SiteHeader } from '@/components/explorer/site-header'
@@ -102,6 +102,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes }: {
             <span className="tm-wk__why">{t(pin.why, locale)}</span>
             {whenLine(pin, locale) && <span className="tm-wk__when">{whenLine(pin, locale)}</span>}
             {pin.price && <span className="tm-wk__meta">{s.guide.priceFrom(thb(pin.price.from, locale))}{pin.price.basis === 'tier-estimate' ? ` (${s.guide.priceEstimate})` : ''}</span>}
+            {pin.price && stay && <span className="tm-wk__meta tm-wk__stay">{s.guide.stayTotal(thb(pin.price.from * nights(stay), locale), nights(stay))}</span>}
             {pin.walk && walkStation && <span className="tm-wk__meta">{s.city.walkMinutes(pin.walk.minutes)} {s.city.from(`${walkStation.code ? walkStation.code + ' ' : ''}${t(walkStation.name, locale)}`)}</span>}
           </span>
         </button>

@@ -8,7 +8,7 @@ import type { Area, Locale, Pin, Station } from '@/lib/content/types'
 import { t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
 import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
-import { useStay } from '@/lib/stay/store'
+import { nights, useStay } from '@/lib/stay/store'
 import { StayPicker } from '@/components/stay/stay-picker'
 import { trackOutbound } from '@/lib/links/track'
 import { thb } from '@/lib/explorer/price'
@@ -99,6 +99,7 @@ export function SavedPage({ locale, cityId, entries, stations }: { locale: Local
                 <span className="tm-wk__why">{t(pin.why, locale)}</span>
                 {whenLine(pin, locale) && <span className="tm-wk__when">{whenLine(pin, locale)}</span>}
                 {pin.price && <span className="tm-wk__meta">{s.guide.priceFrom(thb(pin.price.from, locale))}{pin.price.basis === 'tier-estimate' ? ` (${s.guide.priceEstimate})` : ''}</span>}
+            {pin.price && stay && <span className="tm-wk__meta tm-wk__stay">{s.guide.stayTotal(thb(pin.price.from * nights(stay), locale), nights(stay))}</span>}
                 {pin.walk && walkStation && <span className="tm-wk__meta">{s.city.walkMinutes(pin.walk.minutes)} {s.city.from(`${walkStation.code ? walkStation.code + ' ' : ''}${t(walkStation.name, locale)}`)}</span>}
                 <span className="tm-wk__meta tm-saved__map">{s.saved.showOnMap}</span>
               </span>
@@ -161,6 +162,12 @@ export function SavedPage({ locale, cityId, entries, stations }: { locale: Local
                     <th scope="row">{s.saved.cmpPrice}</th>
                     {hotelRows.map((e) => <td key={e.pin.id}>{e.pin.price ? `${s.guide.priceFrom(thb(e.pin.price.from, locale))}${e.pin.price.basis === 'tier-estimate' ? '*' : ''}` : (e.pin.tier ? s.filters.tier[e.pin.tier] : '')}</td>)}
                   </tr>
+                  {stay && (
+                    <tr>
+                      <th scope="row">{s.saved.cmpStay(nights(stay))}</th>
+                      {hotelRows.map((e) => <td key={e.pin.id}>{e.pin.price ? `${s.guide.about(thb(e.pin.price.from * nights(stay), locale))}${e.pin.price.basis === 'tier-estimate' ? '*' : ''}` : ''}</td>)}
+                    </tr>
+                  )}
                   <tr>
                     <th scope="row">{s.saved.cmpStation}</th>
                     {hotelRows.map((e) => { const st = e.pin.walk ? stationById.get(e.pin.walk.station) : undefined; return <td key={e.pin.id}>{st && e.pin.walk ? `${s.city.walkMinutes(e.pin.walk.minutes)}, ${st.code ? st.code + ' ' : ''}${t(st.name, locale)}` : ''}</td> })}
