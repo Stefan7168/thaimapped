@@ -19,6 +19,8 @@ import { SiteHeader } from '@/components/explorer/site-header'
 import { SiteFooter } from '@/components/explorer/site-footer'
 import { SaveButton } from '@/components/saved/save-button'
 import { StayPicker } from '@/components/stay/stay-picker'
+import { HotelCompare } from '@/components/stay/hotel-compare'
+import { distanceM, WALK_PACE_M_PER_MIN } from '@/lib/explorer/filters'
 import { KIND_ICONS } from '@/components/explorer/kind-bar'
 
 const StageMap = dynamic(() => import('@/components/map/stage-map').then((m) => m.StageMap), {
@@ -36,6 +38,8 @@ const noopSubscribe = () => () => {}
 export function StationPage({ locale, cityId, page, areas, stations, others }: { locale: Locale; cityId: string; page: StationPageData; areas: Area[]; stations: Station[]; others: StationPageData[] }) {
   const s = strings(locale)
   const stay = useStay()
+  // Places of this page inside a ten-minute walk of a hotel, straight-line at walking pace.
+  const nearbyCount = (hotel: Pin) => page.places.filter((n) => distanceM(hotel.location.lon, hotel.location.lat, n.pin.location.lon, n.pin.location.lat) <= WALK_PACE_M_PER_MIN * 10).length
   const detected3D = useSyncExternalStore(noopSubscribe, supports3D, () => null)
   const st = page.stations[0]
   const label = `${st.code ? st.code + ' ' : ''}${t(st.name, locale)}`
@@ -120,6 +124,13 @@ export function StationPage({ locale, cityId, page, areas, stations, others }: {
               <h2 className="tm-wk__time">{s.stationPage.hotels}</h2>
               {page.hotels.length > 0 && <StayPicker locale={locale} />}
               {page.hotels.length === 0 ? <p className="tm-wk__empty">{s.stationPage.noHotels}</p> : <ul className="tm-wk__stops">{page.hotels.map(row)}</ul>}
+              {page.hotels.length > 1 && (
+                <div className="tm-ar__cmp">
+                  <h3 className="tm-wk__time">{s.areaPage.compare}</h3>
+                  <p className="tm-saved__note">{s.stationPage.compareLead}</p>
+                  <HotelCompare locale={locale} cityId={cityId} entries={page.hotels.map((h) => ({ pin: h.pin, area: h.area }))} stations={stations} nearbyCount={nearbyCount} />
+                </div>
+              )}
             </li>
             <li className="tm-wk__slot">
               <h2 className="tm-wk__time">{s.stationPage.places}</h2>
