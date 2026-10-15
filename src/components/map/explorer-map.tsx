@@ -149,6 +149,8 @@ export function ExplorerMap(props: ExplorerMapProps) {
         cooperativeGestures: false,
       })
       map.addControl(new maplibregl.NavigationControl({ visualizePitch: threeD }), 'top-right')
+      // The zoom buttons count as a top overlay, so an opened card is panned below them instead of under them.
+      map.getContainer().querySelector('.maplibregl-ctrl-top-right')?.setAttribute('data-map-overlay', 'top')
       // 'style.load' not 'load': the latter also waits for the tile source, so a
       // slow or failed tile server would hide our own pins and circles too.
       map.once('style.load', () => {

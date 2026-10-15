@@ -129,6 +129,8 @@ export function StageMap({ locale, camera, threeD, areas, route, routes = [], fo
         cooperativeGestures: false,
       })
       map.addControl(new maplibregl.NavigationControl({ visualizePitch: threeD, showCompass: false }), 'top-right')
+      // The zoom buttons count as a top overlay, so an opened card is panned below them instead of under them.
+      map.getContainer().querySelector('.maplibregl-ctrl-top-right')?.setAttribute('data-map-overlay', 'top')
       map.once('style.load', () => {
         if (!map) return
         if (threeD) addBuilding3DLayer(map)

@@ -9,6 +9,7 @@ import type { Marker } from 'maplibre-gl'
  */
 const LABEL = '.tm-pin__label, .tm-stop__label'
 const OFF = 'tm-label--off'
+const LEFT = 'tm-pin--left'
 
 function rank(el: HTMLElement): number {
   if (el.classList.contains('tm-pin--active') || el.classList.contains('tm-stop--active')) return 0
@@ -22,6 +23,17 @@ export function declutterLabels(markers: Marker[], container: HTMLElement | null
   const ordered = markers.map((m, i) => ({ el: m.getElement(), i })).sort((a, b) => rank(a.el) - rank(b.el) || a.i - b.i)
   const labels = ordered.map(({ el }) => el.querySelector<HTMLElement>(LABEL)).filter((l): l is HTMLElement => !!l)
   for (const l of labels) l.classList.remove(OFF)
+  // A label that would run off the right edge sits on the left of its dot instead.
+  const bounds = container?.getBoundingClientRect()
+  if (bounds) {
+    for (const l of labels) {
+      const pin = l.closest<HTMLElement>('.tm-pin')
+      if (!pin) continue
+      pin.classList.remove(LEFT)
+      const r = l.getBoundingClientRect()
+      if (r.width > 0 && r.right > bounds.right - 4 && r.width < bounds.width / 2) pin.classList.add(LEFT)
+    }
+  }
   const rects = labels.map((l) => l.getBoundingClientRect())
   // The picked area's name pill (area-hover.ts) has the spot first.
   const kept: DOMRect[] = [...(container?.querySelectorAll<HTMLElement>('.tm-area-pill') ?? [])].map((el) => el.getBoundingClientRect()).filter((r) => r.width > 0)
