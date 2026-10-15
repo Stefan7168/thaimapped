@@ -116,7 +116,37 @@
         "from": 5500,
         "currency": "THB",
         "basis": "tier-estimate"
-      }
+      },
+      "photo": {
+        "src": "/photos/pins/riverside/riverside-hotel-mandarin-oriental.jpg",
+        "alt": "The Mandarin Oriental, Bangkok seen from the river, with its boat at the pier",
+        "credit": "\"Mandarin Oriental Bangkok Bang Rak\" by Chainwit.",
+        "licence": "CC BY-SA 4.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Mandarin_Oriental_Bangkok_Bang_Rak.jpg"
+      },
+      "photos": [
+        {
+          "src": "/photos/pins/riverside/riverside-hotel-mandarin-oriental.jpg",
+          "alt": "The Mandarin Oriental, Bangkok seen from the river, with its boat at the pier",
+          "credit": "\"Mandarin Oriental Bangkok Bang Rak\" by Chainwit.",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Mandarin_Oriental_Bangkok_Bang_Rak.jpg"
+        },
+        {
+          "src": "/photos/pins/riverside/riverside-hotel-mandarin-oriental-2.jpg",
+          "alt": "The white colonial Authors' Wing of the Mandarin Oriental in its garden",
+          "credit": "\"Mandarin Oriental Bangkok Authors Wing - 06\" by Chainwit.",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Mandarin_Oriental_Bangkok_Authors_Wing_-_06.jpg"
+        },
+        {
+          "src": "/photos/pins/riverside/riverside-hotel-mandarin-oriental-3.jpg",
+          "alt": "The Authors' Lounge inside the Mandarin Oriental",
+          "credit": "\"The Authors' Lounge, Mandarin Oriental Bangkok (Feb 2022) - img 02\" by Chainwit.",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:The_Authors%27_Lounge,_Mandarin_Oriental_Bangkok_(Feb_2022)_-_img_02.jpg"
+        }
+      ]
     },
     {
       "id": "riverside-hotel-chatrium-riverside",
@@ -207,7 +237,37 @@
         "credit": "\"Approaching Iconsiam from Chao Phraya River, Bangkok\" by Slyronit",
         "licence": "CC BY-SA 4.0",
         "source": "https://commons.wikimedia.org/wiki/File:Approaching_Iconsiam_from_Chao_Phraya_River,_Bangkok.jpg"
-      }
+      },
+      "photos": [
+        {
+          "src": "/photos/pins/riverside/iconsiam.jpg",
+          "alt": "ICONSIAM and its two towers seen from the Chao Phraya",
+          "credit": "\"Approaching Iconsiam from Chao Phraya River, Bangkok\" by Slyronit",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Approaching_Iconsiam_from_Chao_Phraya_River,_Bangkok.jpg"
+        },
+        {
+          "src": "/photos/pins/riverside/iconsiam-2.jpg",
+          "alt": "ICONSIAM's riverside front lit up at night under its two towers",
+          "credit": "\"Iconsiam decorated for Chinese New Year, Bangkok\" by Slyronit",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Iconsiam_decorated_for_Chinese_New_Year,_Bangkok.jpg"
+        },
+        {
+          "src": "/photos/pins/riverside/iconsiam-3.jpg",
+          "alt": "The glass front of ICONSIAM with its folded roof above",
+          "credit": "\"Apple Store at Iconsiam, Bangkok 2\" by Slyronit",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Apple_Store_at_Iconsiam,_Bangkok_2.jpg"
+        },
+        {
+          "src": "/photos/pins/riverside/iconsiam-4.jpg",
+          "alt": "The Chao Phraya River and its bend seen from ICONSIAM's terrace",
+          "credit": "\"Chao Phraya River from Iconsiam, Bangkok 2\" by Slyronit",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Chao_Phraya_River_from_Iconsiam,_Bangkok_2.jpg"
+        }
+      ]
     },
     {
       "id": "asiatique",
@@ -243,7 +303,37 @@
         "credit": "\"Asiatique, Bangkok from Chao Phraya River 2\" by Slyronit",
         "licence": "CC BY-SA 4.0",
         "source": "https://commons.wikimedia.org/wiki/File:Asiatique,_Bangkok_from_Chao_Phraya_River_2.jpg"
-      }
+      },
+      "photos": [
+        {
+          "src": "/photos/pins/riverside/asiatique.jpg",
+          "alt": "Asiatique's Ferris wheel and riverfront lit up at night",
+          "credit": "\"Asiatique, Bangkok from Chao Phraya River 2\" by Slyronit",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Asiatique,_Bangkok_from_Chao_Phraya_River_2.jpg"
+        },
+        {
+          "src": "/photos/pins/riverside/asiatique-2.jpg",
+          "alt": "The clock tower at Asiatique The Riverfront at night",
+          "credit": "\"Asiatique The Riverfront at nignt 11\" by Abasaa",
+          "licence": "public domain",
+          "source": "https://commons.wikimedia.org/wiki/File:Asiatique_The_Riverfront_at_nignt_11.jpg"
+        },
+        {
+          "src": "/photos/pins/riverside/asiatique-3.jpg",
+          "alt": "The lit entrance arch of Asiatique The Riverfront",
+          "credit": "\"Asiatique The Riverfront at nignt 06\" by Abasaa",
+          "licence": "public domain",
+          "source": "https://commons.wikimedia.org/wiki/File:Asiatique_The_Riverfront_at_nignt_06.jpg"
+        },
+        {
+          "src": "/photos/pins/riverside/asiatique-4.jpg",
+          "alt": "The Asiatique Ferris wheel lit up over the river at night",
+          "credit": "\"Asiatique the Riverfront 03\" by Ambikabahadur",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Asiatique_the_Riverfront_03.jpg"
+        }
+      ]
     },
     {
       "id": "warehouse-30",
@@ -269,7 +359,14 @@
         ]
       },
       "subarea": "bang-rak",
-      "links": {}
+      "links": {},
+      "photo": {
+        "src": "/photos/pins/riverside/warehouse-30.jpg",
+        "alt": "Old shophouses and traffic along Charoen Krung Road",
+        "credit": "\"Charoen Krung Road April2021 ถนนเจริญกรุง\" by Chainwit.",
+        "licence": "CC BY-SA 4.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Charoen_Krung_Road_April2021_%E0%B8%96%E0%B8%99%E0%B8%99%E0%B9%80%E0%B8%88%E0%B8%A3%E0%B8%B4%E0%B8%8D%E0%B8%81%E0%B8%A3%E0%B8%B8%E0%B8%87.jpg"
+      }
     },
     {
       "id": "lhong-1919",
@@ -295,7 +392,37 @@
         ]
       },
       "subarea": "khlong-san",
-      "links": {}
+      "links": {},
+      "photo": {
+        "src": "/photos/pins/riverside/lhong-1919.jpg",
+        "alt": "The lawn courtyard of Lhong 1919 between its old warehouse wings",
+        "credit": "\"บ้านหวั่งหลี เขตคลองสาน กรุงเทพมหานคร (5)\" by กสิณธร ราชโอรส",
+        "licence": "CC BY-SA 4.0",
+        "source": "https://commons.wikimedia.org/wiki/File:%E0%B8%9A%E0%B9%89%E0%B8%B2%E0%B8%99%E0%B8%AB%E0%B8%A7%E0%B8%B1%E0%B9%88%E0%B8%87%E0%B8%AB%E0%B8%A5%E0%B8%B5_%E0%B9%80%E0%B8%82%E0%B8%95%E0%B8%84%E0%B8%A5%E0%B8%AD%E0%B8%87%E0%B8%AA%E0%B8%B2%E0%B8%99_%E0%B8%81%E0%B8%A3%E0%B8%B8%E0%B8%87%E0%B9%80%E0%B8%97%E0%B8%9E%E0%B8%A1%E0%B8%AB%E0%B8%B2%E0%B8%99%E0%B8%84%E0%B8%A3_(5).jpg"
+      },
+      "photos": [
+        {
+          "src": "/photos/pins/riverside/lhong-1919.jpg",
+          "alt": "The lawn courtyard of Lhong 1919 between its old warehouse wings",
+          "credit": "\"บ้านหวั่งหลี เขตคลองสาน กรุงเทพมหานคร (5)\" by กสิณธร ราชโอรส",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:%E0%B8%9A%E0%B9%89%E0%B8%B2%E0%B8%99%E0%B8%AB%E0%B8%A7%E0%B8%B1%E0%B9%88%E0%B8%87%E0%B8%AB%E0%B8%A5%E0%B8%B5_%E0%B9%80%E0%B8%82%E0%B8%95%E0%B8%84%E0%B8%A5%E0%B8%AD%E0%B8%87%E0%B8%AA%E0%B8%B2%E0%B8%99_%E0%B8%81%E0%B8%A3%E0%B8%B8%E0%B8%87%E0%B9%80%E0%B8%97%E0%B8%9E%E0%B8%A1%E0%B8%AB%E0%B8%B2%E0%B8%99%E0%B8%84%E0%B8%A3_(5).jpg"
+        },
+        {
+          "src": "/photos/pins/riverside/lhong-1919-2.jpg",
+          "alt": "A painted mural on a weathered wall at Lhong 1919",
+          "credit": "\"LHONG 1919 (I)\" by Supanut Arunoprayote",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:LHONG_1919_(I).jpg"
+        },
+        {
+          "src": "/photos/pins/riverside/lhong-1919-3.jpg",
+          "alt": "The red doors of the Mazu shrine at Lhong 1919",
+          "credit": "\"บ้านหวั่งหลี เขตคลองสาน กรุงเทพมหานคร (12)\" by กสิณธร ราชโอรส",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:%E0%B8%9A%E0%B9%89%E0%B8%B2%E0%B8%99%E0%B8%AB%E0%B8%A7%E0%B8%B1%E0%B9%88%E0%B8%87%E0%B8%AB%E0%B8%A5%E0%B8%B5_%E0%B9%80%E0%B8%82%E0%B8%95%E0%B8%84%E0%B8%A5%E0%B8%AD%E0%B8%87%E0%B8%AA%E0%B8%B2%E0%B8%99_%E0%B8%81%E0%B8%A3%E0%B8%B8%E0%B8%87%E0%B9%80%E0%B8%97%E0%B8%9E%E0%B8%A1%E0%B8%AB%E0%B8%B2%E0%B8%99%E0%B8%84%E0%B8%A3_(12).jpg"
+        }
+      ]
     },
     {
       "id": "jam-factory",
@@ -351,7 +478,30 @@
         }
       },
       "subarea": "bang-rak",
-      "links": {}
+      "links": {},
+      "photo": {
+        "src": "/photos/pins/riverside/sathorn-pier.jpg",
+        "alt": "A Chao Phraya tourist boat at Sathorn Pier",
+        "credit": "\"Sathon Pier Bangkok 2019 hoponhopoff boat\" by Chainwit.",
+        "licence": "CC BY-SA 4.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Sathon_Pier_Bangkok_2019_hoponhopoff_boat.jpg"
+      },
+      "photos": [
+        {
+          "src": "/photos/pins/riverside/sathorn-pier.jpg",
+          "alt": "A Chao Phraya tourist boat at Sathorn Pier",
+          "credit": "\"Sathon Pier Bangkok 2019 hoponhopoff boat\" by Chainwit.",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Sathon_Pier_Bangkok_2019_hoponhopoff_boat.jpg"
+        },
+        {
+          "src": "/photos/pins/riverside/sathorn-pier-2.jpg",
+          "alt": "The Sathorn Pier landing with its green name sign",
+          "credit": "\"Sathorn Pier, Chao Phraya River, Bangkok (6906973408)\" by David McKelvey from Brisbane, Australia",
+          "licence": "CC BY 2.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Sathorn_Pier,_Chao_Phraya_River,_Bangkok_(6906973408).jpg"
+        }
+      ]
     },
     {
       "id": "bang-rak-market",
