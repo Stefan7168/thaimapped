@@ -5,7 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useMemo, useState, useSyncExternalStore } from 'react'
 import { ArrowLeft, SlidersHorizontal, X } from 'lucide-react'
-import type { CityBundle, Locale, Pin, Station, TripRoute } from '@/lib/content/types'
+import type { CityBundle, DayKind, Locale, Pin, Station, TimeOfDay, TripRoute } from '@/lib/content/types'
 import { t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
 import { supports3D } from '@/lib/map/device'
@@ -13,7 +13,7 @@ import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
 import { trackOutbound } from '@/lib/links/track'
 import { whenLine } from '@/lib/explorer/when'
 import { WEEKEND_SLOTS, weekendPlan } from '@/lib/explorer/weekend'
-import { activeFilterCount, allPins, EMPTY_FILTERS, isFullRange, PRICE_RANGE, selectedPlaceCentres, selectedStations, subareaKey, TIER_PRICE, TIERS, visiblePins, type FilterState, type PriceRange, type Tier } from '@/lib/explorer/filters'
+import { activeFilterCount, allPins, DAYS, EMPTY_FILTERS, isFullRange, PRICE_RANGE, TIMES, selectedPlaceCentres, selectedStations, subareaKey, TIER_PRICE, TIERS, visiblePins, type FilterState, type PriceRange, type Tier } from '@/lib/explorer/filters'
 import { thb } from '@/lib/explorer/price'
 import type { Outline } from '@/components/map/explorer-map'
 import { FilterPanel } from './filter-panel'
@@ -49,11 +49,13 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
       const tier = h.get('tier')
       const priceParam = h.get('price')
       const station = h.get('station')
-      if (!area && !tier && !priceParam && !station) return
+      const times = (h.get('time') ?? '').split(',').filter((x): x is TimeOfDay => (TIMES as readonly string[]).includes(x))
+      const days = (h.get('day') ?? '').split(',').filter((x): x is DayKind => (DAYS as readonly string[]).includes(x))
+      if (!area && !tier && !priceParam && !station && times.length === 0 && days.length === 0) return
       const m = priceParam?.match(/^(\d+)-(\d+)$/)
       const fromParam: PriceRange | null = m ? { min: Math.max(PRICE_RANGE.min, Number(m[1])), max: Math.min(PRICE_RANGE.max, Number(m[2])) } : null
       const price = fromParam && fromParam.min < fromParam.max ? fromParam : tier && (TIERS as readonly string[]).includes(tier) ? TIER_PRICE[tier as Tier] : null
-      const next: FilterState = { ...EMPTY_FILTERS, areas: area && areas.some((a) => a.id === area) ? [area] : [], stations: station && bundle.stations.some((st) => st.id === station) ? [station] : [], price: isFullRange(price) ? null : price }
+      const next: FilterState = { ...EMPTY_FILTERS, areas: area && areas.some((a) => a.id === area) ? [area] : [], stations: station && bundle.stations.some((st) => st.id === station) ? [station] : [], price: isFullRange(price) ? null : price, times, days }
       setFilters(next)
     }
     const id = window.requestAnimationFrame(apply)

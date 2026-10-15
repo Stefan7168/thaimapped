@@ -45,6 +45,9 @@ const en = {
     action: 'Open the map',
     facts: (areas: number, stations: number, trips: number) => `${areas} areas · ${stations} stations · ${trips} trips`,
     showing: (place: string) => `Showing ${place}`,
+    nowLine: (slot: string) => `It is ${slot} in Bangkok right now.`,
+    nowLink: (slot: string) => (slot === 'morning' ? 'What is good this morning' : slot === 'afternoon' ? 'What is good this afternoon' : 'What is good tonight'),
+    weekendLink: 'Plan this weekend',
     intro: [
       'ThaiMapped is one map of Bangkok drawn like paper. Eight areas, 193 BTS, MRT, Airport Link and SRT stations, the landmarks you have heard of, and hotels placed where they really stand.',
       'Pick a station and you see what sits inside a ten-minute walk of it. Pick an area and you see its streets, its sub-areas and the trains that reach it.',

@@ -10,6 +10,7 @@ import { QUIZ_PACES, QUIZ_PURPOSES, rankAreas, type Pace, type QuizAnswers } fro
 import { t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
 import { supports3D } from '@/lib/map/device'
+import { bangkokNow } from '@/lib/explorer/when'
 import { RevealObserver } from '@/components/motion/reveal'
 import { SiteFooter } from '@/components/explorer/site-footer'
 import { HotelFragment, StationFragment, TripStopsFragment } from './ui-fragments'
@@ -19,6 +20,10 @@ const StageMap = dynamic(() => import('@/components/map/stage-map').then((m) => 
   ssr: false,
   loading: () => <div className="h-full w-full bg-paper" />,
 })
+
+// One reading per page load: useSyncExternalStore needs the same object back each time, and the slot does not change mid-visit.
+let nowCache: ReturnType<typeof bangkokNow> | null = null
+const nowSnapshot = () => nowCache ?? (nowCache = bangkokNow())
 
 function noopSubscribe() {
   return () => {}
@@ -50,6 +55,8 @@ export function HomePage({ locale, bundle, routes }: { locale: Locale; bundle: C
     })
   // The highlight the reader tapped open.
   const [cardPin, setCardPin] = useState<{ pin: Pin; area: Area } | null>(null)
+  // Bangkok's clock, read in the browser only, so the server's HTML carries no time of its own.
+  const now = useSyncExternalStore(noopSubscribe, nowSnapshot, () => null)
   // On a phone the map is a sticky band above the scrolling text, so a tapped card would open out of sight: bring the map back first.
   const showStageMap = () => {
     if (window.innerWidth > 1023) return
@@ -133,6 +140,15 @@ export function HomePage({ locale, bundle, routes }: { locale: Locale; bundle: C
               <h1 className="tm-hero__title" data-rise style={{ ['--i' as string]: 1 }}>{s.home.headline}</h1>
               <p className="tm-hero__line" data-rise style={{ ['--i' as string]: 2 }}>{s.home.sentence}</p>
               <Link href={mapHref} className="tm-button" data-rise style={{ ['--i' as string]: 3 }}>{s.home.action}</Link>
+              {/* The one thing on this page that changes with the clock: what Bangkok is doing right now, and the two shortcuts people actually want. */}
+              {now && (
+                <p className="tm-hero__now" data-rise style={{ ['--i' as string]: 4 }}>
+                  {s.home.nowLine(s.filters.time[now.time].toLowerCase())}{' '}
+                  <Link href={`/${locale}/${city.id}#time=${now.time === 'night' ? 'night' : now.time === 'evening' ? 'evening,night' : now.time}`} className="tm-link tm-link--under">{s.home.nowLink(now.time)}</Link>
+                  {' · '}
+                  <a href="#tm-quiz" className="tm-link tm-link--under">{s.home.weekendLink}</a>
+                </p>
+              )}
             </div>
           </section>
 
@@ -150,7 +166,7 @@ export function HomePage({ locale, bundle, routes }: { locale: Locale; bundle: C
             ))}
           </section>
 
-          <section className="tm-quiz" aria-labelledby="tm-quiz-heading">
+          <section id="tm-quiz" className="tm-quiz" aria-labelledby="tm-quiz-heading">
             <h2 id="tm-quiz-heading" className="tm-h2" data-reveal>{s.home.quiz.heading}</h2>
             <p className="tm-quiz__lead" data-reveal>{s.home.quiz.lead}</p>
             <div className="tm-quiz__q" data-reveal>

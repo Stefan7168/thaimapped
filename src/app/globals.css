@@ -318,6 +318,7 @@ body {
 .tm-hero__nav .tm-link:last-child { justify-self: start; }
 .tm-hero__centre { display: flex; flex-direction: column; align-items: center; gap: 24px; padding-top: 26svh; padding-bottom: 20svh; }
 .tm-hero__title { font-family: var(--font-display), Georgia, serif; font-weight: 600; font-size: var(--step-display); line-height: 1.02; letter-spacing: -0.02em; color: var(--accent); max-width: 18ch; text-wrap: balance; }
+.tm-hero__now { font-size: var(--step-small); line-height: 1.5; color: var(--ink-2); max-width: 44ch; }
 .tm-hero__line { font-size: var(--step-body); line-height: 1.5; color: var(--ink); max-width: 40ch; }
 
 .tm-intro { padding: 0 32px 120px var(--axis); max-width: calc(var(--axis) + 340px); }
