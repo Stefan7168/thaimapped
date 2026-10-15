@@ -45,6 +45,15 @@ const en = {
   explorerPage: {
     title: (city: string) => `${city} map`,
   },
+  areaPage: {
+    title: (area: string, city: string) => `${area}, ${city}: where to stay and what is there`,
+    description: (tagline: string, hotels: number, places: number, stations: number) => `${tagline} ${hotels === 1 ? '1 hotel' : `${hotels} hotels`}, ${places === 1 ? '1 place' : `${places} places`} and ${stations === 1 ? '1 station' : `${stations} stations`}, each placed where it really stands.`,
+    photos: 'Photographs of the area',
+    weekend: 'Plan a weekend here',
+    stationsLead: 'Each station page lists the hotels and places inside a ten-minute walk.',
+    others: 'Other areas',
+    link: 'Area page',
+  },
   weekendPage: {
     eyebrow: 'A weekend plan',
     title: (area: string) => `Your weekend in ${area}`,

@@ -17,6 +17,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       urls.push({ url: `${base}/${locale}/${city}`, changeFrequency: 'weekly', priority: 0.9 })
       urls.push({ url: `${base}/${locale}/${city}/trip`, changeFrequency: 'weekly', priority: 0.6 })
       for (const r of loadRoutes(city)) urls.push({ url: `${base}/${locale}/${city}/trip/${r.id}`, changeFrequency: 'monthly', priority: 0.6 })
+      for (const a of bundle.areas) urls.push({ url: `${base}/${locale}/${city}/area/${a.id}`, changeFrequency: 'weekly', priority: 0.8 })
       for (const a of bundle.areas) urls.push({ url: `${base}/${locale}/${city}/weekend/${a.id}`, changeFrequency: 'weekly', priority: 0.8 })
       urls.push({ url: `${base}/${locale}/${city}/station`, changeFrequency: 'weekly', priority: 0.6 })
       for (const p of stationPages(bundle)) urls.push({ url: `${base}/${locale}/${city}/station/${p.slug}`, changeFrequency: 'weekly', priority: 0.7 })

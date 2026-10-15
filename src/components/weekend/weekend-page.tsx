@@ -142,6 +142,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes }: {
               {shared === 'copied' ? s.weekendPage.copied : shared === 'failed' ? s.weekendPage.copyFailed : s.weekendPage.share}
             </button>
             <Link href={explorerHref} className="tm-link">{s.weekendPage.openMap}</Link>
+            <Link href={`/${locale}/${cityId}/area/${area.id}`} className="tm-link">{s.areaPage.link}</Link>
           </div>
           <ol className="tm-wk__slots">
             {WEEKEND_SLOTS.map((slot) => (

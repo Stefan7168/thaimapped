@@ -525,3 +525,12 @@ body {
 .tm-saved__note { margin-top: 12px; font-size: 13px; color: var(--ink-2); }
 .tm-saved__map { color: var(--accent); font-weight: 600; }
 a.tm-wk__stop { text-decoration: none; }
+
+/* Area page: three photographs in a row, the about text, sections between the lead and the place list. */
+.tm-ar__photos { list-style: none; margin: 18px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.tm-ar__photo img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 8px; display: block; }
+.tm-ar__credit { display: block; margin-top: 4px; font-size: 11px; line-height: 1.3; color: var(--ink-2); overflow-wrap: anywhere; }
+.tm-ar__about { margin-top: 16px; font-size: 15px; line-height: 1.55; color: var(--ink); max-width: 60ch; }
+.tm-ar__section { margin-top: 22px; }
+.tm-ar__parts { margin-top: 6px; font-size: 14px; color: var(--ink); }
+@media (max-width: 480px) { .tm-ar__photos { grid-template-columns: repeat(2, 1fr); } .tm-ar__photo:nth-child(3) { display: none; } }

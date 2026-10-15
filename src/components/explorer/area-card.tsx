@@ -1,5 +1,7 @@
 'use client'
 
+import Link from 'next/link'
+
 import { useState } from 'react'
 import Image from 'next/image'
 import { ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react'
@@ -64,6 +66,7 @@ export function AreaCard({ locale, area, stations, onPick, onPickSubarea, onPick
       </button>
       <div id={panelId} className="tm-acard__more" hidden={!open}>
         {area.about && <p className="tm-acard__about">{t(area.about, locale)}</p>}
+        <Link href={`/${locale}/${area.city}/area/${area.id}`} className="tm-weekend__share">{s.areaPage.link}</Link>
         <p className="tm-acard__label">{s.guide.subareas}</p>
         <ul className="tm-acard__list">
           {area.subareas.map((sub) => (
