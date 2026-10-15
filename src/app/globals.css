@@ -594,5 +594,11 @@ a.tm-wk__stop { text-decoration: none; }
 .tm-cmp thead th { border-top: 0; font-family: var(--font-display), Georgia, serif; font-size: 16px; font-weight: 600; }
 .tm-cmp tbody th { font-weight: 600; color: var(--ink-2); font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; min-width: 92px; position: sticky; left: 0; background: var(--paper); }
 .tm-cmp__links a { margin-right: 10px; }
+.tm-areas-cmp { margin-top: 56px; max-width: 1040px; }
+.tm-cmp--areas th, .tm-cmp--areas td { min-width: 124px; }
+.tm-cmp--areas tbody th { min-width: 84px; }
+.tm-cmp__corner { border-top: 0 !important; }
+.tm-cmp--areas thead th { font-size: 15px; }
+.tm-cmp--areas thead th .tm-link { font-family: inherit; font-size: inherit; }
 
 .tm-stoprow__tbc { display: inline-block; margin-top: 4px; padding: 1px 7px; border-radius: 6px; border: 1px dashed var(--line); font-size: 12px; color: var(--ink-2); }

@@ -123,6 +123,16 @@ export function HomePage({ locale, bundle, routes }: { locale: Locale; bundle: C
   }, [stations, areas, routes])
 
   const mapHref = `/${locale}/${city.id}`
+  // The train lines that reach an area, from its stations: "BTS Sukhumvit, MRT Blue".
+  const stationById = useMemo(() => new Map(stations.map((st) => [st.id, st])), [stations])
+  const areaLines = (a: Area): string[] => {
+    const seen = new Set<string>()
+    for (const id of a.stations) {
+      const st = stationById.get(id)
+      if (st) seen.add(`${st.system} ${st.line}`)
+    }
+    return [...seen]
+  }
   const tripsHref = `/${locale}/${city.id}/trip`
 
   return (
@@ -269,6 +279,46 @@ export function HomePage({ locale, bundle, routes }: { locale: Locale; bundle: C
                 )
               })}
             </ul>
+            <div className="tm-areas-cmp" data-reveal>
+              <h3 className="tm-wk__time">{s.home.compare.heading}</h3>
+              <p className="tm-saved__note">{s.home.compare.lead}</p>
+              <div className="tm-cmp__wrap">
+                <table className="tm-cmp tm-cmp--areas">
+                  <thead>
+                    <tr>
+                      <td className="tm-cmp__corner" />
+                      {areas.map((a) => <th key={a.id} scope="col"><Link href={`/${locale}/${city.id}/area/${a.id}`} className="tm-link">{t(a.name, locale)}</Link></th>)}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th scope="row">{s.home.compare.bestFor}</th>
+                      {areas.map((a) => <td key={a.id}>{a.fits.map((f) => s.home.compare.fits[f] ?? f).join(', ')}</td>)}
+                    </tr>
+                    <tr>
+                      <th scope="row">{s.home.compare.trains}</th>
+                      {areas.map((a) => <td key={a.id}>{areaLines(a).join(', ')}</td>)}
+                    </tr>
+                    <tr>
+                      <th scope="row">{s.home.compare.hotels}</th>
+                      {areas.map((a) => {
+                        const hotels = a.pins.filter((p) => p.kind === 'hotel')
+                        const walks = hotels.map((h) => h.walk?.minutes).filter((m): m is number => typeof m === 'number')
+                        return <td key={a.id}>{s.home.compare.hotelsCell(hotels.length, walks.length ? Math.min(...walks) : null, walks.length ? Math.max(...walks) : null)}</td>
+                      })}
+                    </tr>
+                    <tr>
+                      <th scope="row">{s.home.compare.places}</th>
+                      {areas.map((a) => <td key={a.id}>{s.home.compare.placesCell(a.pins.filter((p) => p.kind !== 'hotel').length)}</td>)}
+                    </tr>
+                    <tr>
+                      <th scope="row">{s.home.compare.weekend}</th>
+                      {areas.map((a) => <td key={a.id}><Link href={`/${locale}/${city.id}/weekend/${a.id}`} className="tm-link tm-link--under">{s.home.compare.plan}</Link></td>)}
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </section>
 
           <section className="tm-how" aria-labelledby="tm-how-heading">
