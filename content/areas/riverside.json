@@ -127,6 +127,12 @@
         "station": "bts-silom-s7",
         "minutes": 10
       },
+      "when": {
+        "times": [
+          "afternoon",
+          "evening"
+        ]
+      },
       "subarea": "khlong-san",
       "links": {},
       "photo": {
@@ -153,6 +159,15 @@
       "walk": {
         "station": "bts-silom-s6",
         "minutes": 25
+      },
+      "when": {
+        "times": [
+          "evening",
+          "night"
+        ],
+        "note": {
+          "en": "Opens at 16:00; the ferris wheel and stalls run until midnight"
+        }
       },
       "subarea": "charoen-krung",
       "links": {},

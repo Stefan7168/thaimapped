@@ -128,6 +128,11 @@
         "station": "bts-sukhumvit-e6",
         "minutes": 8
       },
+      "when": {
+        "times": [
+          "night"
+        ]
+      },
       "subarea": "thonglor",
       "links": {},
       "photo": {

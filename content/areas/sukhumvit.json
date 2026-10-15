@@ -128,6 +128,12 @@
         "station": "bts-sukhumvit-e4",
         "minutes": 1
       },
+      "when": {
+        "times": [
+          "afternoon",
+          "evening"
+        ]
+      },
       "subarea": "asok",
       "links": {},
       "photo": {
@@ -154,6 +160,12 @@
       "walk": {
         "station": "bts-sukhumvit-e5",
         "minutes": 1
+      },
+      "when": {
+        "times": [
+          "afternoon",
+          "evening"
+        ]
       },
       "subarea": "phrom-phong",
       "links": {},

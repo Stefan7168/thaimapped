@@ -127,6 +127,15 @@
         "station": "mrt-blue-bl31",
         "minutes": 8
       },
+      "when": {
+        "times": [
+          "morning",
+          "afternoon"
+        ],
+        "note": {
+          "en": "Open 08:30 to 15:30; go at opening to beat the heat and the groups"
+        }
+      },
       "subarea": "grand-palace",
       "links": {},
       "photo": {
@@ -153,6 +162,12 @@
       "walk": {
         "station": "mrt-blue-bl31",
         "minutes": 5
+      },
+      "when": {
+        "times": [
+          "morning",
+          "afternoon"
+        ]
       },
       "subarea": "grand-palace",
       "links": {},
@@ -181,6 +196,16 @@
         "station": "mrt-blue-bl31",
         "minutes": 12
       },
+      "when": {
+        "times": [
+          "morning",
+          "afternoon",
+          "evening"
+        ],
+        "note": {
+          "en": "Best at dusk from the Tha Tien side, when the spire is lit"
+        }
+      },
       "subarea": "grand-palace",
       "links": {},
       "photo": {
@@ -207,6 +232,12 @@
       "walk": {
         "station": "mrt-blue-bl30",
         "minutes": 20
+      },
+      "when": {
+        "times": [
+          "evening",
+          "night"
+        ]
       },
       "subarea": "khao-san",
       "links": {},

@@ -224,6 +224,29 @@
             "$ref": "common.schema.json#/$defs/slug",
             "description": "Which sub-area the pin belongs to. Optional: a pin can sit in the area but outside every named sub-area."
           },
+          "when": {
+            "type": "object",
+            "description": "When the place is worth going: times of day it is open or at its best, and the days (omitted = every day). Editorial, from the content pass; the note is shown on the card.",
+            "properties": {
+              "times": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": { "type": "string", "enum": ["morning", "afternoon", "evening", "night"] }
+              },
+              "days": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": { "type": "string", "enum": ["weekday", "weekend"] }
+              },
+              "note": {
+                "$ref": "common.schema.json#/$defs/localized"
+              }
+            },
+            "required": ["times"],
+            "additionalProperties": false
+          },
           "shape": {
             "type": "object",
             "description": "How the place is drawn beyond its pin: a street is the real road stretch, a zone is the real area. The file comes from OpenStreetMap via scripts/fetch-place-shapes.mjs, never drawn by hand.",

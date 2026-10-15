@@ -127,6 +127,12 @@
         "station": "mrt-blue-bl28",
         "minutes": 5
       },
+      "when": {
+        "times": [
+          "morning",
+          "afternoon"
+        ]
+      },
       "subarea": "talat-noi",
       "links": {},
       "photo": {
@@ -153,6 +159,15 @@
       "walk": {
         "station": "mrt-blue-bl29",
         "minutes": 2
+      },
+      "when": {
+        "times": [
+          "evening",
+          "night"
+        ],
+        "note": {
+          "en": "Comes alive after dark; stalls set up from about 18:00"
+        }
       },
       "subarea": "yaowarat",
       "links": {},

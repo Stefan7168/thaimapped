@@ -1,5 +1,6 @@
 import type { Area, Locale, Pin, Station } from '@/lib/content/types'
 import { t } from '@/lib/i18n/locales'
+import { whenLine } from '@/lib/explorer/when'
 import { strings } from '@/lib/i18n/strings'
 import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
 import type { NearbyPin } from '@/lib/explorer/filters'
@@ -41,6 +42,13 @@ export function cardElement(locale: Locale, cityId: string, pin: Pin, area: Area
   why.className = 'tm-card__why'
   why.textContent = t(pin.why, locale)
   el.append(head, name, why)
+  const when = whenLine(pin, locale)
+  if (when) {
+    const line = document.createElement('p')
+    line.className = 'tm-card__when'
+    line.textContent = when
+    el.append(line)
+  }
   if (pin.walk && station) {
     const walk = document.createElement('p')
     walk.className = 'tm-card__walk'

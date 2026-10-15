@@ -45,6 +45,8 @@ export interface Line {
   color: string
 }
 
+export type TimeOfDay = 'morning' | 'afternoon' | 'evening' | 'night'
+export type DayKind = 'weekday' | 'weekend'
 export type PinKind = 'hotel' | 'sight' | 'food' | 'market' | 'nightlife' | 'transport'
 export type PinLinks = Partial<Record<'agoda' | 'booking' | 'viator' | 'klook' | 'official', string>>
 
@@ -61,6 +63,8 @@ export interface Pin {
   links: PinLinks
   /** One real, credited photograph for the card and the home highlights. Optional until fetched. */
   photo?: AreaPhoto
+  /** When the place is open or at its best; days omitted means every day. */
+  when?: { times: TimeOfDay[]; days?: DayKind[]; note?: Localized }
   /** A street or zone drawn on the map besides the pin; the file is read into `geometry` at load time. */
   shape?: { kind: 'street' | 'zone'; path: string }
   geometry?: GeoJSON.MultiLineString | GeoJSON.MultiPolygon

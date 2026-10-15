@@ -9,6 +9,7 @@ import { t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
 import { supports3D } from '@/lib/map/device'
 import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
+import { whenLine } from '@/lib/explorer/when'
 import { activeFilterCount, allPins, EMPTY_FILTERS, selectedPlaceCentres, selectedStations, subareaKey, visiblePins, type FilterState } from '@/lib/explorer/filters'
 import type { Outline } from '@/components/map/explorer-map'
 import { FilterPanel } from './filter-panel'
@@ -91,6 +92,7 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
                 <span className="truncate font-medium">{t(pin.name, locale)}</span>
               </span>
               <span className="block text-ink-2">{t(pin.why, locale)}</span>
+              {whenLine(pin, locale) && <span className="block text-xs font-medium text-accent">{whenLine(pin, locale)}</span>}
               {pin.walk && walkStation && (
                 <span className="block text-xs text-ink-2">
                   {s.city.walkMinutes(pin.walk.minutes)} {s.city.from(`${walkStation.code ? walkStation.code + ' ' : ''}${t(walkStation.name, locale)}`)}

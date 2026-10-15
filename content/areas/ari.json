@@ -116,6 +116,18 @@
         "station": "bts-sukhumvit-n8",
         "minutes": 5
       },
+      "when": {
+        "times": [
+          "morning",
+          "afternoon"
+        ],
+        "days": [
+          "weekend"
+        ],
+        "note": {
+          "en": "Saturday and Sunday only; go before 11:00 for air and space"
+        }
+      },
       "subarea": "saphan-khwai",
       "links": {},
       "photo": {

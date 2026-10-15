@@ -73,6 +73,7 @@ body {
 .tm-card__name { margin-top: 2px; font-family: var(--font-display), Georgia, serif; font-size: 18px; font-weight: 600; line-height: 1.15; }
 .tm-card__why { margin-top: 6px; font-size: 14px; line-height: 1.4; }
 .tm-card__walk { margin-top: 6px; font-size: 13px; color: var(--ink-2); }
+.tm-card__when { margin: 6px 0 0; font-size: 13px; font-weight: 600; color: var(--accent); }
 .tm-card__links { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
 .tm-card__link { display: inline-flex; align-items: center; min-height: 32px; padding: 0 12px; border-radius: 9999px; background: var(--accent); color: #fff; font-size: 13px; font-weight: 600; text-decoration: none; }
 .tm-card__link--quiet { background: transparent; color: var(--ink); border: 1px solid var(--line); }

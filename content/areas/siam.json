@@ -127,6 +127,13 @@
         "station": "bts-sukhumvit-n1",
         "minutes": 12
       },
+      "when": {
+        "times": [
+          "afternoon",
+          "evening",
+          "night"
+        ]
+      },
       "subarea": "pratunam",
       "links": {},
       "photo": {
@@ -153,6 +160,12 @@
       "walk": {
         "station": "bts-silom-cen",
         "minutes": 2
+      },
+      "when": {
+        "times": [
+          "afternoon",
+          "evening"
+        ]
       },
       "subarea": "siam-square",
       "links": {},
@@ -181,6 +194,12 @@
         "station": "bts-silom-w1",
         "minutes": 2
       },
+      "when": {
+        "times": [
+          "afternoon",
+          "evening"
+        ]
+      },
       "subarea": "siam-square",
       "links": {},
       "photo": {
@@ -207,6 +226,12 @@
       "walk": {
         "station": "bts-sukhumvit-e1",
         "minutes": 3
+      },
+      "when": {
+        "times": [
+          "afternoon",
+          "evening"
+        ]
       },
       "subarea": "ratchaprasong",
       "links": {},
@@ -235,6 +260,13 @@
         "station": "bts-sukhumvit-e1",
         "minutes": 1
       },
+      "when": {
+        "times": [
+          "morning",
+          "afternoon",
+          "evening"
+        ]
+      },
       "subarea": "ratchaprasong",
       "links": {},
       "photo": {
@@ -262,6 +294,12 @@
         "station": "bts-silom-w1",
         "minutes": 5
       },
+      "when": {
+        "times": [
+          "morning",
+          "afternoon"
+        ]
+      },
       "subarea": "siam-square",
       "links": {},
       "photo": {
@@ -288,6 +326,13 @@
       "walk": {
         "station": "bts-silom-w1",
         "minutes": 1
+      },
+      "when": {
+        "times": [
+          "morning",
+          "afternoon",
+          "evening"
+        ]
       },
       "subarea": "siam-square",
       "links": {},

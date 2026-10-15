@@ -1,7 +1,9 @@
-import type { Area, CityBundle, Line, Pin, PinKind, Station } from '@/lib/content/types'
+import type { Area, CityBundle, DayKind, Line, Pin, PinKind, Station, TimeOfDay } from '@/lib/content/types'
 
 export const PIN_KINDS: PinKind[] = ['hotel', 'sight', 'food', 'market', 'nightlife', 'transport']
 export const TIERS = ['budget', 'mid', 'luxury'] as const
+export const TIMES: TimeOfDay[] = ['morning', 'afternoon', 'evening', 'night']
+export const DAYS: DayKind[] = ['weekday', 'weekend']
 export type Tier = (typeof TIERS)[number]
 
 /** Walking radius used for "near a station". 800 m is about 10 minutes. */
@@ -17,16 +19,19 @@ export interface FilterState {
   lines: string[]
   kinds: PinKind[]
   tiers: Tier[]
+  /** When: a place with no `when` passes; one with it must fit every picked time and day. */
+  times: TimeOfDay[]
+  days: DayKind[]
 }
 
-export const EMPTY_FILTERS: FilterState = { areas: [], subareas: [], stations: [], lines: [], kinds: [], tiers: [] }
+export const EMPTY_FILTERS: FilterState = { areas: [], subareas: [], stations: [], lines: [], kinds: [], tiers: [], times: [], days: [] }
 
 export function subareaKey(areaId: string, subId: string): string {
   return `${areaId}/${subId}`
 }
 
 export function activeFilterCount(f: FilterState): number {
-  return f.areas.length + f.subareas.length + f.stations.length + f.lines.length + f.kinds.length + f.tiers.length
+  return f.areas.length + f.subareas.length + f.stations.length + f.lines.length + f.kinds.length + f.tiers.length + f.times.length + f.days.length
 }
 
 export function lineKey(s: { system: string; line: string }): string {
@@ -101,6 +106,7 @@ export function visiblePins(bundle: CityBundle, f: FilterState): VisiblePin[] {
       }
       if (kinds.size > 0 && !kinds.has(pin.kind)) continue
       if (tiers.size > 0 && (!pin.tier || !tiers.has(pin.tier))) continue
+      if (!fitsWhen(pin, f)) continue
       if (stations.length > 0) {
         const near = stations.some((st) => distanceM(st.lon, st.lat, pin.location.lon, pin.location.lat) <= WALK_RADIUS_M)
         if (!near) continue
@@ -109,6 +115,15 @@ export function visiblePins(bundle: CityBundle, f: FilterState): VisiblePin[] {
     }
   }
   return out
+}
+
+/** Hotels and places with no `when` fit any time; a place with `when` must be good at one picked time and open on one picked day kind. */
+export function fitsWhen(pin: Pin, f: FilterState): boolean {
+  if (f.times.length === 0 && f.days.length === 0) return true
+  if (!pin.when) return true
+  if (f.times.length > 0 && !f.times.some((t) => pin.when!.times.includes(t))) return false
+  if (f.days.length > 0 && pin.when.days && !f.days.some((d) => pin.when!.days!.includes(d))) return false
+  return true
 }
 
 export interface LineGroup {
