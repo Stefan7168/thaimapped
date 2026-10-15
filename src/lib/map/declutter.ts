@@ -58,12 +58,39 @@ export function declutterLabels(markers: Marker[], container: HTMLElement | null
   })
 }
 
+type Projecting = { project: (lngLat: [number, number]) => { x: number; y: number } }
+
+/**
+ * Numbered pins (a hotel and a sight in one building) sat on top of each
+ * other. Each number keeps its spot unless it would cover an earlier one;
+ * then it slides to the first free spot around it (right, left, below,
+ * above, the diagonals), one pin's width away. Offsets reset every pass so a
+ * zoom-in puts the pins back on their true places.
+ */
+const STEP = 26
+const SLOTS: [number, number][] = [[0, 0], [STEP, 0], [-STEP, 0], [0, STEP], [0, -STEP], [STEP, STEP], [-STEP, STEP], [STEP, -STEP], [-STEP, -STEP], [STEP * 2, 0], [-STEP * 2, 0]]
+
+export function spreadNumbers(markers: Marker[], map: Projecting) {
+  const placed: { x: number; y: number }[] = []
+  for (const m of markers) {
+    if (!m.getElement().classList.contains('tm-pin--num')) continue
+    const ll = m.getLngLat()
+    const p = map.project([ll.lng, ll.lat])
+    const slot = SLOTS.find(([dx, dy]) => !placed.some((q) => Math.abs(q.x - (p.x + dx)) < STEP - 2 && Math.abs(q.y - (p.y + dy)) < STEP - 2)) ?? [0, 0]
+    m.setOffset(slot)
+    placed.push({ x: p.x + slot[0], y: p.y + slot[1] })
+  }
+}
+
 /** Re-runs the pass on every camera move, one frame at a time. Returns the detach function. */
-export function watchDeclutter(map: { on: (ev: string, fn: () => void) => void; off: (ev: string, fn: () => void) => void; getContainer: () => HTMLElement }, markers: () => Marker[]): () => void {
+export function watchDeclutter(map: { on: (ev: string, fn: () => void) => void; off: (ev: string, fn: () => void) => void; getContainer: () => HTMLElement } & Projecting, markers: () => Marker[]): () => void {
   let frame = 0
   const run = () => {
     cancelAnimationFrame(frame)
-    frame = requestAnimationFrame(() => declutterLabels(markers(), map.getContainer()))
+    frame = requestAnimationFrame(() => {
+      spreadNumbers(markers(), map)
+      declutterLabels(markers(), map.getContainer())
+    })
   }
   for (const ev of ['move', 'moveend', 'resize']) map.on(ev, run)
   return () => {

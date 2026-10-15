@@ -12,7 +12,7 @@ import { fitPopupSoon, overlayInsets } from '@/lib/map/fit-popup'
 import { t } from '@/lib/i18n/locales'
 import { PAPER_STYLE_URL } from './explorer-map'
 import { STOP_COLORS } from './trip-map'
-import { declutterLabels, watchDeclutter } from '@/lib/map/declutter'
+import { declutterLabels, spreadNumbers, watchDeclutter } from '@/lib/map/declutter'
 
 const ROUTE_SOURCE = 'tm-stage-route'
 
@@ -207,6 +207,7 @@ export function StageMap({ locale, camera, threeD, areas, route, routes = [], fo
         el.classList.add('tm-pin--station')
         markersRef.current.push(new maplibregl.Marker({ element: el, anchor: 'left' }).setLngLat([marker.lon, marker.lat]).addTo(map))
       }
+      spreadNumbers(markersRef.current, map)
       declutterLabels(markersRef.current, map.getContainer())
     })()
     return () => {
