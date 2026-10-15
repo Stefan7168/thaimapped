@@ -564,3 +564,4 @@ a.tm-wk__stop { text-decoration: none; }
 
 .tm-list__head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
 .tm-list__share { font: inherit; text-transform: none; letter-spacing: 0; font-weight: 600; color: var(--accent-text); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+@media (max-width: 480px) { .tm-wk__links { margin-left: 0; } }
