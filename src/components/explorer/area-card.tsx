@@ -38,7 +38,7 @@ export function AreaCard({ locale, area, stations, onPick, onPickSubarea, onPick
               <button type="button" aria-label={s.guide.nextPhoto} onClick={() => step(1)} className="tm-acard__arrow tm-acard__arrow--right">
                 <ChevronRight aria-hidden="true" className="size-4" />
               </button>
-              <span className="tm-acard__dots" aria-label={s.guide.photoOf(name, photo + 1, n)}>
+              <span className="tm-acard__dots" role="img" aria-label={s.guide.photoOf(name, photo + 1, n)}>
                 {photos.map((_, i) => (
                   <span key={i} className={`tm-acard__dot${i === photo ? ' tm-acard__dot--on' : ''}`} />
                 ))}

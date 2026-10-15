@@ -290,9 +290,10 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
       <KindBar locale={locale} bundle={bundle} filters={filters} onChange={update} onNear={locate} locating={locating} />
       {nearNote && <p role="status" className="tm-near__note">{nearNote}</p>}
 
-      <div className="relative flex min-h-0 flex-1">
+      <main className="relative flex min-h-0 flex-1">
+        <h1 className="sr-only md:hidden">{s.guide.heading(t(city.name, locale))}</h1>
         {/* Wide screens: the guide, or the places found, at the left. */}
-        <aside className="hidden w-[22rem] shrink-0 flex-col overflow-y-auto border-r border-line bg-paper md:flex">
+        <aside aria-label={s.a11y.places} className="hidden w-[22rem] shrink-0 flex-col overflow-y-auto border-r border-line bg-paper md:flex">
           {count === 0 ? (
             <AreaGuide locale={locale} bundle={bundle} routes={routes} onPickArea={(id) => update({ ...filters, areas: [id] })} onPickSubarea={(areaId, subId) => onPick({ kind: 'subarea', id: subareaKey(areaId, subId) } as SearchHit)} onPickStation={(id) => onPick({ kind: 'station', id } as SearchHit)} />
           ) : (
@@ -369,7 +370,7 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
         </div>
 
         {/* Wide screens: the panel sits on the right. */}
-        <aside className="hidden w-[22rem] shrink-0 overflow-y-auto border-l border-line bg-paper lg:block">
+        <aside aria-label={s.a11y.filters} className="hidden w-[22rem] shrink-0 overflow-y-auto border-l border-line bg-paper lg:block">
           {panel}
           <SiteFooter locale={locale} cityId={city.id} compact />
         </aside>
@@ -394,7 +395,7 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
             </div>
           </div>
         )}
-      </div>
+      </main>
     </div>
   )
 }

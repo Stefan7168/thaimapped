@@ -150,5 +150,5 @@ export function TripMap({ locale, route, day, activeStopId, onSelectStop }: Trip
     map.fitBounds(bounds(pts), { padding: 70, duration: 1200, essential: true })
   }, [route, day, activeStopId, mapReady])
 
-  return <div ref={containerRef} className="h-full w-full bg-paper" aria-label="Map" role="region" />
+  return <div ref={containerRef} className="h-full w-full bg-paper" />
 }

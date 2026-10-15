@@ -48,7 +48,7 @@ export default async function StationIndex(props: PageProps<'/[locale]/[city]/st
                 return (
                   <li key={p.slug}>
                     <Link href={`/${locale}/${city}/station/${p.slug}`} className="tm-st__index-row">
-                      <span className="tm-ui__code tm-st__code" style={{ background: line.color }}>{st.code}</span>
+                      <span className="tm-ui__code tm-st__code" style={{ ['--lc' as string]: line.color }}>{st.code}</span>
                       <span className="tm-st__index-name">{t(st.name, locale)}</span>
                       <span className="tm-st__index-meta">{s.stationPage.counts(p.hotels.length, p.places.length)}</span>
                     </Link>

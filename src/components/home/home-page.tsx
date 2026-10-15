@@ -128,10 +128,11 @@ export function HomePage({ locale, bundle, routes }: { locale: Locale; bundle: C
   return (
     <div className="tm-home">
       <RevealObserver />
+      <main>
       <div className="tm-stage">
         <div className="tm-sheet">
           <section className="tm-hero">
-            <nav className="tm-hero__nav" data-rise style={{ ['--i' as string]: 0 }}>
+            <nav className="tm-hero__nav" aria-label={s.a11y.siteNav} data-rise style={{ ['--i' as string]: 0 }}>
               <Link href={mapHref} className="tm-link">{s.nav.map}</Link>
               <span className="tm-wordmark">{s.brand}</span>
               <Link href={tripsHref} className="tm-link">{s.nav.trips}</Link>
@@ -342,6 +343,7 @@ export function HomePage({ locale, bundle, routes }: { locale: Locale; bundle: C
           <Link href={tripsHref} className="tm-link tm-link--under">{s.home.ctaLink}</Link>
         </div>
       </section>
+      </main>
 
       <SiteFooter locale={locale} cityId={city.id} />
     </div>

@@ -9,7 +9,7 @@ export function SiteHeader({ locale, cityId }: { locale: Locale; cityId: string 
   return (
     <header className="tm-bar">
       <Link href={`/${locale}`} className="tm-wordmark">{s.brand}</Link>
-      <nav className="tm-bar__links">
+      <nav className="tm-bar__links" aria-label={s.a11y.siteNav}>
         <Link href={`/${locale}/${cityId}`} className="tm-link">{s.nav.map}</Link>
         <Link href={`/${locale}/${cityId}/trip`} className="tm-link">{s.nav.trips}</Link>
         <Link href={`/${locale}/${cityId}/station`} className="tm-link">{s.nav.stations}</Link>

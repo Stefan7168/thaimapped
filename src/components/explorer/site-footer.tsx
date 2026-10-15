@@ -13,7 +13,7 @@ export function SiteFooter({ locale, cityId, compact = false }: { locale: Locale
     <footer className={`tm-footer${compact ? ' tm-footer--compact' : ''}`}>
       <p>{s.footer.data}</p>
       {cityId && (
-        <nav className="tm-footer__links">
+        <nav className="tm-footer__links" aria-label={s.a11y.footerNav}>
           <Link href={`/${locale}/${cityId}`} className="tm-link">{s.nav.map}</Link>
           <Link href={`/${locale}/${cityId}/trip`} className="tm-link">{s.nav.trips}</Link>
           <Link href={`/${locale}/${cityId}/station`} className="tm-link">{s.nav.stations}</Link>

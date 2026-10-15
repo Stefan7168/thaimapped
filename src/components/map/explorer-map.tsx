@@ -360,5 +360,5 @@ export function ExplorerMap(props: ExplorerMapProps) {
     if (map.getLayer(BUILDING_TINT_LAYER)) map.setFilter(BUILDING_TINT_LAYER, zones.length ? ['within', { type: 'MultiPolygon', coordinates: zones }] : ['boolean', false])
   }, [pins, activePinId, mapReady])
 
-  return <div ref={containerRef} className="h-full w-full bg-paper" aria-label="Map" role="region" />
+  return <div ref={containerRef} className="h-full w-full bg-paper" />
 }

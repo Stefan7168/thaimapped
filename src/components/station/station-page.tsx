@@ -98,9 +98,9 @@ export function StationPage({ locale, cityId, page, areas, stations, others }: {
       <SiteHeader locale={locale} cityId={cityId} />
       <main className="tm-stage tm-wk" style={{ ['--pin' as string]: page.lines[0]?.color ?? 'var(--accent)' }}>
         <div className="tm-sheet tm-wk__sheet">
-          <p className="tm-wk__eyebrow">
+          <p className="tm-wk__eyebrow tm-wk__eyebrow--lines">
             {page.lines.map((l) => (
-              <span key={l.id} className="tm-st__badge" style={{ background: l.color }}>{l.system} {l.line}</span>
+              <span key={l.id} className="tm-st__badge" style={{ ['--lc' as string]: l.color }}>{l.system} {l.line}</span>
             ))}
           </p>
           <h1 className="tm-h2">{s.stationPage.title(label)}</h1>
@@ -121,7 +121,7 @@ export function StationPage({ locale, cityId, page, areas, stations, others }: {
               {others.map((p) => (
                 <li key={p.slug}>
                   <Link href={`/${locale}/${cityId}/station/${p.slug}`} className="tm-weekend__stop">
-                    <span className="tm-ui__code tm-st__code" style={{ background: p.lines[0]?.color }}>{p.stations[0].code}</span>
+                    <span className="tm-ui__code tm-st__code" style={{ ['--lc' as string]: p.lines[0]?.color }}>{p.stations[0].code}</span>
                     {t(p.stations[0].name, locale)}
                   </Link>
                 </li>

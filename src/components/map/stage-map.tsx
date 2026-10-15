@@ -272,5 +272,5 @@ export function StageMap({ locale, camera, threeD, areas, route, routes = [], fo
     map.flyTo({ center: camera.center, zoom: camera.zoom, pitch: threeD ? camera.pitch : 0, bearing: threeD ? camera.bearing : 0, duration: 1600, essential: true })
   }, [camera, route, routes, threeD, focus, marker, mapReady])
 
-  return <div ref={containerRef} className="h-full w-full bg-paper" aria-label="Map" role="region" />
+  return <div ref={containerRef} className="h-full w-full bg-paper" />
 }

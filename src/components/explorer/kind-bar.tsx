@@ -21,7 +21,7 @@ export const KIND_ICONS = { hotel: BedDouble, sight: Landmark, food: Utensils, m
 export function KindBar({ locale, bundle, filters, onChange, onNear, locating = false }: { locale: Locale; bundle: CityBundle; filters: FilterState; onChange: (next: FilterState) => void; onNear?: () => void; locating?: boolean }) {
   const s = strings(locale)
   return (
-    <div className="flex items-center gap-2 overflow-x-auto border-b border-line bg-paper px-3 py-2 md:px-4">
+    <section aria-label={s.filters.kinds} className="flex items-center gap-2 overflow-x-auto border-b border-line bg-paper px-3 py-2 md:px-4">
       <span className="shrink-0 text-xs font-semibold uppercase tracking-wider text-ink-2">{s.filters.kinds}</span>
       {KIND_CHIPS.map((k) => {
         const on = filters.kinds.includes(k)
@@ -43,6 +43,6 @@ export function KindBar({ locale, bundle, filters, onChange, onNear, locating = 
           {filters.near && <X aria-hidden="true" className="tm-kind__x size-4" />}
         </button>
       )}
-    </div>
+    </section>
   )
 }

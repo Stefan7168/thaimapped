@@ -22,7 +22,7 @@ export function StationFragment({ locale, stations, lines, active }: { locale: L
         {stations.map((st) => (
           <li key={st.id} className={`tm-ui__row${st.id === active.id ? ' tm-ui__row--on' : ''}`}>
             <span className="tm-ui__check" aria-hidden="true" />
-            <span className="tm-ui__code" style={{ background: colour(st) }}>{st.code}</span>
+            <span className="tm-ui__code" style={{ ['--lc' as string]: colour(st) }}>{st.code}</span>
             <span className="tm-ui__name">{t(st.name, locale)}</span>
             <span className="tm-ui__sub">{st.system} {st.line}</span>
           </li>

@@ -7,6 +7,7 @@ import type { Locale } from '@/lib/content/types'
 const en = {
   brand: 'ThaiMapped',
   nav: { cities: 'Cities', map: 'Map', trips: 'Trips', stations: 'Stations', credits: 'Photo credits' },
+  a11y: { siteNav: 'Site', footerNav: 'Footer', places: 'Places on the map', filters: 'Filters' },
   stationPage: {
     indexTitle: 'Hotels near a station',
     indexLead: (n: number) => `${n} stations with hotels or places inside a ten-minute walk. Each page lists them nearest first, with the walk in minutes.`,
