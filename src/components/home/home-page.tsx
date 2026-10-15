@@ -266,7 +266,7 @@ export function HomePage({ locale, bundle, routes }: { locale: Locale; bundle: C
         </div>
 
         <div className="tm-stage__map" data-ui>
-          <StageMap locale={locale} camera={camera} threeD={threeD} areas={areas} route={null} focus={focusArea} card={cardPin} onCloseCard={() => setCardPin(null)} cityId={city.id} stations={stations} />
+          <StageMap locale={locale} camera={camera} threeD={threeD} areas={areas} route={null} focus={focusArea} card={cardPin} onCloseCard={() => setCardPin(null)} cityId={city.id} stations={stations} onSelectArea={(id) => { setActiveArea(id); document.querySelector(`[data-area="${id}"]`)?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }} />
           <div className="tm-stage__bar">
             <span>{s.home.facts(areas.length, stations.length, routes.length)}</span>
             <span className="tm-stage__showing">{s.home.showing(active ? t(active.name, locale) : cityName)}</span>

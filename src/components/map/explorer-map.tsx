@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import type { ExpressionSpecification, LngLatBoundsLike, Map as MaplibreMap, Marker, Popup } from 'maplibre-gl'
 import type { Area, Camera, Locale, Pin, Station } from '@/lib/content/types'
 import { loadMaplibreGl } from '@/lib/map/load-maplibre'
+import { addAreaHover } from '@/lib/map/area-hover'
 import { addBuilding3DLayer, BUILDING_3D_LAYER_ID } from '@/lib/map/buildings'
 import { isGestureActive } from '@/lib/map/gesture'
 import { t } from '@/lib/i18n/locales'
@@ -114,6 +115,7 @@ export function ExplorerMap(props: ExplorerMapProps) {
   useEffect(() => {
     let cancelled = false
     let map: MaplibreMap | null = null
+    let removeHover: (() => void) | null = null
     ;(async () => {
       const maplibregl = await loadMaplibreGl()
       if (cancelled || !containerRef.current) return
@@ -154,6 +156,7 @@ export function ExplorerMap(props: ExplorerMapProps) {
         map.addSource(NEARBY_SOURCE, { type: 'geojson', data: { type: 'FeatureCollection', features: [] } })
         map.addLayer({ id: `${NEARBY_SOURCE}-line`, type: 'line', source: NEARBY_SOURCE, paint: { 'line-color': '#2b2a26', 'line-width': 1.5, 'line-opacity': 0.5, 'line-dasharray': [1.5, 2] } })
         map.addLayer({ id: `${OUTLINE_SOURCE}-line`, type: 'line', source: OUTLINE_SOURCE, layout: { 'line-join': 'round' }, paint: { 'line-color': ['get', 'color'], 'line-width': 2.5, 'line-opacity': 0.9 } })
+        removeHover = addAreaHover(map, areas, locale, (id) => callbacks.current.onSelectArea(id), `${WALK_CIRCLE_SOURCE}-fill`)
         mapRef.current = map
         // Narrow screens at city zoom: dots only, the label comes on tap. Sixteen labels in a 100 px band read as broken.
         const dotsOnly = () => map!.getContainer().classList.toggle('tm-map--dots', window.innerWidth < 768 && map!.getZoom() < 13)
@@ -169,6 +172,7 @@ export function ExplorerMap(props: ExplorerMapProps) {
       markersRef.current = []
       popupRef.current?.remove()
       popupRef.current = null
+      removeHover?.()
       mapRef.current = null
       map?.remove()
     }

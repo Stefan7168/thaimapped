@@ -5,6 +5,7 @@ import type { Map as MaplibreMap, Marker, Popup } from 'maplibre-gl'
 import type { Area, Camera, Locale, Pin, Station, TripRoute } from '@/lib/content/types'
 import { cardElement } from './pin-card'
 import { loadMaplibreGl } from '@/lib/map/load-maplibre'
+import { addAreaHover } from '@/lib/map/area-hover'
 import { addBuilding3DLayer } from '@/lib/map/buildings'
 import { isGestureActive } from '@/lib/map/gesture'
 import { t } from '@/lib/i18n/locales'
@@ -32,6 +33,8 @@ export interface StageMapProps {
   /** For the card's walk line and outbound links. */
   cityId?: string
   stations?: Station[]
+  /** An area clicked (or tapped) on the map. */
+  onSelectArea?: (areaId: string) => void
 }
 
 function labelElement(text: string, color: string, minor: boolean): HTMLElement {
@@ -76,8 +79,12 @@ function routesBounds(routes: TripRoute[]): [[number, number], [number, number]]
  * It only follows the page: the camera prop moves it, a route prop draws a
  * trip on it. Wheel zoom is off so the page keeps scrolling over it.
  */
-export function StageMap({ locale, camera, threeD, areas, route, routes = [], focus = null, card = null, onCloseCard, cityId = '', stations = [] }: StageMapProps) {
+export function StageMap({ locale, camera, threeD, areas, route, routes = [], focus = null, card = null, onCloseCard, cityId = '', stations = [], onSelectArea }: StageMapProps) {
   const containerRef = useRef<HTMLDivElement>(null)
+  const onSelectAreaRef = useRef(onSelectArea)
+  useEffect(() => {
+    onSelectAreaRef.current = onSelectArea
+  }, [onSelectArea])
   const mapRef = useRef<MaplibreMap | null>(null)
   const markersRef = useRef<Marker[]>([])
   const popupRef = useRef<Popup | null>(null)
@@ -92,6 +99,7 @@ export function StageMap({ locale, camera, threeD, areas, route, routes = [], fo
     let cancelled = false
     let map: MaplibreMap | null = null
     let ro: ResizeObserver | null = null
+    let removeHover: (() => void) | null = null
     ;(async () => {
       const maplibregl = await loadMaplibreGl()
       if (cancelled || !containerRef.current) return
@@ -114,6 +122,7 @@ export function StageMap({ locale, camera, threeD, areas, route, routes = [], fo
         map.addSource(ROUTE_SOURCE, { type: 'geojson', data: { type: 'FeatureCollection', features: [] } })
         map.addLayer({ id: `${ROUTE_SOURCE}-casing`, type: 'line', source: ROUTE_SOURCE, layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#ffffff', 'line-width': 7, 'line-opacity': 0.9 } })
         map.addLayer({ id: `${ROUTE_SOURCE}-line`, type: 'line', source: ROUTE_SOURCE, layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#c8553d', 'line-width': 4, 'line-dasharray': ['case', ['get', 'dashed'], ['literal', [2, 1.5]], ['literal', [1, 0]]] } })
+        removeHover = addAreaHover(map, areas, locale, (id) => onSelectAreaRef.current?.(id), `${ROUTE_SOURCE}-casing`)
         mapRef.current = map
         setMapReady((n) => n + 1)
       })
@@ -129,6 +138,7 @@ export function StageMap({ locale, camera, threeD, areas, route, routes = [], fo
       ro?.disconnect()
       markersRef.current.forEach((m) => m.remove())
       markersRef.current = []
+      removeHover?.()
       popupRef.current?.remove()
       popupRef.current = null
       mapRef.current = null
