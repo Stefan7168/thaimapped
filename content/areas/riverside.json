@@ -62,6 +62,29 @@
     }
   ],
   "video": null,
+  "photos": [
+    {
+      "src": "/photos/areas/riverside/chao-phraya.jpg",
+      "alt": "The Chao Phraya at Bang Rak, with State Tower on the bank",
+      "credit": "\"Chao Praya River - Bangrak\" by Supanut Arunoprayote",
+      "licence": "CC BY-SA 4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Chao_Praya_River_-_Bangrak.jpg"
+    },
+    {
+      "src": "/photos/areas/riverside/iconsiam.jpg",
+      "alt": "ICONSIAM and its two towers seen from the Chao Phraya",
+      "credit": "\"Approaching Iconsiam from Chao Phraya River, Bangkok\" by Slyronit",
+      "licence": "CC BY-SA 4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Approaching_Iconsiam_from_Chao_Phraya_River,_Bangkok.jpg"
+    },
+    {
+      "src": "/photos/areas/riverside/asiatique.jpg",
+      "alt": "Asiatique's Ferris wheel and riverfront lit up at night",
+      "credit": "\"Asiatique, Bangkok from Chao Phraya River 2\" by Slyronit",
+      "licence": "CC BY-SA 4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Asiatique,_Bangkok_from_Chao_Phraya_River_2.jpg"
+    }
+  ],
   "pins": [
     {
       "id": "riverside-hotel-1",
@@ -102,7 +125,14 @@
         "minutes": 10
       },
       "subarea": "khlong-san",
-      "links": {}
+      "links": {},
+      "photo": {
+        "src": "/photos/pins/riverside/iconsiam.jpg",
+        "alt": "ICONSIAM and its two towers seen from the Chao Phraya",
+        "credit": "\"Approaching Iconsiam from Chao Phraya River, Bangkok\" by Slyronit",
+        "licence": "CC BY-SA 4.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Approaching_Iconsiam_from_Chao_Phraya_River,_Bangkok.jpg"
+      }
     },
     {
       "id": "asiatique",
@@ -122,7 +152,14 @@
         "minutes": 25
       },
       "subarea": "charoen-krung",
-      "links": {}
+      "links": {},
+      "photo": {
+        "src": "/photos/pins/riverside/asiatique.jpg",
+        "alt": "Asiatique's Ferris wheel and riverfront lit up at night",
+        "credit": "\"Asiatique, Bangkok from Chao Phraya River 2\" by Slyronit",
+        "licence": "CC BY-SA 4.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Asiatique,_Bangkok_from_Chao_Phraya_River_2.jpg"
+      }
     }
   ]
 }

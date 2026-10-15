@@ -63,6 +63,29 @@
     }
   ],
   "video": null,
+  "photos": [
+    {
+      "src": "/photos/areas/sukhumvit/sukhumvit-road.jpg",
+      "alt": "Sukhumvit Road at dusk under the BTS Skytrain at Asok",
+      "credit": "\"Sukhumwit Road with BTS Asok and Asok Montri Rd\" by Chainwit.",
+      "licence": "CC BY-SA 4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Sukhumwit_Road_with_BTS_Asok_and_Asok_Montri_Rd.jpg"
+    },
+    {
+      "src": "/photos/areas/sukhumvit/terminal-21.jpg",
+      "alt": "Terminal 21 mall and its tower at the Asok junction",
+      "credit": "\"Terminal 21 Asok Bangkok 20202021\" by Chainwit.",
+      "licence": "CC BY-SA 4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Terminal_21_Asok_Bangkok_20202021.jpg"
+    },
+    {
+      "src": "/photos/areas/sukhumvit/benjakitti-park.jpg",
+      "alt": "Benjakitti Forest Park's wetland boardwalks with the city skyline behind",
+      "credit": "\"Benjakitti Forest Park (I)\" by This Photo was taken by Supanut Arunoprayote . Feel free to…",
+      "licence": "CC BY 4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Benjakitti_Forest_Park_(I).jpg"
+    }
+  ],
   "pins": [
     {
       "id": "sukhumvit-hotel-1",
@@ -103,7 +126,14 @@
         "minutes": 1
       },
       "subarea": "asok",
-      "links": {}
+      "links": {},
+      "photo": {
+        "src": "/photos/pins/sukhumvit/terminal-21.jpg",
+        "alt": "Terminal 21 mall and its tower at the Asok junction",
+        "credit": "\"Terminal 21 Asok Bangkok 20202021\" by Chainwit.",
+        "licence": "CC BY-SA 4.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Terminal_21_Asok_Bangkok_20202021.jpg"
+      }
     },
     {
       "id": "emquartier",
@@ -123,7 +153,14 @@
         "minutes": 1
       },
       "subarea": "phrom-phong",
-      "links": {}
+      "links": {},
+      "photo": {
+        "src": "/photos/pins/sukhumvit/emquartier.jpg",
+        "alt": "The tree-lined outdoor walkway between the EmQuartier buildings",
+        "credit": "\"ศูนย์การค้าดิ เอ็มควอร์เทียร์ เขตวัฒนา กรุงเทพมหานคร The Emquartier,Vadhana,Bangkok (2)\" by กสิณธร ราชโอรส",
+        "licence": "CC BY-SA 4.0",
+        "source": "https://commons.wikimedia.org/wiki/File:%E0%B8%A8%E0%B8%B9%E0%B8%99%E0%B8%A2%E0%B9%8C%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%84%E0%B9%89%E0%B8%B2%E0%B8%94%E0%B8%B4_%E0%B9%80%E0%B8%AD%E0%B9%87%E0%B8%A1%E0%B8%84%E0%B8%A7%E0%B8%AD%E0%B8%A3%E0%B9%8C%E0%B9%80%E0%B8%97%E0%B8%B5%E0%B8%A2%E0%B8%A3%E0%B9%8C_%E0%B9%80%E0%B8%82%E0%B8%95%E0%B8%A7%E0%B8%B1%E0%B8%92%E0%B8%99%E0%B8%B2_%E0%B8%81%E0%B8%A3%E0%B8%B8%E0%B8%87%E0%B9%80%E0%B8%97%E0%B8%9E%E0%B8%A1%E0%B8%AB%E0%B8%B2%E0%B8%99%E0%B8%84%E0%B8%A3_The_Emquartier,Vadhana,Bangkok_(2).jpg"
+      }
     }
   ]
 }

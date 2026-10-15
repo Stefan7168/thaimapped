@@ -1,0 +1,72 @@
+[
+ {
+  "file": "public/photos/areas/ari/ari-soi.jpg",
+  "media": "image",
+  "ref": "commons:190416548",
+  "title": "Ari Samphan Noodles Stall",
+  "creator": "Phoebus 28",
+  "creatorUrl": null,
+  "date": "2026-04-26",
+  "license": "CC0",
+  "licenseCode": "cc0",
+  "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/deed.en",
+  "creditRequired": false,
+  "page": "https://commons.wikimedia.org/wiki/File:Ari_Samphan_Noodles_Stall.jpg",
+  "via": "Wikimedia Commons",
+  "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4f/Ari_Samphan_Noodles_Stall.jpg/1920px-Ari_Samphan_Noodles_Stall.jpg",
+  "width": 1600,
+  "height": 1200,
+  "bytes": 354435,
+  "credit": "\"Ari Samphan Noodles Stall\" by Phoebus 28, CC0, via Wikimedia Commons",
+  "notes": [],
+  "saved": "2026-10-15T13:10:42.612Z"
+ },
+ {
+  "file": "public/photos/areas/ari/saphan-khwai.jpg",
+  "media": "image",
+  "ref": "commons:91293954",
+  "title": "สะพานควาย2",
+  "creator": "Phoebus 28",
+  "creatorUrl": null,
+  "date": "2020-06-18",
+  "license": "CC BY-SA 4.0",
+  "licenseCode": "by-sa",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+  "creditRequired": true,
+  "page": "https://commons.wikimedia.org/wiki/File:%E0%B8%AA%E0%B8%B0%E0%B8%9E%E0%B8%B2%E0%B8%99%E0%B8%84%E0%B8%A7%E0%B8%B2%E0%B8%A22.jpg",
+  "via": "Wikimedia Commons",
+  "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/87/%E0%B8%AA%E0%B8%B0%E0%B8%9E%E0%B8%B2%E0%B8%99%E0%B8%84%E0%B8%A7%E0%B8%B2%E0%B8%A22.jpg/1920px-%E0%B8%AA%E0%B8%B0%E0%B8%9E%E0%B8%B2%E0%B8%99%E0%B8%84%E0%B8%A7%E0%B8%B2%E0%B8%A22.jpg",
+  "width": 1600,
+  "height": 1200,
+  "bytes": 388374,
+  "credit": "\"สะพานควาย2\" by Phoebus 28, CC BY-SA 4.0, via Wikimedia Commons",
+  "notes": [
+   "Share-alike: an altered version (recoloured, combined with other pictures) must be shared under the same licence."
+  ],
+  "saved": "2026-10-15T13:10:46.898Z"
+ },
+ {
+  "file": "public/photos/areas/ari/chatuchak-market.jpg",
+  "media": "image",
+  "ref": "commons:91112222",
+  "title": "Chatuchak Weekend Market 1",
+  "creator": "Christophe95",
+  "creatorUrl": null,
+  "date": "2018-05-12",
+  "license": "CC BY-SA 4.0",
+  "licenseCode": "by-sa",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+  "creditRequired": true,
+  "page": "https://commons.wikimedia.org/wiki/File:Chatuchak_Weekend_Market_1.jpg",
+  "via": "Wikimedia Commons",
+  "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8d/Chatuchak_Weekend_Market_1.jpg/1920px-Chatuchak_Weekend_Market_1.jpg",
+  "width": 1600,
+  "height": 1038,
+  "bytes": 266094,
+  "credit": "\"Chatuchak Weekend Market 1\" by Christophe95, CC BY-SA 4.0, via Wikimedia Commons",
+  "notes": [
+   "Share-alike: an altered version (recoloured, combined with other pictures) must be shared under the same licence."
+  ],
+  "saved": "2026-10-15T13:10:51.182Z"
+ }
+]

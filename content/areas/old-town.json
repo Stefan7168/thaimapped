@@ -62,6 +62,29 @@
     }
   ],
   "video": null,
+  "photos": [
+    {
+      "src": "/photos/areas/old-town/grand-palace.jpg",
+      "alt": "Wat Phra Kaew inside the Grand Palace grounds, with the two golden chedis",
+      "credit": "\"วัดพระศรีรัตนศาสดาราม วัดพระแก้ว กรุงเทพมหานคร - Wat Phra Kaew, Temple of Emerald Buddha…\" by Basile Morin",
+      "licence": "CC BY-SA 4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:%E0%B8%A7%E0%B8%B1%E0%B8%94%E0%B8%9E%E0%B8%A3%E0%B8%B0%E0%B8%A8%E0%B8%A3%E0%B8%B5%E0%B8%A3%E0%B8%B1%E0%B8%95%E0%B8%99%E0%B8%A8%E0%B8%B2%E0%B8%AA%E0%B8%94%E0%B8%B2%E0%B8%A3%E0%B8%B2%E0%B8%A1_%E0%B8%A7%E0%B8%B1%E0%B8%94%E0%B8%9E%E0%B8%A3%E0%B8%B0%E0%B9%81%E0%B8%81%E0%B9%89%E0%B8%A7_%E0%B8%81%E0%B8%A3%E0%B8%B8%E0%B8%87%E0%B9%80%E0%B8%97%E0%B8%9E%E0%B8%A1%E0%B8%AB%E0%B8%B2%E0%B8%99%E0%B8%84%E0%B8%A3_-_Wat_Phra_Kaew,_Temple_of_Emerald_Buddha,_Bangkok,_Thailand.jpg"
+    },
+    {
+      "src": "/photos/areas/old-town/wat-pho.jpg",
+      "alt": "The gold Reclining Buddha inside Wat Pho",
+      "credit": "\"Reclining Buddha Statue, Wat Pho, Bangkok a064\" by Michael Gunther",
+      "licence": "CC BY-SA 4.0",
+      "source": "https://commons.wikimedia.org/w/index.php?curid=35496260"
+    },
+    {
+      "src": "/photos/areas/old-town/khao-san-road.jpg",
+      "alt": "Khao San Road with tuk-tuks, shop signs and guesthouses",
+      "credit": "\"Khao San Road (3646762370)\" by nakhon100",
+      "licence": "CC BY 2.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Khao_San_Road_(3646762370).jpg"
+    }
+  ],
   "pins": [
     {
       "id": "old-town-hotel-1",
@@ -102,7 +125,14 @@
         "minutes": 8
       },
       "subarea": "grand-palace",
-      "links": {}
+      "links": {},
+      "photo": {
+        "src": "/photos/pins/old-town/grand-palace.jpg",
+        "alt": "Wat Phra Kaew inside the Grand Palace grounds, with the two golden chedis",
+        "credit": "\"วัดพระศรีรัตนศาสดาราม วัดพระแก้ว กรุงเทพมหานคร - Wat Phra Kaew, Temple of Emerald Buddha…\" by Basile Morin",
+        "licence": "CC BY-SA 4.0",
+        "source": "https://commons.wikimedia.org/wiki/File:%E0%B8%A7%E0%B8%B1%E0%B8%94%E0%B8%9E%E0%B8%A3%E0%B8%B0%E0%B8%A8%E0%B8%A3%E0%B8%B5%E0%B8%A3%E0%B8%B1%E0%B8%95%E0%B8%99%E0%B8%A8%E0%B8%B2%E0%B8%AA%E0%B8%94%E0%B8%B2%E0%B8%A3%E0%B8%B2%E0%B8%A1_%E0%B8%A7%E0%B8%B1%E0%B8%94%E0%B8%9E%E0%B8%A3%E0%B8%B0%E0%B9%81%E0%B8%81%E0%B9%89%E0%B8%A7_%E0%B8%81%E0%B8%A3%E0%B8%B8%E0%B8%87%E0%B9%80%E0%B8%97%E0%B8%9E%E0%B8%A1%E0%B8%AB%E0%B8%B2%E0%B8%99%E0%B8%84%E0%B8%A3_-_Wat_Phra_Kaew,_Temple_of_Emerald_Buddha,_Bangkok,_Thailand.jpg"
+      }
     },
     {
       "id": "wat-pho",
@@ -122,7 +152,14 @@
         "minutes": 5
       },
       "subarea": "grand-palace",
-      "links": {}
+      "links": {},
+      "photo": {
+        "src": "/photos/pins/old-town/wat-pho.jpg",
+        "alt": "The gold Reclining Buddha inside Wat Pho",
+        "credit": "\"Reclining Buddha Statue, Wat Pho, Bangkok a064\" by Michael Gunther",
+        "licence": "CC BY-SA 4.0",
+        "source": "https://commons.wikimedia.org/w/index.php?curid=35496260"
+      }
     },
     {
       "id": "wat-arun",
@@ -142,7 +179,14 @@
         "minutes": 12
       },
       "subarea": "grand-palace",
-      "links": {}
+      "links": {},
+      "photo": {
+        "src": "/photos/pins/old-town/wat-arun.jpg",
+        "alt": "Wat Arun lit up at dusk, seen across the Chao Phraya",
+        "credit": "\"Wat Arun Ratchawararam Ratchawaramahawihan\" by KOSIN SUKHUM",
+        "licence": "CC BY-SA 4.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Wat_Arun_Ratchawararam_Ratchawaramahawihan.jpg"
+      }
     },
     {
       "id": "khao-san-road",
@@ -162,7 +206,14 @@
         "minutes": 20
       },
       "subarea": "khao-san",
-      "links": {}
+      "links": {},
+      "photo": {
+        "src": "/photos/pins/old-town/khao-san-road.jpg",
+        "alt": "Khao San Road with tuk-tuks, shop signs and guesthouses",
+        "credit": "\"Khao San Road (3646762370)\" by nakhon100",
+        "licence": "CC BY 2.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Khao_San_Road_(3646762370).jpg"
+      }
     }
   ]
 }

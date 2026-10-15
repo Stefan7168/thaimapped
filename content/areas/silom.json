@@ -63,6 +63,29 @@
     }
   ],
   "video": null,
+  "photos": [
+    {
+      "src": "/photos/areas/silom/silom-skyline.jpg",
+      "alt": "Silom office towers at sunset",
+      "credit": "\"Silom Sunset by Don Ramey Logan (cropped)\" by Don Ramey Logan",
+      "licence": "CC BY 4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Silom_Sunset_by_Don_Ramey_Logan_(cropped).jpg"
+    },
+    {
+      "src": "/photos/areas/silom/king-power-mahanakhon.jpg",
+      "alt": "King Power MahaNakhon tower seen from below at dusk",
+      "credit": "\"King Power Maha Nakhon 2\" by Welcome to Thailand",
+      "licence": "CC0",
+      "source": "https://commons.wikimedia.org/w/index.php?curid=158386175"
+    },
+    {
+      "src": "/photos/areas/silom/lumphini-park.jpg",
+      "alt": "Lumphini Park lake with the Silom skyline behind it",
+      "credit": "\"Lumphini Park (I)\" by This Photo was taken by Supanut Arunoprayote . Feel free to…",
+      "licence": "CC BY 4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Lumphini_Park_(I).jpg"
+    }
+  ],
   "pins": [
     {
       "id": "silom-hotel-1",
@@ -103,7 +126,14 @@
         "minutes": 1
       },
       "subarea": "sathorn",
-      "links": {}
+      "links": {},
+      "photo": {
+        "src": "/photos/pins/silom/king-power-mahanakhon.jpg",
+        "alt": "King Power MahaNakhon tower seen from below at dusk",
+        "credit": "\"King Power Maha Nakhon 2\" by Welcome to Thailand",
+        "licence": "CC0",
+        "source": "https://commons.wikimedia.org/w/index.php?curid=158386175"
+      }
     },
     {
       "id": "lumphini-park",
@@ -123,7 +153,14 @@
         "minutes": 2
       },
       "subarea": "silom-road",
-      "links": {}
+      "links": {},
+      "photo": {
+        "src": "/photos/pins/silom/lumphini-park.jpg",
+        "alt": "Lumphini Park lake with the Silom skyline behind it",
+        "credit": "\"Lumphini Park (I)\" by This Photo was taken by Supanut Arunoprayote . Feel free to…",
+        "licence": "CC BY 4.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Lumphini_Park_(I).jpg"
+      }
     },
     {
       "id": "patpong-night-market",
@@ -143,7 +180,14 @@
         "minutes": 3
       },
       "subarea": "silom-road",
-      "links": {}
+      "links": {},
+      "photo": {
+        "src": "/photos/pins/silom/patpong-night-market.jpg",
+        "alt": "Patpong in the evening, with its bar signs and stalls",
+        "credit": "\"Patpong\"",
+        "licence": "Public domain",
+        "source": "https://commons.wikimedia.org/wiki/File:Patpong.JPG"
+      }
     }
   ]
 }

@@ -62,6 +62,29 @@
     }
   ],
   "video": null,
+  "photos": [
+    {
+      "src": "/photos/areas/siam/siam-paragon.jpg",
+      "alt": "The glass entrance of Siam Paragon with its fountains",
+      "credit": "\"Siam Paragon 06.23\" by This Photo was taken by Supanut Arunoprayote . Feel free to…",
+      "licence": "CC BY 4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Siam_Paragon_06.23.jpg"
+    },
+    {
+      "src": "/photos/areas/siam/erawan-shrine.jpg",
+      "alt": "The Erawan Shrine at the Ratchaprasong junction, under the Skytrain",
+      "credit": "\"Erawan Shrine from pedestrian walkway\" by BrokenSphere",
+      "licence": "CC BY-SA 3.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Erawan_Shrine_from_pedestrian_walkway.JPG"
+    },
+    {
+      "src": "/photos/areas/siam/baiyoke-sky-tower.jpg",
+      "alt": "Baiyoke Tower II rising over Pratunam, seen from the street",
+      "credit": "\"Baiyoke Tower (20250319120011)\" by MikSed",
+      "licence": "CC BY-SA 4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Baiyoke_Tower_(20250319120011).jpg"
+    }
+  ],
   "pins": [
     {
       "id": "siam-hotel-1",
@@ -102,7 +125,14 @@
         "minutes": 12
       },
       "subarea": "pratunam",
-      "links": {}
+      "links": {},
+      "photo": {
+        "src": "/photos/pins/siam/baiyoke-sky-tower.jpg",
+        "alt": "Baiyoke Tower II rising over Pratunam, seen from the street",
+        "credit": "\"Baiyoke Tower (20250319120011)\" by MikSed",
+        "licence": "CC BY-SA 4.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Baiyoke_Tower_(20250319120011).jpg"
+      }
     },
     {
       "id": "siam-paragon",
@@ -122,7 +152,14 @@
         "minutes": 2
       },
       "subarea": "siam-square",
-      "links": {}
+      "links": {},
+      "photo": {
+        "src": "/photos/pins/siam/siam-paragon.jpg",
+        "alt": "The glass entrance of Siam Paragon with its fountains",
+        "credit": "\"Siam Paragon 06.23\" by This Photo was taken by Supanut Arunoprayote . Feel free to…",
+        "licence": "CC BY 4.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Siam_Paragon_06.23.jpg"
+      }
     },
     {
       "id": "mbk-center",
@@ -142,7 +179,14 @@
         "minutes": 2
       },
       "subarea": "siam-square",
-      "links": {}
+      "links": {},
+      "photo": {
+        "src": "/photos/pins/siam/mbk-center.jpg",
+        "alt": "MBK Center's new facade on Rama I Road, from the skywalk",
+        "credit": "\"MBK Center (New facade)\" by This Photo was taken by Supanut Arunoprayote . Feel free to…",
+        "licence": "CC BY 4.0",
+        "source": "https://commons.wikimedia.org/wiki/File:MBK_Center_(New_facade).jpg"
+      }
     },
     {
       "id": "central-world",
@@ -162,7 +206,14 @@
         "minutes": 3
       },
       "subarea": "ratchaprasong",
-      "links": {}
+      "links": {},
+      "photo": {
+        "src": "/photos/pins/siam/central-world.jpg",
+        "alt": "CentralWorld's long glass front on Ratchaprasong",
+        "credit": "\"Central World (I)\" by This Photo was taken by Supanut Arunoprayote . Feel free to…",
+        "licence": "CC BY 4.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Central_World_(I).jpg"
+      }
     },
     {
       "id": "erawan-shrine",
@@ -182,7 +233,14 @@
         "minutes": 1
       },
       "subarea": "ratchaprasong",
-      "links": {}
+      "links": {},
+      "photo": {
+        "src": "/photos/pins/siam/erawan-shrine.jpg",
+        "alt": "The Erawan Shrine at the Ratchaprasong junction, under the Skytrain",
+        "credit": "\"Erawan Shrine from pedestrian walkway\" by BrokenSphere",
+        "licence": "CC BY-SA 3.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Erawan_Shrine_from_pedestrian_walkway.JPG"
+      }
     },
     {
       "id": "jim-thompson-house",
@@ -202,7 +260,14 @@
         "minutes": 5
       },
       "subarea": "siam-square",
-      "links": {}
+      "links": {},
+      "photo": {
+        "src": "/photos/pins/siam/jim-thompson-house.jpg",
+        "alt": "The red teak main house of the Jim Thompson House in its garden",
+        "credit": "\"Main House of Jim Thompson photo Don Ramey Logan\" by Don Ramey Logan",
+        "licence": "CC BY-SA 3.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Main_House_of_Jim_Thompson_photo_Don_Ramey_Logan.jpg"
+      }
     },
     {
       "id": "bacc",
@@ -222,7 +287,14 @@
         "minutes": 1
       },
       "subarea": "siam-square",
-      "links": {}
+      "links": {},
+      "photo": {
+        "src": "/photos/pins/siam/bacc.jpg",
+        "alt": "The round white Bangkok Art and Culture Centre at Pathum Wan junction",
+        "credit": "\"BKK Art and Culture Centre\" by This Photo was taken by Supanut Arunoprayote . Feel free to…",
+        "licence": "CC BY 4.0",
+        "source": "https://commons.wikimedia.org/wiki/File:BKK_Art_and_Culture_Centre.jpg"
+      }
     }
   ]
 }

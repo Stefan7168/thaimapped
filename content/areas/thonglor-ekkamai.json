@@ -63,6 +63,29 @@
     }
   ],
   "video": null,
+  "photos": [
+    {
+      "src": "/photos/areas/thonglor-ekkamai/thonglor-soi.jpg",
+      "alt": "Soi Thong Lo (Sukhumvit Soi 55), lined with towers and shopfronts",
+      "credit": "\"Soi Thong Lor 26 Sep 2012\" by Sry85",
+      "licence": "CC BY-SA 3.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Soi_Thong_Lor_26_Sep_2012.JPG"
+    },
+    {
+      "src": "/photos/areas/thonglor-ekkamai/ekkamai.jpg",
+      "alt": "Ekkamai Road at the Ekkamai Tai junction, with Ekkamai Corner",
+      "credit": "\"Ekkamai Road and Ekkamai Corner\" by Kay3233",
+      "licence": "CC BY-SA 4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Ekkamai_Road_and_Ekkamai_Corner.jpg"
+    },
+    {
+      "src": "/photos/areas/thonglor-ekkamai/phra-khanong-canal.jpg",
+      "alt": "A long-tail boat on the Phra Khanong canal",
+      "credit": "\"Phra Khanong Canal\" by takato marui",
+      "licence": "CC BY-SA 2.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Phra_Khanong_Canal.jpg"
+    }
+  ],
   "pins": [
     {
       "id": "thonglor-ekkamai-hotel-1",
@@ -103,7 +126,14 @@
         "minutes": 8
       },
       "subarea": "thonglor",
-      "links": {}
+      "links": {},
+      "photo": {
+        "src": "/photos/pins/thonglor-ekkamai/thonglor-soi-bars.jpg",
+        "alt": "Soi Thong Lo (Sukhumvit Soi 55), lined with towers and shopfronts",
+        "credit": "\"Soi Thong Lor 26 Sep 2012\" by Sry85",
+        "licence": "CC BY-SA 3.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Soi_Thong_Lor_26_Sep_2012.JPG"
+      }
     }
   ]
 }

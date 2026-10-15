@@ -62,6 +62,29 @@
     }
   ],
   "video": null,
+  "photos": [
+    {
+      "src": "/photos/areas/chinatown/yaowarat-road.jpg",
+      "alt": "Yaowarat Road at night under its neon shop signs",
+      "credit": "\"Yaowarat Road at night\" by Christophe95",
+      "licence": "CC BY-SA 4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Yaowarat_Road_at_night.jpg"
+    },
+    {
+      "src": "/photos/areas/chinatown/wat-traimit.jpg",
+      "alt": "Wat Traimit's white and gold hall of the Golden Buddha",
+      "credit": "\"Wat Traimit 20240917\" by Suicasmo",
+      "licence": "CC BY-SA 4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Wat_Traimit_20240917.jpg"
+    },
+    {
+      "src": "/photos/areas/chinatown/talat-noi.jpg",
+      "alt": "Rong Kuak Chinese shrine among the old buildings of Talat Noi",
+      "credit": "\"Rong Kuak Shrine Talat Noi ศาลเจ้าโรงเกือก ตลาดน้อย 2021 June\" by Chainwit.",
+      "licence": "CC BY-SA 4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Rong_Kuak_Shrine_Talat_Noi_%E0%B8%A8%E0%B8%B2%E0%B8%A5%E0%B9%80%E0%B8%88%E0%B9%89%E0%B8%B2%E0%B9%82%E0%B8%A3%E0%B8%87%E0%B9%80%E0%B8%81%E0%B8%B7%E0%B8%AD%E0%B8%81_%E0%B8%95%E0%B8%A5%E0%B8%B2%E0%B8%94%E0%B8%99%E0%B9%89%E0%B8%AD%E0%B8%A2_2021_June.jpg"
+    }
+  ],
   "pins": [
     {
       "id": "chinatown-hotel-1",
@@ -102,7 +125,14 @@
         "minutes": 5
       },
       "subarea": "talat-noi",
-      "links": {}
+      "links": {},
+      "photo": {
+        "src": "/photos/pins/chinatown/wat-traimit.jpg",
+        "alt": "Wat Traimit's white and gold hall of the Golden Buddha",
+        "credit": "\"Wat Traimit 20240917\" by Suicasmo",
+        "licence": "CC BY-SA 4.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Wat_Traimit_20240917.jpg"
+      }
     },
     {
       "id": "yaowarat-road",
@@ -122,7 +152,14 @@
         "minutes": 2
       },
       "subarea": "yaowarat",
-      "links": {}
+      "links": {},
+      "photo": {
+        "src": "/photos/pins/chinatown/yaowarat-road.jpg",
+        "alt": "Yaowarat Road at night under its neon shop signs",
+        "credit": "\"Yaowarat Road at night\" by Christophe95",
+        "licence": "CC BY-SA 4.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Yaowarat_Road_at_night.jpg"
+      }
     }
   ]
 }

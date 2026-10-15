@@ -51,6 +51,29 @@
     }
   ],
   "video": null,
+  "photos": [
+    {
+      "src": "/photos/areas/ari/ari-soi.jpg",
+      "alt": "A noodle stall on Soi Ari Samphan, one of Ari's side streets",
+      "credit": "\"Ari Samphan Noodles Stall\" by Phoebus 28",
+      "licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Ari_Samphan_Noodles_Stall.jpg"
+    },
+    {
+      "src": "/photos/areas/ari/saphan-khwai.jpg",
+      "alt": "The Saphan Khwai junction on Phahonyothin Road, under the BTS",
+      "credit": "\"สะพานควาย2\" by Phoebus 28",
+      "licence": "CC BY-SA 4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:%E0%B8%AA%E0%B8%B0%E0%B8%9E%E0%B8%B2%E0%B8%99%E0%B8%84%E0%B8%A7%E0%B8%B2%E0%B8%A22.jpg"
+    },
+    {
+      "src": "/photos/areas/ari/chatuchak-market.jpg",
+      "alt": "A lane of stalls at Chatuchak Weekend Market",
+      "credit": "\"Chatuchak Weekend Market 1\" by Christophe95",
+      "licence": "CC BY-SA 4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Chatuchak_Weekend_Market_1.jpg"
+    }
+  ],
   "pins": [
     {
       "id": "ari-hotel-1",
@@ -91,7 +114,14 @@
         "minutes": 5
       },
       "subarea": "saphan-khwai",
-      "links": {}
+      "links": {},
+      "photo": {
+        "src": "/photos/pins/ari/chatuchak-market.jpg",
+        "alt": "A lane of stalls at Chatuchak Weekend Market",
+        "credit": "\"Chatuchak Weekend Market 1\" by Christophe95",
+        "licence": "CC BY-SA 4.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Chatuchak_Weekend_Market_1.jpg"
+      }
     }
   ]
 }

@@ -1,0 +1,50 @@
+[
+ {
+  "file": "public/photos/pins/chinatown/wat-traimit.jpg",
+  "media": "image",
+  "ref": "commons:153361854",
+  "title": "Wat Traimit 20240917",
+  "creator": "Suicasmo",
+  "creatorUrl": null,
+  "date": "2024-09-17",
+  "license": "CC BY-SA 4.0",
+  "licenseCode": "by-sa",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+  "creditRequired": true,
+  "page": "https://commons.wikimedia.org/wiki/File:Wat_Traimit_20240917.jpg",
+  "via": "Wikimedia Commons",
+  "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4e/Wat_Traimit_20240917.jpg/1920px-Wat_Traimit_20240917.jpg",
+  "width": 1600,
+  "height": 1066,
+  "bytes": 157766,
+  "credit": "\"Wat Traimit 20240917\" by Suicasmo, CC BY-SA 4.0, via Wikimedia Commons",
+  "notes": [
+   "Share-alike: an altered version (recoloured, combined with other pictures) must be shared under the same licence."
+  ],
+  "saved": "2026-10-15T12:46:11.576Z"
+ },
+ {
+  "file": "public/photos/pins/chinatown/yaowarat-road.jpg",
+  "media": "image",
+  "ref": "commons:91057481",
+  "title": "Yaowarat Road at night",
+  "creator": "Christophe95",
+  "creatorUrl": null,
+  "date": "2018-05-10",
+  "license": "CC BY-SA 4.0",
+  "licenseCode": "by-sa",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+  "creditRequired": true,
+  "page": "https://commons.wikimedia.org/wiki/File:Yaowarat_Road_at_night.jpg",
+  "via": "Wikimedia Commons",
+  "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0e/Yaowarat_Road_at_night.jpg/1920px-Yaowarat_Road_at_night.jpg",
+  "width": 1600,
+  "height": 1200,
+  "bytes": 276143,
+  "credit": "\"Yaowarat Road at night\" by Christophe95, CC BY-SA 4.0, via Wikimedia Commons",
+  "notes": [
+   "Share-alike: an altered version (recoloured, combined with other pictures) must be shared under the same licence."
+  ],
+  "saved": "2026-10-15T12:46:07.400Z"
+ }
+]
