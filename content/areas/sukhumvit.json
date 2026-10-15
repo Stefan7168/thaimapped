@@ -147,6 +147,13 @@
         "from": 1800,
         "currency": "THB",
         "basis": "tier-estimate"
+      },
+      "photo": {
+        "src": "/photos/pins/sukhumvit/sukhumvit-hotel-grande-centre-point-terminal-21.jpg",
+        "alt": "The Grande Centre Point Terminal 21 tower rising above the Terminal 21 mall at Asok",
+        "credit": "\"Terminal 21\" by Sry85",
+        "licence": "CC BY-SA 3.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Terminal_21.JPG"
       }
     },
     {
@@ -209,7 +216,37 @@
         "credit": "\"Terminal 21 Asok Bangkok 20202021\" by Chainwit.",
         "licence": "CC BY-SA 4.0",
         "source": "https://commons.wikimedia.org/wiki/File:Terminal_21_Asok_Bangkok_20202021.jpg"
-      }
+      },
+      "photos": [
+        {
+          "src": "/photos/pins/sukhumvit/terminal-21.jpg",
+          "alt": "Terminal 21 mall and its tower at the Asok junction",
+          "credit": "\"Terminal 21 Asok Bangkok 20202021\" by Chainwit.",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Terminal_21_Asok_Bangkok_20202021.jpg"
+        },
+        {
+          "src": "/photos/pins/sukhumvit/terminal-21-2.jpg",
+          "alt": "The long escalators rising through Terminal 21's atrium",
+          "credit": "\"Terminal 21 Bangkok longest escalator\" by Chainwit.",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Terminal_21_Bangkok_longest_escalator.jpg"
+        },
+        {
+          "src": "/photos/pins/sukhumvit/terminal-21-3.jpg",
+          "alt": "The ground-floor atrium of Terminal 21 with escalators and shops",
+          "credit": "\"Terminal 21 Atrium 2018\" by Wpcpey",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Terminal_21_Atrium_2018.jpg"
+        },
+        {
+          "src": "/photos/pins/sukhumvit/terminal-21-4.jpg",
+          "alt": "Sumo wrestler statues in the Tokyo-themed floor of Terminal 21",
+          "credit": "\"Terminal 21 (20250404171142)\" by MikSed",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Terminal_21_(20250404171142).jpg"
+        }
+      ]
     },
     {
       "id": "emquartier",
@@ -242,7 +279,30 @@
         "credit": "\"ศูนย์การค้าดิ เอ็มควอร์เทียร์ เขตวัฒนา กรุงเทพมหานคร The Emquartier,Vadhana,Bangkok (2)\" by กสิณธร ราชโอรส",
         "licence": "CC BY-SA 4.0",
         "source": "https://commons.wikimedia.org/wiki/File:%E0%B8%A8%E0%B8%B9%E0%B8%99%E0%B8%A2%E0%B9%8C%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%84%E0%B9%89%E0%B8%B2%E0%B8%94%E0%B8%B4_%E0%B9%80%E0%B8%AD%E0%B9%87%E0%B8%A1%E0%B8%84%E0%B8%A7%E0%B8%AD%E0%B8%A3%E0%B9%8C%E0%B9%80%E0%B8%97%E0%B8%B5%E0%B8%A2%E0%B8%A3%E0%B9%8C_%E0%B9%80%E0%B8%82%E0%B8%95%E0%B8%A7%E0%B8%B1%E0%B8%92%E0%B8%99%E0%B8%B2_%E0%B8%81%E0%B8%A3%E0%B8%B8%E0%B8%87%E0%B9%80%E0%B8%97%E0%B8%9E%E0%B8%A1%E0%B8%AB%E0%B8%B2%E0%B8%99%E0%B8%84%E0%B8%A3_The_Emquartier,Vadhana,Bangkok_(2).jpg"
-      }
+      },
+      "photos": [
+        {
+          "src": "/photos/pins/sukhumvit/emquartier.jpg",
+          "alt": "The tree-lined outdoor walkway between the EmQuartier buildings",
+          "credit": "\"ศูนย์การค้าดิ เอ็มควอร์เทียร์ เขตวัฒนา กรุงเทพมหานคร The Emquartier,Vadhana,Bangkok (2)\" by กสิณธร ราชโอรส",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:%E0%B8%A8%E0%B8%B9%E0%B8%99%E0%B8%A2%E0%B9%8C%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%84%E0%B9%89%E0%B8%B2%E0%B8%94%E0%B8%B4_%E0%B9%80%E0%B8%AD%E0%B9%87%E0%B8%A1%E0%B8%84%E0%B8%A7%E0%B8%AD%E0%B8%A3%E0%B9%8C%E0%B9%80%E0%B8%97%E0%B8%B5%E0%B8%A2%E0%B8%A3%E0%B9%8C_%E0%B9%80%E0%B8%82%E0%B8%95%E0%B8%A7%E0%B8%B1%E0%B8%92%E0%B8%99%E0%B8%B2_%E0%B8%81%E0%B8%A3%E0%B8%B8%E0%B8%87%E0%B9%80%E0%B8%97%E0%B8%9E%E0%B8%A1%E0%B8%AB%E0%B8%B2%E0%B8%99%E0%B8%84%E0%B8%A3_The_Emquartier,Vadhana,Bangkok_(2).jpg"
+        },
+        {
+          "src": "/photos/pins/sukhumvit/emquartier-2.jpg",
+          "alt": "The garden atrium of EmQuartier with planted terraces between the shop floors",
+          "credit": "\"EmQuartier 2018\" by Wpcpey",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:EmQuartier_2018.jpg"
+        },
+        {
+          "src": "/photos/pins/sukhumvit/emquartier-3.jpg",
+          "alt": "The EmQuartier building and its glass tower seen from the street",
+          "credit": "\"ศูนย์การค้าดิ เอ็มควอร์เทียร์ เขตวัฒนา กรุงเทพมหานคร The Emquartier,Vadhana,Bangkok (1)\" by กสิณธร ราชโอรส",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:%E0%B8%A8%E0%B8%B9%E0%B8%99%E0%B8%A2%E0%B9%8C%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%84%E0%B9%89%E0%B8%B2%E0%B8%94%E0%B8%B4_%E0%B9%80%E0%B8%AD%E0%B9%87%E0%B8%A1%E0%B8%84%E0%B8%A7%E0%B8%AD%E0%B8%A3%E0%B9%8C%E0%B9%80%E0%B8%97%E0%B8%B5%E0%B8%A2%E0%B8%A3%E0%B9%8C_%E0%B9%80%E0%B8%82%E0%B8%95%E0%B8%A7%E0%B8%B1%E0%B8%92%E0%B8%99%E0%B8%B2_%E0%B8%81%E0%B8%A3%E0%B8%B8%E0%B8%87%E0%B9%80%E0%B8%97%E0%B8%9E%E0%B8%A1%E0%B8%AB%E0%B8%B2%E0%B8%99%E0%B8%84%E0%B8%A3_The_Emquartier,Vadhana,Bangkok_(1).jpg"
+        }
+      ]
     },
     {
       "id": "benjakitti-park",
@@ -278,7 +338,37 @@
         "credit": "\"Benjakitti Forest Park (I)\" by Supanut Arunoprayote",
         "licence": "CC BY 4.0",
         "source": "https://commons.wikimedia.org/wiki/File:Benjakitti_Forest_Park_(I).jpg"
-      }
+      },
+      "photos": [
+        {
+          "src": "/photos/pins/sukhumvit/benjakitti-park.jpg",
+          "alt": "Benjakitti Forest Park's wetland boardwalks with the city skyline behind",
+          "credit": "\"Benjakitti Forest Park (I)\" by Supanut Arunoprayote",
+          "licence": "CC BY 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Benjakitti_Forest_Park_(I).jpg"
+        },
+        {
+          "src": "/photos/pins/sukhumvit/benjakitti-park-2.jpg",
+          "alt": "The lakeside path in Benjakitti Park lined with bougainvillea, towers behind",
+          "credit": "\"Benjakitti Park, Bangkok\" by Slyronit",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Benjakitti_Park,_Bangkok.jpg"
+        },
+        {
+          "src": "/photos/pins/sukhumvit/benjakitti-park-3.jpg",
+          "alt": "Raised boardwalks over the wetland forest of Benjakitti Park at night",
+          "credit": "\"Benjakitti Park\" by Poowang",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Benjakitti_Park.jpg"
+        },
+        {
+          "src": "/photos/pins/sukhumvit/benjakitti-park-4.jpg",
+          "alt": "Green planting in Benjakitti Park with the Bangkok skyline beyond",
+          "credit": "\"Benjakitti Park BKK Thailand by Don Ramey Logan\" by Don Ramey Logan",
+          "licence": "CC BY 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Benjakitti_Park_BKK_Thailand_by_Don_Ramey_Logan.jpg"
+        }
+      ]
     },
     {
       "id": "soi-cowboy",
@@ -303,7 +393,37 @@
         ]
       },
       "subarea": "asok",
-      "links": {}
+      "links": {},
+      "photo": {
+        "src": "/photos/pins/sukhumvit/soi-cowboy.jpg",
+        "alt": "Soi Cowboy at night, its bars lit in pink and green neon",
+        "credit": "\"Soi Cowboy 2023 03\" by Yu tptw",
+        "licence": "CC BY-SA 4.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Soi_Cowboy_2023_03.jpg"
+      },
+      "photos": [
+        {
+          "src": "/photos/pins/sukhumvit/soi-cowboy.jpg",
+          "alt": "Soi Cowboy at night, its bars lit in pink and green neon",
+          "credit": "\"Soi Cowboy 2023 03\" by Yu tptw",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Soi_Cowboy_2023_03.jpg"
+        },
+        {
+          "src": "/photos/pins/sukhumvit/soi-cowboy-2.jpg",
+          "alt": "Neon bar signs and outdoor seating along Soi Cowboy",
+          "credit": "\"Soi Cowboy 2023 01\" by Yu tptw",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Soi_Cowboy_2023_01.jpg"
+        },
+        {
+          "src": "/photos/pins/sukhumvit/soi-cowboy-3.jpg",
+          "alt": "Red-lit bar fronts lining Soi Cowboy in the evening",
+          "credit": "\"Soi Cowboy 2023 04\" by Yu tptw",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Soi_Cowboy_2023_04.jpg"
+        }
+      ]
     },
     {
       "id": "sukhumvit-soi-11",
@@ -329,7 +449,14 @@
         ]
       },
       "subarea": "nana",
-      "links": {}
+      "links": {},
+      "photo": {
+        "src": "/photos/pins/sukhumvit/sukhumvit-soi-11.jpg",
+        "alt": "Shop signs and street stalls along Sukhumvit Soi 11 by day",
+        "credit": "\"Sukhumvit Soi 11 (15168046798)\" by Clay Gilliland",
+        "licence": "CC BY-SA 2.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Sukhumvit_Soi_11_(15168046798).jpg"
+      }
     },
     {
       "id": "benjasiri-park",
@@ -355,7 +482,37 @@
         ]
       },
       "subarea": "phrom-phong",
-      "links": {}
+      "links": {},
+      "photo": {
+        "src": "/photos/pins/sukhumvit/benjasiri-park.jpg",
+        "alt": "Benjasiri Park seen from above, a green square among Sukhumvit towers",
+        "credit": "\"Benchasiri Park from EmQuartier SkyGarden\" by Slyronit",
+        "licence": "CC BY-SA 4.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Benchasiri_Park_from_EmQuartier_SkyGarden.jpg"
+      },
+      "photos": [
+        {
+          "src": "/photos/pins/sukhumvit/benjasiri-park.jpg",
+          "alt": "Benjasiri Park seen from above, a green square among Sukhumvit towers",
+          "credit": "\"Benchasiri Park from EmQuartier SkyGarden\" by Slyronit",
+          "licence": "CC BY-SA 4.0",
+          "source": "https://commons.wikimedia.org/wiki/File:Benchasiri_Park_from_EmQuartier_SkyGarden.jpg"
+        },
+        {
+          "src": "/photos/pins/sukhumvit/benjasiri-park-2.jpg",
+          "alt": "The bronze pyramid sculpture and fountain in Benjasiri Park",
+          "credit": "\"BANGKOK THAILAND JAN 2012 (6870970674)\" by calflier001",
+          "licence": "CC BY-SA 2.0",
+          "source": "https://commons.wikimedia.org/wiki/File:BANGKOK_THAILAND_JAN_2012_(6870970674).jpg"
+        },
+        {
+          "src": "/photos/pins/sukhumvit/benjasiri-park-3.jpg",
+          "alt": "The pond and fountain in Benjasiri Park with towers behind",
+          "credit": "\"SUKHUMVIT ROAD CENTRAL BANGKOK THAILAND JAN 2012 (7190066336)\" by calflier001",
+          "licence": "CC BY-SA 2.0",
+          "source": "https://commons.wikimedia.org/wiki/File:SUKHUMVIT_ROAD_CENTRAL_BANGKOK_THAILAND_JAN_2012_(7190066336).jpg"
+        }
+      ]
     }
   ]
 }
