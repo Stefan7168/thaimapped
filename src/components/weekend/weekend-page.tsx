@@ -9,7 +9,7 @@ import type { Area, Locale, Pin, Station, TripRoute } from '@/lib/content/types'
 import { t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
 import { isFullRange, PRICE_RANGE, type PriceRange } from '@/lib/explorer/filters'
-import { WEEKEND_SLOTS, weekendPlan } from '@/lib/explorer/weekend'
+import { WEEKEND_SLOTS, weekendPlan, type WeekendSlot } from '@/lib/explorer/weekend'
 import { whenLine } from '@/lib/explorer/when'
 import { thb } from '@/lib/explorer/price'
 import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
@@ -62,6 +62,14 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes }: {
   const saved = useSaved()
   const hotels = useMemo(() => [...plan.hotels].sort((a, b) => Number(saved.includes(b.id)) - Number(saved.includes(a.id))), [plan.hotels, saved])
   const pinned = useMemo(() => [...stops, ...hotels], [stops, hotels])
+  // With a Friday-to-Sunday stay picked, each slot heading carries its date.
+  const slotDate = (slot: WeekendSlot): string | null => {
+    if (!stay || nights(stay) !== 2) return null
+    const d = new Date(stay.checkIn + 'T00:00:00')
+    if (d.getDay() !== 5) return null
+    d.setDate(d.getDate() + (slot === 'fridayNight' ? 0 : slot === 'sunday' ? 2 : 1))
+    return new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short' }).format(d)
+  }
   const priceQuery = price ? `price=${price.min}-${price.max}` : ''
   const explorerHref = `/${locale}/${cityId}#area=${area.id}${priceQuery ? `&${priceQuery}` : ''}`
 
@@ -140,6 +148,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes }: {
           <p className="tm-wk__eyebrow">{s.weekendPage.eyebrow}</p>
           <h1 className="tm-h2">{s.weekendPage.title(t(area.name, locale))}</h1>
           <p className="tm-wk__lead">{t(area.tagline, locale)} {price ? s.weekendPage.budget(thb(price.min, locale), thb(price.max, locale)) : s.weekendPage.anyBudget}</p>
+          <StayPicker locale={locale} />
           <div className="tm-wk__actions">
             <button type="button" onClick={share} className="tm-button">
               <Share2 aria-hidden="true" className="size-4" />
@@ -151,13 +160,12 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes }: {
           <ol className="tm-wk__slots">
             {WEEKEND_SLOTS.map((slot) => (
               <li key={slot} className="tm-wk__slot">
-                <h2 className="tm-wk__time">{s.guide.slots[slot]}</h2>
+                <h2 className="tm-wk__time">{s.guide.slots[slot]}{slotDate(slot) && <span className="tm-wk__date"> · {slotDate(slot)}</span>}</h2>
                 {plan.slots[slot].length === 0 ? <p className="tm-wk__empty">{s.guide.slotEmpty}</p> : <ul className="tm-wk__stops">{plan.slots[slot].map(stop)}</ul>}
               </li>
             ))}
             <li className="tm-wk__slot tm-wk__slot--stay">
               <h2 className="tm-wk__time">{s.guide.stay}</h2>
-              {hotels.length > 0 && <StayPicker locale={locale} />}
               {hotels.length === 0 ? <p className="tm-wk__empty">{s.guide.stayNone}</p> : <ul className="tm-wk__stops">{hotels.map(stop)}</ul>}
             </li>
           </ol>

@@ -574,6 +574,8 @@ a.tm-wk__stop { text-decoration: none; }
 .tm-stay__dates { display: flex; align-items: center; gap: 8px; }
 .tm-stay input[type='date'] { width: 148px; min-height: 40px; padding: 0 10px; font: inherit; font-size: var(--step-small); color: var(--ink); background: var(--paper-2); border: 0; border-radius: 0; }
 .tm-stay input[type='date']:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
+.tm-wk__date { font-weight: 500; color: var(--ink-2); text-transform: none; letter-spacing: 0; }
+.tm-wk .tm-wk__sheet > .tm-stay { margin: 14px 0 4px; }
 .tm-wk__stay { color: var(--ink); font-weight: 600; }
 .tm-stay__to { color: var(--ink-2); }
 .tm-stay__nights { font-size: var(--step-small); color: var(--ink-2); }
