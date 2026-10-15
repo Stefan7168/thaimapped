@@ -1,4 +1,4 @@
-import type { Area, Locale, Pin, Station } from '@/lib/content/types'
+import type { Area, AreaPhoto, Locale, Pin, Station } from '@/lib/content/types'
 import { t } from '@/lib/i18n/locales'
 import { whenLine } from '@/lib/explorer/when'
 import { strings } from '@/lib/i18n/strings'
@@ -7,30 +7,87 @@ import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
 import { trackOutbound } from '@/lib/links/track'
 import type { NearbyPin } from '@/lib/explorer/filters'
 
+/**
+ * The card's pictures: one photograph, or a slider the visitor swipes or
+ * steps through with arrows, each slide carrying its own credit.
+ */
+function photoSlider(photos: AreaPhoto[], s: ReturnType<typeof strings>): HTMLElement {
+  const fig = document.createElement('figure')
+  fig.className = 'tm-card__photo'
+  const track = document.createElement('div')
+  track.className = 'tm-card__track'
+  const caps: HTMLElement[] = []
+  photos.forEach((photo, i) => {
+    const img = document.createElement('img')
+    // The optimiser serves a 640 px copy: the card is 300 px wide and the file is 1600 px.
+    img.src = `/_next/image?url=${encodeURIComponent(photo.src)}&w=640&q=75`
+    img.alt = photo.alt
+    img.loading = i === 0 ? 'eager' : 'lazy'
+    img.draggable = false
+    track.append(img)
+    const cap = document.createElement('figcaption')
+    const credit = document.createElement('a')
+    credit.href = photo.source
+    credit.target = '_blank'
+    credit.rel = 'noopener'
+    credit.textContent = photo.credit
+    cap.append(credit, ` (${photo.licence})`)
+    cap.hidden = i !== 0
+    caps.push(cap)
+  })
+  fig.append(track, ...caps)
+  if (photos.length > 1) {
+    fig.classList.add('tm-card__photo--slider')
+    const dots = document.createElement('div')
+    dots.className = 'tm-card__dots'
+    const dotEls = photos.map((_, i) => {
+      const d = document.createElement('button')
+      d.type = 'button'
+      d.className = 'tm-card__dot'
+      d.setAttribute('aria-label', s.card.photoOf(i + 1, photos.length))
+      d.addEventListener('click', () => go(i))
+      dots.append(d)
+      return d
+    })
+    let at = 0
+    const show = (i: number) => {
+      at = i
+      caps.forEach((c, j) => (c.hidden = j !== i))
+      dotEls.forEach((d, j) => d.classList.toggle('is-on', j === i))
+    }
+    const go = (i: number) => {
+      const next = (i + photos.length) % photos.length
+      track.scrollTo({ left: next * track.clientWidth, behavior: 'smooth' })
+      show(next)
+    }
+    // A swipe moves the track; read the slide it settled on.
+    track.addEventListener('scroll', () => {
+      const i = Math.round(track.scrollLeft / Math.max(1, track.clientWidth))
+      if (i !== at) show(i)
+    }, { passive: true })
+    const arrow = (dir: -1 | 1) => {
+      const b = document.createElement('button')
+      b.type = 'button'
+      b.className = `tm-card__arrow tm-card__arrow--${dir < 0 ? 'prev' : 'next'}`
+      b.setAttribute('aria-label', dir < 0 ? s.card.photoPrev : s.card.photoNext)
+      b.textContent = dir < 0 ? '‹' : '›'
+      b.addEventListener('click', (e) => { e.stopPropagation(); go(at + dir) })
+      return b
+    }
+    fig.append(arrow(-1), arrow(1), dots)
+    show(0)
+  }
+  return fig
+}
+
 /** The card that opens on a pin: what it is, why it is here, how far from the train, where to book. */
 export function cardElement(locale: Locale, cityId: string, pin: Pin, area: Area, station: Station | undefined, nearby: NearbyPin[], onClose: () => void, onPick: (pin: Pin) => void): HTMLElement {
   const s = strings(locale)
   const el = document.createElement('div')
   el.className = 'tm-card'
   el.style.setProperty('--pin', `var(--${area.color})`)
-  if (pin.photo) {
-    const fig = document.createElement('figure')
-    fig.className = 'tm-card__photo'
-    const img = document.createElement('img')
-    // The optimiser serves a 640 px copy: the card is 300 px wide and the file is 1600 px.
-    img.src = `/_next/image?url=${encodeURIComponent(pin.photo.src)}&w=640&q=75`
-    img.alt = pin.photo.alt
-    img.loading = 'lazy'
-    const cap = document.createElement('figcaption')
-    const credit = document.createElement('a')
-    credit.href = pin.photo.source
-    credit.target = '_blank'
-    credit.rel = 'noopener'
-    credit.textContent = pin.photo.credit
-    cap.append(credit, ` (${pin.photo.licence})`)
-    fig.append(img, cap)
-    el.append(fig)
-  }
+  const photos = pin.photos?.length ? pin.photos : pin.photo ? [pin.photo] : []
+  if (photos.length > 0) el.append(photoSlider(photos, s))
   const head = document.createElement('div')
   head.className = 'tm-card__head'
   const kind = document.createElement('span')

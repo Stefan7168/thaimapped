@@ -69,6 +69,8 @@ export interface Pin {
   links: PinLinks
   /** One real, credited photograph for the card and the home highlights. Optional until fetched. */
   photo?: AreaPhoto
+  /** More credited photographs for the card's slider; the first is the same as `photo`. Optional until fetched. */
+  photos?: AreaPhoto[]
   /** When the place is open or at its best; days omitted means every day. */
   when?: { times: TimeOfDay[]; days?: DayKind[]; note?: Localized }
   /** A street or zone drawn on the map besides the pin; the file is read into `geometry` at load time. */

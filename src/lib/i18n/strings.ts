@@ -160,6 +160,9 @@ const en = {
   },
   card: {
     close: 'Close',
+    photoPrev: 'Previous photo',
+    photoNext: 'Next photo',
+    photoOf: (n: number, total: number) => `Photo ${n} of ${total}`,
     nearby: 'Walkable from here',
     nearbyWalk: (minutes: number) => `about ${minutes} min`,
     bestAt: (times: string) => `Best ${times}`,

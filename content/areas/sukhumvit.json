@@ -85,7 +85,7 @@
     {
       "src": "/photos/areas/sukhumvit/benjakitti-park.jpg",
       "alt": "Benjakitti Forest Park's wetland boardwalks with the city skyline behind",
-      "credit": "\"Benjakitti Forest Park (I)\" by This Photo was taken by Supanut Arunoprayote . Feel free to…",
+      "credit": "\"Benjakitti Forest Park (I)\" by Supanut Arunoprayote",
       "licence": "CC BY 4.0",
       "source": "https://commons.wikimedia.org/wiki/File:Benjakitti_Forest_Park_(I).jpg"
     }
@@ -271,7 +271,14 @@
         }
       },
       "subarea": "asok",
-      "links": {}
+      "links": {},
+      "photo": {
+        "src": "/photos/pins/sukhumvit/benjakitti-park.jpg",
+        "alt": "Benjakitti Forest Park's wetland boardwalks with the city skyline behind",
+        "credit": "\"Benjakitti Forest Park (I)\" by Supanut Arunoprayote",
+        "licence": "CC BY 4.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Benjakitti_Forest_Park_(I).jpg"
+      }
     },
     {
       "id": "soi-cowboy",
