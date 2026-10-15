@@ -90,140 +90,6 @@
   ],
   "pins": [
     {
-      "id": "warehouse-30",
-      "kind": "sight",
-      "name": {
-        "en": "Warehouse 30 and Charoen Krung"
-      },
-      "why": {
-        "en": "Converted warehouses: galleries, a bookshop, coffee; the creative district."
-      },
-      "location": {
-        "lon": 100.5148,
-        "lat": 13.7281
-      },
-      "walk": {
-        "station": "bts-silom-s6",
-        "minutes": 14
-      },
-      "when": {
-        "times": [
-          "afternoon",
-          "evening"
-        ]
-      },
-      "subarea": "bang-rak",
-      "links": {}
-    },
-    {
-      "id": "lhong-1919",
-      "kind": "sight",
-      "name": {
-        "en": "Lhong 1919"
-      },
-      "why": {
-        "en": "A restored Chinese pier house across the river, with a Mazu shrine and cafés."
-      },
-      "location": {
-        "lon": 100.5075,
-        "lat": 13.734
-      },
-      "walk": {
-        "station": "bts-silom-s6",
-        "minutes": 25
-      },
-      "when": {
-        "times": [
-          "afternoon",
-          "evening"
-        ]
-      },
-      "subarea": "khlong-san",
-      "links": {}
-    },
-    {
-      "id": "jam-factory",
-      "kind": "sight",
-      "name": {
-        "en": "The Jam Factory"
-      },
-      "why": {
-        "en": "A riverside compound of a bookshop, a restaurant and a lawn, opposite the Sheraton."
-      },
-      "location": {
-        "lon": 100.5105,
-        "lat": 13.7294
-      },
-      "walk": {
-        "station": "bts-silom-s6",
-        "minutes": 17
-      },
-      "when": {
-        "times": [
-          "afternoon",
-          "evening"
-        ]
-      },
-      "subarea": "khlong-san",
-      "links": {}
-    },
-    {
-      "id": "sathorn-pier",
-      "kind": "transport",
-      "name": {
-        "en": "Sathorn Pier (Chao Phraya Express)"
-      },
-      "why": {
-        "en": "Where the river boats start: the orange flag goes all the way to the Grand Palace."
-      },
-      "location": {
-        "lon": 100.5126,
-        "lat": 13.7184
-      },
-      "walk": {
-        "station": "bts-silom-s6",
-        "minutes": 3
-      },
-      "when": {
-        "times": [
-          "morning",
-          "afternoon",
-          "evening"
-        ],
-        "note": {
-          "en": "Boats every 10 to 20 minutes until about 19:00"
-        }
-      },
-      "subarea": "bang-rak",
-      "links": {}
-    },
-    {
-      "id": "bang-rak-market",
-      "kind": "food",
-      "name": {
-        "en": "Bang Rak market street"
-      },
-      "why": {
-        "en": "Roast duck, noodles and fruit stalls along Charoen Krung near Saphan Taksin."
-      },
-      "location": {
-        "lon": 100.5153,
-        "lat": 13.7205
-      },
-      "walk": {
-        "station": "bts-silom-s6",
-        "minutes": 3
-      },
-      "when": {
-        "times": [
-          "morning",
-          "afternoon"
-        ]
-      },
-      "subarea": "bang-rak",
-      "links": {}
-    },
-    {
       "id": "riverside-hotel-mandarin-oriental",
       "kind": "hotel",
       "tier": "luxury",
@@ -360,6 +226,140 @@
         "licence": "CC BY-SA 4.0",
         "source": "https://commons.wikimedia.org/wiki/File:Asiatique,_Bangkok_from_Chao_Phraya_River_2.jpg"
       }
+    },
+    {
+      "id": "warehouse-30",
+      "kind": "sight",
+      "name": {
+        "en": "Warehouse 30 and Charoen Krung"
+      },
+      "why": {
+        "en": "Converted warehouses: galleries, a bookshop, coffee; the creative district."
+      },
+      "location": {
+        "lon": 100.5148,
+        "lat": 13.7281
+      },
+      "walk": {
+        "station": "bts-silom-s6",
+        "minutes": 14
+      },
+      "when": {
+        "times": [
+          "afternoon",
+          "evening"
+        ]
+      },
+      "subarea": "bang-rak",
+      "links": {}
+    },
+    {
+      "id": "lhong-1919",
+      "kind": "sight",
+      "name": {
+        "en": "Lhong 1919"
+      },
+      "why": {
+        "en": "A restored Chinese pier house across the river, with a Mazu shrine and cafés."
+      },
+      "location": {
+        "lon": 100.5075,
+        "lat": 13.734
+      },
+      "walk": {
+        "station": "bts-silom-s6",
+        "minutes": 25
+      },
+      "when": {
+        "times": [
+          "afternoon",
+          "evening"
+        ]
+      },
+      "subarea": "khlong-san",
+      "links": {}
+    },
+    {
+      "id": "jam-factory",
+      "kind": "sight",
+      "name": {
+        "en": "The Jam Factory"
+      },
+      "why": {
+        "en": "A riverside compound of a bookshop, a restaurant and a lawn, opposite the Sheraton."
+      },
+      "location": {
+        "lon": 100.5105,
+        "lat": 13.7294
+      },
+      "walk": {
+        "station": "bts-silom-s6",
+        "minutes": 17
+      },
+      "when": {
+        "times": [
+          "afternoon",
+          "evening"
+        ]
+      },
+      "subarea": "khlong-san",
+      "links": {}
+    },
+    {
+      "id": "sathorn-pier",
+      "kind": "transport",
+      "name": {
+        "en": "Sathorn Pier (Chao Phraya Express)"
+      },
+      "why": {
+        "en": "Where the river boats start: the orange flag goes all the way to the Grand Palace."
+      },
+      "location": {
+        "lon": 100.5126,
+        "lat": 13.7184
+      },
+      "walk": {
+        "station": "bts-silom-s6",
+        "minutes": 3
+      },
+      "when": {
+        "times": [
+          "morning",
+          "afternoon",
+          "evening"
+        ],
+        "note": {
+          "en": "Boats every 10 to 20 minutes until about 19:00"
+        }
+      },
+      "subarea": "bang-rak",
+      "links": {}
+    },
+    {
+      "id": "bang-rak-market",
+      "kind": "food",
+      "name": {
+        "en": "Bang Rak market street"
+      },
+      "why": {
+        "en": "Roast duck, noodles and fruit stalls along Charoen Krung near Saphan Taksin."
+      },
+      "location": {
+        "lon": 100.5153,
+        "lat": 13.7205
+      },
+      "walk": {
+        "station": "bts-silom-s6",
+        "minutes": 3
+      },
+      "when": {
+        "times": [
+          "morning",
+          "afternoon"
+        ]
+      },
+      "subarea": "bang-rak",
+      "links": {}
     }
   ]
 }

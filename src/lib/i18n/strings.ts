@@ -130,6 +130,7 @@ const en = {
     tripsLink: 'All trips',
     showing: (n: number) => (n === 1 ? '1 place on the map' : `${n} places on the map`),
     back: 'Back to the areas',
+    hoverMeta: (places: number, hotels: number) => `${places === 1 ? '1 place' : `${places} places`} · ${hotels === 1 ? '1 hotel' : `${hotels} hotels`}, budget to luxury`,
     weekend: (name: string) => `Your weekend in ${name}`,
     weekendLead: 'Friday night to Sunday, from the places on this map. Tap a stop to see it.',
     slots: { fridayNight: 'Friday night', saturdayMorning: 'Saturday morning', saturdayAfternoon: 'Saturday afternoon', saturdayNight: 'Saturday night', sunday: 'Sunday' } as Record<string, string>,

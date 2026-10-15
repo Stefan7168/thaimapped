@@ -156,7 +156,7 @@ export function ExplorerMap(props: ExplorerMapProps) {
         map.addSource(NEARBY_SOURCE, { type: 'geojson', data: { type: 'FeatureCollection', features: [] } })
         map.addLayer({ id: `${NEARBY_SOURCE}-line`, type: 'line', source: NEARBY_SOURCE, paint: { 'line-color': '#2b2a26', 'line-width': 1.5, 'line-opacity': 0.5, 'line-dasharray': [1.5, 2] } })
         map.addLayer({ id: `${OUTLINE_SOURCE}-line`, type: 'line', source: OUTLINE_SOURCE, layout: { 'line-join': 'round' }, paint: { 'line-color': ['get', 'color'], 'line-width': 2.5, 'line-opacity': 0.9 } })
-        removeHover = addAreaHover(map, areas, locale, (id) => callbacks.current.onSelectArea(id), `${WALK_CIRCLE_SOURCE}-fill`)
+        removeHover = addAreaHover(map, areas, locale, (id) => callbacks.current.onSelectArea(id), `${WALK_CIRCLE_SOURCE}-fill`, maplibregl.Marker)
         mapRef.current = map
         // Narrow screens at city zoom: dots only, the label comes on tap. Sixteen labels in a 100 px band read as broken.
         const dotsOnly = () => map!.getContainer().classList.toggle('tm-map--dots', window.innerWidth < 768 && map!.getZoom() < 13)

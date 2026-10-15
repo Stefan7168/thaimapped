@@ -90,115 +90,6 @@
   ],
   "pins": [
     {
-      "id": "sampeng-lane",
-      "kind": "market",
-      "name": {
-        "en": "Sampeng Lane"
-      },
-      "why": {
-        "en": "A 1 km lane of wholesale fabric, toys and trinkets. Narrow and busy."
-      },
-      "location": {
-        "lon": 100.5035,
-        "lat": 13.7425
-      },
-      "walk": {
-        "station": "mrt-blue-bl29",
-        "minutes": 10
-      },
-      "when": {
-        "times": [
-          "morning",
-          "afternoon"
-        ],
-        "note": {
-          "en": "Shops close by late afternoon"
-        }
-      },
-      "subarea": "yaowarat",
-      "links": {}
-    },
-    {
-      "id": "wat-mangkon",
-      "kind": "sight",
-      "name": {
-        "en": "Wat Mangkon Kamalawat"
-      },
-      "why": {
-        "en": "The main Chinese temple: incense, red lanterns, busiest on festival days."
-      },
-      "location": {
-        "lon": 100.5095,
-        "lat": 13.7428
-      },
-      "walk": {
-        "station": "mrt-blue-bl29",
-        "minutes": 2
-      },
-      "when": {
-        "times": [
-          "morning",
-          "afternoon"
-        ]
-      },
-      "subarea": "yaowarat",
-      "links": {}
-    },
-    {
-      "id": "talat-noi",
-      "kind": "sight",
-      "name": {
-        "en": "Talat Noi"
-      },
-      "why": {
-        "en": "Old shophouses, street art and car-part workshops down by the river."
-      },
-      "location": {
-        "lon": 100.5125,
-        "lat": 13.7365
-      },
-      "walk": {
-        "station": "mrt-blue-bl28",
-        "minutes": 7
-      },
-      "when": {
-        "times": [
-          "afternoon"
-        ],
-        "note": {
-          "en": "Afternoon light on the walls"
-        }
-      },
-      "subarea": "talat-noi",
-      "links": {}
-    },
-    {
-      "id": "song-wat-road",
-      "kind": "food",
-      "name": {
-        "en": "Song Wat Road"
-      },
-      "why": {
-        "en": "The old trading street turned café row, one block from the river."
-      },
-      "location": {
-        "lon": 100.506,
-        "lat": 13.74
-      },
-      "walk": {
-        "station": "mrt-blue-bl29",
-        "minutes": 7
-      },
-      "when": {
-        "times": [
-          "morning",
-          "afternoon"
-        ]
-      },
-      "subarea": "song-wat",
-      "links": {}
-    },
-    {
       "id": "chinatown-hotel-shanghai-mansion",
       "kind": "hotel",
       "tier": "luxury",
@@ -339,6 +230,115 @@
         "licence": "CC BY-SA 4.0",
         "source": "https://commons.wikimedia.org/wiki/File:Yaowarat_Road_at_night.jpg"
       }
+    },
+    {
+      "id": "sampeng-lane",
+      "kind": "market",
+      "name": {
+        "en": "Sampeng Lane"
+      },
+      "why": {
+        "en": "A 1 km lane of wholesale fabric, toys and trinkets. Narrow and busy."
+      },
+      "location": {
+        "lon": 100.5035,
+        "lat": 13.7425
+      },
+      "walk": {
+        "station": "mrt-blue-bl29",
+        "minutes": 10
+      },
+      "when": {
+        "times": [
+          "morning",
+          "afternoon"
+        ],
+        "note": {
+          "en": "Shops close by late afternoon"
+        }
+      },
+      "subarea": "yaowarat",
+      "links": {}
+    },
+    {
+      "id": "wat-mangkon",
+      "kind": "sight",
+      "name": {
+        "en": "Wat Mangkon Kamalawat"
+      },
+      "why": {
+        "en": "The main Chinese temple: incense, red lanterns, busiest on festival days."
+      },
+      "location": {
+        "lon": 100.5095,
+        "lat": 13.7428
+      },
+      "walk": {
+        "station": "mrt-blue-bl29",
+        "minutes": 2
+      },
+      "when": {
+        "times": [
+          "morning",
+          "afternoon"
+        ]
+      },
+      "subarea": "yaowarat",
+      "links": {}
+    },
+    {
+      "id": "talat-noi",
+      "kind": "sight",
+      "name": {
+        "en": "Talat Noi"
+      },
+      "why": {
+        "en": "Old shophouses, street art and car-part workshops down by the river."
+      },
+      "location": {
+        "lon": 100.5125,
+        "lat": 13.7365
+      },
+      "walk": {
+        "station": "mrt-blue-bl28",
+        "minutes": 7
+      },
+      "when": {
+        "times": [
+          "afternoon"
+        ],
+        "note": {
+          "en": "Afternoon light on the walls"
+        }
+      },
+      "subarea": "talat-noi",
+      "links": {}
+    },
+    {
+      "id": "song-wat-road",
+      "kind": "food",
+      "name": {
+        "en": "Song Wat Road"
+      },
+      "why": {
+        "en": "The old trading street turned café row, one block from the river."
+      },
+      "location": {
+        "lon": 100.506,
+        "lat": 13.74
+      },
+      "walk": {
+        "station": "mrt-blue-bl29",
+        "minutes": 7
+      },
+      "when": {
+        "times": [
+          "morning",
+          "afternoon"
+        ]
+      },
+      "subarea": "song-wat",
+      "links": {}
     }
   ]
 }

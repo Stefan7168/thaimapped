@@ -91,88 +91,6 @@
   ],
   "pins": [
     {
-      "id": "the-commons",
-      "kind": "food",
-      "name": {
-        "en": "The Commons Thonglor"
-      },
-      "why": {
-        "en": "A terraced food hall: coffee downstairs, bars and a lawn upstairs."
-      },
-      "location": {
-        "lon": 100.5822,
-        "lat": 13.735
-      },
-      "walk": {
-        "station": "bts-sukhumvit-e6",
-        "minutes": 17
-      },
-      "when": {
-        "times": [
-          "afternoon",
-          "evening"
-        ]
-      },
-      "subarea": "thonglor",
-      "links": {}
-    },
-    {
-      "id": "donki-mall",
-      "kind": "sight",
-      "name": {
-        "en": "Donki Mall Thonglor"
-      },
-      "why": {
-        "en": "The 24-hour Japanese discount store, oddly good at 02:00."
-      },
-      "location": {
-        "lon": 100.5857,
-        "lat": 13.7307
-      },
-      "walk": {
-        "station": "bts-sukhumvit-e6",
-        "minutes": 15
-      },
-      "when": {
-        "times": [
-          "afternoon",
-          "evening",
-          "night"
-        ],
-        "note": {
-          "en": "Open 24 hours"
-        }
-      },
-      "subarea": "ekkamai",
-      "links": {}
-    },
-    {
-      "id": "w-district",
-      "kind": "nightlife",
-      "name": {
-        "en": "W District"
-      },
-      "why": {
-        "en": "Open-air night market and bars at Phra Khanong, cheaper than Thonglor."
-      },
-      "location": {
-        "lon": 100.5935,
-        "lat": 13.7147
-      },
-      "walk": {
-        "station": "bts-sukhumvit-e8",
-        "minutes": 4
-      },
-      "when": {
-        "times": [
-          "evening",
-          "night"
-        ]
-      },
-      "subarea": "phra-khanong",
-      "links": {}
-    },
-    {
       "id": "thonglor-ekkamai-hotel-hotel-nikko",
       "kind": "hotel",
       "tier": "luxury",
@@ -272,6 +190,88 @@
         "licence": "CC BY-SA 3.0",
         "source": "https://commons.wikimedia.org/wiki/File:Soi_Thong_Lor_26_Sep_2012.JPG"
       }
+    },
+    {
+      "id": "the-commons",
+      "kind": "food",
+      "name": {
+        "en": "The Commons Thonglor"
+      },
+      "why": {
+        "en": "A terraced food hall: coffee downstairs, bars and a lawn upstairs."
+      },
+      "location": {
+        "lon": 100.5822,
+        "lat": 13.735
+      },
+      "walk": {
+        "station": "bts-sukhumvit-e6",
+        "minutes": 17
+      },
+      "when": {
+        "times": [
+          "afternoon",
+          "evening"
+        ]
+      },
+      "subarea": "thonglor",
+      "links": {}
+    },
+    {
+      "id": "donki-mall",
+      "kind": "sight",
+      "name": {
+        "en": "Donki Mall Thonglor"
+      },
+      "why": {
+        "en": "The 24-hour Japanese discount store, oddly good at 02:00."
+      },
+      "location": {
+        "lon": 100.5857,
+        "lat": 13.7307
+      },
+      "walk": {
+        "station": "bts-sukhumvit-e6",
+        "minutes": 15
+      },
+      "when": {
+        "times": [
+          "afternoon",
+          "evening",
+          "night"
+        ],
+        "note": {
+          "en": "Open 24 hours"
+        }
+      },
+      "subarea": "ekkamai",
+      "links": {}
+    },
+    {
+      "id": "w-district",
+      "kind": "nightlife",
+      "name": {
+        "en": "W District"
+      },
+      "why": {
+        "en": "Open-air night market and bars at Phra Khanong, cheaper than Thonglor."
+      },
+      "location": {
+        "lon": 100.5935,
+        "lat": 13.7147
+      },
+      "walk": {
+        "station": "bts-sukhumvit-e8",
+        "minutes": 4
+      },
+      "when": {
+        "times": [
+          "evening",
+          "night"
+        ]
+      },
+      "subarea": "phra-khanong",
+      "links": {}
     }
   ]
 }

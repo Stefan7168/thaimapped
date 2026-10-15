@@ -92,93 +92,6 @@
   ],
   "pins": [
     {
-      "id": "sri-maha-mariamman",
-      "kind": "sight",
-      "name": {
-        "en": "Sri Maha Mariamman Temple"
-      },
-      "why": {
-        "en": "The Hindu temple on Silom, a riot of colour; busiest at evening prayers."
-      },
-      "location": {
-        "lon": 100.523,
-        "lat": 13.7245
-      },
-      "walk": {
-        "station": "bts-silom-s5",
-        "minutes": 9
-      },
-      "when": {
-        "times": [
-          "morning",
-          "afternoon",
-          "evening"
-        ],
-        "note": {
-          "en": "Evening prayers around 18:00"
-        }
-      },
-      "subarea": "surasak",
-      "links": {}
-    },
-    {
-      "id": "silom-soi-20",
-      "kind": "food",
-      "name": {
-        "en": "Silom Soi 20 and Convent Road stalls"
-      },
-      "why": {
-        "en": "Office-worker lunch: noodle carts and curry stalls from dawn."
-      },
-      "location": {
-        "lon": 100.523,
-        "lat": 13.7251
-      },
-      "walk": {
-        "station": "bts-silom-s3",
-        "minutes": 10
-      },
-      "when": {
-        "times": [
-          "morning",
-          "afternoon"
-        ],
-        "days": [
-          "weekday"
-        ],
-        "note": {
-          "en": "Weekday lunch rush, quiet on Sunday"
-        }
-      },
-      "subarea": "silom-road",
-      "links": {}
-    },
-    {
-      "id": "silom-soi-4",
-      "kind": "nightlife",
-      "name": {
-        "en": "Silom Soi 4"
-      },
-      "why": {
-        "en": "The small gay bar soi: tables on the street, friendly to everyone."
-      },
-      "location": {
-        "lon": 100.5328,
-        "lat": 13.7287
-      },
-      "walk": {
-        "station": "bts-silom-s2",
-        "minutes": 3
-      },
-      "when": {
-        "times": [
-          "night"
-        ]
-      },
-      "subarea": "silom-road",
-      "links": {}
-    },
-    {
       "id": "silom-hotel-the-sukhothai",
       "kind": "hotel",
       "tier": "luxury",
@@ -356,6 +269,93 @@
         "licence": "Public domain",
         "source": "https://commons.wikimedia.org/wiki/File:Patpong.JPG"
       }
+    },
+    {
+      "id": "sri-maha-mariamman",
+      "kind": "sight",
+      "name": {
+        "en": "Sri Maha Mariamman Temple"
+      },
+      "why": {
+        "en": "The Hindu temple on Silom, a riot of colour; busiest at evening prayers."
+      },
+      "location": {
+        "lon": 100.523,
+        "lat": 13.7245
+      },
+      "walk": {
+        "station": "bts-silom-s5",
+        "minutes": 9
+      },
+      "when": {
+        "times": [
+          "morning",
+          "afternoon",
+          "evening"
+        ],
+        "note": {
+          "en": "Evening prayers around 18:00"
+        }
+      },
+      "subarea": "surasak",
+      "links": {}
+    },
+    {
+      "id": "silom-soi-20",
+      "kind": "food",
+      "name": {
+        "en": "Silom Soi 20 and Convent Road stalls"
+      },
+      "why": {
+        "en": "Office-worker lunch: noodle carts and curry stalls from dawn."
+      },
+      "location": {
+        "lon": 100.523,
+        "lat": 13.7251
+      },
+      "walk": {
+        "station": "bts-silom-s3",
+        "minutes": 10
+      },
+      "when": {
+        "times": [
+          "morning",
+          "afternoon"
+        ],
+        "days": [
+          "weekday"
+        ],
+        "note": {
+          "en": "Weekday lunch rush, quiet on Sunday"
+        }
+      },
+      "subarea": "silom-road",
+      "links": {}
+    },
+    {
+      "id": "silom-soi-4",
+      "kind": "nightlife",
+      "name": {
+        "en": "Silom Soi 4"
+      },
+      "why": {
+        "en": "The small gay bar soi: tables on the street, friendly to everyone."
+      },
+      "location": {
+        "lon": 100.5328,
+        "lat": 13.7287
+      },
+      "walk": {
+        "station": "bts-silom-s2",
+        "minutes": 3
+      },
+      "when": {
+        "times": [
+          "night"
+        ]
+      },
+      "subarea": "silom-road",
+      "links": {}
     }
   ]
 }

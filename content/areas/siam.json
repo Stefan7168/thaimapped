@@ -90,59 +90,6 @@
   ],
   "pins": [
     {
-      "id": "pratunam-market",
-      "kind": "market",
-      "name": {
-        "en": "Pratunam Market"
-      },
-      "why": {
-        "en": "Wholesale clothes stalls, cheapest in the city, chaotic in the right way."
-      },
-      "location": {
-        "lon": 100.5405,
-        "lat": 13.7523
-      },
-      "walk": {
-        "station": "bts-sukhumvit-e1",
-        "minutes": 13
-      },
-      "when": {
-        "times": [
-          "morning",
-          "afternoon"
-        ]
-      },
-      "subarea": "pratunam",
-      "links": {}
-    },
-    {
-      "id": "siam-square-sois",
-      "kind": "food",
-      "name": {
-        "en": "Siam Square sois"
-      },
-      "why": {
-        "en": "Student Bangkok: snack stalls, bubble tea, small shops, open late."
-      },
-      "location": {
-        "lon": 100.533,
-        "lat": 13.7447
-      },
-      "walk": {
-        "station": "bts-silom-cen",
-        "minutes": 3
-      },
-      "when": {
-        "times": [
-          "afternoon",
-          "evening",
-          "night"
-        ]
-      },
-      "subarea": "siam-square",
-      "links": {}
-    },
-    {
       "id": "siam-hotel-siam-kempinski",
       "kind": "hotel",
       "tier": "luxury",
@@ -444,6 +391,59 @@
         "licence": "CC BY 4.0",
         "source": "https://commons.wikimedia.org/wiki/File:BKK_Art_and_Culture_Centre.jpg"
       }
+    },
+    {
+      "id": "pratunam-market",
+      "kind": "market",
+      "name": {
+        "en": "Pratunam Market"
+      },
+      "why": {
+        "en": "Wholesale clothes stalls, cheapest in the city, chaotic in the right way."
+      },
+      "location": {
+        "lon": 100.5405,
+        "lat": 13.7523
+      },
+      "walk": {
+        "station": "bts-sukhumvit-e1",
+        "minutes": 13
+      },
+      "when": {
+        "times": [
+          "morning",
+          "afternoon"
+        ]
+      },
+      "subarea": "pratunam",
+      "links": {}
+    },
+    {
+      "id": "siam-square-sois",
+      "kind": "food",
+      "name": {
+        "en": "Siam Square sois"
+      },
+      "why": {
+        "en": "Student Bangkok: snack stalls, bubble tea, small shops, open late."
+      },
+      "location": {
+        "lon": 100.533,
+        "lat": 13.7447
+      },
+      "walk": {
+        "station": "bts-silom-cen",
+        "minutes": 3
+      },
+      "when": {
+        "times": [
+          "afternoon",
+          "evening",
+          "night"
+        ]
+      },
+      "subarea": "siam-square",
+      "links": {}
     }
   ]
 }
