@@ -97,6 +97,24 @@ export function nextWeekend(today = new Date()): Stay {
   return { checkIn: iso(d), checkOut: iso(out) }
 }
 
+/** The dates as one URL value, "2026-10-16_2026-10-18", so a shared link carries them. */
+export function stayParam(stay: Stay): string {
+  return `${stay.checkIn}_${stay.checkOut}`
+}
+
+export function parseStayParam(value: string | null): Stay | null {
+  const m = value?.match(/^(\d{4}-\d{2}-\d{2})_(\d{4}-\d{2}-\d{2})$/)
+  if (!m) return null
+  const stay = { checkIn: m[1], checkOut: m[2] }
+  return valid(stay) ? stay : null
+}
+
+/** Takes the dates from a shared address ("?stay=") when the visitor has none of their own yet. */
+export function adoptStayFromUrl() {
+  const sent = parseStayParam(new URLSearchParams(window.location.search).get('stay'))
+  if (sent && !read()) write(sent)
+}
+
 export function todayIso(): string {
   return iso(new Date())
 }

@@ -8,7 +8,7 @@ import type { Area, Locale, Pin, Station } from '@/lib/content/types'
 import { t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
 import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
-import { nights, useStay } from '@/lib/stay/store'
+import { adoptStayFromUrl, nights, stayParam, useStay } from '@/lib/stay/store'
 import { StayPicker } from '@/components/stay/stay-picker'
 import { trackOutbound } from '@/lib/links/track'
 import { thb } from '@/lib/explorer/price'
@@ -42,6 +42,7 @@ export function SavedPage({ locale, cityId, entries, stations }: { locale: Local
     const id = window.requestAnimationFrame(() => {
       const ids = new URLSearchParams(window.location.search).get('ids')
       setSentIds(ids ? ids.split(',').filter((id) => id) : null)
+      adoptStayFromUrl()
     })
     return () => window.cancelAnimationFrame(id)
   }, [])
@@ -55,7 +56,7 @@ export function SavedPage({ locale, cityId, entries, stations }: { locale: Local
   const placeRows = rows.filter((e) => e.pin.kind !== 'hotel')
 
   const share = async () => {
-    const url = `${window.location.origin}/${locale}/saved?ids=${encodeURIComponent(ids.join(','))}`
+    const url = `${window.location.origin}/${locale}/saved?ids=${encodeURIComponent(ids.join(','))}${stay ? `&stay=${stayParam(stay)}` : ''}`
     try {
       if (navigator.share) {
         await navigator.share({ title: s.saved.title, url })

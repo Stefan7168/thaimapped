@@ -13,7 +13,7 @@ import { WEEKEND_SLOTS, weekendPlan, type WeekendSlot } from '@/lib/explorer/wee
 import { whenLine } from '@/lib/explorer/when'
 import { thb } from '@/lib/explorer/price'
 import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
-import { nights, useStay } from '@/lib/stay/store'
+import { adoptStayFromUrl, nights, stayParam, useStay } from '@/lib/stay/store'
 import { trackOutbound } from '@/lib/links/track'
 import { supports3D } from '@/lib/map/device'
 import { SiteHeader } from '@/components/explorer/site-header'
@@ -50,7 +50,10 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes }: {
   const [price, setPrice] = useState<PriceRange | null>(null)
   // The address is not known on the server; read it once the page is live.
   useEffect(() => {
-    const id = window.requestAnimationFrame(() => setPrice(readPrice()))
+    const id = window.requestAnimationFrame(() => {
+      setPrice(readPrice())
+      adoptStayFromUrl()
+    })
     return () => window.cancelAnimationFrame(id)
   }, [])
   const plan = useMemo(() => weekendPlan(area, price), [area, price])
@@ -74,7 +77,11 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes }: {
   const explorerHref = `/${locale}/${cityId}#area=${area.id}${priceQuery ? `&${priceQuery}` : ''}`
 
   const share = async () => {
-    const url = window.location.href
+    // The link carries the budget (already in the address) and the dates, so the other person sees the same plan.
+    const u = new URL(window.location.href)
+    if (stay) u.searchParams.set('stay', stayParam(stay))
+    else u.searchParams.delete('stay')
+    const url = u.toString()
     const title = s.weekendPage.title(t(area.name, locale))
     try {
       if (navigator.share) {
