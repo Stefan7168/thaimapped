@@ -91,6 +91,87 @@
   ],
   "pins": [
     {
+      "id": "wattana-panich",
+      "kind": "food",
+      "name": {
+        "en": "Wattana Panich beef noodles"
+      },
+      "why": {
+        "en": "The 50-year broth in the giant pot; braised beef noodles at street prices."
+      },
+      "location": {
+        "lon": 100.5883,
+        "lat": 13.7349
+      },
+      "walk": {
+        "station": "bts-sukhumvit-e6",
+        "minutes": 22
+      },
+      "when": {
+        "times": [
+          "morning",
+          "afternoon"
+        ],
+        "note": {
+          "en": "Lunch, before the pot runs low"
+        }
+      },
+      "subarea": "ekkamai",
+      "links": {}
+    },
+    {
+      "id": "gateway-ekamai",
+      "kind": "sight",
+      "name": {
+        "en": "Gateway Ekamai"
+      },
+      "why": {
+        "en": "The Japanese-themed mall at the BTS: ramen floors, a supermarket, cheap sushi."
+      },
+      "location": {
+        "lon": 100.5855,
+        "lat": 13.7193
+      },
+      "walk": {
+        "station": "bts-sukhumvit-e7",
+        "minutes": 1
+      },
+      "when": {
+        "times": [
+          "afternoon",
+          "evening"
+        ]
+      },
+      "subarea": "ekkamai",
+      "links": {}
+    },
+    {
+      "id": "wat-mahabut",
+      "kind": "sight",
+      "name": {
+        "en": "Wat Mahabut (Mae Nak shrine)"
+      },
+      "why": {
+        "en": "The shrine of Bangkok's famous ghost story, by the canal at On Nut."
+      },
+      "location": {
+        "lon": 100.599,
+        "lat": 13.7152
+      },
+      "walk": {
+        "station": "bts-sukhumvit-e9",
+        "minutes": 15
+      },
+      "when": {
+        "times": [
+          "morning",
+          "afternoon"
+        ]
+      },
+      "subarea": "phra-khanong",
+      "links": {}
+    },
+    {
       "id": "thonglor-ekkamai-hotel-hotel-nikko",
       "kind": "hotel",
       "tier": "luxury",

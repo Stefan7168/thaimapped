@@ -80,6 +80,83 @@
   ],
   "pins": [
     {
+      "id": "jj-mall",
+      "kind": "sight",
+      "name": {
+        "en": "JJ Mall"
+      },
+      "why": {
+        "en": "The air-conditioned sister of the weekend market: pets, plants, crafts, open all week."
+      },
+      "location": {
+        "lon": 100.5495,
+        "lat": 13.8012
+      },
+      "walk": {
+        "station": "mrt-blue-bl12",
+        "minutes": 6
+      },
+      "when": {
+        "times": [
+          "afternoon"
+        ]
+      },
+      "subarea": "saphan-khwai",
+      "links": {}
+    },
+    {
+      "id": "chatuchak-park",
+      "kind": "sight",
+      "name": {
+        "en": "Chatuchak Park"
+      },
+      "why": {
+        "en": "The long lakeside park beside the market, a shady walk before the stalls."
+      },
+      "location": {
+        "lon": 100.553,
+        "lat": 13.803
+      },
+      "walk": {
+        "station": "mrt-blue-bl13",
+        "minutes": 1
+      },
+      "when": {
+        "times": [
+          "morning",
+          "evening"
+        ]
+      },
+      "subarea": "saphan-khwai",
+      "links": {}
+    },
+    {
+      "id": "lay-lao",
+      "kind": "food",
+      "name": {
+        "en": "Lay Lao"
+      },
+      "why": {
+        "en": "Isan food done well: som tam, grilled meats, a local favourite on the Ari sois."
+      },
+      "location": {
+        "lon": 100.5435,
+        "lat": 13.78
+      },
+      "walk": {
+        "station": "bts-sukhumvit-n5",
+        "minutes": 2
+      },
+      "when": {
+        "times": [
+          "afternoon",
+          "evening"
+        ]
+      },
+      "subarea": "ari-sois",
+      "links": {}
+    },
+    {
       "id": "ari-hotel-the-quarter-ari",
       "kind": "hotel",
       "tier": "mid",
