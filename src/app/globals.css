@@ -548,3 +548,5 @@ a.tm-wk__stop { text-decoration: none; }
 }
 .tm-wk__eyebrow--lines { display: block; }
 .tm-wk__eyebrow--lines::before { display: none; }
+
+.tm-empty { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; padding: 4px 4px 12px; }

@@ -259,7 +259,14 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
   ) : (
     <>
       <p className="px-1 pb-2 text-xs font-semibold uppercase tracking-wider text-ink-2">{s.guide.showing(pins.length)}</p>
-      {pins.length === 0 && <p className="px-1 pb-1 text-sm text-ink-2">{s.filters.noResults}</p>}
+      {pins.length === 0 && (
+        <div className="tm-empty">
+          <p className="text-sm text-ink-2">{s.filters.noResults}</p>
+          <button type="button" className="tm-card__link tm-card__link--quiet" onClick={() => update({ ...filters, kinds: [], tiers: [], price: null, times: [], days: [], near: null })}>
+            {s.filters.showAllHere}
+          </button>
+        </div>
+      )}
       {placeList}
     </>
   )

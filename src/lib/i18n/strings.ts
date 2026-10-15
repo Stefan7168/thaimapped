@@ -204,6 +204,7 @@ const en = {
     results: (n: number) => (n === 1 ? '1 place' : `${n} places`),
     emptyHint: 'Pick an area or a station to see places. Or tap an area on the map.',
     noResults: 'No places match these filters yet.',
+    showAllHere: 'Show everything here',
   },
   city: {
     walkMinutes: (n: number) => `${n} min walk`,
