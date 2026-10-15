@@ -486,7 +486,14 @@
         ]
       },
       "subarea": "silom-road",
-      "links": {}
+      "links": {},
+      "photo": {
+        "src": "/photos/pins/silom/silom-soi-4.jpg",
+        "alt": "Crowds in a Songkran water fight on Silom Soi 4",
+        "credit": "\"Soi 4 Thanon Silom 是隆路4巷\" by YANG HAI",
+        "licence": "CC BY 2.0",
+        "source": "https://www.flickr.com/photos/59377843@N06/6947233024"
+      }
     }
   ]
 }
