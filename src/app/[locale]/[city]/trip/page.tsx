@@ -1,7 +1,6 @@
 import { notFound } from 'next/navigation'
 import { liveCityIds, loadCity, loadRoutes } from '@/lib/content/load'
 import { LOCALES, isLocale } from '@/lib/i18n/locales'
-import { strings } from '@/lib/i18n/strings'
 import { SiteHeader } from '@/components/explorer/site-header'
 import { SiteFooter } from '@/components/explorer/site-footer'
 import { TripList } from '@/components/explorer/trip-list'
@@ -17,17 +16,14 @@ export default async function TripsIndexPage(props: PageProps<'/[locale]/[city]/
   if (!isLocale(locale)) notFound()
   const cityData = loadCity(city)
   if (!cityData) notFound()
-  const s = strings(locale)
   const routes = loadRoutes(city)
   return (
     <>
-      <SiteHeader locale={locale} />
-      <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-10">
-        <h1 className="font-display text-4xl font-semibold tracking-tight">{s.trip.heading}</h1>
-        <p className="mt-2 max-w-xl text-ink-2">{s.trip.intro}</p>
-        <TripList locale={locale} cityId={city} routes={routes} />
+      <SiteHeader locale={locale} cityId={city} />
+      <main className="flex-1">
+        <TripList locale={locale} cityId={city} cityCamera={cityData.camera2d} routes={routes} />
       </main>
-      <SiteFooter locale={locale} />
+      <SiteFooter locale={locale} cityId={city} />
     </>
   )
 }

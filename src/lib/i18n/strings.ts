@@ -6,10 +6,49 @@ import type { Locale } from '@/lib/content/types'
  */
 const en = {
   brand: 'ThaiMapped',
-  nav: { cities: 'Cities', trips: 'Trips' },
+  nav: { cities: 'Cities', map: 'Map', trips: 'Trips' },
+  home: {
+    headline: 'Bangkok, mapped before you book.',
+    sentence: 'See the city before you pick a hotel.',
+    action: 'Open the map',
+    facts: (areas: number, stations: number, trips: number) => `${areas} areas · ${stations} stations · ${trips} trips`,
+    showing: (place: string) => `Showing ${place}`,
+    intro: [
+      'ThaiMapped is one map of Bangkok drawn like paper. Eight areas, 193 BTS, MRT, Airport Link and SRT stations, the landmarks you have heard of, and hotels placed where they really stand.',
+      'Pick a station and you see what sits inside a ten-minute walk of it. Pick an area and you see its streets, its sub-areas and the trains that reach it.',
+      'Nothing is listed that we have not placed. A hotel with no station in walking distance says so. A trip with no road line yet says so.',
+      'Searching is free and needs no account. When you book through a link here, the hotel or tour pays us a commission and you pay the same price. Chiang Mai, Phuket and Krabi are next.',
+    ],
+    introLink: 'Open the Bangkok map',
+    areasHeading: 'Eight areas',
+    areaMeta: (stations: number, places: number) => `${stations === 1 ? '1 station' : `${stations} stations`} · ${places === 1 ? '1 place' : `${places} places`}`,
+    areaFits: (fits: string) => `Fits: ${fits}.`,
+    areaLink: (name: string) => `See ${name} on the map`,
+    howHeading: 'How a booking goes here',
+    how: [
+      { lead: 'To begin,', text: 'pick a station or an area. The map shows each station the way it is signed on the platform, with its line colour and its code, so E4 Asok on the map is E4 Asok when you arrive.' },
+      { lead: 'Within the circle,', text: 'every hotel sits at its true walk from the station, in minutes, with its price band. Tap one and the booking links appear. No hotel is sold a better place on the map.' },
+      { lead: 'For the weekend,', text: 'a trip page lays the road on the same map: where to stop for coffee, what to see and where to sleep, day by day. Filter trips by morning, afternoon or how many days you have.' },
+      { lead: 'From then on,', text: 'the map is yours. Free, no account, in English for now and in more languages later.' },
+    ],
+    tripsHeading: 'Four trips from Bangkok',
+    tripsNote: 'Filter them by morning, afternoon, how many days and how you travel.',
+    tripsLink: 'All trips',
+    tripMeta: (parts: string[]) => parts.join(' · '),
+    cta: 'See where everything is, then book with the map still open.',
+    ctaAction: 'Open the Bangkok map',
+    ctaLink: 'Browse the trips',
+    fragments: {
+      stationTitle: 'Near a station',
+      stationSearch: 'Search stations',
+      hotelWalk: (minutes: number, station: string) => `${minutes} min walk from ${station}`,
+      tripRowTitle: 'Day 1',
+    },
+  },
   trip: {
-    heading: 'Weekend trips',
-    intro: 'Road trips with the route, the stops and a place to sleep, day by day.',
+    heading: 'Trips from Bangkok',
+    intro: 'Road trips with the route, the stops and a place to sleep, day by day. Pick a row and the map moves to it.',
+    open: 'Open this trip',
     day: (n: number) => `Day ${n}`,
     days: (n: number) => (n === 1 ? '1 day' : `${n} days`),
     km: (n: number) => `${n} km`,
@@ -62,8 +101,9 @@ const en = {
   },
   pin: { hotel: 'Hotel', sight: 'Sight', food: 'Food', market: 'Market', nightlife: 'Nightlife', transport: 'Transport' } as Record<string, string>,
   footer: {
-    data: 'Map data (c) OpenStreetMap contributors, ODbL. Tiles by OpenFreeMap.',
+    data: 'Map data © OpenStreetMap contributors, ODbL. Tiles by OpenFreeMap.',
     affiliate: 'Some links earn us a commission at no cost to you.',
+    year: '2026',
   },
 } as const
 

@@ -13,6 +13,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<'/'>) {
   return (
     <html lang="en" className={`${inter.variable} ${fraunces.variable} h-full antialiased`}>
+      <head>
+        {/* Entrances hide nothing unless this runs: no script, no hidden content. */}
+        <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
+      </head>
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   )

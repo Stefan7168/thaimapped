@@ -150,7 +150,7 @@ export function CityExplorer({ locale, bundle }: { locale: Locale; bundle: CityB
         {/* Wide screens: the panel sits on the right. */}
         <aside className="hidden w-[22rem] shrink-0 overflow-y-auto border-l border-line bg-paper md:block">
           {panel}
-          <SiteFooter locale={locale} />
+          <SiteFooter locale={locale} cityId={city.id} compact />
         </aside>
 
         {/* Phones: the same panel as a bottom sheet. */}

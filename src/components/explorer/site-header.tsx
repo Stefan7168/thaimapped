@@ -2,15 +2,15 @@ import Link from 'next/link'
 import type { Locale } from '@/lib/content/types'
 import { strings } from '@/lib/i18n/strings'
 
-export function SiteHeader({ locale }: { locale: Locale }) {
+/** A plain bar: wordmark, two links. No chrome. */
+export function SiteHeader({ locale, cityId }: { locale: Locale; cityId: string }) {
   const s = strings(locale)
   return (
-    <header className="flex items-center justify-between border-b border-line bg-paper px-4 py-3">
-      <Link href={`/${locale}`} className="font-display text-xl font-semibold tracking-tight">
-        {s.brand}
-      </Link>
-      <nav className="text-sm text-ink-2">
-        <Link href={`/${locale}`}>{s.nav.cities}</Link>
+    <header className="tm-bar">
+      <Link href={`/${locale}`} className="tm-wordmark">{s.brand}</Link>
+      <nav className="tm-bar__links">
+        <Link href={`/${locale}/${cityId}`} className="tm-link">{s.nav.map}</Link>
+        <Link href={`/${locale}/${cityId}/trip`} className="tm-link">{s.nav.trips}</Link>
       </nav>
     </header>
   )

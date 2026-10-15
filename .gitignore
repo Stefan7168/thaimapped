@@ -43,5 +43,6 @@ next-env.d.ts
 # maplibre worker copied by scripts/copy-maplibre-worker.mjs
 /public/vendor
 
-# taste-skill working files (direction sheets, inspector screenshots)
-.taste-skill/
+# taste-skill working files: keep the dealt direction, not the inspector's screenshots
+.taste-skill/*
+!.taste-skill/direction.json
