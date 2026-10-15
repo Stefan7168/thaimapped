@@ -105,7 +105,8 @@ export function visiblePins(bundle: CityBundle, f: FilterState): VisiblePin[] {
         if (!inArea && !inSub) continue
       }
       if (kinds.size > 0 && !kinds.has(pin.kind)) continue
-      if (tiers.size > 0 && (!pin.tier || !tiers.has(pin.tier))) continue
+      // The budget is a hotel budget: it narrows the hotels and leaves the places alone.
+      if (tiers.size > 0 && pin.kind === 'hotel' && (!pin.tier || !tiers.has(pin.tier))) continue
       if (!fitsWhen(pin, f)) continue
       if (stations.length > 0) {
         const near = stations.some((st) => distanceM(st.lon, st.lat, pin.location.lon, pin.location.lat) <= WALK_RADIUS_M)

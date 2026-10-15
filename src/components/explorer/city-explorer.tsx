@@ -11,6 +11,7 @@ import { supports3D } from '@/lib/map/device'
 import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
 import { trackOutbound } from '@/lib/links/track'
 import { whenLine } from '@/lib/explorer/when'
+import { WEEKEND_SLOTS, weekendPlan } from '@/lib/explorer/weekend'
 import { activeFilterCount, allPins, EMPTY_FILTERS, selectedPlaceCentres, selectedStations, subareaKey, TIERS, visiblePins, type FilterState, type Tier } from '@/lib/explorer/filters'
 import type { Outline } from '@/components/map/explorer-map'
 import { FilterPanel } from './filter-panel'
@@ -98,6 +99,50 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
 
   const panel = <FilterPanel locale={locale} bundle={bundle} filters={filters} onChange={update} />
 
+  // One area picked, nothing narrower: the weekend plan sits above the list.
+  const planArea = filters.areas.length === 1 && filters.subareas.length === 0 && filters.stations.length === 0 && filters.lines.length === 0 ? areas.find((a) => a.id === filters.areas[0]) : undefined
+  const plan = useMemo(() => (planArea ? weekendPlan(planArea, filters.tiers.length === 1 ? filters.tiers[0] : null) : null), [planArea, filters.tiers])
+  const weekend = planArea && plan && (
+    <section className="tm-weekend" aria-labelledby="tm-weekend-heading" style={{ ['--pin' as string]: `var(--${planArea.color})` }}>
+      <h2 id="tm-weekend-heading" className="tm-weekend__heading">{s.guide.weekend(t(planArea.name, locale))}</h2>
+      <p className="tm-weekend__lead">{s.guide.weekendLead}</p>
+      <ol className="tm-weekend__slots">
+        {WEEKEND_SLOTS.map((slot) => (
+          <li key={slot} className="tm-weekend__slot">
+            <span className="tm-weekend__time">{s.guide.slots[slot]}</span>
+            {plan.slots[slot].length === 0 ? (
+              <span className="tm-weekend__empty">{s.guide.slotEmpty}</span>
+            ) : (
+              <span className="tm-weekend__stops">
+                {plan.slots[slot].map((pin) => (
+                  <button key={pin.id} type="button" className={`tm-weekend__stop${activePin?.id === pin.id ? ' tm-weekend__stop--on' : ''}`} onClick={() => { setActivePin(pin); setListOpen(false) }}>
+                    <span className="tm-weekend__kind">{s.pin[pin.kind]}</span>
+                    {t(pin.name, locale)}
+                  </button>
+                ))}
+              </span>
+            )}
+          </li>
+        ))}
+        <li className="tm-weekend__slot tm-weekend__slot--stay">
+          <span className="tm-weekend__time">{s.guide.stay}</span>
+          {plan.hotels.length === 0 ? (
+            <span className="tm-weekend__empty">{s.guide.stayNone}</span>
+          ) : (
+            <span className="tm-weekend__stops">
+              {plan.hotels.map((pin) => (
+                <button key={pin.id} type="button" className={`tm-weekend__stop${activePin?.id === pin.id ? ' tm-weekend__stop--on' : ''}`} onClick={() => { setActivePin(pin); setListOpen(false) }}>
+                  <span className="tm-weekend__kind">{pin.tier ? s.filters.tier[pin.tier] : s.pin.hotel}</span>
+                  {t(pin.name, locale)}
+                </button>
+              ))}
+            </span>
+          )}
+        </li>
+      </ol>
+    </section>
+  )
+
   const placeList = (
     <ul className="space-y-1">
       {pins.map(({ pin, area }) => {
@@ -169,6 +214,7 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
                 <ArrowLeft aria-hidden="true" className="size-4" />
                 {s.guide.back}
               </button>
+              {weekend}
               <p className="px-1 pb-2 text-xs font-semibold uppercase tracking-wider text-ink-2">{s.guide.showing(pins.length)}</p>
               {pins.length === 0 && <p className="px-1 pb-1 text-sm text-ink-2">{s.filters.noResults}</p>}
               {placeList}
@@ -217,6 +263,7 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
               </button>
               {listOpen && (
                 <div className="overflow-y-auto px-2 pb-2">
+                  {weekend}
                   {pins.length === 0 && <p className="px-1 pb-1 text-sm text-ink-2">{s.filters.noResults}</p>}
                   {placeList}
                 </div>
