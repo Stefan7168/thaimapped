@@ -167,7 +167,7 @@ export function AreaPage({ locale, cityId, area, areas, stations, stationSlugs }
             <li className="tm-wk__slot tm-wk__slot--stay">
               <h2 className="tm-wk__time">{s.guide.stay}</h2>
               {hotels.length > 0 && <StayPicker locale={locale} />}
-              {hotels.length > 0 && <p className="tm-wk__empty">{myHotel ? s.weekendPage.hotelPicked(t(myHotel.name, locale)) : s.weekendPage.pickHotelHint}</p>}
+              {hotels.length > 0 && <p className={myHotel ? 'tm-wk__empty' : 'tm-wk__empty tm-wk__hint'}>{myHotel ? s.weekendPage.hotelPicked(t(myHotel.name, locale)) : s.weekendPage.pickHotelHint}</p>}
               {hotels.length === 0 ? <p className="tm-wk__empty">{s.guide.stayNone}</p> : <ul className="tm-wk__stops">{hotels.map(row)}</ul>}
               {hotels.length > 1 && (
                 <div className="tm-ar__cmp">

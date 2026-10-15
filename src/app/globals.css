@@ -562,7 +562,8 @@ a.tm-wk__stop { text-decoration: none; }
 
 /* Paper: a weekend, area or station page prints as the list alone. */
 @media print {
-  .tm-bar__links, .tm-footer__links, .tm-stage__map, .tm-save, .tm-wk__links, .tm-wk__actions, .tm-weekend__share, .tm-kind, .tm-near__note { display: none !important; }
+  .tm-bar__links, .tm-footer__links, .tm-stage__map, .tm-save, .tm-wk__links, .tm-wk__actions, .tm-weekend__share, .tm-kind, .tm-near__note, .tm-stay, .tm-wk__hint, .tm-cmp__links, .tm-cmp tr:has(.tm-cmp__links) { display: none !important; } /* no date inputs, tap hints or booking links on paper; the headings carry the dates */
+  .tm-cmp__wrap { overflow: visible; }
   .tm-stage { display: block; }
   .tm-sheet { width: 100%; max-width: none; padding: 0; }
   .tm-wk__stop, .tm-wk__item { break-inside: avoid; }
