@@ -60,13 +60,13 @@ body {
 .tm-pin--active .tm-pin__dot { box-shadow: 0 0 0 3px rgba(200,85,61,0.35), 0 1px 3px rgba(0,0,0,0.3); } /* taste-skill-ignore: map marker halo */
 .tm-pin--active .tm-pin__label { border-color: var(--ink); }
 .tm-map--dots .tm-pin:not(.tm-pin--active):not(.tm-pin--area) .tm-pin__label { display: none; }
-.tm-pin--left { position: relative; }
 .tm-pin--left .tm-pin__label { position: absolute; right: 100%; top: 50%; transform: translateY(-50%); margin-right: 6px; }
 .tm-label--off { visibility: hidden; } /* hidden by lib/map/declutter.ts: it would cover a label with more right to the spot */
 .tm-map--nums .tm-stop:not(.tm-stop--active) .tm-stop__label { display: none; } /* narrow stage: numbers only, the list has the names */
 @media (max-width: 767px) { .tm-pin--area .tm-pin__label { font-size: 12px; padding: 1px 6px; } }
 .tm-pin--stack { flex-direction: column; gap: 2px; }
 .tm-pin--stack .tm-pin__dot { margin-top: -6px; }
+.tm-pin--stack.tm-pin--up .tm-pin__label { position: absolute; bottom: calc(100% - 2px); left: 50%; transform: translateX(-50%); }
 
 /* The card on a tapped pin. */
 .tm-card-popup .maplibregl-popup-content { padding: 0; background: transparent; box-shadow: none; border-radius: 0; }

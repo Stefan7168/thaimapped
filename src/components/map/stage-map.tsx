@@ -189,8 +189,13 @@ export function StageMap({ locale, camera, threeD, areas, route, routes = [], fo
       for (const a of areas) {
         // The area whose highlights are pinned drops its own label: the pins say where it is.
         if (focus?.pins.length && a.id === focus.area.id) continue
-        const el = labelElement(t(a.name, locale), `var(--${a.color})`, !!focus && a.id !== focus.area.id)
-        markersRef.current.push(new maplibregl.Marker({ element: el, anchor: 'left' }).setLngLat(a.camera.center).addTo(map))
+        // A narrow map gets the short name (before "and" or a bracket), as the explorer does; the full name is in the text beside it.
+        const full = t(a.name, locale)
+        const narrow = map.getContainer().clientWidth < 600
+        const el = labelElement(narrow ? full.split(/ and | \(/)[0] : full, `var(--${a.color})`, !!focus && a.id !== focus.area.id)
+        // Stacked under the dot on a phone, as on the explorer, so neighbouring areas do not run into each other.
+        if (narrow && !focus) el.classList.add('tm-pin--stack')
+        markersRef.current.push(new maplibregl.Marker({ element: el, anchor: narrow && !focus ? 'top' : 'left' }).setLngLat(a.camera.center).addTo(map))
       }
       ;(focus?.pins ?? []).forEach((pin, i) => {
         const el = focus!.numbered ? numberElement(i + 1, `var(--${focus!.area.color})`) : labelElement(t(pin.name, locale), `var(--${focus!.area.color})`, false)
@@ -271,8 +276,16 @@ export function StageMap({ locale, camera, threeD, areas, route, routes = [], fo
       })
       return
     }
+    if (!focus && areas.length > 1 && map.getContainer().clientWidth < 600) {
+      // A phone's narrow band cannot hold the city camera's frame: fit every area dot instead, with room on the right for the names.
+      const lons = areas.map((a) => a.camera.center[0]), lats = areas.map((a) => a.camera.center[1])
+      map.fitBounds([[Math.min(...lons), Math.min(...lats)], [Math.max(...lons), Math.max(...lats)]], {
+        padding: { top: 32, bottom: 72, left: 48, right: 48 }, maxZoom: camera.zoom, pitch: 0, bearing: 0, duration: 1600, essential: true,
+      })
+      return
+    }
     map.flyTo({ center: camera.center, zoom: camera.zoom, pitch: threeD ? camera.pitch : 0, bearing: threeD ? camera.bearing : 0, duration: 1600, essential: true })
-  }, [camera, route, routes, threeD, focus, marker, mapReady])
+  }, [camera, route, routes, threeD, focus, marker, mapReady, areas])
 
   return <div ref={containerRef} className="h-full w-full bg-paper" />
 }

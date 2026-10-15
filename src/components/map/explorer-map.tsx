@@ -260,7 +260,7 @@ export function ExplorerMap(props: ExplorerMapProps) {
       // A phone is tall and narrow: the city camera is set for a wide screen, so frame the eight area labels instead.
       if (window.innerWidth < 768 && areas.length > 0) {
         const pts = areas.map((a) => a.camera.center)
-        const cam = map.cameraForBounds([[Math.min(...pts.map((p) => p[0])), Math.min(...pts.map((p) => p[1]))], [Math.max(...pts.map((p) => p[0])), Math.max(...pts.map((p) => p[1]))]], { padding: { top: 60, bottom: 120, left: 36, right: 36 }, maxZoom: 13 })
+        const cam = map.cameraForBounds([[Math.min(...pts.map((p) => p[0])), Math.min(...pts.map((p) => p[1]))], [Math.max(...pts.map((p) => p[0])), Math.max(...pts.map((p) => p[1]))]], { padding: { top: 60, bottom: 120, left: 48, right: 48 }, maxZoom: 13 })
         if (cam) {
           map.flyTo({ center: cam.center, zoom: cam.zoom, pitch: 0, bearing: 0, duration: 1400, essential: true })
           return

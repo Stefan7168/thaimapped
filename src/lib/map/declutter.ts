@@ -10,6 +10,8 @@ import type { Marker } from 'maplibre-gl'
 const LABEL = '.tm-pin__label, .tm-stop__label'
 const OFF = 'tm-label--off'
 const LEFT = 'tm-pin--left'
+const STACK = 'tm-pin--stack'
+const UP = 'tm-pin--up'
 
 function rank(el: HTMLElement): number {
   if (el.classList.contains('tm-pin--active') || el.classList.contains('tm-stop--active')) return 0
@@ -37,10 +39,20 @@ export function declutterLabels(markers: Marker[], container: HTMLElement | null
   const rects = labels.map((l) => l.getBoundingClientRect())
   // The picked area's name pill (area-hover.ts) has the spot first.
   const kept: DOMRect[] = [...(container?.querySelectorAll<HTMLElement>('.tm-area-pill') ?? [])].map((el) => el.getBoundingClientRect()).filter((r) => r.width > 0)
+  const hits = (r: DOMRect) => kept.some((k) => r.left < k.right + 2 && r.right > k.left - 2 && r.top < k.bottom + 2 && r.bottom > k.top - 2)
   labels.forEach((l, i) => {
-    const r = rects[i]
+    let r = rects[i]
     if (r.width === 0) return
-    const hit = kept.some((k) => r.left < k.right + 2 && r.right > k.left - 2 && r.top < k.bottom + 2 && r.bottom > k.top - 2)
+    const pin = l.closest<HTMLElement>('.tm-pin')
+    pin?.classList.remove(UP)
+    let hit = hits(r)
+    // A stacked name that would cover a neighbour tries the spot above its dot before giving up.
+    if (hit && pin?.classList.contains(STACK)) {
+      pin.classList.add(UP)
+      r = l.getBoundingClientRect()
+      hit = hits(r)
+      if (hit) pin.classList.remove(UP)
+    }
     if (hit) l.classList.add(OFF)
     else kept.push(r)
   })
