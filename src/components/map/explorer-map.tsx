@@ -11,6 +11,7 @@ import { WALK_RADIUS_M, type VisiblePin } from '@/lib/explorer/filters'
 
 export const PAPER_STYLE_URL = '/map/paper.json'
 const WALK_CIRCLE_SOURCE = 'tm-walk-circle'
+const OUTLINE_SOURCE = 'tm-area-outline'
 
 export interface ExplorerMapProps {
   locale: Locale
@@ -23,6 +24,8 @@ export interface ExplorerMapProps {
   stations: Station[]
   /** Centres of picked areas and sub-areas, framed even when no pin matches. */
   centres: [number, number][]
+  /** Ticked areas whose district border is drawn and framed. */
+  outlines: Area[]
   /** Pin to highlight, if any. */
   activePinId: string | null
   onSelectArea: (id: string) => void
@@ -54,8 +57,9 @@ function pinElement(label: string, color: string, minor: boolean, active: boolea
 }
 
 /** Bounds around every pin and station circle, or null when there is nothing to frame. */
-function focusBounds(pins: VisiblePin[], stations: Station[], centres: [number, number][]): LngLatBoundsLike | null {
+function focusBounds(pins: VisiblePin[], stations: Station[], centres: [number, number][], outlines: Area[]): LngLatBoundsLike | null {
   const pts: [number, number][] = [...centres]
+  for (const a of outlines) for (const poly of a.boundary?.coordinates ?? []) for (const [lon, lat] of poly[0]) pts.push([lon, lat])
   for (const { pin } of pins) pts.push([pin.location.lon, pin.location.lat])
   for (const st of stations) {
     const dLat = WALK_RADIUS_M / 111_320
@@ -73,7 +77,7 @@ function focusBounds(pins: VisiblePin[], stations: Station[], centres: [number, 
 }
 
 export function ExplorerMap(props: ExplorerMapProps) {
-  const { locale, cityCamera, threeD, areas, pins, stations, centres, activePinId, onSelectArea, onSelectPin } = props
+  const { locale, cityCamera, threeD, areas, pins, stations, centres, outlines, activePinId, onSelectArea, onSelectPin } = props
   const containerRef = useRef<HTMLDivElement>(null)
   const mapRef = useRef<MaplibreMap | null>(null)
   const markersRef = useRef<Marker[]>([])
@@ -110,6 +114,10 @@ export function ExplorerMap(props: ExplorerMapProps) {
         map.addSource(WALK_CIRCLE_SOURCE, { type: 'geojson', data: { type: 'FeatureCollection', features: [] } })
         map.addLayer({ id: `${WALK_CIRCLE_SOURCE}-fill`, type: 'fill', source: WALK_CIRCLE_SOURCE, paint: { 'fill-color': '#c8553d', 'fill-opacity': 0.1 } })
         map.addLayer({ id: `${WALK_CIRCLE_SOURCE}-line`, type: 'line', source: WALK_CIRCLE_SOURCE, paint: { 'line-color': '#c8553d', 'line-width': 1.5, 'line-dasharray': [2, 2] } })
+        // The district border of each ticked area, in the area's own colour.
+        map.addSource(OUTLINE_SOURCE, { type: 'geojson', data: { type: 'FeatureCollection', features: [] } })
+        map.addLayer({ id: `${OUTLINE_SOURCE}-fill`, type: 'fill', source: OUTLINE_SOURCE, paint: { 'fill-color': ['get', 'color'], 'fill-opacity': 0.08 } })
+        map.addLayer({ id: `${OUTLINE_SOURCE}-line`, type: 'line', source: OUTLINE_SOURCE, layout: { 'line-join': 'round' }, paint: { 'line-color': ['get', 'color'], 'line-width': 2.5, 'line-opacity': 0.9 } })
         mapRef.current = map
         setMapReady((n) => n + 1)
       })
@@ -162,13 +170,13 @@ export function ExplorerMap(props: ExplorerMapProps) {
   useEffect(() => {
     const map = mapRef.current
     if (!map || isGestureActive(map)) return
-    const bounds = focusBounds(pins, stations, centres)
+    const bounds = focusBounds(pins, stations, centres, outlines)
     if (!bounds) {
       map.flyTo({ center: cityCamera.center, zoom: cityCamera.zoom, pitch: threeD ? cityCamera.pitch : 0, bearing: threeD ? cityCamera.bearing : 0, duration: 1400, essential: true })
       return
     }
     map.fitBounds(bounds, { padding: 60, maxZoom: 15.5, pitch: threeD ? 50 : 0, bearing: threeD ? -12 : 0, duration: 1400, essential: true })
-  }, [pins, stations, centres, threeD, cityCamera, mapReady])
+  }, [pins, stations, centres, outlines, threeD, cityCamera, mapReady])
 
   useEffect(() => {
     const map = mapRef.current
@@ -176,6 +184,19 @@ export function ExplorerMap(props: ExplorerMapProps) {
     const src = map.getSource(WALK_CIRCLE_SOURCE) as { setData?: (d: GeoJSON.GeoJSON) => void } | undefined
     src?.setData?.({ type: 'FeatureCollection', features: stations.map((st) => circlePolygon(st.lon, st.lat, WALK_RADIUS_M)) })
   }, [stations, mapReady])
+
+  // Outlines of the ticked areas. The colour comes from the same CSS token
+  // the labels use, read once per update so the map and the panel agree.
+  useEffect(() => {
+    const map = mapRef.current
+    if (!map) return
+    const src = map.getSource(OUTLINE_SOURCE) as { setData?: (d: GeoJSON.GeoJSON) => void } | undefined
+    const styles = getComputedStyle(document.documentElement)
+    const features: GeoJSON.Feature[] = outlines.flatMap((a) =>
+      a.boundary ? [{ type: 'Feature', properties: { color: styles.getPropertyValue(`--${a.color}`).trim() || '#c8553d' }, geometry: a.boundary }] : [],
+    )
+    src?.setData?.({ type: 'FeatureCollection', features })
+  }, [outlines, mapReady])
 
   return <div ref={containerRef} className="h-full w-full bg-paper" aria-label="Map" role="region" />
 }

@@ -74,6 +74,19 @@ for (const { id: cityId } of country.cities) {
     if (seenColors.has(area.color)) errors.push(`${label}: color ${area.color} already used by ${seenColors.get(area.color)}`)
     seenColors.set(area.color, areaId)
     for (const st of area.stations ?? []) if (!stationIds.has(st)) errors.push(`${label}: unknown station ${st}`)
+    if (area.polygon) {
+      let outline
+      try {
+        outline = read(area.polygon)
+      } catch {
+        errors.push(`${label}: polygon file ${area.polygon} is missing`)
+      }
+      if (outline) {
+        if (outline.type !== 'Feature' || outline.geometry?.type !== 'MultiPolygon') errors.push(`${area.polygon}: must be a Feature with a MultiPolygon`)
+        if (outline.properties?.area !== areaId) errors.push(`${area.polygon}: belongs to ${outline.properties?.area}, not ${areaId}`)
+        if (!outline.properties?.source) errors.push(`${area.polygon}: has no source note`)
+      }
+    }
     const subIds = new Set()
     for (const sub of area.subareas ?? []) {
       if (subIds.has(sub.id)) errors.push(`${label}: duplicate sub-area ${sub.id}`)

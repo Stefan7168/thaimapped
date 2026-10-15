@@ -30,6 +30,7 @@
     "ajv-formats": "^3.0.1",
     "eslint": "^9",
     "eslint-config-next": "16.4.1",
+    "polyclip-ts": "^0.16.8",
     "tailwindcss": "^4",
     "tsx": "^4.23.15",
     "typescript": "^5"

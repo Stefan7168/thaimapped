@@ -21,6 +21,7 @@
     "pitch": 52,
     "bearing": -15
   },
+  "polygon": "boundaries/silom.geojson",
   "stations": [
     "bts-silom-s2",
     "mrt-blue-bl26",

@@ -21,6 +21,7 @@
     "pitch": 52,
     "bearing": -10
   },
+  "polygon": "boundaries/chinatown.geojson",
   "stations": [
     "mrt-blue-bl29",
     "mrt-blue-bl28"

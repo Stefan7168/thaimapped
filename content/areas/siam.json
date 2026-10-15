@@ -21,6 +21,7 @@
     "pitch": 52,
     "bearing": -8
   },
+  "polygon": "boundaries/siam.geojson",
   "stations": [
     "bts-silom-cen",
     "bts-sukhumvit-e1"

@@ -30,7 +30,11 @@ export function loadCity(cityId: string): City | null {
 export function loadCityBundle(cityId: string): CityBundle | null {
   const city = loadCity(cityId)
   if (!city) return null
-  const areas = city.areas.map((id) => read<Area>(`areas/${id}.json`))
+  const areas = city.areas.map((id) => {
+    const area = read<Area>(`areas/${id}.json`)
+    if (area.polygon) area.boundary = read<GeoJSON.Feature<GeoJSON.MultiPolygon>>(area.polygon).geometry
+    return area
+  })
   const stations = city.stations ? read<{ stations: Station[] }>(city.stations).stations : []
   const lines = city.lines ? read<{ lines: Line[] }>(city.lines).lines : []
   return { city, areas, stations, lines }

@@ -21,6 +21,7 @@
     "pitch": 52,
     "bearing": 0
   },
+  "polygon": "boundaries/old-town.geojson",
   "stations": [
     "mrt-blue-bl31",
     "mrt-blue-bl30"

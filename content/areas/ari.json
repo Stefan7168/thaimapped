@@ -22,6 +22,7 @@
     "pitch": 52,
     "bearing": 0
   },
+  "polygon": "boundaries/ari.geojson",
   "stations": [
     "bts-sukhumvit-n5"
   ],

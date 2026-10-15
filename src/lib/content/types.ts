@@ -82,7 +82,10 @@ export interface Area {
   fits: string[]
   color: `area-${1 | 2 | 3 | 4 | 5 | 6 | 7 | 8}`
   camera: Camera
+  /** Path under content/ of the area's outline file (see scripts/area-boundaries.mjs). */
   polygon?: string
+  /** The outline itself, read from `polygon` at load time: the border of the district(s) the area sits in. */
+  boundary?: GeoJSON.MultiPolygon
   stations: string[]
   subareas: Subarea[]
   video: Video | null

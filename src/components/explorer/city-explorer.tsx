@@ -36,6 +36,8 @@ export function CityExplorer({ locale, bundle }: { locale: Locale; bundle: CityB
   const pins = useMemo(() => visiblePins(bundle, filters), [bundle, filters])
   const stations = useMemo(() => selectedStations(bundle, filters), [bundle, filters])
   const centres = useMemo(() => selectedPlaceCentres(bundle, filters), [bundle, filters])
+  // Whole areas that are ticked draw their district border on the map.
+  const outlines = useMemo(() => areas.filter((a) => a.boundary && filters.areas.includes(a.id)), [areas, filters.areas])
   const stationById = useMemo(() => new Map(bundle.stations.map((st) => [st.id, st])), [bundle])
   const count = activeFilterCount(filters)
 
@@ -89,6 +91,7 @@ export function CityExplorer({ locale, bundle }: { locale: Locale; bundle: CityB
               pins={pins}
               stations={stations}
               centres={centres}
+              outlines={outlines}
               activePinId={activePin?.id ?? null}
               onSelectArea={(id) => update({ ...filters, areas: [id] })}
               onSelectPin={(pin) => setActivePin(pin)}

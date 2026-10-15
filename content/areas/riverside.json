@@ -22,6 +22,7 @@
     "pitch": 52,
     "bearing": -20
   },
+  "polygon": "boundaries/riverside.geojson",
   "stations": [
     "bts-silom-s6"
   ],

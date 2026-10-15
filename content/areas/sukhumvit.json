@@ -22,6 +22,7 @@
     "pitch": 52,
     "bearing": -12
   },
+  "polygon": "boundaries/sukhumvit.geojson",
   "stations": [
     "bts-sukhumvit-e4",
     "mrt-blue-bl22"

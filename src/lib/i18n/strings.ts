@@ -101,7 +101,7 @@ const en = {
   },
   pin: { hotel: 'Hotel', sight: 'Sight', food: 'Food', market: 'Market', nightlife: 'Nightlife', transport: 'Transport' } as Record<string, string>,
   footer: {
-    data: 'Map data © OpenStreetMap contributors, ODbL. Tiles by OpenFreeMap.',
+    data: 'Map data © OpenStreetMap contributors, ODbL. Tiles by OpenFreeMap. District borders courtesy of geoBoundaries.org (Royal Thai Survey Department via OCHA, CC BY 3.0 IGO).',
     affiliate: 'Some links earn us a commission at no cost to you.',
     year: '2026',
   },
