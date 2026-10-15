@@ -13,6 +13,7 @@
     "check": "pnpm validate:content && pnpm typecheck && pnpm lint"
   },
   "dependencies": {
+    "lucide-react": "^1.57.0",
     "maplibre-gl": "^6.14.0",
     "next": "16.4.1",
     "pmtiles": "^4.5.0",

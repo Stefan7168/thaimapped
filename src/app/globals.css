@@ -55,3 +55,5 @@ body {
 .tm-pin__label { font-size: 12px; font-weight: 600; color: var(--ink); background: rgba(246,244,238,0.92); padding: 2px 7px; border-radius: 6px; border: 1px solid var(--line); white-space: nowrap; }
 .tm-pin--minor .tm-pin__dot { width: 9px; height: 9px; }
 .tm-pin--minor .tm-pin__label { font-weight: 500; color: var(--ink-2); }
+.tm-pin--active .tm-pin__dot { box-shadow: 0 0 0 3px rgba(200,85,61,0.35), 0 1px 3px rgba(0,0,0,0.3); }
+.tm-pin--active .tm-pin__label { border-color: var(--ink); }
