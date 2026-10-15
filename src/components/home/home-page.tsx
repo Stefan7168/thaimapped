@@ -5,6 +5,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
 import type { Area, Camera, CityBundle, Locale, Pin, TripRoute } from '@/lib/content/types'
+import { TIERS } from '@/lib/explorer/filters'
+import { QUIZ_PACES, QUIZ_PURPOSES, rankAreas, type Pace, type QuizAnswers } from '@/lib/explorer/quiz'
 import { t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
 import { supports3D } from '@/lib/map/device'
@@ -33,6 +35,19 @@ export function HomePage({ locale, bundle, routes }: { locale: Locale; bundle: C
   const detected3D = useSyncExternalStore(noopSubscribe, supports3D, () => null)
   const threeD = detected3D ?? false
   const [activeArea, setActiveArea] = useState<string | null>(null)
+  // The quiz: three answers rank the areas; the best one lights up on the map.
+  const [answers, setAnswers] = useState<QuizAnswers>({ purpose: null, tier: null, pace: null })
+  const ranked = useMemo(() => (answers.purpose || answers.tier || answers.pace ? rankAreas(areas, answers) : []), [areas, answers])
+  const best = ranked.length > 0 && ranked[0].score > 0 ? ranked[0] : null
+  const runnersUp = best ? ranked.slice(1, 3).filter((r) => r.score > 0 && r.score >= best.score - 1) : []
+  // Answering lights the winning area up on the map (set in the handler, not an effect).
+  const answer = (patch: Partial<QuizAnswers>) =>
+    setAnswers((prev) => {
+      const next = { ...prev, ...patch }
+      const top = rankAreas(areas, next)[0]
+      if (top && top.score > 0) setActiveArea(top.area.id)
+      return next
+    })
   // The highlight the reader tapped open.
   const [cardPin, setCardPin] = useState<{ pin: Pin; area: Area } | null>(null)
   const rowsRef = useRef<Map<string, HTMLElement>>(new Map())
@@ -124,6 +139,52 @@ export function HomePage({ locale, bundle, routes }: { locale: Locale; bundle: C
                 )}
               </p>
             ))}
+          </section>
+
+          <section className="tm-quiz" aria-labelledby="tm-quiz-heading">
+            <h2 id="tm-quiz-heading" className="tm-h2" data-reveal>{s.home.quiz.heading}</h2>
+            <p className="tm-quiz__lead" data-reveal>{s.home.quiz.lead}</p>
+            <div className="tm-quiz__q" data-reveal>
+              <p className="tm-quiz__label">{s.home.quiz.purpose}</p>
+              <div className="tm-quiz__chips">
+                {QUIZ_PURPOSES.map((v) => (
+                  <button key={v} type="button" aria-pressed={answers.purpose === v} className="tm-quiz__chip" onClick={() => answer({ purpose: answers.purpose === v ? null : v })}>{s.home.quiz.purposes[v]}</button>
+                ))}
+              </div>
+            </div>
+            <div className="tm-quiz__q" data-reveal>
+              <p className="tm-quiz__label">{s.home.quiz.tier}</p>
+              <div className="tm-quiz__chips">
+                {TIERS.map((v) => (
+                  <button key={v} type="button" aria-pressed={answers.tier === v} className="tm-quiz__chip" onClick={() => answer({ tier: answers.tier === v ? null : v })}>{s.filters.tier[v]}</button>
+                ))}
+              </div>
+            </div>
+            <div className="tm-quiz__q" data-reveal>
+              <p className="tm-quiz__label">{s.home.quiz.pace}</p>
+              <div className="tm-quiz__chips">
+                {(Object.keys(QUIZ_PACES) as Pace[]).map((v) => (
+                  <button key={v} type="button" aria-pressed={answers.pace === v} className="tm-quiz__chip" onClick={() => answer({ pace: answers.pace === v ? null : v })}>{s.home.quiz.paces[v]}</button>
+                ))}
+              </div>
+            </div>
+            <div className="tm-quiz__result" aria-live="polite">
+              {!best ? (
+                <p className="tm-quiz__empty">{s.home.quiz.empty}</p>
+              ) : (
+                <div className="tm-quiz__card" style={{ ['--pin' as string]: `var(--${best.area.color})` }}>
+                  <p className="tm-quiz__name">{s.home.quiz.result(t(best.area.name, locale))}</p>
+                  <p className="tm-quiz__why">{t(best.area.tagline, locale)}</p>
+                  {answers.tier && (best.hotel ? (
+                    <p className="tm-quiz__hotel"><span className="tm-quiz__label">{s.home.quiz.hotelPick}</span><strong>{t(best.hotel.name, locale)}</strong> {t(best.hotel.why, locale)}</p>
+                  ) : (
+                    <p className="tm-quiz__hotel">{s.home.quiz.noHotel}</p>
+                  ))}
+                  {runnersUp.length > 0 && <p className="tm-quiz__also">{s.home.quiz.alsoFits(runnersUp.map((r) => t(r.area.name, locale)).join(', '))}</p>}
+                  <Link href={`${mapHref}#area=${best.area.id}${answers.tier ? `&tier=${answers.tier}` : ''}`} className="tm-button">{s.home.quiz.open(t(best.area.name, locale))}</Link>
+                </div>
+              )}
+            </div>
           </section>
 
           <section className="tm-areas" aria-labelledby="tm-areas-heading">

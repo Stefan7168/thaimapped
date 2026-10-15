@@ -196,7 +196,29 @@ body {
 .tm-hero__title { font-family: var(--font-display), Georgia, serif; font-weight: 600; font-size: var(--step-display); line-height: 1.02; letter-spacing: -0.02em; color: var(--accent); max-width: 18ch; text-wrap: balance; }
 .tm-hero__line { font-size: var(--step-body); line-height: 1.5; color: var(--ink); max-width: 40ch; }
 
-.tm-intro { padding: 0 32px 160px var(--axis); max-width: calc(var(--axis) + 340px); }
+.tm-intro { padding: 0 32px 120px var(--axis); max-width: calc(var(--axis) + 340px); }
+.tm-quiz { padding: 0 32px 160px var(--axis); max-width: calc(var(--axis) + 460px); }
+.tm-quiz__lead { margin: 12px 0 28px; font-size: 16px; color: var(--ink-2); }
+.tm-quiz__q + .tm-quiz__q { margin-top: 22px; }
+.tm-quiz__label { margin: 0 0 8px; font-size: var(--step-small); font-weight: 500; color: var(--ink-2); }
+.tm-quiz__chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.tm-quiz__chip { min-height: 40px; padding: 6px 16px; border: 1px solid var(--line); border-radius: 9999px; background: var(--paper); color: var(--ink); font: inherit; font-size: 16px; cursor: pointer; transition: background-color var(--t-hover) ease, border-color var(--t-hover) ease, transform var(--t-press) var(--ease-out); }
+.tm-quiz__chip:active { transform: scale(0.97); }
+.tm-quiz__chip[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.tm-quiz__chip:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+.tm-quiz__result { margin-top: 32px; min-height: 120px; }
+.tm-quiz__empty { font-size: 16px; color: var(--ink-2); }
+.tm-quiz__card { padding: 20px 24px 24px; background: var(--paper-2); border-left: 4px solid var(--pin, var(--accent)); }
+.tm-quiz__name { font-family: var(--font-display), Georgia, serif; font-weight: 600; font-size: var(--step-row); line-height: 1.1; }
+.tm-quiz__why { margin: 8px 0 0; font-size: 16px; line-height: 1.5; }
+.tm-quiz__hotel { margin: 14px 0 0; font-size: 16px; line-height: 1.5; }
+.tm-quiz__hotel .tm-quiz__label { display: block; margin-bottom: 2px; }
+.tm-quiz__also { margin: 10px 0 0; font-size: var(--step-small); color: var(--ink-2); }
+.tm-quiz__card .tm-button { margin-top: 18px; }
+@media (hover: hover) and (pointer: fine) {
+  .tm-quiz__chip:hover { background: #fff; border-color: var(--ink-2); }
+  .tm-quiz__chip[aria-pressed="true"]:hover { background: var(--ink); }
+}
 .tm-intro p { font-size: 16px; line-height: 1.5; color: var(--ink); }
 .tm-intro p + p { margin-top: 1.5em; }
 .tm-intro p:first-child { font-weight: 500; color: var(--ink); }
@@ -338,6 +360,7 @@ body {
   .tm-areas, .tm-how { padding: 0 20px 96px; }
   .tm-row__head { min-height: 56px; }
   .tm-hl { margin-left: 0; max-width: none; }
+  .tm-quiz { padding: 0 var(--margin) 96px; max-width: none; }
   .tm-hl__link { margin-left: 0; }
   .tm-trips__inner { grid-template-columns: 1fr; }
   .tm-trips__drawing { grid-row: auto; }

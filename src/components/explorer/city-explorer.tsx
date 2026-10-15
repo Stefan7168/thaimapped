@@ -2,7 +2,7 @@
 
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
-import { useMemo, useState, useSyncExternalStore } from 'react'
+import { useEffect, useMemo, useState, useSyncExternalStore } from 'react'
 import { ArrowLeft, SlidersHorizontal, X } from 'lucide-react'
 import type { CityBundle, Locale, Pin, Station, TripRoute } from '@/lib/content/types'
 import { t } from '@/lib/i18n/locales'
@@ -11,7 +11,7 @@ import { supports3D } from '@/lib/map/device'
 import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
 import { trackOutbound } from '@/lib/links/track'
 import { whenLine } from '@/lib/explorer/when'
-import { activeFilterCount, allPins, EMPTY_FILTERS, selectedPlaceCentres, selectedStations, subareaKey, visiblePins, type FilterState } from '@/lib/explorer/filters'
+import { activeFilterCount, allPins, EMPTY_FILTERS, selectedPlaceCentres, selectedStations, subareaKey, TIERS, visiblePins, type FilterState, type Tier } from '@/lib/explorer/filters'
 import type { Outline } from '@/components/map/explorer-map'
 import { FilterPanel } from './filter-panel'
 import { TopSearch, type SearchHit } from './top-search'
@@ -37,6 +37,24 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
   const [override3D, setOverride3D] = useState<boolean | null>(null)
   const threeD = override3D ?? detected3D
   const [filters, setFilters] = useState<FilterState>(EMPTY_FILTERS)
+  // A link from the home page quiz carries "#area=<id>&tier=<tier>". The hash never reaches the
+  // server, so it is read once the page is live, in a frame callback rather than straight in the effect.
+  useEffect(() => {
+    const apply = () => {
+      const h = new URLSearchParams(window.location.hash.replace(/^#/, ''))
+      const area = h.get('area')
+      const tier = h.get('tier')
+      if (!area && !tier) return
+      const next: FilterState = { ...EMPTY_FILTERS, areas: area && areas.some((a) => a.id === area) ? [area] : [], tiers: tier && (TIERS as readonly string[]).includes(tier) ? [tier as Tier] : [] }
+      setFilters(next)
+    }
+    const id = window.requestAnimationFrame(apply)
+    window.addEventListener('hashchange', apply)
+    return () => {
+      window.cancelAnimationFrame(id)
+      window.removeEventListener('hashchange', apply)
+    }
+  }, [areas])
   const [activePin, setActivePin] = useState<Pin | null>(null)
   const [sheetOpen, setSheetOpen] = useState(false)
   // Phones: the place list starts as a one-line handle so the map stays visible.
