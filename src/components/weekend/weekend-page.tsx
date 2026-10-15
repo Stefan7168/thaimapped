@@ -51,10 +51,13 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes }: {
   const stay = useStay()
   const detected3D = useSyncExternalStore(noopSubscribe, supports3D, () => null)
   const [price, setPrice] = useState<PriceRange | null>(null)
+  // A hotel named in the address ("?hotel=") by whoever sent the link: used as theirs for this visit, never saved.
+  const [sentHotel, setSentHotel] = useState<string | null>(null)
   // The address is not known on the server; read it once the page is live.
   useEffect(() => {
     const id = window.requestAnimationFrame(() => {
       setPrice(readPrice())
+      setSentHotel(new URLSearchParams(window.location.search).get('hotel'))
       adoptStayFromUrl()
     })
     return () => window.cancelAnimationFrame(id)
@@ -69,7 +72,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes }: {
   const hotels = useMemo(() => [...plan.hotels].sort((a, b) => Number(saved.includes(b.id)) - Number(saved.includes(a.id))), [plan.hotels, saved])
   const pinned = useMemo(() => [...stops, ...hotels], [stops, hotels])
   // The hotel the reader saved (hearted) in this area: every stop then says how far it is from that door.
-  const myHotel = useMemo(() => hotels.find((h) => saved.includes(h.id)) ?? null, [hotels, saved])
+  const myHotel = useMemo(() => hotels.find((h) => h.id === sentHotel) ?? hotels.find((h) => saved.includes(h.id)) ?? null, [hotels, saved, sentHotel])
   const fromHotel = (pin: Pin) => (myHotel ? Math.max(1, Math.round(distanceM(myHotel.location.lon, myHotel.location.lat, pin.location.lon, pin.location.lat) / WALK_PACE_M_PER_MIN)) : null)
   // Stops of this weekend inside a ten-minute walk of a hotel, straight-line at walking pace.
   const nearbyCount = (hotel: Pin) => stops.filter((p) => distanceM(hotel.location.lon, hotel.location.lat, p.location.lon, p.location.lat) <= WALK_PACE_M_PER_MIN * 10).length
@@ -115,6 +118,8 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes }: {
     const u = new URL(window.location.href)
     if (stay) u.searchParams.set('stay', stayParam(stay))
     else u.searchParams.delete('stay')
+    if (myHotel) u.searchParams.set('hotel', myHotel.id)
+    else u.searchParams.delete('hotel')
     const url = u.toString()
     const title = s.weekendPage.title(t(area.name, locale))
     try {
