@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Inter, Fraunces } from 'next/font/google'
 import './globals.css'
 import { env } from '@/lib/env'
@@ -12,7 +12,11 @@ export const metadata: Metadata = {
   description: 'See where everything is in Thailand before you book anything.',
   openGraph: { siteName: 'ThaiMapped', type: 'website' },
   twitter: { card: 'summary_large_image' },
+  appleWebApp: { title: 'ThaiMapped', statusBarStyle: 'default' },
 }
+
+/** The browser chrome on a phone takes the paper colour. */
+export const viewport: Viewport = { themeColor: '#f6f4ee' }
 
 export default function RootLayout({ children }: LayoutProps<'/'>) {
   return (
