@@ -74,11 +74,26 @@ export interface Video {
   thumb: string
 }
 
+export interface AreaPhoto {
+  /** Under /public/photos/, downloaded by the picture script. */
+  src: string
+  alt: string
+  /** "Title, by Creator" as the collection records it. */
+  credit: string
+  licence: string
+  /** The page the picture comes from. */
+  source: string
+}
+
 export interface Area {
   id: string
   city: string
   name: Localized
   tagline: Localized
+  /** The expanded card's text. Optional until the content pass. */
+  about?: Localized
+  /** Real, credited photographs for the card carousel. Optional until fetched. */
+  photos?: AreaPhoto[]
   fits: string[]
   color: `area-${1 | 2 | 3 | 4 | 5 | 6 | 7 | 8}`
   camera: Camera

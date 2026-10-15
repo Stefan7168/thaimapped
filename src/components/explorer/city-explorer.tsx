@@ -4,7 +4,7 @@ import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { useMemo, useState, useSyncExternalStore } from 'react'
 import { ArrowLeft, SlidersHorizontal, X } from 'lucide-react'
-import type { CityBundle, Locale, Pin, TripRoute } from '@/lib/content/types'
+import type { CityBundle, Locale, Pin, Station, TripRoute } from '@/lib/content/types'
 import { t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
 import { supports3D } from '@/lib/map/device'
@@ -14,6 +14,7 @@ import { FilterPanel } from './filter-panel'
 import { TopSearch, type SearchHit } from './top-search'
 import { SiteFooter } from './site-footer'
 import { KindBar } from './kind-bar'
+import { AreaCard } from './area-card'
 
 const ExplorerMap = dynamic(() => import('@/components/map/explorer-map').then((m) => m.ExplorerMap), {
   ssr: false,
@@ -223,26 +224,14 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
 function AreaGuide({ locale, bundle, routes, onPickArea }: { locale: Locale; bundle: CityBundle; routes: TripRoute[]; onPickArea: (id: string) => void }) {
   const s = strings(locale)
   const { city, areas } = bundle
+  const stationById = new Map(bundle.stations.map((st) => [st.id, st]))
   return (
     <div className="p-3">
       <h1 className="font-display text-xl font-semibold leading-tight tracking-tight">{s.guide.heading(t(city.name, locale))}</h1>
       <p className="mt-1 text-sm text-ink-2">{s.guide.intro}</p>
-      <ul className="mt-3 space-y-2">
+      <ul className="mt-3 space-y-3">
         {areas.map((a) => (
-          <li key={a.id}>
-            <button type="button" onClick={() => onPickArea(a.id)} className="w-full rounded-xl border border-line bg-white/70 px-3 py-2.5 text-left hover:border-ink" style={{ borderLeft: `4px solid var(--${a.color})` }}>
-              <span className="flex items-baseline justify-between gap-2">
-                <span className="font-semibold">{t(a.name, locale)}</span>
-                <span className="shrink-0 text-xs text-ink-2">{s.guide.meta(a.stations.length, a.pins.length)}</span>
-              </span>
-              <span className="mt-0.5 block text-sm text-ink-2">{t(a.tagline, locale)}</span>
-              <span className="mt-1.5 flex flex-wrap gap-1">
-                {a.fits.map((f) => (
-                  <span key={f} className="rounded-full bg-paper-2 px-2 py-0.5 text-[11px] font-medium text-ink">{s.guide.fits[f] ?? f}</span>
-                ))}
-              </span>
-            </button>
-          </li>
+          <AreaCard key={a.id} locale={locale} area={a} stations={a.stations.map((id) => stationById.get(id)).filter((st): st is Station => !!st)} onPick={onPickArea} />
         ))}
       </ul>
       {routes.length > 0 && (

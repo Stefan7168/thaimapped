@@ -81,6 +81,31 @@ body {
 .tm-card__nearby-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .tm-card__nearby-min { flex: none; color: var(--ink-2); }
 
+/* Area cards in the explorer's left column. */
+.tm-acard { border: 1px solid var(--line); border-left: 4px solid var(--pin, var(--accent)); border-radius: 12px; background: rgba(255,255,255,0.7); overflow: hidden; }
+.tm-acard__photos { position: relative; aspect-ratio: 16 / 10; background: var(--paper-2); }
+.tm-acard__img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.tm-acard__arrow { position: absolute; top: 50%; transform: translateY(-50%); width: 32px; height: 32px; border-radius: 9999px; background: rgba(246,244,238,0.92); color: var(--ink); display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: 0; transition: opacity 160ms ease; }
+.tm-acard__arrow--left { left: 8px; }
+.tm-acard__arrow--right { right: 8px; }
+.tm-acard__photos:hover .tm-acard__arrow, .tm-acard__arrow:focus-visible, .tm-acard__photos:focus-within .tm-acard__arrow { opacity: 1; }
+@media (hover: none) { .tm-acard__arrow { opacity: 1; } }
+.tm-acard__dots { position: absolute; left: 0; right: 0; bottom: 26px; display: flex; justify-content: center; gap: 5px; }
+.tm-acard__dot { width: 6px; height: 6px; border-radius: 9999px; background: rgba(246,244,238,0.7); }
+.tm-acard__dot--on { background: #fff; width: 14px; }
+.tm-acard__credit { position: absolute; left: 0; right: 0; bottom: 0; padding: 3px 8px; font-size: 10px; line-height: 1.3; color: #fff; background: linear-gradient(to top, rgba(43,42,38,0.6), rgba(43,42,38,0)); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } /* taste-skill-ignore: photo credit legibility over a picture */
+.tm-acard__head { display: block; width: 100%; padding: 10px 12px 4px; text-align: left; cursor: pointer; }
+.tm-acard__head:hover .font-semibold { color: var(--accent); }
+.tm-acard__toggle { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 6px 12px 8px; font-size: 12px; font-weight: 600; color: var(--ink-2); cursor: pointer; }
+.tm-acard__toggle:hover { color: var(--ink); }
+.tm-acard__chevron { transition: transform 200ms ease; }
+.tm-acard__toggle--on .tm-acard__chevron { transform: rotate(180deg); }
+.tm-acard__more { padding: 0 12px 12px; border-top: 1px solid var(--line); }
+.tm-acard__about { padding-top: 10px; font-size: 14px; line-height: 1.45; color: var(--ink); }
+.tm-acard__label { margin-top: 10px; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-2); }
+.tm-acard__list { margin-top: 3px; font-size: 13px; line-height: 1.5; color: var(--ink); }
+@media (prefers-reduced-motion: reduce) { .tm-acard__chevron, .tm-acard__arrow { transition: none; } }
+
 /* Trip stops: numbered badge plus label. */
 .tm-stop { cursor: pointer; display: flex; align-items: center; gap: 6px; }
 .tm-stop__num { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 9999px; background: var(--pin, var(--accent)); color: #fff; font-size: 13px; font-weight: 700; border: 2px solid #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.3); } /* taste-skill-ignore: map marker halo */
