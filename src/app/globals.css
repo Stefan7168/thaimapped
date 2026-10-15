@@ -608,3 +608,6 @@ a.tm-wk__stop { text-decoration: none; }
 /* Area page: the hotels side by side, under the hotel list. */
 .tm-ar__cmp { margin-top: 24px; }
 .tm-ar__cmp .tm-cmp__wrap { margin-top: 12px; }
+
+/* A quiet button beside the booking ones: directions on a trip stop. */
+.tm-button--quiet { background: transparent; color: var(--ink); border: 1px solid var(--line); }

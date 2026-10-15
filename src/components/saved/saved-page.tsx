@@ -8,6 +8,7 @@ import type { Area, Locale, Pin, Station } from '@/lib/content/types'
 import { t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
 import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
+import { directionsUrl } from '@/lib/links/directions'
 import { adoptStayFromUrl, nights, stayParam, useStay } from '@/lib/stay/store'
 import { StayPicker } from '@/components/stay/stay-picker'
 import { HotelCompare } from '@/components/stay/hotel-compare'
@@ -106,8 +107,8 @@ export function SavedPage({ locale, cityId, entries, stations }: { locale: Local
                 <span className="tm-wk__meta tm-saved__map">{s.saved.showOnMap}</span>
               </span>
             </Link>
-            {pin.kind === 'hotel' && partners.length > 0 && (
-              <div className="tm-wk__links">
+            <div className="tm-wk__links">
+              <a href={directionsUrl(pin.location.lat, pin.location.lon)} target="_blank" rel="noopener" className="tm-card__link tm-card__link--quiet">{s.card.directions}</a>
                 {partners.map((p) => {
                   const subId = subIdFor(`${cityId}-${area.id}`, pin.id)
                   return (
@@ -116,8 +117,7 @@ export function SavedPage({ locale, cityId, entries, stations }: { locale: Local
                     </a>
                   )
                 })}
-              </div>
-            )}
+            </div>
           </li>
         )
   }

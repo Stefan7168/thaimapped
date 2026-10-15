@@ -4,6 +4,7 @@ import { whenLine } from '@/lib/explorer/when'
 import { strings } from '@/lib/i18n/strings'
 import { thb } from '@/lib/explorer/price'
 import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
+import { directionsUrl } from '@/lib/links/directions'
 import { nights, stayNow } from '@/lib/stay/store'
 import { trackOutbound } from '@/lib/links/track'
 import type { NearbyPin } from '@/lib/explorer/filters'
@@ -138,9 +139,16 @@ export function cardElement(locale: Locale, cityId: string, pin: Pin, area: Area
     el.append(walk)
   }
   const partners = Object.keys(pin.links) as Partner[]
-  if (partners.length > 0) {
+  {
     const links = document.createElement('div')
     links.className = 'tm-card__links'
+    const go = document.createElement('a')
+    go.className = 'tm-card__link tm-card__link--quiet'
+    go.href = directionsUrl(pin.location.lat, pin.location.lon)
+    go.target = '_blank'
+    go.rel = 'noopener'
+    go.textContent = s.card.directions
+    links.append(go)
     for (const partner of partners) {
       const a = document.createElement('a')
       a.className = partner === 'official' ? 'tm-card__link tm-card__link--quiet' : 'tm-card__link'

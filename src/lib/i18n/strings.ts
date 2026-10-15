@@ -300,6 +300,7 @@ const en = {
     onlyOn: (days: string) => `${days} only`,
     open: (partner: string) => `Open on ${partner}`,
     official: 'Official site',
+    directions: 'Directions',
   },
   pin: { hotel: 'Hotel', sight: 'Sight', food: 'Food', market: 'Market', nightlife: 'Nightlife', transport: 'Transport' } as Record<string, string>,
   footer: {

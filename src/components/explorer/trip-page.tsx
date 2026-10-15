@@ -8,6 +8,7 @@ import type { Locale, TripRoute } from '@/lib/content/types'
 import { t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
 import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
+import { directionsUrl } from '@/lib/links/directions'
 import { useStay } from '@/lib/stay/store'
 import { STOP_COLORS } from '@/components/map/trip-map'
 import { SiteFooter } from './site-footer'
@@ -84,8 +85,9 @@ export function TripPage({ locale, cityId, cityName, route }: { locale: Locale; 
                             {stop.placeholder && <span className="tm-stoprow__tbc">{s.trip.placeholder}</span>}
                           </span>
                         </button>
-                        {active && partners.length > 0 && (
-                          <div className="mt-1 flex gap-2 pl-12">
+                        {active && (
+                          <div className="mt-1 flex flex-wrap gap-2 pl-12">
+                            <a href={directionsUrl(stop.location.lat, stop.location.lon)} target="_blank" rel="noopener" className="tm-button tm-button--small tm-button--quiet">{s.card.directions}</a>
                             {partners.map((p) => (
                               <a key={p} href={buildOutboundUrl(p, stop.links[p]!, subIdFor(`${cityId}-trip-${route.id}`, stop.id), stay)} target="_blank" rel="noopener sponsored" className="tm-button tm-button--small">{p}</a>
                             ))}

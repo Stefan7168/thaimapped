@@ -11,6 +11,7 @@ import { distanceM, KIND_CHIPS, WALK_PACE_M_PER_MIN } from '@/lib/explorer/filte
 import { whenLine } from '@/lib/explorer/when'
 import { thb } from '@/lib/explorer/price'
 import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
+import { directionsUrl } from '@/lib/links/directions'
 import { nights, useStay } from '@/lib/stay/store'
 import { trackOutbound } from '@/lib/links/track'
 import { supports3D } from '@/lib/map/device'
@@ -85,8 +86,8 @@ export function AreaPage({ locale, cityId, area, areas, stations, stationSlugs }
             {pin.walk && walkStation && <span className="tm-wk__meta">{s.city.walkMinutes(pin.walk.minutes)} {s.city.from(`${walkStation.code ? walkStation.code + ' ' : ''}${t(walkStation.name, locale)}`)}</span>}
           </span>
         </button>
-        {partners.length > 0 && (
-          <div className="tm-wk__links">
+        <div className="tm-wk__links">
+          <a href={directionsUrl(pin.location.lat, pin.location.lon)} target="_blank" rel="noopener" className="tm-card__link tm-card__link--quiet">{s.card.directions}</a>
             {partners.map((p) => {
               const subId = subIdFor(`${cityId}-${area.id}`, pin.id)
               return (
@@ -95,8 +96,7 @@ export function AreaPage({ locale, cityId, area, areas, stations, stationSlugs }
                 </a>
               )
             })}
-          </div>
-        )}
+        </div>
       </li>
     )
   }

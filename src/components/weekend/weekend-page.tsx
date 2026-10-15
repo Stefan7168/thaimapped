@@ -13,6 +13,7 @@ import { WEEKEND_SLOTS, weekendPlan, type WeekendSlot } from '@/lib/explorer/wee
 import { whenLine } from '@/lib/explorer/when'
 import { thb } from '@/lib/explorer/price'
 import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
+import { directionsUrl } from '@/lib/links/directions'
 import { adoptStayFromUrl, nights, stayParam, useStay } from '@/lib/stay/store'
 import { buildIcs, downloadIcs, type CalendarEvent } from '@/lib/stay/calendar'
 import { trackOutbound } from '@/lib/links/track'
@@ -148,9 +149,9 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes }: {
             {pin.walk && walkStation && <span className="tm-wk__meta">{s.city.walkMinutes(pin.walk.minutes)} {s.city.from(`${walkStation.code ? walkStation.code + ' ' : ''}${t(walkStation.name, locale)}`)}</span>}
           </span>
         </button>
-        {pin.kind === 'hotel' && (Object.keys(pin.links) as Partner[]).length > 0 && (
-          <div className="tm-wk__links">
-            {(Object.keys(pin.links) as Partner[]).map((p) => {
+        <div className="tm-wk__links">
+          <a href={directionsUrl(pin.location.lat, pin.location.lon)} target="_blank" rel="noopener" className="tm-card__link tm-card__link--quiet">{s.card.directions}</a>
+          {pin.kind === 'hotel' && (Object.keys(pin.links) as Partner[]).map((p) => {
               const subId = subIdFor(`${cityId}-${area.id}`, pin.id)
               return (
                 <a key={p} href={buildOutboundUrl(p, pin.links[p]!, subId, stay)} onClick={() => p !== 'official' && trackOutbound(p, subId)} target="_blank" rel={p === 'official' ? 'noopener' : 'noopener sponsored'} className={p === 'official' ? 'tm-card__link tm-card__link--quiet' : 'tm-card__link'}>
@@ -158,8 +159,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes }: {
                 </a>
               )
             })}
-          </div>
-        )}
+        </div>
       </li>
     )
   }

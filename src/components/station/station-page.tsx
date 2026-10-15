@@ -11,6 +11,7 @@ import type { StationPage as StationPageData, StationPin } from '@/lib/explorer/
 import { whenLine } from '@/lib/explorer/when'
 import { thb } from '@/lib/explorer/price'
 import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
+import { directionsUrl } from '@/lib/links/directions'
 import { nights, useStay } from '@/lib/stay/store'
 import { trackOutbound } from '@/lib/links/track'
 import { supports3D } from '@/lib/map/device'
@@ -87,8 +88,8 @@ export function StationPage({ locale, cityId, page, areas, stations, others }: {
             <span className="tm-wk__meta">{s.city.walkMinutes(minutes)} {s.city.from(label)}{estimated ? ` (${s.stationPage.estimated})` : ''}</span>
           </span>
         </button>
-        {partners.length > 0 && (
-          <div className="tm-wk__links">
+        <div className="tm-wk__links">
+          <a href={directionsUrl(pin.location.lat, pin.location.lon)} target="_blank" rel="noopener" className="tm-card__link tm-card__link--quiet">{s.card.directions}</a>
             {partners.map((p) => {
               const subId = subIdFor(`${cityId}-${area.id}`, pin.id)
               return (
@@ -97,8 +98,7 @@ export function StationPage({ locale, cityId, page, areas, stations, others }: {
                 </a>
               )
             })}
-          </div>
-        )}
+        </div>
       </li>
     )
   }
