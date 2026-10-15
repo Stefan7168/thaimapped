@@ -1,0 +1,67 @@
+{
+  "id": "sukhumvit",
+  "city": "bangkok",
+  "name": {
+    "en": "Sukhumvit"
+  },
+  "tagline": {
+    "en": "Central, easy, on the BTS. The default for a first visit."
+  },
+  "fits": [
+    "first-time",
+    "nightlife",
+    "food"
+  ],
+  "color": "area-1",
+  "camera": {
+    "center": [
+      100.556,
+      13.738
+    ],
+    "zoom": 14.6,
+    "pitch": 52,
+    "bearing": -12
+  },
+  "stations": [
+    "bts-sukhumvit-e4",
+    "mrt-blue-bl22"
+  ],
+  "video": null,
+  "pins": [
+    {
+      "id": "sukhumvit-hotel-1",
+      "kind": "hotel",
+      "tier": "mid",
+      "name": {
+        "en": "Placeholder hotel near Asok"
+      },
+      "why": {
+        "en": "Placeholder. Real pick comes with the content pass."
+      },
+      "location": {
+        "lon": 100.55799999999999,
+        "lat": 13.737
+      },
+      "walk": {
+        "station": "bts-sukhumvit-e4",
+        "minutes": 3
+      },
+      "links": {}
+    },
+    {
+      "id": "sukhumvit-sight-1",
+      "kind": "sight",
+      "name": {
+        "en": "Placeholder sight"
+      },
+      "why": {
+        "en": "Placeholder. Real pick comes with the content pass."
+      },
+      "location": {
+        "lon": 100.553,
+        "lat": 13.74
+      },
+      "links": {}
+    }
+  ]
+}

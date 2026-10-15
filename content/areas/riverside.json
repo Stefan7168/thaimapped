@@ -1,0 +1,66 @@
+{
+  "id": "riverside",
+  "city": "bangkok",
+  "name": {
+    "en": "Riverside"
+  },
+  "tagline": {
+    "en": "The Chao Phraya, old piers, the big hotels. Slow mornings, boat rides."
+  },
+  "fits": [
+    "romantic",
+    "quiet",
+    "luxury"
+  ],
+  "color": "area-4",
+  "camera": {
+    "center": [
+      100.512,
+      13.72
+    ],
+    "zoom": 14.4,
+    "pitch": 52,
+    "bearing": -20
+  },
+  "stations": [
+    "bts-silom-s6"
+  ],
+  "video": null,
+  "pins": [
+    {
+      "id": "riverside-hotel-1",
+      "kind": "hotel",
+      "tier": "mid",
+      "name": {
+        "en": "Placeholder hotel at Saphan Taksin"
+      },
+      "why": {
+        "en": "Placeholder. Real pick comes with the content pass."
+      },
+      "location": {
+        "lon": 100.514,
+        "lat": 13.719000000000001
+      },
+      "walk": {
+        "station": "bts-silom-s6",
+        "minutes": 6
+      },
+      "links": {}
+    },
+    {
+      "id": "riverside-sight-1",
+      "kind": "sight",
+      "name": {
+        "en": "Placeholder sight"
+      },
+      "why": {
+        "en": "Placeholder. Real pick comes with the content pass."
+      },
+      "location": {
+        "lon": 100.509,
+        "lat": 13.722000000000001
+      },
+      "links": {}
+    }
+  ]
+}

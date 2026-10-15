@@ -1,0 +1,17 @@
+{
+  "$id": "https://thaimapped.com/schema/city.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": { "$ref": "common.schema.json#/$defs/slug" },
+    "name": { "$ref": "common.schema.json#/$defs/localized" },
+    "tagline": { "$ref": "common.schema.json#/$defs/localized" },
+    "camera": { "$ref": "common.schema.json#/$defs/camera" },
+    "camera2d": { "$ref": "common.schema.json#/$defs/camera" },
+    "stations": { "type": "string" },
+    "lines": { "type": "string" },
+    "areas": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/slug" }, "minItems": 1 }
+  },
+  "required": ["id", "name", "tagline", "camera", "camera2d", "areas"],
+  "additionalProperties": false
+}

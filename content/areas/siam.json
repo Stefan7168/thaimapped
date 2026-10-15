@@ -1,0 +1,66 @@
+{
+  "id": "siam",
+  "city": "bangkok",
+  "name": {
+    "en": "Siam and Pratunam"
+  },
+  "tagline": {
+    "en": "Malls, markets and the BTS interchange. Shop and move anywhere fast."
+  },
+  "fits": [
+    "shopping",
+    "first-time"
+  ],
+  "color": "area-2",
+  "camera": {
+    "center": [
+      100.535,
+      13.746
+    ],
+    "zoom": 14.8,
+    "pitch": 52,
+    "bearing": -8
+  },
+  "stations": [
+    "bts-silom-cen",
+    "bts-sukhumvit-e1"
+  ],
+  "video": null,
+  "pins": [
+    {
+      "id": "siam-hotel-1",
+      "kind": "hotel",
+      "tier": "mid",
+      "name": {
+        "en": "Placeholder hotel near Siam"
+      },
+      "why": {
+        "en": "Placeholder. Real pick comes with the content pass."
+      },
+      "location": {
+        "lon": 100.53699999999999,
+        "lat": 13.745000000000001
+      },
+      "walk": {
+        "station": "bts-silom-cen",
+        "minutes": 4
+      },
+      "links": {}
+    },
+    {
+      "id": "siam-sight-1",
+      "kind": "sight",
+      "name": {
+        "en": "Placeholder sight"
+      },
+      "why": {
+        "en": "Placeholder. Real pick comes with the content pass."
+      },
+      "location": {
+        "lon": 100.532,
+        "lat": 13.748000000000001
+      },
+      "links": {}
+    }
+  ]
+}

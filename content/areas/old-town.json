@@ -1,0 +1,66 @@
+{
+  "id": "old-town",
+  "city": "bangkok",
+  "name": {
+    "en": "Old Town (Rattanakosin)"
+  },
+  "tagline": {
+    "en": "The Grand Palace, Wat Pho and Khao San Road. History first, then a beer."
+  },
+  "fits": [
+    "culture",
+    "backpacker"
+  ],
+  "color": "area-5",
+  "camera": {
+    "center": [
+      100.496,
+      13.753
+    ],
+    "zoom": 14.6,
+    "pitch": 52,
+    "bearing": 0
+  },
+  "stations": [
+    "mrt-blue-bl31",
+    "mrt-blue-bl30"
+  ],
+  "video": null,
+  "pins": [
+    {
+      "id": "old-town-hotel-1",
+      "kind": "hotel",
+      "tier": "mid",
+      "name": {
+        "en": "Placeholder guesthouse near Sanam Chai"
+      },
+      "why": {
+        "en": "Placeholder. Real pick comes with the content pass."
+      },
+      "location": {
+        "lon": 100.49799999999999,
+        "lat": 13.752
+      },
+      "walk": {
+        "station": "mrt-blue-bl31",
+        "minutes": 8
+      },
+      "links": {}
+    },
+    {
+      "id": "old-town-sight-1",
+      "kind": "sight",
+      "name": {
+        "en": "Placeholder sight"
+      },
+      "why": {
+        "en": "Placeholder. Real pick comes with the content pass."
+      },
+      "location": {
+        "lon": 100.493,
+        "lat": 13.755
+      },
+      "links": {}
+    }
+  ]
+}

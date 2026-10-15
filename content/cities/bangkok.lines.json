@@ -1,0 +1,15 @@
+{
+  "note": "Rail lines of Bangkok. Colors are the operators' public line colors, used for the station search chips and the walking circle only; the base map draws rail from OpenMapTiles.",
+  "lines": [
+    { "id": "bts-sukhumvit", "system": "BTS", "line": "Sukhumvit", "color": "#7cb342" },
+    { "id": "bts-silom", "system": "BTS", "line": "Silom", "color": "#00897b" },
+    { "id": "bts-gold", "system": "BTS", "line": "Gold", "color": "#c9a227" },
+    { "id": "mrt-blue", "system": "MRT", "line": "Blue", "color": "#1e5aa8" },
+    { "id": "mrt-purple", "system": "MRT", "line": "Purple", "color": "#7b4ea3" },
+    { "id": "mrt-pink", "system": "MRT", "line": "Pink", "color": "#e05a8a" },
+    { "id": "mrt-yellow", "system": "MRT", "line": "Yellow", "color": "#e3b505" },
+    { "id": "arl", "system": "ARL", "line": "Airport Rail Link", "color": "#b71c1c" },
+    { "id": "srt-dark-red", "system": "SRT", "line": "Dark Red", "color": "#8e1b1b" },
+    { "id": "srt-light-red", "system": "SRT", "line": "Light Red", "color": "#d9534f" }
+  ]
+}

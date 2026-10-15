@@ -1,36 +1,37 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ThaiMapped
 
-## Getting Started
+Interactive 3D paper-style map of Thailand for first-time visitors: see where everything is, pick an area, pick a hotel near a station. Bangkok first, then Chiang Mai, Phuket, Krabi.
 
-First, run the development server:
+Plan and architecture (source of truth for decisions):
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- Project plan: https://claude.ai/code/artifact/77043149-0898-4fea-9d06-29c4a663fde6
+- Technical architecture: https://claude.ai/code/artifact/eea407f6-b795-46b1-960a-76e742eae125
+
+## Three rules
+
+1. Content JSON in `content/` is the product. `scripts/validate-content.mjs` runs before every build.
+2. Nothing needs a key to run. Map tiles come from OpenFreeMap, no account.
+3. 2D must work on old Android. 3D is opt-in by device capability (`src/lib/map/device.ts`).
+
+## Run
+
+```sh
+pnpm install
+pnpm dev        # http://localhost:3000 redirects to /en
+pnpm check      # validate content, typecheck, lint
+pnpm build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Node 22 or newer, pnpm 10.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Layout
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `content/` country, cities, areas, stations, lines, JSON Schemas
+- `public/map/paper.json` the map style (OpenMapTiles schema via OpenFreeMap)
+- `src/lib/map/` MapLibre loader, 3D buildings, gesture guard, device check
+- `src/lib/content/` typed loaders (server only)
+- `src/lib/links/` affiliate link builder with sub-IDs
+- `src/lib/i18n/` locales and UI strings (English only at launch, shape ready for more)
+- `src/components/map/explorer-map.tsx` the map; `src/components/explorer/` the panel and pages' UI
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Map data (c) OpenStreetMap contributors, ODbL. Station list extracted from OSM (see `content/cities/bangkok.stations.json`).

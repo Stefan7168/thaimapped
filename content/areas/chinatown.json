@@ -1,0 +1,66 @@
+{
+  "id": "chinatown",
+  "city": "bangkok",
+  "name": {
+    "en": "Chinatown (Yaowarat)"
+  },
+  "tagline": {
+    "en": "Street food after dark, gold shops, old shophouses."
+  },
+  "fits": [
+    "food",
+    "culture"
+  ],
+  "color": "area-6",
+  "camera": {
+    "center": [
+      100.51,
+      13.74
+    ],
+    "zoom": 15,
+    "pitch": 52,
+    "bearing": -10
+  },
+  "stations": [
+    "mrt-blue-bl29",
+    "mrt-blue-bl28"
+  ],
+  "video": null,
+  "pins": [
+    {
+      "id": "chinatown-hotel-1",
+      "kind": "hotel",
+      "tier": "mid",
+      "name": {
+        "en": "Placeholder hotel near Wat Mangkon"
+      },
+      "why": {
+        "en": "Placeholder. Real pick comes with the content pass."
+      },
+      "location": {
+        "lon": 100.512,
+        "lat": 13.739
+      },
+      "walk": {
+        "station": "mrt-blue-bl29",
+        "minutes": 4
+      },
+      "links": {}
+    },
+    {
+      "id": "chinatown-sight-1",
+      "kind": "sight",
+      "name": {
+        "en": "Placeholder sight"
+      },
+      "why": {
+        "en": "Placeholder. Real pick comes with the content pass."
+      },
+      "location": {
+        "lon": 100.507,
+        "lat": 13.742
+      },
+      "links": {}
+    }
+  ]
+}

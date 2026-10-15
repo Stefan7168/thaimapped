@@ -1,26 +1,57 @@
 @import "tailwindcss";
+@import "maplibre-gl/dist/maplibre-gl.css";
 
+/* Warm paper palette. One source for the UI; public/map/paper.json mirrors
+   the same hexes for the map itself. */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --paper: #f6f4ee;
+  --paper-2: #efebe1;
+  --ink: #2b2a26;
+  --ink-2: #6f6a5f;
+  --line: #dcd6c8;
+  --accent: #c8553d;
+  --water: #cfe0e6;
+  --area-1: #c8553d;
+  --area-2: #d98e2b;
+  --area-3: #4f7c8a;
+  --area-4: #6c8f5b;
+  --area-5: #8a5fa1;
+  --area-6: #b7443f;
+  --area-7: #3f8f7a;
+  --area-8: #a6753a;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-paper: var(--paper);
+  --color-paper-2: var(--paper-2);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-area-1: var(--area-1);
+  --color-area-2: var(--area-2);
+  --color-area-3: var(--area-3);
+  --color-area-4: var(--area-4);
+  --color-area-5: var(--area-5);
+  --color-area-6: var(--area-6);
+  --color-area-7: var(--area-7);
+  --color-area-8: var(--area-8);
+  --font-sans: var(--font-sans);
+  --font-display: var(--font-display);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+html, body { height: 100%; }
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
 }
+
+.maplibregl-ctrl-attrib { font-size: 11px; background: rgba(246, 244, 238, 0.85) !important; }
+
+/* Area pins on the map: a small dot plus a label chip. */
+.tm-pin { cursor: pointer; display: flex; align-items: center; gap: 6px; }
+.tm-pin__dot { width: 12px; height: 12px; border-radius: 9999px; border: 2px solid #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.3); background: var(--pin, var(--accent)); }
+.tm-pin__label { font-size: 12px; font-weight: 600; color: var(--ink); background: rgba(246,244,238,0.92); padding: 2px 7px; border-radius: 6px; border: 1px solid var(--line); white-space: nowrap; }
+.tm-pin--minor .tm-pin__dot { width: 9px; height: 9px; }
+.tm-pin--minor .tm-pin__label { font-weight: 500; color: var(--ink-2); }

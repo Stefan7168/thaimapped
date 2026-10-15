@@ -1,0 +1,66 @@
+{
+  "id": "ari",
+  "city": "bangkok",
+  "name": {
+    "en": "Ari"
+  },
+  "tagline": {
+    "en": "A local neighbourhood with cafes and quiet lanes. Where expats send friends."
+  },
+  "fits": [
+    "quiet",
+    "food",
+    "local"
+  ],
+  "color": "area-7",
+  "camera": {
+    "center": [
+      100.541,
+      13.779
+    ],
+    "zoom": 15,
+    "pitch": 52,
+    "bearing": 0
+  },
+  "stations": [
+    "bts-sukhumvit-n5"
+  ],
+  "video": null,
+  "pins": [
+    {
+      "id": "ari-hotel-1",
+      "kind": "hotel",
+      "tier": "mid",
+      "name": {
+        "en": "Placeholder hotel near Ari"
+      },
+      "why": {
+        "en": "Placeholder. Real pick comes with the content pass."
+      },
+      "location": {
+        "lon": 100.54299999999999,
+        "lat": 13.778
+      },
+      "walk": {
+        "station": "bts-sukhumvit-n5",
+        "minutes": 5
+      },
+      "links": {}
+    },
+    {
+      "id": "ari-sight-1",
+      "kind": "sight",
+      "name": {
+        "en": "Placeholder sight"
+      },
+      "why": {
+        "en": "Placeholder. Real pick comes with the content pass."
+      },
+      "location": {
+        "lon": 100.538,
+        "lat": 13.781
+      },
+      "links": {}
+    }
+  ]
+}

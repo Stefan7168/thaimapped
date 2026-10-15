@@ -1,0 +1,12 @@
+{
+  "id": "thailand",
+  "name": { "en": "Thailand" },
+  "tagline": { "en": "See where everything is before you book anything." },
+  "camera": { "center": [100.9, 13.4], "zoom": 5.4, "pitch": 0, "bearing": 0 },
+  "cities": [
+    { "id": "bangkok", "status": "live" },
+    { "id": "chiang-mai", "status": "planned" },
+    { "id": "phuket", "status": "planned" },
+    { "id": "krabi", "status": "planned" }
+  ]
+}

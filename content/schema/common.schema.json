@@ -1,0 +1,25 @@
+{
+  "$id": "https://thaimapped.com/schema/common.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "localized": {
+      "type": "object",
+      "description": "Translatable string. 'en' is required at launch; other locales fall back to en.",
+      "properties": { "en": { "type": "string", "minLength": 1 }, "th": { "type": "string" }, "es": { "type": "string" }, "pt": { "type": "string" }, "zh": { "type": "string" } },
+      "required": ["en"],
+      "additionalProperties": false
+    },
+    "camera": {
+      "type": "object",
+      "properties": {
+        "center": { "type": "array", "items": { "type": "number" }, "minItems": 2, "maxItems": 2 },
+        "zoom": { "type": "number", "minimum": 0, "maximum": 22 },
+        "pitch": { "type": "number", "minimum": 0, "maximum": 85 },
+        "bearing": { "type": "number", "minimum": -180, "maximum": 180 }
+      },
+      "required": ["center", "zoom", "pitch", "bearing"],
+      "additionalProperties": false
+    },
+    "slug": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" }
+  }
+}

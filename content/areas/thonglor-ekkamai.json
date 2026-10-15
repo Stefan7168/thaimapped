@@ -1,0 +1,67 @@
+{
+  "id": "thonglor-ekkamai",
+  "city": "bangkok",
+  "name": {
+    "en": "Thonglor and Ekkamai"
+  },
+  "tagline": {
+    "en": "Bangkok’s trendiest bars and restaurants, pricier, less walkable."
+  },
+  "fits": [
+    "nightlife",
+    "food",
+    "luxury"
+  ],
+  "color": "area-8",
+  "camera": {
+    "center": [
+      100.583,
+      13.73
+    ],
+    "zoom": 14.6,
+    "pitch": 52,
+    "bearing": -12
+  },
+  "stations": [
+    "bts-sukhumvit-e6",
+    "bts-sukhumvit-e7"
+  ],
+  "video": null,
+  "pins": [
+    {
+      "id": "thonglor-ekkamai-hotel-1",
+      "kind": "hotel",
+      "tier": "mid",
+      "name": {
+        "en": "Placeholder hotel near Thong Lo"
+      },
+      "why": {
+        "en": "Placeholder. Real pick comes with the content pass."
+      },
+      "location": {
+        "lon": 100.585,
+        "lat": 13.729000000000001
+      },
+      "walk": {
+        "station": "bts-sukhumvit-e6",
+        "minutes": 7
+      },
+      "links": {}
+    },
+    {
+      "id": "thonglor-ekkamai-sight-1",
+      "kind": "sight",
+      "name": {
+        "en": "Placeholder sight"
+      },
+      "why": {
+        "en": "Placeholder. Real pick comes with the content pass."
+      },
+      "location": {
+        "lon": 100.58,
+        "lat": 13.732000000000001
+      },
+      "links": {}
+    }
+  ]
+}

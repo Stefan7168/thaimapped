@@ -1,0 +1,10 @@
+{
+  "id": "bangkok",
+  "name": { "en": "Bangkok" },
+  "tagline": { "en": "Eight areas. Pick the one that fits you, then pick a hotel near a station." },
+  "camera": { "center": [100.53, 13.745], "zoom": 11.6, "pitch": 45, "bearing": -10 },
+  "camera2d": { "center": [100.53, 13.745], "zoom": 11.3, "pitch": 0, "bearing": 0 },
+  "stations": "cities/bangkok.stations.json",
+  "lines": "cities/bangkok.lines.json",
+  "areas": ["sukhumvit", "siam", "silom", "riverside", "old-town", "chinatown", "ari", "thonglor-ekkamai"]
+}

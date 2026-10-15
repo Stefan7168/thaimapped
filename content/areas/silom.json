@@ -1,0 +1,67 @@
+{
+  "id": "silom",
+  "city": "bangkok",
+  "name": {
+    "en": "Silom and Sathorn"
+  },
+  "tagline": {
+    "en": "Office district by day, Patpong and rooftop bars by night."
+  },
+  "fits": [
+    "nightlife",
+    "business"
+  ],
+  "color": "area-3",
+  "camera": {
+    "center": [
+      100.531,
+      13.726
+    ],
+    "zoom": 14.6,
+    "pitch": 52,
+    "bearing": -15
+  },
+  "stations": [
+    "bts-silom-s2",
+    "mrt-blue-bl26",
+    "bts-silom-s3"
+  ],
+  "video": null,
+  "pins": [
+    {
+      "id": "silom-hotel-1",
+      "kind": "hotel",
+      "tier": "mid",
+      "name": {
+        "en": "Placeholder hotel near Sala Daeng"
+      },
+      "why": {
+        "en": "Placeholder. Real pick comes with the content pass."
+      },
+      "location": {
+        "lon": 100.533,
+        "lat": 13.725000000000001
+      },
+      "walk": {
+        "station": "bts-silom-s2",
+        "minutes": 5
+      },
+      "links": {}
+    },
+    {
+      "id": "silom-sight-1",
+      "kind": "sight",
+      "name": {
+        "en": "Placeholder sight"
+      },
+      "why": {
+        "en": "Placeholder. Real pick comes with the content pass."
+      },
+      "location": {
+        "lon": 100.528,
+        "lat": 13.728000000000002
+      },
+      "links": {}
+    }
+  ]
+}
