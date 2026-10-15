@@ -7,6 +7,19 @@ import type { Locale } from '@/lib/content/types'
 const en = {
   brand: 'ThaiMapped',
   nav: { cities: 'Cities', map: 'Map', trips: 'Trips', credits: 'Photo credits' },
+  weekendPage: {
+    eyebrow: 'A weekend plan',
+    title: (area: string) => `Your weekend in ${area}`,
+    description: (area: string, tagline: string) => `Friday night to Sunday in ${area}: ${tagline} With the hotels inside your budget and the walk from the train.`,
+    budget: (min: string, max: string) => `Hotels from ${min} to ${max} a night.`,
+    anyBudget: 'Hotels at every price; set a budget on the map to narrow them.',
+    share: 'Share this weekend',
+    copied: 'Link copied',
+    copyFailed: 'Copy the address bar to share',
+    openMap: 'Open on the map',
+    others: 'Other weekends',
+    shareFromMap: 'Open as a page you can share',
+  },
   credits: {
     title: 'Photo credits',
     lead: (n: number) => `${n} photographs on this site come from open collections, each by a named photographer under a licence that allows reuse with credit. Every picture shows the place it stands for.`,

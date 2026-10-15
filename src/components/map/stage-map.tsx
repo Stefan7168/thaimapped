@@ -27,7 +27,7 @@ export interface StageMapProps {
   /** Every trip, drawn as quiet lines while no single one is active. */
   routes?: TripRoute[]
   /** The area in view on the home page: all of its highlights are pinned at once. */
-  focus?: { pins: Pin[]; area: Area } | null
+  focus?: { pins: Pin[]; area: Area; /** Number the pins 1, 2, 3 in list order instead of naming them: for a plan whose list carries the names. */ numbered?: boolean } | null
   /** A highlight the reader tapped: its card opens on the map. */
   card?: { pin: Pin; area: Area } | null
   onCloseCard?: () => void
@@ -36,6 +36,15 @@ export interface StageMapProps {
   stations?: Station[]
   /** An area clicked (or tapped) on the map. */
   onSelectArea?: (areaId: string) => void
+}
+
+/** A numbered badge in the area's colour, for a plan's stops. */
+function numberElement(n: number, color: string): HTMLElement {
+  const el = document.createElement('div')
+  el.className = 'tm-pin tm-pin--num'
+  el.style.setProperty('--pin', color)
+  el.textContent = String(n)
+  return el
 }
 
 function labelElement(text: string, color: string, minor: boolean): HTMLElement {
@@ -172,11 +181,11 @@ export function StageMap({ locale, camera, threeD, areas, route, routes = [], fo
         const el = labelElement(t(a.name, locale), `var(--${a.color})`, !!focus && a.id !== focus.area.id)
         markersRef.current.push(new maplibregl.Marker({ element: el, anchor: 'left' }).setLngLat(a.camera.center).addTo(map))
       }
-      for (const pin of focus?.pins ?? []) {
-        const el = labelElement(t(pin.name, locale), `var(--${focus!.area.color})`, false)
+      ;(focus?.pins ?? []).forEach((pin, i) => {
+        const el = focus!.numbered ? numberElement(i + 1, `var(--${focus!.area.color})`) : labelElement(t(pin.name, locale), `var(--${focus!.area.color})`, false)
         el.classList.add('tm-pin--active')
-        markersRef.current.push(new maplibregl.Marker({ element: el, anchor: 'left' }).setLngLat([pin.location.lon, pin.location.lat]).addTo(map))
-      }
+        markersRef.current.push(new maplibregl.Marker({ element: el, anchor: focus!.numbered ? 'center' : 'left' }).setLngLat([pin.location.lon, pin.location.lat]).addTo(map))
+      })
     })()
     return () => {
       cancelled = true
@@ -237,8 +246,10 @@ export function StageMap({ locale, camera, threeD, areas, route, routes = [], fo
       // Frame every pinned highlight (and the area's centre) so no label is cut off at the edge.
       const pts: [number, number][] = [camera.center, ...focus.pins.map((p): [number, number] => [p.location.lon, p.location.lat])]
       const lons = pts.map((c) => c[0]), lats = pts.map((c) => c[1])
+      // The labels hang to the right of their dots, so the right padding is the widest label; a phone's narrow band gets tighter margins.
+      const narrow = map.getContainer().clientWidth < 600
       map.fitBounds([[Math.min(...lons), Math.min(...lats)], [Math.max(...lons), Math.max(...lats)]], {
-        padding: { top: 80, bottom: 80, left: 80, right: 160 }, maxZoom: camera.zoom, pitch: threeD ? camera.pitch : 0, bearing: threeD ? camera.bearing : 0, duration: 1600, essential: true,
+        padding: narrow ? { top: 36, bottom: 72, left: 20, right: 120 } : { top: 80, bottom: 80, left: 80, right: 160 }, maxZoom: camera.zoom, pitch: threeD ? camera.pitch : 0, bearing: threeD ? camera.bearing : 0, duration: 1600, essential: true,
       })
       return
     }

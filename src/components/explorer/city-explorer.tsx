@@ -116,6 +116,7 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
     <section className="tm-weekend" aria-labelledby="tm-weekend-heading" style={{ ['--pin' as string]: `var(--${planArea.color})` }}>
       <h2 id="tm-weekend-heading" className="tm-weekend__heading">{s.guide.weekend(t(planArea.name, locale))}</h2>
       <p className="tm-weekend__lead">{s.guide.weekendLead}</p>
+      <Link href={`/${locale}/${city.id}/weekend/${planArea.id}${filters.price ? `?price=${filters.price.min}-${filters.price.max}` : ''}`} className="tm-weekend__share">{s.weekendPage.shareFromMap}</Link>
       <ol className="tm-weekend__slots">
         {WEEKEND_SLOTS.map((slot) => (
           <li key={slot} className="tm-weekend__slot">
