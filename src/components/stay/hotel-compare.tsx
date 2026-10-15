@@ -17,7 +17,7 @@ export interface CompareEntry {
 /**
  * Hotels side by side: a night, the stay total once dates are set, the walk
  * to the train, what is walkable, where to book. The saved page shows the
- * area row too; an area page leaves it out (every column is the same area).
+ * area row and a "Plan it" row too; an area or weekend page leaves both out.
  */
 export function HotelCompare({ locale, cityId, entries, stations, nearbyCount, showArea = true }: {
   locale: Locale
@@ -65,6 +65,12 @@ export function HotelCompare({ locale, cityId, entries, stations, nearbyCount, s
               <th scope="row">{s.saved.cmpNearby}</th>
               {entries.map((e) => <td key={e.pin.id}>{s.saved.cmpPlaces(nearbyCount(e.pin))}</td>)}
             </tr>
+            {showArea && (
+              <tr>
+                <th scope="row">{s.home.compare.weekend}</th>
+                {entries.map((e) => <td key={e.pin.id}><Link href={`/${locale}/${cityId}/weekend/${e.area.id}?hotel=${e.pin.id}`} className="tm-link">{s.home.compare.plan}</Link></td>)}
+              </tr>
+            )}
             <tr>
               <th scope="row">{s.saved.cmpBook}</th>
               {entries.map((e) => (
