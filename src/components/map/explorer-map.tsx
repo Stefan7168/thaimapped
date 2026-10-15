@@ -1,12 +1,14 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
-import type { LngLatBoundsLike, Map as MaplibreMap, Marker } from 'maplibre-gl'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import type { LngLatBoundsLike, Map as MaplibreMap, Marker, Popup } from 'maplibre-gl'
 import type { Area, Camera, Locale, Pin, Station } from '@/lib/content/types'
 import { loadMaplibreGl } from '@/lib/map/load-maplibre'
 import { addBuilding3DLayer } from '@/lib/map/buildings'
 import { isGestureActive } from '@/lib/map/gesture'
 import { t } from '@/lib/i18n/locales'
+import { strings } from '@/lib/i18n/strings'
+import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
 import { WALK_RADIUS_M, type VisiblePin } from '@/lib/explorer/filters'
 
 export const PAPER_STYLE_URL = '/map/paper.json'
@@ -15,21 +17,27 @@ const OUTLINE_SOURCE = 'tm-area-outline'
 
 export interface ExplorerMapProps {
   locale: Locale
+  /** For the sub-ID on the card's outbound links. */
+  cityId: string
   cityCamera: Camera
   threeD: boolean
   areas: Area[]
   /** Pins that pass the filters. Empty means the city overview with area labels. */
   pins: VisiblePin[]
+  /** Every station of the city, for the walk line on a pin's card. */
+  allStations: Station[]
   /** Stations that draw a walking circle. */
   stations: Station[]
   /** Centres of picked areas and sub-areas, framed even when no pin matches. */
   centres: [number, number][]
   /** Ticked areas whose district border is drawn and framed. */
   outlines: Area[]
-  /** Pin to highlight, if any. */
+  /** Pin to highlight and open a card on, if any. */
   activePinId: string | null
   onSelectArea: (id: string) => void
   onSelectPin: (pin: Pin) => void
+  /** The card's close button, or the user tapping the map away from it. */
+  onClosePin: () => void
 }
 
 function circlePolygon(lon: number, lat: number, radiusM: number, steps = 64): GeoJSON.Feature<GeoJSON.Polygon> {
@@ -56,6 +64,55 @@ function pinElement(label: string, color: string, minor: boolean, active: boolea
   return el
 }
 
+/** The card that opens on a pin: what it is, why it is here, how far from the train, where to book. */
+function cardElement(locale: Locale, cityId: string, pin: Pin, area: Area, station: Station | undefined, onClose: () => void): HTMLElement {
+  const s = strings(locale)
+  const el = document.createElement('div')
+  el.className = 'tm-card'
+  el.style.setProperty('--pin', `var(--${area.color})`)
+  const head = document.createElement('div')
+  head.className = 'tm-card__head'
+  const kind = document.createElement('span')
+  kind.className = 'tm-card__kind'
+  kind.textContent = pin.tier ? `${s.pin[pin.kind]} · ${s.filters.tier[pin.tier]}` : s.pin[pin.kind]
+  const close = document.createElement('button')
+  close.type = 'button'
+  close.className = 'tm-card__close'
+  close.setAttribute('aria-label', s.card.close)
+  close.textContent = '×'
+  close.addEventListener('click', onClose)
+  head.append(kind, close)
+  const name = document.createElement('p')
+  name.className = 'tm-card__name'
+  name.textContent = t(pin.name, locale)
+  const why = document.createElement('p')
+  why.className = 'tm-card__why'
+  why.textContent = t(pin.why, locale)
+  el.append(head, name, why)
+  if (pin.walk && station) {
+    const walk = document.createElement('p')
+    walk.className = 'tm-card__walk'
+    walk.textContent = `${s.city.walkMinutes(pin.walk.minutes)} ${s.city.from(`${station.code ? station.code + ' ' : ''}${t(station.name, locale)}`)}`
+    el.append(walk)
+  }
+  const partners = Object.keys(pin.links) as Partner[]
+  if (partners.length > 0) {
+    const links = document.createElement('div')
+    links.className = 'tm-card__links'
+    for (const partner of partners) {
+      const a = document.createElement('a')
+      a.className = partner === 'official' ? 'tm-card__link tm-card__link--quiet' : 'tm-card__link'
+      a.href = buildOutboundUrl(partner, pin.links[partner]!, subIdFor(`${cityId}-${area.id}`, pin.id))
+      a.target = '_blank'
+      a.rel = partner === 'official' ? 'noopener' : 'noopener sponsored'
+      a.textContent = partner === 'official' ? s.card.official : s.card.open(partner.charAt(0).toUpperCase() + partner.slice(1))
+      links.append(a)
+    }
+    el.append(links)
+  }
+  return el
+}
+
 /** Bounds around every pin and station circle, or null when there is nothing to frame. */
 function focusBounds(pins: VisiblePin[], stations: Station[], centres: [number, number][], outlines: Area[]): LngLatBoundsLike | null {
   const pts: [number, number][] = [...centres]
@@ -77,14 +134,16 @@ function focusBounds(pins: VisiblePin[], stations: Station[], centres: [number, 
 }
 
 export function ExplorerMap(props: ExplorerMapProps) {
-  const { locale, cityCamera, threeD, areas, pins, stations, centres, outlines, activePinId, onSelectArea, onSelectPin } = props
+  const { locale, cityId, cityCamera, threeD, areas, pins, allStations, stations, centres, outlines, activePinId, onSelectArea, onSelectPin, onClosePin } = props
   const containerRef = useRef<HTMLDivElement>(null)
   const mapRef = useRef<MaplibreMap | null>(null)
   const markersRef = useRef<Marker[]>([])
-  const callbacks = useRef({ onSelectArea, onSelectPin })
+  const popupRef = useRef<Popup | null>(null)
+  const stationById = useMemo(() => new Map(allStations.map((st) => [st.id, st])), [allStations])
+  const callbacks = useRef({ onSelectArea, onSelectPin, onClosePin })
   useEffect(() => {
-    callbacks.current = { onSelectArea, onSelectPin }
-  }, [onSelectArea, onSelectPin])
+    callbacks.current = { onSelectArea, onSelectPin, onClosePin }
+  }, [onSelectArea, onSelectPin, onClosePin])
   // Bumped once the style has loaded so the effects below re-run (refs do not re-render).
   const [mapReady, setMapReady] = useState(0)
 
@@ -126,6 +185,8 @@ export function ExplorerMap(props: ExplorerMapProps) {
       cancelled = true
       markersRef.current.forEach((m) => m.remove())
       markersRef.current = []
+      popupRef.current?.remove()
+      popupRef.current = null
       mapRef.current = null
       map?.remove()
     }
@@ -184,6 +245,44 @@ export function ExplorerMap(props: ExplorerMapProps) {
     const src = map.getSource(WALK_CIRCLE_SOURCE) as { setData?: (d: GeoJSON.GeoJSON) => void } | undefined
     src?.setData?.({ type: 'FeatureCollection', features: stations.map((st) => circlePolygon(st.lon, st.lat, WALK_RADIUS_M)) })
   }, [stations, mapReady])
+
+  // The card on the active pin. One popup, replaced whenever the pin changes.
+  useEffect(() => {
+    const map = mapRef.current
+    if (!map) return
+    popupRef.current?.remove()
+    popupRef.current = null
+    const hit = activePinId ? pins.find((p) => p.pin.id === activePinId) : undefined
+    if (!hit) return
+    let cancelled = false
+    ;(async () => {
+      const maplibregl = await loadMaplibreGl()
+      if (cancelled) return
+      const { pin, area } = hit
+      const station = pin.walk ? stationById.get(pin.walk.station) : undefined
+      const popup = new maplibregl.Popup({ closeButton: false, closeOnClick: false, offset: 14, maxWidth: '300px', className: 'tm-card-popup' })
+        .setLngLat([pin.location.lon, pin.location.lat])
+        .setDOMContent(cardElement(locale, cityId, pin, area, station, () => callbacks.current.onClosePin()))
+        .addTo(map)
+      popup.on('close', () => {
+        if (popupRef.current === popup) callbacks.current.onClosePin()
+      })
+      popupRef.current = popup
+      // Bring the pin to where the card has room: on a phone always (the
+      // places list covers the bottom of the map), on a wide screen only when
+      // the pin sits near an edge. Never during a gesture.
+      if (!isGestureActive(map)) {
+        const narrow = map.getContainer().clientWidth < 768
+        const pt = map.project([pin.location.lon, pin.location.lat])
+        const { clientWidth: w, clientHeight: h } = map.getContainer()
+        const nearEdge = pt.x < 170 || pt.x > w - 170 || pt.y < 260 || pt.y > h - 40
+        if (narrow || nearEdge) map.easeTo({ center: [pin.location.lon, pin.location.lat], offset: [0, narrow ? 30 : 120], duration: 500, essential: true })
+      }
+    })()
+    return () => {
+      cancelled = true
+    }
+  }, [activePinId, pins, stationById, locale, cityId, mapReady])
 
   // Outlines of the ticked areas. The colour comes from the same CSS token
   // the labels use, read once per update so the map and the panel agree.

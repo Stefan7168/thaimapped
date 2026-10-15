@@ -59,6 +59,21 @@ body {
 .tm-pin--active .tm-pin__dot { box-shadow: 0 0 0 3px rgba(200,85,61,0.35), 0 1px 3px rgba(0,0,0,0.3); } /* taste-skill-ignore: map marker halo */
 .tm-pin--active .tm-pin__label { border-color: var(--ink); }
 
+/* The card on a tapped pin. */
+.tm-card-popup .maplibregl-popup-content { padding: 0; background: transparent; box-shadow: none; border-radius: 0; }
+.tm-card-popup .maplibregl-popup-tip { border-top-color: var(--paper); border-bottom-color: var(--paper); }
+.tm-card { width: min(300px, 80vw); background: var(--paper); border-radius: 12px; border: 1px solid var(--line); border-top: 4px solid var(--pin, var(--accent)); box-shadow: 0 8px 24px rgba(43,42,38,0.18); padding: 10px 12px 12px; font-family: var(--font-sans), system-ui, sans-serif; color: var(--ink); } /* taste-skill-ignore: map card over tiles */
+.tm-card__head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.tm-card__kind { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--pin, var(--accent)); }
+.tm-card__close { width: 28px; height: 28px; margin: -4px -6px 0 0; border-radius: 9999px; font-size: 20px; line-height: 1; color: var(--ink-2); cursor: pointer; }
+.tm-card__close:hover { background: var(--paper-2); color: var(--ink); }
+.tm-card__name { margin-top: 2px; font-family: var(--font-display), Georgia, serif; font-size: 18px; font-weight: 600; line-height: 1.15; }
+.tm-card__why { margin-top: 6px; font-size: 14px; line-height: 1.4; }
+.tm-card__walk { margin-top: 6px; font-size: 13px; color: var(--ink-2); }
+.tm-card__links { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.tm-card__link { display: inline-flex; align-items: center; min-height: 32px; padding: 0 12px; border-radius: 9999px; background: var(--accent); color: #fff; font-size: 13px; font-weight: 600; text-decoration: none; }
+.tm-card__link--quiet { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+
 /* Trip stops: numbered badge plus label. */
 .tm-stop { cursor: pointer; display: flex; align-items: center; gap: 6px; }
 .tm-stop__num { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 9999px; background: var(--pin, var(--accent)); color: #fff; font-size: 13px; font-weight: 700; border: 2px solid #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.3); } /* taste-skill-ignore: map marker halo */

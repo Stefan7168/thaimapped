@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation'
-import { liveCityIds, loadCityBundle } from '@/lib/content/load'
+import { liveCityIds, loadCityBundle, loadRoutes } from '@/lib/content/load'
 import { LOCALES, isLocale } from '@/lib/i18n/locales'
 import { CityExplorer } from '@/components/explorer/city-explorer'
 
@@ -16,5 +16,5 @@ export default async function CityPage(props: PageProps<'/[locale]/[city]'>) {
   if (!isLocale(locale)) notFound()
   const bundle = loadCityBundle(city)
   if (!bundle) notFound()
-  return <CityExplorer locale={locale} bundle={bundle} />
+  return <CityExplorer locale={locale} bundle={bundle} routes={loadRoutes(city)} />
 }

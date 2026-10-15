@@ -99,6 +99,21 @@ const en = {
     flat: '2D',
     tilt: '3D',
   },
+  guide: {
+    heading: (city: string) => `Where to stay in ${city}`,
+    intro: 'Eight areas, each with the stations, the picks and what it is good for. Tap one to see it on the map.',
+    meta: (stations: number, places: number) => `${stations === 1 ? '1 station' : `${stations} stations`} · ${places === 1 ? '1 place' : `${places} places`}`,
+    fits: { 'first-time': 'First visit', nightlife: 'Nightlife', food: 'Food', shopping: 'Shopping', business: 'Business', romantic: 'Romantic', quiet: 'Quiet', luxury: 'Luxury', culture: 'Culture', backpacker: 'Backpacker', local: 'Local life', family: 'Family' } as Record<string, string>,
+    tripsHeading: 'Trips out of town',
+    tripsLink: 'All trips',
+    showing: (n: number) => (n === 1 ? '1 place on the map' : `${n} places on the map`),
+    back: 'Back to the areas',
+  },
+  card: {
+    close: 'Close',
+    open: (partner: string) => `Open on ${partner}`,
+    official: 'Official site',
+  },
   pin: { hotel: 'Hotel', sight: 'Sight', food: 'Food', market: 'Market', nightlife: 'Nightlife', transport: 'Transport' } as Record<string, string>,
   footer: {
     data: 'Map data © OpenStreetMap contributors, ODbL. Tiles by OpenFreeMap. District borders courtesy of geoBoundaries.org (Royal Thai Survey Department via OCHA, CC BY 3.0 IGO).',
