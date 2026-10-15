@@ -80,6 +80,90 @@
   ],
   "pins": [
     {
+      "id": "or-tor-kor-market",
+      "kind": "market",
+      "name": {
+        "en": "Or Tor Kor Market"
+      },
+      "why": {
+        "en": "The clean, pricey farmers market: perfect mangoes, curry pastes, a food court."
+      },
+      "location": {
+        "lon": 100.5508,
+        "lat": 13.8004
+      },
+      "walk": {
+        "station": "mrt-blue-bl12",
+        "minutes": 2
+      },
+      "when": {
+        "times": [
+          "morning",
+          "afternoon"
+        ],
+        "note": {
+          "en": "Best before noon, every day"
+        }
+      },
+      "subarea": "saphan-khwai",
+      "links": {}
+    },
+    {
+      "id": "rot-fai-park",
+      "kind": "sight",
+      "name": {
+        "en": "Wachirabenchathat Park (Rot Fai Park)"
+      },
+      "why": {
+        "en": "Rent a bike and loop the lake; the quiet side of Chatuchak."
+      },
+      "location": {
+        "lon": 100.552,
+        "lat": 13.8095
+      },
+      "walk": {
+        "station": "mrt-blue-bl14",
+        "minutes": 15
+      },
+      "when": {
+        "times": [
+          "morning",
+          "evening"
+        ]
+      },
+      "subarea": "saphan-khwai",
+      "links": {}
+    },
+    {
+      "id": "ari-soi-1-cafes",
+      "kind": "food",
+      "name": {
+        "en": "Ari Soi 1 cafés"
+      },
+      "why": {
+        "en": "The café soi: brunch, iced coffee, small shops in old houses."
+      },
+      "location": {
+        "lon": 100.5428,
+        "lat": 13.7805
+      },
+      "walk": {
+        "station": "bts-sukhumvit-n5",
+        "minutes": 3
+      },
+      "when": {
+        "times": [
+          "morning",
+          "afternoon"
+        ],
+        "note": {
+          "en": "Brunch crowd on weekend mornings"
+        }
+      },
+      "subarea": "ari-sois",
+      "links": {}
+    },
+    {
       "id": "ari-hotel-the-quarter-ari",
       "kind": "hotel",
       "tier": "mid",

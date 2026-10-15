@@ -22,8 +22,8 @@ const PER_SLOT = 2
 
 /**
  * Builds a Friday night to Sunday plan from the area's own places and their
- * `when` data. Each place is used once. First pass: a place goes to the slot
- * that covers at least half of its times (so a morning-and-afternoon temple
+ * `when` data. Each place is used once. First pass: one place per slot, then
+ * a second, where the slot covers at least half of its times (so a morning-and-afternoon temple
  * lands in the daytime, not on Friday night). Second pass: any remaining
  * overlap fills the gaps. Weekend-only places are kept for Sunday; a place
  * with no `when` goes to Saturday afternoon. A slot with nothing stays empty.
@@ -34,9 +34,9 @@ export function weekendPlan(area: Area, tier: Tier | null = null): WeekendPlan {
   const slots: Record<WeekendSlot, Pin[]> = { fridayNight: [], saturdayMorning: [], saturdayAfternoon: [], saturdayNight: [], sunday: [] }
   const weekendOnly = (p: Pin) => Boolean(p.when?.days && !p.when.days.includes('weekday'))
   const fit = (p: Pin, slot: WeekendSlot) => (p.when ? p.when.times.filter((x) => SLOT_TIMES[slot].includes(x)).length / p.when.times.length : 0)
-  const fill = (slot: WeekendSlot, ok: (p: Pin) => boolean) => {
+  const fill = (slot: WeekendSlot, ok: (p: Pin) => boolean, cap = PER_SLOT) => {
     for (const p of places) {
-      if (slots[slot].length >= PER_SLOT) break
+      if (slots[slot].length >= cap) break
       if (used.has(p.id) || !ok(p)) continue
       used.add(p.id)
       slots[slot].push(p)
@@ -44,7 +44,10 @@ export function weekendPlan(area: Area, tier: Tier | null = null): WeekendPlan {
   }
   fill('sunday', (p) => weekendOnly(p) && fit(p, 'sunday') > 0)
   const nightSlots: WeekendSlot[] = ['fridayNight', 'saturdayNight']
-  for (const slot of WEEKEND_SLOTS) fill(slot, (p) => !weekendOnly(p) && fit(p, slot) >= 0.5 && (!nightSlots.includes(slot) || !p.when?.times.includes('morning')))
+  // One good fit per slot first, so two night places spread over Friday and Saturday; then top up.
+  const good = (slot: WeekendSlot) => (p: Pin) => !weekendOnly(p) && fit(p, slot) >= 0.5 && (!nightSlots.includes(slot) || !p.when?.times.includes('morning'))
+  for (const slot of WEEKEND_SLOTS) fill(slot, good(slot), 1)
+  for (const slot of WEEKEND_SLOTS) fill(slot, good(slot))
   fill('saturdayAfternoon', (p) => !p.when)
   for (const slot of WEEKEND_SLOTS) fill(slot, (p) => fit(p, slot) > 0)
   const hotels = area.pins.filter((p) => p.kind === 'hotel' && (!tier || p.tier === tier))

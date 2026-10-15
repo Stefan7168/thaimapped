@@ -6,7 +6,7 @@ Status of the Bangkok set (2026-10-15):
 
 - Areas and sub-areas: real names, approximate centres.
 - Stations: extracted from OpenStreetMap (ODbL), coordinates are real.
-- Landmark pins: real places with coordinates written from general knowledge, accurate to roughly 100 m. Verify each against OpenStreetMap before launch.
+- Landmark pins: real places with coordinates written from general knowledge, accurate to roughly 100 m. Verify each against OpenStreetMap before launch. 29 more added 2026-10-15 for the weekend plan (3 to 5 per area, each with `when`); their coordinates are being checked against Nominatim on the Mac.
 - Hotel pins: 24 real hotels, three per area (luxury, mid, budget), a starting set to work with, not editorial picks. Each one is a hotel or hostel object in OpenStreetMap (coordinates from Nominatim, 2026-10-15). The OSM ids are in the commit that added them. The `why` line only states the location. Links: a Booking.com search for the hotel name (in a browser the hotel is the first result; plain curl gets a 202 bot check). No Agoda links: `agoda.com/search?city=9395&textToSearch=…` opens a general Bangkok search that ignores the name, and without `city` it redirects to the home page. Swap in exact hotel page URLs during the content pass.
 - Hotel walk minutes: straight line at 75 m per minute to the nearest station *listed on the area*, rounded up. Where the nearest real station is not on the area's list (Phrom Phong, Saphan Khwai, Surasak, Khao San's walk to the river piers), the number is longer than the real walk.
 - Walk minutes: estimates, not measured routes.

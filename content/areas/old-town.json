@@ -90,6 +90,143 @@
   ],
   "pins": [
     {
+      "id": "wat-saket",
+      "kind": "sight",
+      "name": {
+        "en": "Wat Saket (Golden Mount)"
+      },
+      "why": {
+        "en": "300 steps up for the best old-town view; cool bells at the top."
+      },
+      "location": {
+        "lon": 100.5066,
+        "lat": 13.7538
+      },
+      "walk": {
+        "station": "mrt-blue-bl30",
+        "minutes": 12
+      },
+      "when": {
+        "times": [
+          "morning",
+          "afternoon",
+          "evening"
+        ],
+        "note": {
+          "en": "Sunset from the top"
+        }
+      },
+      "subarea": "banglamphu",
+      "links": {}
+    },
+    {
+      "id": "thipsamai",
+      "kind": "food",
+      "name": {
+        "en": "Thipsamai pad thai"
+      },
+      "why": {
+        "en": "The famous pad thai shop; the queue moves fast."
+      },
+      "location": {
+        "lon": 100.5047,
+        "lat": 13.7527
+      },
+      "walk": {
+        "station": "mrt-blue-bl30",
+        "minutes": 10
+      },
+      "when": {
+        "times": [
+          "evening",
+          "night"
+        ],
+        "note": {
+          "en": "Opens in the afternoon, queue after 18:00"
+        }
+      },
+      "subarea": "banglamphu",
+      "links": {}
+    },
+    {
+      "id": "giant-swing",
+      "kind": "sight",
+      "name": {
+        "en": "Giant Swing and Wat Suthat"
+      },
+      "why": {
+        "en": "The red swing and the temple behind it, a quiet counterpart to the Grand Palace."
+      },
+      "location": {
+        "lon": 100.501,
+        "lat": 13.7515
+      },
+      "walk": {
+        "station": "mrt-blue-bl30",
+        "minutes": 7
+      },
+      "when": {
+        "times": [
+          "morning",
+          "afternoon"
+        ]
+      },
+      "subarea": "grand-palace",
+      "links": {}
+    },
+    {
+      "id": "phra-athit-road",
+      "kind": "nightlife",
+      "name": {
+        "en": "Phra Athit Road"
+      },
+      "why": {
+        "en": "Riverside bars with live music, calmer than Khao San two streets away."
+      },
+      "location": {
+        "lon": 100.4948,
+        "lat": 13.7625
+      },
+      "walk": {
+        "station": "mrt-blue-bl30",
+        "minutes": 26
+      },
+      "when": {
+        "times": [
+          "evening",
+          "night"
+        ]
+      },
+      "subarea": "khao-san",
+      "links": {}
+    },
+    {
+      "id": "amulet-market",
+      "kind": "market",
+      "name": {
+        "en": "Amulet Market (Tha Phra Chan)"
+      },
+      "why": {
+        "en": "Collectors with magnifying glasses over trays of amulets, next to the river."
+      },
+      "location": {
+        "lon": 100.4895,
+        "lat": 13.7563
+      },
+      "walk": {
+        "station": "mrt-blue-bl31",
+        "minutes": 20
+      },
+      "when": {
+        "times": [
+          "morning",
+          "afternoon"
+        ]
+      },
+      "subarea": "grand-palace",
+      "links": {}
+    },
+    {
       "id": "old-town-hotel-riva-arun",
       "kind": "hotel",
       "tier": "luxury",

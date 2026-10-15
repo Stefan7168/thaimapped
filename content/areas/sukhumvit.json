@@ -92,6 +92,112 @@
   ],
   "pins": [
     {
+      "id": "benjakitti-park",
+      "kind": "sight",
+      "name": {
+        "en": "Benjakitti Park"
+      },
+      "why": {
+        "en": "The new forest park with skywalks over wetlands, next to the convention centre."
+      },
+      "location": {
+        "lon": 100.559,
+        "lat": 13.731
+      },
+      "walk": {
+        "station": "bts-sukhumvit-e4",
+        "minutes": 10
+      },
+      "when": {
+        "times": [
+          "morning",
+          "evening"
+        ],
+        "note": {
+          "en": "Cool and busy at sunrise and sunset"
+        }
+      },
+      "subarea": "asok",
+      "links": {}
+    },
+    {
+      "id": "soi-cowboy",
+      "kind": "nightlife",
+      "name": {
+        "en": "Soi Cowboy"
+      },
+      "why": {
+        "en": "The neon go-go bar lane: a 150 m walk-through, not for everyone."
+      },
+      "location": {
+        "lon": 100.5625,
+        "lat": 13.7372
+      },
+      "walk": {
+        "station": "mrt-blue-bl22",
+        "minutes": 2
+      },
+      "when": {
+        "times": [
+          "night"
+        ]
+      },
+      "subarea": "asok",
+      "links": {}
+    },
+    {
+      "id": "sukhumvit-soi-11",
+      "kind": "nightlife",
+      "name": {
+        "en": "Sukhumvit Soi 11"
+      },
+      "why": {
+        "en": "Rooftop bars, clubs and the Levels crowd; the mainstream night out."
+      },
+      "location": {
+        "lon": 100.5555,
+        "lat": 13.743
+      },
+      "walk": {
+        "station": "bts-sukhumvit-e3",
+        "minutes": 4
+      },
+      "when": {
+        "times": [
+          "evening",
+          "night"
+        ]
+      },
+      "subarea": "nana",
+      "links": {}
+    },
+    {
+      "id": "benjasiri-park",
+      "kind": "sight",
+      "name": {
+        "en": "Benjasiri Park"
+      },
+      "why": {
+        "en": "A small park with a pond and skaters, right next to Phrom Phong."
+      },
+      "location": {
+        "lon": 100.569,
+        "lat": 13.7306
+      },
+      "walk": {
+        "station": "bts-sukhumvit-e5",
+        "minutes": 2
+      },
+      "when": {
+        "times": [
+          "morning",
+          "evening"
+        ]
+      },
+      "subarea": "phrom-phong",
+      "links": {}
+    },
+    {
       "id": "sukhumvit-hotel-sheraton-grande-sukhumvit",
       "kind": "hotel",
       "tier": "luxury",
