@@ -15,6 +15,7 @@ import { whenLine } from '@/lib/explorer/when'
 import { WEEKEND_SLOTS, weekendPlan } from '@/lib/explorer/weekend'
 import { activeFilterCount, allPins, DAYS, EMPTY_FILTERS, isFullRange, PRICE_RANGE, TIMES, selectedPlaceCentres, selectedStations, subareaKey, TIER_PRICE, TIERS, visiblePins, type FilterState, type PriceRange, type Tier } from '@/lib/explorer/filters'
 import { thb } from '@/lib/explorer/price'
+import { stationPages } from '@/lib/explorer/stations'
 import type { Outline } from '@/components/map/explorer-map'
 import { FilterPanel } from './filter-panel'
 import { TopSearch, type SearchHit } from './top-search'
@@ -92,6 +93,9 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
     return out
   }, [areas, filters.areas, filters.subareas])
   const stationById = useMemo(() => new Map(bundle.stations.map((st) => [st.id, st])), [bundle])
+  // Station id to its page's address, for the stations that have one (enough hotels or places in walking distance).
+  const stationSlug = useMemo(() => new Map(stationPages(bundle).flatMap((p) => p.stations.map((st) => [st.id, p.slug] as const))), [bundle])
+  const pickedStationPage = filters.stations.length === 1 ? stationSlug.get(filters.stations[0]) : undefined
   const everyPin = useMemo(() => allPins(bundle), [bundle])
   const count = activeFilterCount(filters)
 
@@ -261,6 +265,11 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
                 <ArrowLeft aria-hidden="true" className="size-4" />
                 {s.guide.back}
               </button>
+              {pickedStationPage && (
+                <Link href={`/${locale}/${city.id}/station/${pickedStationPage}`} className="tm-weekend__share mb-2">
+                  {s.guide.stationPage}
+                </Link>
+              )}
               {tabs}
               {column}
             </div>

@@ -173,6 +173,7 @@ const en = {
     tilt: '3D',
   },
   guide: {
+    stationPage: 'Hotels and places near this station, as one page',
     heading: (city: string) => `Where to stay in ${city}`,
     intro: 'Eight areas, each with the stations, the picks and what it is good for. Tap one to see it on the map.',
     meta: (stations: number, places: number) => `${stations === 1 ? '1 station' : `${stations} stations`} · ${places === 1 ? '1 place' : `${places} places`}`,
