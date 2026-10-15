@@ -4,7 +4,7 @@ import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useMemo, useState, useSyncExternalStore } from 'react'
-import { Share2 } from 'lucide-react'
+import { CalendarPlus, Share2 } from 'lucide-react'
 import type { Area, Locale, Pin, Station, TripRoute } from '@/lib/content/types'
 import { t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
@@ -14,6 +14,7 @@ import { whenLine } from '@/lib/explorer/when'
 import { thb } from '@/lib/explorer/price'
 import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
 import { adoptStayFromUrl, nights, stayParam, useStay } from '@/lib/stay/store'
+import { buildIcs, downloadIcs, type CalendarEvent } from '@/lib/stay/calendar'
 import { trackOutbound } from '@/lib/links/track'
 import { supports3D } from '@/lib/map/device'
 import { SiteHeader } from '@/components/explorer/site-header'
@@ -66,12 +67,38 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes }: {
   const hotels = useMemo(() => [...plan.hotels].sort((a, b) => Number(saved.includes(b.id)) - Number(saved.includes(a.id))), [plan.hotels, saved])
   const pinned = useMemo(() => [...stops, ...hotels], [stops, hotels])
   // With a Friday-to-Sunday stay picked, each slot heading carries its date.
-  const slotDate = (slot: WeekendSlot): string | null => {
+  const slotDay = (slot: WeekendSlot): Date | null => {
     if (!stay || nights(stay) !== 2) return null
     const d = new Date(stay.checkIn + 'T00:00:00')
     if (d.getDay() !== 5) return null
     d.setDate(d.getDate() + (slot === 'fridayNight' ? 0 : slot === 'sunday' ? 2 : 1))
-    return new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short' }).format(d)
+    return d
+  }
+  const slotDate = (slot: WeekendSlot): string | null => {
+    const d = slotDay(slot)
+    return d ? new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short' }).format(d) : null
+  }
+  // The plan as a calendar file: one event per slot, Bangkok time, the stops in the description.
+  const SLOT_HOURS: Record<WeekendSlot, [string, string]> = { fridayNight: ['18:00', '22:00'], saturdayMorning: ['09:00', '12:00'], saturdayAfternoon: ['13:00', '17:00'], saturdayNight: ['18:00', '22:00'], sunday: ['10:00', '16:00'] }
+  const addToCalendar = () => {
+    const areaName = t(area.name, locale)
+    const url = window.location.href.split('#')[0]
+    const hotelLine = hotels.length ? `${s.weekendPage.calendarHotel}: ${hotels.map((h) => t(h.name, locale)).join(', ')}` : ''
+    const events: CalendarEvent[] = WEEKEND_SLOTS.flatMap((slot) => {
+      const d = slotDay(slot)
+      const items = plan.slots[slot]
+      if (!d || items.length === 0) return []
+      const date = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+      const stopsText = items.map((p, i) => `${i + 1}. ${t(p.name, locale)}: ${t(p.why, locale)}`).join('\n')
+      return [{
+        date, start: SLOT_HOURS[slot][0], end: SLOT_HOURS[slot][1],
+        title: `${s.guide.slots[slot]}, ${areaName}`,
+        description: [`${s.weekendPage.calendarStops}:`, stopsText, hotelLine, url].filter(Boolean).join('\n'),
+        location: `${t(items[0].name, locale)}, ${areaName}`,
+        url,
+      }]
+    })
+    downloadIcs(`weekend-${area.id}.ics`, buildIcs(events, s.weekendPage.calendarName(areaName)))
   }
   const priceQuery = price ? `price=${price.min}-${price.max}` : ''
   const explorerHref = `/${locale}/${cityId}#area=${area.id}${priceQuery ? `&${priceQuery}` : ''}`
@@ -161,6 +188,12 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes }: {
               <Share2 aria-hidden="true" className="size-4" />
               {shared === 'copied' ? s.weekendPage.copied : shared === 'failed' ? s.weekendPage.copyFailed : s.weekendPage.share}
             </button>
+            {slotDay('fridayNight') && (
+              <button type="button" onClick={addToCalendar} className="tm-link tm-link--button">
+                <CalendarPlus aria-hidden="true" className="size-4" />
+                {s.weekendPage.calendar}
+              </button>
+            )}
             <Link href={explorerHref} className="tm-link">{s.weekendPage.openMap}</Link>
             <Link href={`/${locale}/${cityId}/area/${area.id}`} className="tm-link">{s.areaPage.link}</Link>
           </div>
@@ -216,6 +249,12 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes }: {
           )}
           <div className="tm-stage__bar" data-map-overlay="bottom">
             <span className="tm-stage__showing">{s.home.showing(t(area.name, locale))}</span>
+            {slotDay('fridayNight') && (
+              <button type="button" onClick={addToCalendar} className="tm-link tm-link--button">
+                <CalendarPlus aria-hidden="true" className="size-4" />
+                {s.weekendPage.calendar}
+              </button>
+            )}
             <Link href={explorerHref} className="tm-link">{s.weekendPage.openMap}</Link>
           </div>
         </div>
