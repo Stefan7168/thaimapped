@@ -4,6 +4,7 @@ import { whenLine } from '@/lib/explorer/when'
 import { strings } from '@/lib/i18n/strings'
 import { thb } from '@/lib/explorer/price'
 import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
+import { stayNow } from '@/lib/stay/store'
 import { trackOutbound } from '@/lib/links/track'
 import type { NearbyPin } from '@/lib/explorer/filters'
 
@@ -134,7 +135,7 @@ export function cardElement(locale: Locale, cityId: string, pin: Pin, area: Area
       const a = document.createElement('a')
       a.className = partner === 'official' ? 'tm-card__link tm-card__link--quiet' : 'tm-card__link'
       const subId = subIdFor(`${cityId}-${area.id}`, pin.id)
-      a.href = buildOutboundUrl(partner, pin.links[partner]!, subId)
+      a.href = buildOutboundUrl(partner, pin.links[partner]!, subId, stayNow())
       if (partner !== 'official') a.addEventListener('click', () => trackOutbound(partner, subId))
       a.target = '_blank'
       a.rel = partner === 'official' ? 'noopener' : 'noopener sponsored'

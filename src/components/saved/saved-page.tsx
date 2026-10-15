@@ -8,6 +8,8 @@ import type { Area, Locale, Pin, Station } from '@/lib/content/types'
 import { t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
 import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
+import { useStay } from '@/lib/stay/store'
+import { StayPicker } from '@/components/stay/stay-picker'
 import { trackOutbound } from '@/lib/links/track'
 import { thb } from '@/lib/explorer/price'
 import { distanceM, WALK_PACE_M_PER_MIN } from '@/lib/explorer/filters'
@@ -28,6 +30,7 @@ export interface SavedEntry {
  */
 export function SavedPage({ locale, cityId, entries, stations }: { locale: Locale; cityId: string; entries: SavedEntry[]; stations: Station[] }) {
   const s = strings(locale)
+  const stay = useStay()
   const mine = useSaved()
   const [sentIds, setSentIds] = useState<string[] | null>(null)
   const [shared, setShared] = useState<'idle' | 'copied' | 'failed' | 'kept'>('idle')
@@ -105,7 +108,7 @@ export function SavedPage({ locale, cityId, entries, stations }: { locale: Local
                 {partners.map((p) => {
                   const subId = subIdFor(`${cityId}-${area.id}`, pin.id)
                   return (
-                    <a key={p} href={buildOutboundUrl(p, pin.links[p]!, subId)} onClick={() => p !== 'official' && trackOutbound(p, subId)} target="_blank" rel={p === 'official' ? 'noopener' : 'noopener sponsored'} className={p === 'official' ? 'tm-card__link tm-card__link--quiet' : 'tm-card__link'}>
+                    <a key={p} href={buildOutboundUrl(p, pin.links[p]!, subId, stay)} onClick={() => p !== 'official' && trackOutbound(p, subId)} target="_blank" rel={p === 'official' ? 'noopener' : 'noopener sponsored'} className={p === 'official' ? 'tm-card__link tm-card__link--quiet' : 'tm-card__link'}>
                       {p === 'official' ? s.card.official : s.card.open(p.charAt(0).toUpperCase() + p.slice(1))}
                     </a>
                   )
@@ -172,7 +175,7 @@ export function SavedPage({ locale, cityId, entries, stations }: { locale: Local
                       <td key={e.pin.id} className="tm-cmp__links">
                         {(Object.keys(e.pin.links) as Partner[]).filter((p) => p !== 'official').map((p) => {
                           const subId = subIdFor(`${cityId}-${e.area.id}`, e.pin.id)
-                          return <a key={p} href={buildOutboundUrl(p, e.pin.links[p]!, subId)} onClick={() => trackOutbound(p, subId)} target="_blank" rel="noopener sponsored" className="tm-link">{p.charAt(0).toUpperCase() + p.slice(1)}</a>
+                          return <a key={p} href={buildOutboundUrl(p, e.pin.links[p]!, subId, stay)} onClick={() => trackOutbound(p, subId)} target="_blank" rel="noopener sponsored" className="tm-link">{p.charAt(0).toUpperCase() + p.slice(1)}</a>
                         })}
                       </td>
                     ))}
@@ -186,6 +189,7 @@ export function SavedPage({ locale, cityId, entries, stations }: { locale: Local
         {hotelRows.length > 0 && (
           <section className="tm-saved__group">
             <h2 className="tm-wk__time">{s.stationPage.hotels}</h2>
+            <StayPicker locale={locale} />
             <ol className="tm-wk__stops tm-saved__list">{hotelRows.map(row)}</ol>
           </section>
         )}

@@ -1,5 +1,6 @@
 import { env } from '@/lib/env'
 import type { PinLinks } from '@/lib/content/types'
+import { nights, type Stay } from '@/lib/stay/store'
 
 /**
  * Outbound link builder. Content stores plain destination URLs; the
@@ -18,7 +19,38 @@ const TP_PROGRAM: Partial<Record<Partner, { trs: string; p: string }>> = {
   booking: { trs: '', p: '' },
 }
 
-export function buildOutboundUrl(partner: Partner, destination: string, subId: string): string {
+/**
+ * Adds the visitor's dates to a hotel page so it opens priced for the stay.
+ * Booking's names (checkin, checkout, group_adults, no_rooms) are read off a
+ * live hotel URL; Agoda's (checkIn, checkOut, los, adults, rooms) are the
+ * usual ones but not yet checked on a live page. Unknown names are ignored by
+ * the site, so the worst case is a page priced for tonight, as before.
+ */
+export function withStay(partner: Partner, destination: string, stay: Stay | null): string {
+  if (!stay || (partner !== 'agoda' && partner !== 'booking')) return destination
+  let u: URL
+  try {
+    u = new URL(destination)
+  } catch {
+    return destination
+  }
+  if (partner === 'agoda') {
+    u.searchParams.set('checkIn', stay.checkIn)
+    u.searchParams.set('checkOut', stay.checkOut)
+    u.searchParams.set('los', String(nights(stay)))
+    u.searchParams.set('adults', '2')
+    u.searchParams.set('rooms', '1')
+  } else {
+    u.searchParams.set('checkin', stay.checkIn)
+    u.searchParams.set('checkout', stay.checkOut)
+    u.searchParams.set('group_adults', '2')
+    u.searchParams.set('no_rooms', '1')
+  }
+  return u.toString()
+}
+
+export function buildOutboundUrl(partner: Partner, destination: string, subId: string, stay: Stay | null = null): string {
+  destination = withStay(partner, destination, stay)
   const marker = env.travelpayoutsMarker
   const program = TP_PROGRAM[partner]
   if (!marker || !program || !program.p) return destination

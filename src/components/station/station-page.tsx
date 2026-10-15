@@ -11,6 +11,7 @@ import type { StationPage as StationPageData, StationPin } from '@/lib/explorer/
 import { whenLine } from '@/lib/explorer/when'
 import { thb } from '@/lib/explorer/price'
 import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
+import { useStay } from '@/lib/stay/store'
 import { trackOutbound } from '@/lib/links/track'
 import { supports3D } from '@/lib/map/device'
 import { SiteHeader } from '@/components/explorer/site-header'
@@ -32,6 +33,7 @@ const noopSubscribe = () => () => {}
  */
 export function StationPage({ locale, cityId, page, areas, stations, others }: { locale: Locale; cityId: string; page: StationPageData; areas: Area[]; stations: Station[]; others: StationPageData[] }) {
   const s = strings(locale)
+  const stay = useStay()
   const detected3D = useSyncExternalStore(noopSubscribe, supports3D, () => null)
   const st = page.stations[0]
   const label = `${st.code ? st.code + ' ' : ''}${t(st.name, locale)}`
@@ -88,7 +90,7 @@ export function StationPage({ locale, cityId, page, areas, stations, others }: {
             {partners.map((p) => {
               const subId = subIdFor(`${cityId}-${area.id}`, pin.id)
               return (
-                <a key={p} href={buildOutboundUrl(p, pin.links[p]!, subId)} onClick={() => p !== 'official' && trackOutbound(p, subId)} target="_blank" rel={p === 'official' ? 'noopener' : 'noopener sponsored'} className={p === 'official' ? 'tm-card__link tm-card__link--quiet' : 'tm-card__link'}>
+                <a key={p} href={buildOutboundUrl(p, pin.links[p]!, subId, stay)} onClick={() => p !== 'official' && trackOutbound(p, subId)} target="_blank" rel={p === 'official' ? 'noopener' : 'noopener sponsored'} className={p === 'official' ? 'tm-card__link tm-card__link--quiet' : 'tm-card__link'}>
                   {p === 'official' ? s.card.official : s.card.open(p.charAt(0).toUpperCase() + p.slice(1))}
                 </a>
               )

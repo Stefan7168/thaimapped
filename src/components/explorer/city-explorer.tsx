@@ -10,6 +10,7 @@ import { t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
 import { supports3D } from '@/lib/map/device'
 import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
+import { useStay } from '@/lib/stay/store'
 import { trackOutbound } from '@/lib/links/track'
 import { whenLine } from '@/lib/explorer/when'
 import { WEEKEND_SLOTS, weekendPlan } from '@/lib/explorer/weekend'
@@ -38,6 +39,7 @@ const ExplorerMap = dynamic(() => import('@/components/map/explorer-map').then((
  */
 export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundle: CityBundle; routes: TripRoute[] }) {
   const s = strings(locale)
+  const stay = useStay()
   const { city, areas } = bundle
   const detected3D = useSyncExternalStore(noopSubscribe, supports3D, () => null)
   const [override3D, setOverride3D] = useState<boolean | null>(null)
@@ -252,7 +254,7 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
             {active && partners.length > 0 && (
               <div className="mt-1 flex gap-2 px-1">
                 {partners.map((p) => (
-                  <a key={p} href={buildOutboundUrl(p, pin.links[p]!, subIdFor(`${city.id}-${area.id}`, pin.id))} onClick={() => trackOutbound(p, subIdFor(`${city.id}-${area.id}`, pin.id))} target="_blank" rel="noopener sponsored" className="rounded bg-accent px-2 py-1 text-xs font-semibold text-white">
+                  <a key={p} href={buildOutboundUrl(p, pin.links[p]!, subIdFor(`${city.id}-${area.id}`, pin.id), stay)} onClick={() => trackOutbound(p, subIdFor(`${city.id}-${area.id}`, pin.id))} target="_blank" rel="noopener sponsored" className="rounded bg-accent px-2 py-1 text-xs font-semibold text-white">
                     {p}
                   </a>
                 ))}

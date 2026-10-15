@@ -13,11 +13,13 @@ import { WEEKEND_SLOTS, weekendPlan } from '@/lib/explorer/weekend'
 import { whenLine } from '@/lib/explorer/when'
 import { thb } from '@/lib/explorer/price'
 import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
+import { useStay } from '@/lib/stay/store'
 import { trackOutbound } from '@/lib/links/track'
 import { supports3D } from '@/lib/map/device'
 import { SiteHeader } from '@/components/explorer/site-header'
 import { SiteFooter } from '@/components/explorer/site-footer'
 import { SaveButton } from '@/components/saved/save-button'
+import { StayPicker } from '@/components/stay/stay-picker'
 import { useSaved } from '@/lib/saved/store'
 import { KIND_ICONS } from '@/components/explorer/kind-bar'
 
@@ -43,6 +45,7 @@ function readPrice(): PriceRange | null {
  */
 export function WeekendPage({ locale, cityId, area, areas, stations, routes }: { locale: Locale; cityId: string; area: Area; areas: Area[]; stations: Station[]; routes: TripRoute[] }) {
   const s = strings(locale)
+  const stay = useStay()
   const detected3D = useSyncExternalStore(noopSubscribe, supports3D, () => null)
   const [price, setPrice] = useState<PriceRange | null>(null)
   // The address is not known on the server; read it once the page is live.
@@ -107,7 +110,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes }: {
             {(Object.keys(pin.links) as Partner[]).map((p) => {
               const subId = subIdFor(`${cityId}-${area.id}`, pin.id)
               return (
-                <a key={p} href={buildOutboundUrl(p, pin.links[p]!, subId)} onClick={() => p !== 'official' && trackOutbound(p, subId)} target="_blank" rel={p === 'official' ? 'noopener' : 'noopener sponsored'} className={p === 'official' ? 'tm-card__link tm-card__link--quiet' : 'tm-card__link'}>
+                <a key={p} href={buildOutboundUrl(p, pin.links[p]!, subId, stay)} onClick={() => p !== 'official' && trackOutbound(p, subId)} target="_blank" rel={p === 'official' ? 'noopener' : 'noopener sponsored'} className={p === 'official' ? 'tm-card__link tm-card__link--quiet' : 'tm-card__link'}>
                   {p === 'official' ? s.card.official : s.card.open(p.charAt(0).toUpperCase() + p.slice(1))}
                 </a>
               )
@@ -153,6 +156,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes }: {
             ))}
             <li className="tm-wk__slot tm-wk__slot--stay">
               <h2 className="tm-wk__time">{s.guide.stay}</h2>
+              {hotels.length > 0 && <StayPicker locale={locale} />}
               {hotels.length === 0 ? <p className="tm-wk__empty">{s.guide.stayNone}</p> : <ul className="tm-wk__stops">{hotels.map(stop)}</ul>}
             </li>
           </ol>

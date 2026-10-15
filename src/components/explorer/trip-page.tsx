@@ -8,6 +8,7 @@ import type { Locale, TripRoute } from '@/lib/content/types'
 import { t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
 import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
+import { useStay } from '@/lib/stay/store'
 import { STOP_COLORS } from '@/components/map/trip-map'
 import { SiteFooter } from './site-footer'
 
@@ -19,6 +20,7 @@ const TripMap = dynamic(() => import('@/components/map/trip-map').then((m) => m.
 /** A trip: the map on the left, the day-by-day plan on the right. */
 export function TripPage({ locale, cityId, cityName, route }: { locale: Locale; cityId: string; cityName: string; route: TripRoute }) {
   const s = strings(locale)
+  const stay = useStay()
   const [day, setDay] = useState<number | null>(null)
   const [activeStop, setActiveStop] = useState<string | null>(null)
   const days = Array.from({ length: route.days }, (_, i) => i + 1)
@@ -85,7 +87,7 @@ export function TripPage({ locale, cityId, cityName, route }: { locale: Locale; 
                         {active && partners.length > 0 && (
                           <div className="mt-1 flex gap-2 pl-12">
                             {partners.map((p) => (
-                              <a key={p} href={buildOutboundUrl(p, stop.links[p]!, subIdFor(`${cityId}-trip-${route.id}`, stop.id))} target="_blank" rel="noopener sponsored" className="tm-button tm-button--small">{p}</a>
+                              <a key={p} href={buildOutboundUrl(p, stop.links[p]!, subIdFor(`${cityId}-trip-${route.id}`, stop.id), stay)} target="_blank" rel="noopener sponsored" className="tm-button tm-button--small">{p}</a>
                             ))}
                           </div>
                         )}

@@ -24,6 +24,14 @@ const en = {
     others: 'Other stations',
     all: 'All stations',
   },
+  stay: {
+    label: 'Your dates',
+    checkIn: 'Check-in',
+    checkOut: 'Check-out',
+    thisWeekend: 'This weekend',
+    nights: (n: number) => (n === 1 ? '1 night' : `${n} nights`),
+    clear: 'Clear',
+  },
   saved: {
     nav: 'Saved',
     title: 'Saved',
