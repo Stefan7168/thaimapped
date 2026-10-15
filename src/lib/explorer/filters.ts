@@ -1,6 +1,8 @@
 import type { Area, CityBundle, DayKind, Line, Pin, PinKind, Station, TimeOfDay } from '@/lib/content/types'
 
 export const PIN_KINDS: PinKind[] = ['hotel', 'sight', 'food', 'market', 'nightlife', 'transport']
+/** The kinds offered as chips in the What-to-show bar: no Transport chip (Stefan, 2026-10-15); stations are reached through the transit picker, and the one pier pin shows with everything. */
+export const KIND_CHIPS: PinKind[] = ['hotel', 'sight', 'food', 'market', 'nightlife']
 export const TIERS = ['budget', 'mid', 'luxury'] as const
 export const TIMES: TimeOfDay[] = ['morning', 'afternoon', 'evening', 'night']
 export const DAYS: DayKind[] = ['weekday', 'weekend']
