@@ -4,7 +4,7 @@ import { whenLine } from '@/lib/explorer/when'
 import { strings } from '@/lib/i18n/strings'
 import { thb } from '@/lib/explorer/price'
 import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
-import { stayNow } from '@/lib/stay/store'
+import { nights, stayNow } from '@/lib/stay/store'
 import { trackOutbound } from '@/lib/links/track'
 import type { NearbyPin } from '@/lib/explorer/filters'
 
@@ -94,11 +94,21 @@ export function cardElement(locale: Locale, cityId: string, pin: Pin, area: Area
   const kind = document.createElement('span')
   kind.className = 'tm-card__kind'
   kind.textContent = pin.tier ? `${s.pin[pin.kind]} · ${s.filters.tier[pin.tier]}` : s.pin[pin.kind]
+  // The price lines go under the "why" line (built below); `after` on a node
+  // not yet in the card did nothing, so the popup never showed a price before.
+  const priceLines: HTMLElement[] = []
   if (pin.price) {
     const price = document.createElement('p')
     price.className = 'tm-card__price'
     price.textContent = s.guide.priceFrom(thb(pin.price.from, locale)) + (pin.price.basis === 'tier-estimate' ? ` (${s.guide.priceEstimate})` : '')
-    kind.after(price)
+    priceLines.push(price)
+    const stay = stayNow()
+    if (stay) {
+      const total = document.createElement('p')
+      total.className = 'tm-card__price tm-card__stay'
+      total.textContent = s.guide.stayTotal(thb(pin.price.from * nights(stay), locale), nights(stay))
+      priceLines.push(total)
+    }
   }
   const close = document.createElement('button')
   close.type = 'button'
@@ -113,7 +123,7 @@ export function cardElement(locale: Locale, cityId: string, pin: Pin, area: Area
   const why = document.createElement('p')
   why.className = 'tm-card__why'
   why.textContent = t(pin.why, locale)
-  el.append(head, name, why)
+  el.append(head, name, why, ...priceLines)
   const when = whenLine(pin, locale)
   if (when) {
     const line = document.createElement('p')

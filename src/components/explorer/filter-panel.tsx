@@ -9,6 +9,7 @@ import { activeFilterCount, DAYS, EMPTY_FILTERS, isFullRange, PRICE_RANGE, TIMES
 import { thb, usd } from '@/lib/explorer/price'
 import { TransitFilter } from './transit-filter'
 import { AreaFilter } from './area-filter'
+import { StayPicker } from '@/components/stay/stay-picker'
 
 export interface FilterPanelProps {
   locale: Locale
@@ -91,6 +92,9 @@ export function FilterPanel({ locale, bundle, filters, onChange }: FilterPanelPr
       </Section>
       <Section label={s.filters.price}>
         <PriceSlider locale={locale} value={filters.price} onChange={(price) => onChange({ ...filters, price })} />
+      </Section>
+      <Section label={s.stay.label}>
+        <StayPicker locale={locale} bare />
       </Section>
     </div>
   )

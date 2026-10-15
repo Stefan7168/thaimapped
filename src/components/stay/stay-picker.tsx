@@ -8,9 +8,10 @@ import { clearStay, nextWeekend, nights, setStay, todayIso, useStay, type Stay }
 /**
  * Check-in and check-out, kept in this browser. Every booking link on the
  * site carries the dates once they are set, so the hotel page opens priced
- * for the stay. "This weekend" fills the coming Friday to Sunday.
+ * for the stay. "This weekend" fills the coming Friday to Sunday. `bare`
+ * drops the control's own label where the surrounding section carries one.
  */
-export function StayPicker({ locale }: { locale: Locale }) {
+export function StayPicker({ locale, bare = false }: { locale: Locale; bare?: boolean }) {
   const s = strings(locale)
   const stay = useStay()
   // The server does not know the visitor's day; the date floor is set once the page is live.
@@ -37,8 +38,8 @@ export function StayPicker({ locale }: { locale: Locale }) {
     setStay(checkIn, checkOut)
   }
   return (
-    <div className="tm-stay" role="group" aria-label={s.stay.label}>
-      <span className="tm-stay__label">{s.stay.label}</span>
+    <div className={`tm-stay${bare ? ' tm-stay--bare' : ''}`} role="group" aria-label={s.stay.label}>
+      {!bare && <span className="tm-stay__label">{s.stay.label}</span>}
       <span className="tm-stay__dates">
         <input type="date" value={stay?.checkIn ?? ''} min={today} onChange={(e) => onChange('in', e.target.value)} aria-label={s.stay.checkIn} />
         <span className="tm-stay__to" aria-hidden="true">→</span>
