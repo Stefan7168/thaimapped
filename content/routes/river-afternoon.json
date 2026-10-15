@@ -1909,8 +1909,10 @@
         "en": "Coffee on the river terrace"
       },
       "why": {
-        "en": "Placeholder: a terrace cafe at ICONSIAM facing the river."
+        "en": "A coffee break around here."
       },
+      "placeholder": true,
+      "note": "Placeholder: a terrace cafe at ICONSIAM facing the river.",
       "location": {
         "lon": 100.51,
         "lat": 13.7262

@@ -79,6 +79,7 @@ export function TripPage({ locale, cityId, cityName, route }: { locale: Locale; 
                               <span className="truncate text-[17px] font-medium">{t(stop.name, locale)}</span>
                             </span>
                             <span className="block text-[16px] text-ink">{t(stop.why, locale)}</span>
+                            {stop.placeholder && <span className="tm-stoprow__tbc">{s.trip.placeholder}</span>}
                           </span>
                         </button>
                         {active && partners.length > 0 && (

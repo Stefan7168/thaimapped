@@ -146,6 +146,10 @@ export interface RouteStop {
   day: number
   name: Localized
   why: Localized
+  /** The exact spot is not picked yet: the page says so rather than naming one. */
+  placeholder?: boolean
+  /** Editor's note for the content pass; never rendered. */
+  note?: string
   location: { lon: number; lat: number }
   links: PinLinks
 }

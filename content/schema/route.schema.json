@@ -101,6 +101,14 @@
           "why": {
             "$ref": "common.schema.json#/$defs/localized"
           },
+          "placeholder": {
+            "type": "boolean",
+            "description": "The exact spot is not picked yet; the page says so instead of naming one."
+          },
+          "note": {
+            "type": "string",
+            "description": "Editor's note for the content pass. Never shown to visitors."
+          },
           "location": {
             "type": "object",
             "properties": {

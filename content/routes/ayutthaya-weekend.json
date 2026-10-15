@@ -13417,8 +13417,10 @@
         "en": "Coffee stop near Rangsit"
       },
       "why": {
-        "en": "First break after the city traffic. Placeholder: pick a real cafe on the content pass."
+        "en": "First break after the city traffic."
       },
+      "placeholder": true,
+      "note": "Placeholder: pick a real cafe on the content pass.",
       "location": {
         "lon": 100.579,
         "lat": 14.03
@@ -13465,8 +13467,10 @@
         "en": "Riverside hotel in Ayutthaya"
       },
       "why": {
-        "en": "Placeholder: a mid-range riverside stay on the island. Real pick on the content pass."
+        "en": "A night around here."
       },
+      "placeholder": true,
+      "note": "Placeholder: a mid-range riverside stay on the island. Real pick on the content pass.",
       "location": {
         "lon": 100.558,
         "lat": 14.356
@@ -13513,8 +13517,10 @@
         "en": "Boat noodles by the river"
       },
       "why": {
-        "en": "Ayutthaya's dish. Placeholder: name the stall on the content pass."
+        "en": "Ayutthaya's dish."
       },
+      "placeholder": true,
+      "note": "Placeholder: name the stall on the content pass.",
       "location": {
         "lon": 100.576,
         "lat": 14.352
@@ -13529,8 +13535,10 @@
         "en": "Coffee on the way back"
       },
       "why": {
-        "en": "Placeholder cafe south of the island, before the highway."
+        "en": "A coffee break around here."
       },
+      "placeholder": true,
+      "note": "Placeholder cafe south of the island, before the highway.",
       "location": {
         "lon": 100.57,
         "lat": 14.25

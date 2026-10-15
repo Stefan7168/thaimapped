@@ -17465,8 +17465,10 @@
         "en": "Coffee near Saraburi"
       },
       "why": {
-        "en": "Placeholder: a highway cafe. Real pick on the content pass."
+        "en": "A coffee break around here."
       },
+      "placeholder": true,
+      "note": "Placeholder: a highway cafe. Real pick on the content pass.",
       "location": {
         "lon": 100.9,
         "lat": 14.3
@@ -17481,8 +17483,10 @@
         "en": "Lunch in Pak Chong"
       },
       "why": {
-        "en": "The town at the park gate. Placeholder restaurant."
+        "en": "The town at the park gate."
       },
+      "placeholder": true,
+      "note": "Placeholder restaurant.",
       "location": {
         "lon": 101.41,
         "lat": 14.71
@@ -17497,8 +17501,10 @@
         "en": "Resort near the park gate"
       },
       "why": {
-        "en": "Placeholder: a mid-range resort on Thanarat Road. Real pick on the content pass."
+        "en": "A night around here."
       },
+      "placeholder": true,
+      "note": "Placeholder: a mid-range resort on Thanarat Road. Real pick on the content pass.",
       "location": {
         "lon": 101.39,
         "lat": 14.62
@@ -17529,8 +17535,10 @@
         "en": "Khao Yai viewpoint"
       },
       "why": {
-        "en": "Placeholder: a ridge viewpoint on the park road. Watch for elephants at dusk."
+        "en": "A viewpoint around here."
       },
+      "placeholder": true,
+      "note": "Placeholder: a ridge viewpoint on the park road. Watch for elephants at dusk.",
       "location": {
         "lon": 101.38,
         "lat": 14.5
@@ -17545,8 +17553,10 @@
         "en": "Winery lunch"
       },
       "why": {
-        "en": "Placeholder: one of the Khao Yai wineries for lunch and a tasting."
+        "en": "A meal around here."
       },
+      "placeholder": true,
+      "note": "Placeholder: one of the Khao Yai wineries for lunch and a tasting.",
       "location": {
         "lon": 101.36,
         "lat": 14.65
@@ -17561,8 +17571,10 @@
         "en": "Coffee before the highway"
       },
       "why": {
-        "en": "Placeholder cafe near Pak Chong."
+        "en": "A coffee break around here."
       },
+      "placeholder": true,
+      "note": "Placeholder cafe near Pak Chong.",
       "location": {
         "lon": 101.41,
         "lat": 14.71

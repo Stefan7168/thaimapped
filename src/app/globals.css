@@ -575,3 +575,5 @@ a.tm-wk__stop { text-decoration: none; }
 .tm-cmp thead th { border-top: 0; font-family: var(--font-display), Georgia, serif; font-size: 16px; font-weight: 600; }
 .tm-cmp tbody th { font-weight: 600; color: var(--ink-2); font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; min-width: 92px; position: sticky; left: 0; background: var(--paper); }
 .tm-cmp__links a { margin-right: 10px; }
+
+.tm-stoprow__tbc { display: inline-block; margin-top: 4px; padding: 1px 7px; border-radius: 6px; border: 1px dashed var(--line); font-size: 12px; color: var(--ink-2); }

@@ -1716,8 +1716,10 @@
         "en": "Coffee at Tha Tien"
       },
       "why": {
-        "en": "Placeholder: a river-view cafe near the pier. Real pick on the content pass."
+        "en": "A coffee break around here."
       },
+      "placeholder": true,
+      "note": "Placeholder: a river-view cafe near the pier. Real pick on the content pass.",
       "location": {
         "lon": 100.492,
         "lat": 13.746
