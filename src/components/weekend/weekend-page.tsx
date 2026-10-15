@@ -8,7 +8,7 @@ import { CalendarPlus, Share2 } from 'lucide-react'
 import type { Area, Locale, Pin, Station, TripRoute } from '@/lib/content/types'
 import { t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
-import { isFullRange, PRICE_RANGE, type PriceRange } from '@/lib/explorer/filters'
+import { distanceM, isFullRange, PRICE_RANGE, WALK_PACE_M_PER_MIN, type PriceRange } from '@/lib/explorer/filters'
 import { WEEKEND_SLOTS, weekendPlan, type WeekendSlot } from '@/lib/explorer/weekend'
 import { whenLine } from '@/lib/explorer/when'
 import { thb } from '@/lib/explorer/price'
@@ -22,6 +22,7 @@ import { SiteHeader } from '@/components/explorer/site-header'
 import { SiteFooter } from '@/components/explorer/site-footer'
 import { SaveButton } from '@/components/saved/save-button'
 import { StayPicker } from '@/components/stay/stay-picker'
+import { HotelCompare } from '@/components/stay/hotel-compare'
 import { useSaved } from '@/lib/saved/store'
 import { KIND_ICONS } from '@/components/explorer/kind-bar'
 
@@ -67,6 +68,8 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes }: {
   const saved = useSaved()
   const hotels = useMemo(() => [...plan.hotels].sort((a, b) => Number(saved.includes(b.id)) - Number(saved.includes(a.id))), [plan.hotels, saved])
   const pinned = useMemo(() => [...stops, ...hotels], [stops, hotels])
+  // Stops of this weekend inside a ten-minute walk of a hotel, straight-line at walking pace.
+  const nearbyCount = (hotel: Pin) => stops.filter((p) => distanceM(hotel.location.lon, hotel.location.lat, p.location.lon, p.location.lat) <= WALK_PACE_M_PER_MIN * 10).length
   // With a Friday-to-Sunday stay picked, each slot heading carries its date.
   const slotDay = (slot: WeekendSlot): Date | null => {
     if (!stay || nights(stay) !== 2) return null
@@ -207,6 +210,13 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes }: {
             <li className="tm-wk__slot tm-wk__slot--stay">
               <h2 className="tm-wk__time">{s.guide.stay}</h2>
               {hotels.length === 0 ? <p className="tm-wk__empty">{s.guide.stayNone}</p> : <ul className="tm-wk__stops">{hotels.map(stop)}</ul>}
+              {hotels.length > 1 && (
+                <div className="tm-ar__cmp">
+                  <h3 className="tm-wk__time">{s.areaPage.compare}</h3>
+                  <p className="tm-saved__note">{s.weekendPage.compareLead}</p>
+                  <HotelCompare locale={locale} cityId={cityId} entries={hotels.map((pin) => ({ pin, area }))} stations={stations} nearbyCount={nearbyCount} showArea={false} />
+                </div>
+              )}
             </li>
           </ol>
           {dayTrips.length > 0 && (

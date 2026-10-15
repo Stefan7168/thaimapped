@@ -86,6 +86,7 @@ const en = {
   },
   weekendPage: {
     eyebrow: 'A weekend plan',
+    compareLead: 'A night, the walk to the train, and how many of this weekend\'s stops are within ten minutes on foot. Prices are typical for the class, not checked.',
     title: (area: string) => `Your weekend in ${area}`,
     description: (area: string, tagline: string) => `Friday night to Sunday in ${area}: ${tagline} With the hotels inside your budget and the walk from the train.`,
     budget: (min: string, max: string) => `Hotels from ${min} to ${max} a night.`,
