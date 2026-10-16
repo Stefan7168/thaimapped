@@ -26,6 +26,13 @@ export function TripPage({ locale, cityId, cityName, route }: { locale: Locale; 
   const [activeStop, setActiveStop] = useState<string | null>(null)
   const days = Array.from({ length: route.days }, (_, i) => i + 1)
   const [shared, setShared] = useState<'idle' | 'copied' | 'failed'>('idle')
+  // With dates set, day N is the check-in date plus N - 1, shown beside the day heading as the weekend page does.
+  const dayDate = (d: number): string | null => {
+    if (!stay) return null
+    const date = new Date(`${stay.checkIn}T12:00:00`)
+    date.setDate(date.getDate() + d - 1)
+    return new Intl.DateTimeFormat(locale, { weekday: 'short', day: 'numeric', month: 'short' }).format(date)
+  }
   useEffect(() => { adoptStayFromUrl() }, [])
 
   const share = async () => {
@@ -93,7 +100,7 @@ export function TripPage({ locale, cityId, cityName, route }: { locale: Locale; 
             )}
             {days.map((d) => (
               <section key={d} className={`mt-5 ${day !== null && day !== d ? 'opacity-50' : ''}`}>
-                {route.days > 1 && <h2 className="text-[17px] font-semibold">{s.trip.day(d)}</h2>}
+                {route.days > 1 && <h2 className="text-[17px] font-semibold">{s.trip.day(d)}{dayDate(d) && <span className="tm-wk__date"> · {dayDate(d)}</span>}</h2>}
                 <ol className="mt-2 space-y-1.5">
                   {route.stops.map((stop, i) => {
                     if (stop.day !== d) return null
