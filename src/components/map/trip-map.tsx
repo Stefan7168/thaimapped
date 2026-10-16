@@ -30,6 +30,10 @@ export interface TripMapProps {
   day: number | null
   activeStopId: string | null
   onSelectStop: (id: string) => void
+  /** The stop whose list row the pointer is on: its number is lifted on the map. */
+  hoverStopId?: string | null
+  /** The pointer entered (id) or left (null) a stop on the map: the page lifts its list row. */
+  onHoverStop?: (id: string | null) => void
 }
 
 function bounds(points: [number, number][]): LngLatBoundsLike {
@@ -55,7 +59,7 @@ function stopElement(index: number, label: string, color: string, active: boolea
 }
 
 /** The trip page map: the road line plus numbered stops. 2D on purpose, a route reads best flat. */
-export function TripMap({ locale, route, day, activeStopId, onSelectStop }: TripMapProps) {
+export function TripMap({ locale, route, day, activeStopId, onSelectStop, hoverStopId = null, onHoverStop }: TripMapProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const mapRef = useRef<MaplibreMap | null>(null)
   const framedOnce = useRef(false)
@@ -65,6 +69,17 @@ export function TripMap({ locale, route, day, activeStopId, onSelectStop }: Trip
     onSelect.current = onSelectStop
   }, [onSelectStop])
   const [mapReady, setMapReady] = useState(0)
+  const onHover = useRef(onHoverStop)
+  useEffect(() => {
+    onHover.current = onHoverStop
+  }, [onHoverStop])
+  const hoverRef = useRef(hoverStopId)
+  const stopElsRef = useRef(new Map<string, HTMLElement>())
+  // The hovered row's stop is lifted in place, without rebuilding the markers.
+  useEffect(() => {
+    hoverRef.current = hoverStopId
+    for (const [id, el] of stopElsRef.current) el.classList.toggle('tm-stop--hover', id === hoverStopId)
+  }, [hoverStopId, mapReady])
 
   useEffect(() => {
     let cancelled = false
@@ -122,11 +137,16 @@ export function TripMap({ locale, route, day, activeStopId, onSelectStop }: Trip
       if (cancelled) return
       markersRef.current.forEach((m) => m.remove())
       markersRef.current = []
+      stopElsRef.current.clear()
       route.stops.forEach((stop, i) => {
         const dimmed = day !== null && stop.day !== day
         const el = stopElement(i + 1, t(stop.name, locale), STOP_COLORS[stop.kind] ?? '#6f6a5f', stop.id === activeStopId)
         if (dimmed) el.classList.add('tm-stop--dim')
         el.addEventListener('click', () => onSelect.current(stop.id))
+        el.addEventListener('mouseenter', () => onHover.current?.(stop.id))
+        el.addEventListener('mouseleave', () => onHover.current?.(null))
+        if (stop.id === hoverRef.current) el.classList.add('tm-stop--hover')
+        stopElsRef.current.set(stop.id, el)
         markersRef.current.push(new maplibregl.Marker({ element: el, anchor: 'left' }).setLngLat([stop.location.lon, stop.location.lat]).addTo(map))
       })
       declutterLabels(markersRef.current, map.getContainer())

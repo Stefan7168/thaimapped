@@ -24,6 +24,7 @@ export function TripPage({ locale, cityId, cityName, route }: { locale: Locale; 
   const stay = useStay()
   const [day, setDay] = useState<number | null>(null)
   const [activeStop, setActiveStop] = useState<string | null>(null)
+  const [hoverStop, setHoverStop] = useState<string | null>(null)
   const days = Array.from({ length: route.days }, (_, i) => i + 1)
   const [shared, setShared] = useState<'idle' | 'copied' | 'failed'>('idle')
   // With dates set, day N is the check-in date plus N - 1, shown beside the day heading as the weekend page does.
@@ -65,7 +66,7 @@ export function TripPage({ locale, cityId, cityName, route }: { locale: Locale; 
       </header>
       <main className="flex min-h-0 flex-1 flex-col md:flex-row">
         <div className="relative order-1 min-h-[45dvh] flex-1 md:min-h-0" data-ui>
-          <TripMap locale={locale} route={route} day={day} activeStopId={activeStop} onSelectStop={(id) => setActiveStop(id)} />
+          <TripMap locale={locale} route={route} day={day} activeStopId={activeStop} onSelectStop={(id) => setActiveStop(id)} hoverStopId={hoverStop} onHoverStop={setHoverStop} />
           {!route.path && (
             <p className="pointer-events-none absolute inset-x-3 bottom-3 bg-paper px-3 py-2 text-[15px] text-ink-2 md:right-auto md:max-w-sm">{s.trip.pathNote}</p>
           )}
@@ -108,7 +109,7 @@ export function TripPage({ locale, cityId, cityName, route }: { locale: Locale; 
                     const partners = Object.keys(stop.links) as Partner[]
                     return (
                       <li key={stop.id}>
-                        <button type="button" onClick={() => setActiveStop(active ? null : stop.id)} className={`tm-stoprow${active ? ' tm-stoprow--on' : ''}`}>
+                        <button type="button" onClick={() => setActiveStop(active ? null : stop.id)} onMouseEnter={() => setHoverStop(stop.id)} onMouseLeave={() => setHoverStop(null)} className={`tm-stoprow${active ? ' tm-stoprow--on' : ''}${hoverStop === stop.id ? ' tm-stoprow--hover' : ''}`}>
                           <span className="tm-stoprow__num" style={{ ['--lc' as string]: STOP_COLORS[stop.kind] }}>{i + 1}</span>
                           <span className="min-w-0">
                             <span className="flex items-center gap-2">
