@@ -19,6 +19,11 @@ function read(areaId: string): string | null {
   }
 }
 
+/** The chosen hotel id for an area, read once (for code outside React, such as the map card). */
+export function myHotelChoice(areaId: string): string | null {
+  return read(areaId)
+}
+
 export function chooseHotel(areaId: string, hotelId: string) {
   try {
     window.localStorage.setItem(PREFIX + areaId, hotelId)

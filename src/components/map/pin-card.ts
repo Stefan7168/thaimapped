@@ -7,6 +7,8 @@ import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
 import { directionsUrl } from '@/lib/links/directions'
 import { nights, stayNow } from '@/lib/stay/store'
 import { savedIds, toggleSaved } from '@/lib/saved/store'
+import { myHotelChoice } from '@/lib/saved/my-hotel'
+import { distanceM, WALK_PACE_M_PER_MIN } from '@/lib/explorer/filters'
 import { trackOutbound } from '@/lib/links/track'
 import type { NearbyPin } from '@/lib/explorer/filters'
 
@@ -154,6 +156,19 @@ export function cardElement(locale: Locale, cityId: string, pin: Pin, area: Area
     walk.className = 'tm-card__walk'
     walk.textContent = `${s.city.walkMinutes(pin.walk.minutes)} ${s.city.from(`${station.code ? station.code + ' ' : ''}${t(station.name, locale)}`)}`
     el.append(walk)
+  }
+  // A place also says how far it is from the reader's hotel in this area (the chosen one, else the first saved), as the plan pages do.
+  if (pin.kind !== 'hotel') {
+    const saved = savedIds()
+    const hotels = area.pins.filter((p) => p.kind === 'hotel' && saved.includes(p.id))
+    const chosen = myHotelChoice(area.id)
+    const mine = hotels.find((h) => h.id === chosen) ?? hotels[0]
+    if (mine) {
+      const from = document.createElement('p')
+      from.className = 'tm-card__walk tm-card__from'
+      from.textContent = s.weekendPage.fromHotel(Math.max(1, Math.round(distanceM(mine.location.lon, mine.location.lat, pin.location.lon, pin.location.lat) / WALK_PACE_M_PER_MIN)), t(mine.name, locale))
+      el.append(from)
+    }
   }
   const partners = Object.keys(pin.links) as Partner[]
   {
