@@ -47,6 +47,7 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
   const threeD = override3D ?? detected3D
   const [filters, setFilters] = useState<FilterState>(EMPTY_FILTERS)
   const [activePin, setActivePin] = useState<Pin | null>(null)
+  const [hoverPin, setHoverPin] = useState<string | null>(null)
   // A link from the home page quiz carries "#area=<id>&price=<min>-<max>" (an older "tier=" still works). The hash never reaches the
   // server, so it is read once the page is live, in a frame callback rather than straight in the effect.
   useEffect(() => {
@@ -246,7 +247,7 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
         return (
           <li key={pin.id} className="relative">
             {<SaveButton id={pin.id} locale={locale} className="absolute right-2 top-2" />}
-            <button type="button" onClick={() => { setActivePin(pin); setListOpen(false) }} className={`tm-place tm-place--save ${active ? 'border-ink bg-white' : 'border-line bg-white/70'}`}>
+            <button type="button" onClick={() => { setActivePin(pin); setListOpen(false) }} onMouseEnter={() => setHoverPin(pin.id)} onMouseLeave={() => setHoverPin(null)} className={`tm-place tm-place--save ${active ? 'border-ink bg-white' : hoverPin === pin.id ? 'border-ink-2 bg-white' : 'border-line bg-white/70'}`}>
               {/* A square picture on the left: the place's first photo, or its kind's icon on paper until one is fetched. */}
               {thumb ? (
                 <Image src={thumb.src} alt="" width={72} height={72} sizes="72px" className="tm-place__thumb" />
@@ -385,6 +386,8 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
               near={filters.near}
               outlines={outlines}
               activePinId={activePin?.id ?? null}
+              hoverPinId={hoverPin}
+              onHoverPin={setHoverPin}
               onSelectArea={(id) => update({ ...filters, areas: [id] })}
               onSelectPin={(pin) => {
                 // A place picked from the tip may sit outside the current filters: widen to its area so it is on the map.

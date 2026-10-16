@@ -239,6 +239,11 @@ body {
 .tm-area-hover__top { color: var(--ink); }
 .tm-area-hover__meta { font-size: 12px; }
 .tm-pin--hover .tm-pin__dot { animation: tm-pop 240ms var(--ease-out, ease-out) both; }
+/* The explorer's hovered list row on the map: a bigger dot with a paper ring, the name shown even where the declutter hid it. */
+.tm-pin--lift { z-index: 2; }
+.tm-pin__dot { transition: transform var(--t-hover) ease, box-shadow var(--t-hover) ease; }
+.tm-pin--lift .tm-pin__dot { transform: scale(1.5); box-shadow: 0 0 0 3px var(--paper), 0 1px 4px rgba(0,0,0,0.35); } /* taste-skill-ignore: map marker over tiles */
+.tm-pin--lift .tm-pin__label { visibility: visible; border-color: var(--ink); }
 @keyframes tm-pop { from { transform: scale(0); } to { transform: scale(1); } }
 @media (prefers-reduced-motion: reduce) { .tm-pin--hover .tm-pin__dot { animation: none; } }
 .tm-pin--hover { pointer-events: none; }

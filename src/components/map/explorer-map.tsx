@@ -52,6 +52,10 @@ export interface ExplorerMapProps {
   outlines: Outline[]
   /** Pin to highlight and open a card on, if any. */
   activePinId: string | null
+  /** The place whose list row the pointer is on: its pin is lifted on the map. */
+  hoverPinId?: string | null
+  /** The pointer entered (id) or left (null) a pin on the map: the list lifts its row. */
+  onHoverPin?: (id: string | null) => void
   onSelectArea: (id: string) => void
   onSelectPin: (pin: Pin) => void
   /** The card's close button, or the user tapping the map away from it. */
@@ -116,17 +120,19 @@ function focusBounds(pins: VisiblePin[], stations: Station[], centres: [number, 
 }
 
 export function ExplorerMap(props: ExplorerMapProps) {
-  const { locale, cityId, cityCamera, threeD, areas, pins, allPins, allStations, stations, centres, near = null, outlines, activePinId, onSelectArea, onSelectPin, onClosePin } = props
+  const { locale, cityId, cityCamera, threeD, areas, pins, allPins, allStations, stations, centres, near = null, outlines, activePinId, onSelectArea, onSelectPin, onClosePin, hoverPinId = null, onHoverPin } = props
   const containerRef = useRef<HTMLDivElement>(null)
   const mapRef = useRef<MaplibreMap | null>(null)
   const markersRef = useRef<Marker[]>([])
   const popupRef = useRef<Popup | null>(null)
   const hoverRef = useRef<AreaHover | null>(null)
   const stationById = useMemo(() => new Map(allStations.map((st) => [st.id, st])), [allStations])
-  const callbacks = useRef({ onSelectArea, onSelectPin, onClosePin })
+  const callbacks = useRef({ onSelectArea, onSelectPin, onClosePin, onHoverPin })
   useEffect(() => {
-    callbacks.current = { onSelectArea, onSelectPin, onClosePin }
-  }, [onSelectArea, onSelectPin, onClosePin])
+    callbacks.current = { onSelectArea, onSelectPin, onClosePin, onHoverPin }
+  }, [onSelectArea, onSelectPin, onClosePin, onHoverPin])
+  const liftRef = useRef(hoverPinId)
+  const pinElsRef = useRef(new Map<string, HTMLElement>())
   // Bumped once the style has loaded so the effects below re-run (refs do not re-render).
   const [mapReady, setMapReady] = useState(0)
 
@@ -203,6 +209,12 @@ export function ExplorerMap(props: ExplorerMapProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  // The hovered row's pin is lifted in place, without rebuilding the markers.
+  useEffect(() => {
+    liftRef.current = hoverPinId
+    for (const [id, el] of pinElsRef.current) el.classList.toggle('tm-pin--lift', id === hoverPinId)
+  }, [hoverPinId, mapReady])
+
   // Markers: area labels on the overview, filtered pins otherwise.
   useEffect(() => {
     const map = mapRef.current
@@ -213,6 +225,7 @@ export function ExplorerMap(props: ExplorerMapProps) {
       if (cancelled) return
       markersRef.current.forEach((m) => m.remove())
       markersRef.current = []
+      pinElsRef.current.clear()
       if (pins.length === 0 && stations.length === 0 && centres.length === 0 && !near) {
         for (const a of areas) {
           // Phones get the short name (before "and" or a bracket); the full name is in the guide.
@@ -232,6 +245,10 @@ export function ExplorerMap(props: ExplorerMapProps) {
       for (const { pin, area } of pins) {
         const el = pinElement(t(pin.name, locale), `var(--${area.color})`, pin.kind !== 'hotel', pin.id === activePinId)
         el.addEventListener('click', () => callbacks.current.onSelectPin(pin))
+        el.addEventListener('mouseenter', () => callbacks.current.onHoverPin?.(pin.id))
+        el.addEventListener('mouseleave', () => callbacks.current.onHoverPin?.(null))
+        if (pin.id === liftRef.current) el.classList.add('tm-pin--lift')
+        pinElsRef.current.set(pin.id, el)
         markersRef.current.push(new maplibregl.Marker({ element: el, anchor: 'left' }).setLngLat([pin.location.lon, pin.location.lat]).addTo(map))
       }
       for (const st of stations) {
