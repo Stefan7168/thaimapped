@@ -9,6 +9,7 @@ import { t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
 import { distanceM, KIND_CHIPS, WALK_PACE_M_PER_MIN } from '@/lib/explorer/filters'
 import { whenLine } from '@/lib/explorer/when'
+import { chooseHotel, useMyHotelChoice } from '@/lib/saved/my-hotel'
 import { thb } from '@/lib/explorer/price'
 import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
 import { directionsUrl } from '@/lib/links/directions'
@@ -49,7 +50,8 @@ export function AreaPage({ locale, cityId, area, areas, stations, stationSlugs }
   const hotels = useMemo(() => area.pins.filter((p) => p.kind === 'hotel'), [area])
   // The hotel the reader hearted in this area: every place then says how far it is from that door.
   const saved = useSaved()
-  const myHotel = useMemo(() => hotels.find((h) => saved.includes(h.id)) ?? null, [hotels, saved])
+  const chosenHotel = useMyHotelChoice(area.id)
+  const myHotel = useMemo(() => hotels.find((h) => h.id === chosenHotel && saved.includes(h.id)) ?? hotels.find((h) => saved.includes(h.id)) ?? null, [hotels, saved, chosenHotel])
   const fromHotel = (pin: Pin) => (myHotel ? Math.max(1, Math.round(distanceM(myHotel.location.lon, myHotel.location.lat, pin.location.lon, pin.location.lat) / WALK_PACE_M_PER_MIN)) : null)
   const pinned = useMemo(() => [...kinds.flatMap((g) => g.pins), ...hotels], [kinds, hotels])
   // Stable map props: a new object on every render would rebuild the markers and re-frame the map on each hover or card change.
@@ -98,6 +100,9 @@ export function AreaPage({ locale, cityId, area, areas, stations, stationSlugs }
         </button>
         <div className="tm-wk__links">
           <a href={directionsUrl(pin.location.lat, pin.location.lon)} target="_blank" rel="noopener" className="tm-card__link tm-card__link--quiet">{s.card.directions}</a>
+          {pin.kind === 'hotel' && myHotel && myHotel.id !== pin.id && saved.includes(pin.id) && (
+            <button type="button" className="tm-card__link tm-card__link--quiet" onClick={() => chooseHotel(area.id, pin.id)}>{s.weekendPage.useHotel}</button>
+          )}
             {partners.map((p) => {
               const subId = subIdFor(`${cityId}-${area.id}`, pin.id)
               return (
