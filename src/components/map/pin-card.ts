@@ -7,7 +7,7 @@ import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
 import { directionsUrl } from '@/lib/links/directions'
 import { nights, stayNow } from '@/lib/stay/store'
 import { savedIds, toggleSaved } from '@/lib/saved/store'
-import { myHotelChoice } from '@/lib/saved/my-hotel'
+import { chooseHotel, myHotelChoice } from '@/lib/saved/my-hotel'
 import { distanceM, WALK_PACE_M_PER_MIN } from '@/lib/explorer/filters'
 import { trackOutbound } from '@/lib/links/track'
 import type { NearbyPin } from '@/lib/explorer/filters'
@@ -170,6 +170,21 @@ export function cardElement(locale: Locale, cityId: string, pin: Pin, area: Area
       el.append(from)
     }
   }
+  // A saved hotel, where the area has more than one saved: say when it is the one the plan walks from.
+  if (pin.kind === 'hotel') {
+    const saved = savedIds()
+    const hotels = area.pins.filter((p) => p.kind === 'hotel' && saved.includes(p.id))
+    if (hotels.length > 1) {
+      const chosen = myHotelChoice(area.id)
+      const mine = hotels.find((h) => h.id === chosen) ?? hotels[0]
+      if (mine.id === pin.id) {
+        const tag = document.createElement('p')
+        tag.className = 'tm-card__walk tm-card__from'
+        tag.textContent = s.saved.yourPick(t(area.name, locale))
+        el.append(tag)
+      }
+    }
+  }
   const partners = Object.keys(pin.links) as Partner[]
   {
     const links = document.createElement('div')
@@ -198,6 +213,8 @@ export function cardElement(locale: Locale, cityId: string, pin: Pin, area: Area
       plan.className = 'tm-card__link tm-card__link--quiet'
       plan.href = `/${locale}/${cityId}/weekend/${area.id}?hotel=${pin.id}`
       plan.textContent = s.card.planWeekend
+      // Taking the plan from a saved hotel also makes it the one the other pages walk from.
+      plan.addEventListener('click', () => { if (savedIds().includes(pin.id)) chooseHotel(area.id, pin.id) })
       links.append(plan)
     }
     el.append(links)
