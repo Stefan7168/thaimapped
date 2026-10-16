@@ -57,6 +57,7 @@ const en = {
     clear: 'Clear the list',
     compare: 'Side by side',
     compareLead: 'Your saved hotels on one line each: where, what it costs, how far to the train, what is walkable.',
+    compareLeadSent: 'The hotels on this list, one line each: where, what it costs, how far to the train, what is walkable.',
     compareWhat: 'What',
     cmpSwipe: 'Swipe sideways for the rest',
     cmpArea: 'Area',

@@ -173,7 +173,7 @@ export function SavedPage({ locale, cityId, entries, stations }: { locale: Local
         {hotelRows.length > 1 && (
           <section className="tm-saved__group">
             <h2 className="tm-wk__time">{s.saved.compare}</h2>
-            <p className="tm-saved__note">{s.saved.compareLead}</p>
+            <p className="tm-saved__note">{sentIds ? s.saved.compareLeadSent : s.saved.compareLead}</p>
             <StayPicker locale={locale} />
             <HotelCompare locale={locale} cityId={cityId} entries={hotelRows} stations={stations} nearbyCount={nearbyCount} mine={sentIds ? null : hotelRows.find((e) => pickFor(e.area.id) === e.pin.id && areaHotelCount(e.area.id) > 1)?.pin.id} />
           </section>
