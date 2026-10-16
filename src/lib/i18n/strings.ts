@@ -160,6 +160,7 @@ const en = {
     weekendLink: 'Plan this weekend',
     yourWeekend: (hotel: string, area: string) => `Your weekend: ${hotel} in ${area}`,
     yourWeekendLink: 'Open your plan',
+    jumpNow: (slot: string) => `It is ${slot} of your weekend · Jump to now`,
     setDates: 'Set your dates',
     yourDates: (range: string, nights: string) => `Your dates: ${range}, ${nights}`,
     pickArea: 'Pick an area in three taps',

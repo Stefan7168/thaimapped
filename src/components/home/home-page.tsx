@@ -11,7 +11,8 @@ import { QUIZ_PACES, QUIZ_PURPOSES, rankAreas, type Pace, type QuizAnswers } fro
 import { t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
 import { supports3D } from '@/lib/map/device'
-import { bangkokNow } from '@/lib/explorer/when'
+import { bangkokClock, bangkokNow } from '@/lib/explorer/when'
+import { slotNow } from '@/lib/explorer/weekend'
 import { addSaved, useSaved } from '@/lib/saved/store'
 import { StayPicker } from '@/components/stay/stay-picker'
 import { chooseHotel, myHotelChoice, useHotelChoiceVersion } from '@/lib/saved/my-hotel'
@@ -30,6 +31,8 @@ const StageMap = dynamic(() => import('@/components/map/stage-map').then((m) => 
 // One reading per page load: useSyncExternalStore needs the same object back each time, and the slot does not change mid-visit.
 let nowCache: ReturnType<typeof bangkokNow> | null = null
 const nowSnapshot = () => nowCache ?? (nowCache = bangkokNow())
+let clockCache: ReturnType<typeof bangkokClock> | null = null
+const clockSnapshot = () => clockCache ?? (clockCache = bangkokClock())
 
 function noopSubscribe() {
   return () => {}
@@ -80,6 +83,9 @@ export function HomePage({ locale, bundle, routes }: { locale: Locale; bundle: C
   const myPlace = useMemo(() => (myHotel ? null : allPins(bundle).find((x) => x.pin.kind !== 'hotel' && saved.includes(x.pin.id)) ?? null), [bundle, saved, myHotel])
   // Bangkok's clock, read in the browser only, so the server's HTML carries no time of its own.
   const now = useSyncExternalStore(noopSubscribe, nowSnapshot, () => null)
+  // During the stay itself, the line sends the reader to the slot it is right now.
+  const clock = useSyncExternalStore(noopSubscribe, clockSnapshot, () => null)
+  const nowSlot = clock && stay ? slotNow(clock, stay) : null
   // On a phone the map is a sticky band above the scrolling text, so a tapped card would open out of sight: bring the map back first.
   const showStageMap = () => {
     if (window.innerWidth > 1023) return
@@ -192,7 +198,11 @@ export function HomePage({ locale, bundle, routes }: { locale: Locale; bundle: C
                   {s.home.yourWeekend(t(myHotel.pin.name, locale), t(myHotel.area.name, locale))}
                   {/* With dates: the range, then the stay's cost at the hotel's class-typical rate (which names the nights), else the range and the nights. */}
                   {stay && stayLabel ? (myHotel.pin.price ? <>{` · ${stayLabel} · `}<span title={myHotel.pin.price.basis === 'tier-estimate' ? s.guide.priceEstimate : undefined}>{s.guide.stayTotal(thb(myHotel.pin.price.from * nights(stay), locale), nights(stay))}{myHotel.pin.price.basis === 'tier-estimate' ? '*' : ''}</span></> : ` · ${stayLabel}, ${s.stay.nights(nights(stay))}`) : ''}{' · '}
-                  <Link href={`/${locale}/${city.id}/weekend/${myHotel.area.id}?hotel=${myHotel.pin.id}`} className="tm-link tm-link--under">{s.home.yourWeekendLink}</Link>
+                  {nowSlot ? (
+                    <Link href={`/${locale}/${city.id}/weekend/${myHotel.area.id}?hotel=${myHotel.pin.id}#tm-slot-${nowSlot}`} className="tm-link tm-link--under">{s.home.jumpNow(s.guide.slots[nowSlot].toLowerCase())}</Link>
+                  ) : (
+                    <Link href={`/${locale}/${city.id}/weekend/${myHotel.area.id}?hotel=${myHotel.pin.id}`} className="tm-link tm-link--under">{s.home.yourWeekendLink}</Link>
+                  )}
                   {!stay && <>{' · '}<a href="#tm-quiz" className="tm-link tm-link--under">{s.home.setDates}</a></>}
                 </p>
               )}
