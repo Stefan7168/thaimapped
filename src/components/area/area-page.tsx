@@ -12,7 +12,8 @@ import { t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
 import { distanceM, KIND_CHIPS, WALK_PACE_M_PER_MIN } from '@/lib/explorer/filters'
 import { whenLine } from '@/lib/explorer/when'
-import { chooseHotel, useMyHotelChoice } from '@/lib/saved/my-hotel'
+import { chooseHotel, myHotelChoice, useMyHotelChoice } from '@/lib/saved/my-hotel'
+import type { HotelDoor } from '@/lib/content/slim'
 import { thb } from '@/lib/explorer/price'
 import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
 import { directionsUrl } from '@/lib/links/directions'
@@ -39,7 +40,7 @@ const noopSubscribe = () => () => {}
  * stations, the places by kind and the hotels, with the map at the side.
  * The same content the map's area card shows, laid out to be read and sent.
  */
-export function AreaPage({ locale, cityId, area, areas, stations, stationSlugs, airport = {}, rides = {} }: { locale: Locale; cityId: string; area: Area; areas: Area[]; stations: Station[]; stationSlugs: Record<string, string>; airport?: Record<string, AirportRoutes>; rides?: Record<string, Record<string, AirportLeg[] | null>> }) {
+export function AreaPage({ locale, cityId, area, areas, stations, stationSlugs, airport = {}, rides = {}, hotelDoors = {}, elsewhereRides = {} }: { locale: Locale; cityId: string; area: Area; areas: Area[]; stations: Station[]; stationSlugs: Record<string, string>; airport?: Record<string, AirportRoutes>; rides?: Record<string, Record<string, AirportLeg[] | null>>; hotelDoors?: Record<string, HotelDoor[]>; elsewhereRides?: Record<string, Record<string, AirportLeg[] | null>> }) {
   const s = strings(locale)
   const stay = useStay()
   const detected3D = useSyncExternalStore(noopSubscribe, supports3D, () => null)
@@ -55,6 +56,22 @@ export function AreaPage({ locale, cityId, area, areas, stations, stationSlugs, 
   const saved = useSaved()
   const chosenHotel = useMyHotelChoice(area.id)
   const myHotel = useMemo(() => hotels.find((h) => h.id === chosenHotel && saved.includes(h.id)) ?? hotels.find((h) => saved.includes(h.id)) ?? null, [hotels, saved, chosenHotel])
+  // No hotel of this area saved, but one elsewhere: name it and the ride to this area's first station, as the weekend page does.
+  const elsewhere = useMemo(() => {
+    if (myHotel) return null
+    for (const [areaId, doors] of Object.entries(hotelDoors)) {
+      if (areaId === area.id) continue
+      const mine = doors.filter((h) => saved.includes(h.id))
+      if (mine.length === 0) continue
+      const hotel = mine.find((h) => h.id === myHotelChoice(areaId)) ?? mine[0]
+      const other = areas.find((a) => a.id === areaId)
+      const legs = hotel.walk && area.stations[0] ? elsewhereRides[hotel.walk.station]?.[area.stations[0]] : undefined
+      return { hotel, areaName: other ? t(other.name, locale) : areaId, route: legs && legs.length > 0 ? rideSentence(legs, null, locale) : null }
+    }
+    return null
+    // chosenHotel is read so a new choice recomputes the pick.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [myHotel, hotelDoors, saved, area.id, area.stations, areas, elsewhereRides, locale, chosenHotel])
   // A place more than twenty minutes on foot from the hotel, when both walk from a station and the chain is a real ride.
   const byTrain = (pin: Pin): string | null => {
     if (!myHotel?.walk || !pin.walk || pin.walk.station === myHotel.walk.station) return null
@@ -148,6 +165,11 @@ export function AreaPage({ locale, cityId, area, areas, stations, stationSlugs, 
             </ul>
           )}
           {area.about && <p className="tm-ar__about">{t(area.about, locale)}</p>}
+          {elsewhere && (
+            <p className="tm-wk__shared tm-wk__elsewhere">
+              {s.weekendPage.sleepElsewhere(t(elsewhere.hotel.name, locale), elsewhere.areaName)}{elsewhere.route ? ` ${s.weekendPage.gettingHere(elsewhere.route)}` : ''} <a href="#tm-stay" className="tm-link tm-link--under">{s.weekendPage.sleepHere(t(area.name, locale))}</a>
+            </p>
+          )}
           <div className="tm-wk__actions">
             <Link href={weekendHref} className="tm-button tm-button--small">{s.areaPage.weekend}</Link>
             <Link href={explorerHref} className="tm-link">{s.weekendPage.openMap}</Link>
@@ -185,7 +207,7 @@ export function AreaPage({ locale, cityId, area, areas, stations, stationSlugs, 
                 <ul className="tm-wk__stops">{pins.map(row)}</ul>
               </li>
             ))}
-            <li className="tm-wk__slot tm-wk__slot--stay">
+            <li className="tm-wk__slot tm-wk__slot--stay" id="tm-stay">
               <h2 className="tm-wk__time">{s.guide.stay}</h2>
               {hotels.length > 0 && <StayPicker locale={locale} />}
               {hotels.length > 0 && <p className={myHotel ? 'tm-wk__empty' : 'tm-wk__empty tm-wk__hint'}>{myHotel ? s.weekendPage.hotelPicked(t(myHotel.name, locale)) : s.weekendPage.pickHotelHint}{myHotel && hotels.filter((h) => saved.includes(h.id)).length > 1 ? ` ${s.weekendPage.switchHint}` : ''}</p>}
