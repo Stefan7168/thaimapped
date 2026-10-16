@@ -13,7 +13,7 @@ import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
 import { nights, useStay } from '@/lib/stay/store'
 import { trackOutbound } from '@/lib/links/track'
 import { whenLine } from '@/lib/explorer/when'
-import { WEEKEND_SLOTS, weekendPlan } from '@/lib/explorer/weekend'
+import { WEEKEND_SLOTS, borrowedSlots, weekendPlan } from '@/lib/explorer/weekend'
 import { activeFilterCount, allPins, DAYS, KIND_CHIPS, distanceM, EMPTY_FILTERS, isFullRange, PRICE_RANGE, TIMES, selectedPlaceCentres, selectedStations, subareaKey, TIER_PRICE, TIERS, visiblePins, WALK_PACE_M_PER_MIN, type FilterState, type PriceRange, type Tier } from '@/lib/explorer/filters'
 import { thb } from '@/lib/explorer/price'
 import { stationPages } from '@/lib/explorer/stations'
@@ -206,6 +206,8 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
   // One area picked, nothing narrower: the weekend plan sits above the list.
   const planArea = filters.areas.length === 1 && filters.subareas.length === 0 && filters.stations.length === 0 && filters.lines.length === 0 ? areas.find((a) => a.id === filters.areas[0]) : undefined
   const plan = useMemo(() => (planArea ? weekendPlan(planArea, filters.price) : null), [planArea, filters.price])
+  // A slot the area leaves empty borrows from the nearest area, as the weekend page does; a tap moves the map to that area and opens the pin.
+  const borrowed = useMemo(() => (planArea && plan ? borrowedSlots(planArea, bundle.areas, plan) : {}), [planArea, plan, bundle.areas])
   const weekend = !(planArea && plan) ? (
     <p className="px-1 py-3 text-sm text-ink-2">{s.guide.weekendNeedsArea}</p>
   ) : (
@@ -218,7 +220,15 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
           <li key={slot} className="tm-weekend__slot">
             <span className="tm-weekend__time">{s.guide.slots[slot]}</span>
             {plan.slots[slot].length === 0 ? (
-              <span className="tm-weekend__empty">{s.guide.slotEmpty}</span>
+              <span className="tm-weekend__stops tm-weekend__stops--borrowed">
+                <span className="tm-weekend__empty">{s.guide.slotEmpty}{borrowed[slot] ? ` · ${s.weekendPage.borrowed(t(borrowed[slot].area.name, locale))}` : ''}</span>
+                {borrowed[slot]?.pins.map((pin) => (
+                  <button key={pin.id} type="button" className="tm-weekend__stop" style={{ ['--pin' as string]: `var(--${borrowed[slot]!.area.color})` }} onClick={() => { setFilters({ ...EMPTY_FILTERS, areas: [borrowed[slot]!.area.id] }); setActivePin(pin); setListOpen(false) }}>
+                    <span className="tm-weekend__kind">{s.pin[pin.kind]}</span>
+                    {t(pin.name, locale)}
+                  </button>
+                ))}
+              </span>
             ) : (
               <span className={`tm-weekend__stops${hotelFor(planArea.id) ? ' tm-weekend__stops--rows' : ''}`}>
                 {plan.slots[slot].map((pin) => (
