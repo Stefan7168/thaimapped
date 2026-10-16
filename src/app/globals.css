@@ -605,6 +605,16 @@ a.tm-wk__stop { text-decoration: none; }
 
 .tm-list__head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
 .tm-list__share { font: inherit; text-transform: none; letter-spacing: 0; font-weight: 600; color: var(--accent-text); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+/* The weekend page's booking bar: only on phones, where the hearted hotel's row is far up the plan. */
+.tm-wk__book { display: none; }
+@media (max-width: 1023px) {
+  .tm-wk__book { position: fixed; left: 0; right: 0; bottom: 0; z-index: 5; display: flex; align-items: center; gap: 8px; padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); background: var(--paper); border-top: 1px solid var(--line); box-shadow: 0 -4px 16px rgba(0,0,0,0.06); } /* taste-skill-ignore: a bar over the page needs its edge */
+  .tm-wk__book-text { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; line-height: 1.3; }
+  .tm-wk__book-name { font-weight: 600; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .tm-wk__book-total { font-size: 12px; color: var(--ink-2); }
+  .tm-wk:has(+ .tm-wk__book) { padding-bottom: 72px; }
+}
+@media print { .tm-wk__book { display: none !important; } }
 @media (max-width: 480px) {
   .tm-wk__links { margin-left: 0; }
   /* Narrow phones: the booking buttons share the first row half and half; Directions drops to its own row instead of leaving one button orphaned. */

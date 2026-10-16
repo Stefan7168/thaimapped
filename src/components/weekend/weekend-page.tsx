@@ -294,6 +294,21 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes }: {
           </div>
         </div>
       </main>
+      {myHotel && !sentHotel && (
+        // Phones: the hearted hotel's booking links stay within reach at the bottom while the plan scrolls.
+        <div className="tm-wk__book" data-ui>
+          <span className="tm-wk__book-text">
+            <span className="tm-wk__book-name">{t(myHotel.name, locale)}</span>
+            {myHotel.price && stay && <span className="tm-wk__book-total" title={myHotel.price.basis === 'tier-estimate' ? s.guide.priceEstimate : undefined}>{s.guide.stayTotal(thb(myHotel.price.from * nights(stay), locale), nights(stay))}{myHotel.price.basis === 'tier-estimate' ? '*' : ''}</span>}
+          </span>
+          {(Object.keys(myHotel.links) as Partner[]).filter((p) => p !== 'official').map((p) => {
+            const subId = subIdFor(`${cityId}-${area.id}`, myHotel.id)
+            return (
+              <a key={p} href={buildOutboundUrl(p, myHotel.links[p]!, subId, stay)} onClick={() => trackOutbound(p, subId)} target="_blank" rel="noopener sponsored" className="tm-card__link">{p.charAt(0).toUpperCase() + p.slice(1)}</a>
+            )
+          })}
+        </div>
+      )}
     </>
   )
 }
