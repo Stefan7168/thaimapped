@@ -59,6 +59,8 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
   const [price, setPrice] = useState<PriceRange | null>(null)
   // A hotel named in the address ("?hotel=") by whoever sent the link: used as theirs for this visit, never saved.
   const [sentHotel, setSentHotel] = useState<string | null>(null)
+  // Stops the sender took out ("?skip="): left out for this visit, never written to this browser's own list.
+  const [sentSkips, setSentSkips] = useState<readonly string[]>([])
   // With two or more hotels of this area saved, the reader can say which one the plan walks from (kept per area in this browser).
   const chosenHotel = useMyHotelChoice(area.id)
   // The address is not known on the server; read it once the page is live.
@@ -66,14 +68,15 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
     const id = window.requestAnimationFrame(() => {
       setPrice(readPrice())
       setSentHotel(new URLSearchParams(window.location.search).get('hotel'))
+      setSentSkips((new URLSearchParams(window.location.search).get('skip') ?? '').split(',').filter(Boolean))
       adoptStayFromUrl()
     })
     return () => window.cancelAnimationFrame(id)
   }, [])
   // Stops the reader took out: the plan refills from the area's other places.
   const skipped = useSkipped()
-  const skippedHere = useMemo(() => area.pins.filter((p) => p.kind !== 'hotel' && skipped.includes(p.id)), [area, skipped])
-  const plan = useMemo(() => weekendPlan(area, price, new Set(skipped)), [area, price, skipped])
+  const skippedHere = useMemo(() => area.pins.filter((p) => p.kind !== 'hotel' && (skipped.includes(p.id) || sentSkips.includes(p.id))), [area, skipped, sentSkips])
+  const plan = useMemo(() => weekendPlan(area, price, new Set([...skipped, ...sentSkips])), [area, price, skipped, sentSkips])
   const [card, setCard] = useState<{ pin: Pin; area: Area } | null>(null)
   const [hoverId, setHoverId] = useState<string | null>(null)
   const [shared, setShared] = useState<'idle' | 'copied' | 'failed'>('idle')
@@ -157,6 +160,8 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
     else u.searchParams.delete('stay')
     if (myHotel) u.searchParams.set('hotel', myHotel.id)
     else u.searchParams.delete('hotel')
+    if (skippedHere.length > 0) u.searchParams.set('skip', skippedHere.map((p) => p.id).join(','))
+    else u.searchParams.delete('skip')
     const url = u.toString()
     const title = s.weekendPage.title(t(area.name, locale))
     // The share sheet's text names the hotel and the dates, so the message reads as a plan, not a bare link.
@@ -272,7 +277,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
           </div>
           {skippedHere.length > 0 && (
             <p className="tm-wk__empty tm-wk__skipped">
-              {s.weekendPage.skipped(skippedHere.map((p) => t(p.name, locale)).join(', '))} <button type="button" className="tm-link tm-link--under" onClick={() => unskipStops(skippedHere.map((p) => p.id))}>{s.weekendPage.putBack}</button>
+              {s.weekendPage.skipped(skippedHere.map((p) => t(p.name, locale)).join(', '))} <button type="button" className="tm-link tm-link--under" onClick={() => { unskipStops(skippedHere.map((p) => p.id)); setSentSkips([]) }}>{s.weekendPage.putBack}</button>
             </p>
           )}
           <ol className="tm-wk__slots">
