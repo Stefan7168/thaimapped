@@ -8,6 +8,7 @@ import { slimArea, slimRoute, stationsFor } from '@/lib/content/slim'
 import { WeekendPage } from '@/components/weekend/weekend-page'
 import { JsonLd, pinNode, placeListLd } from '@/lib/seo/json-ld'
 import { borrowedSlots, weekendPlan } from '@/lib/explorer/weekend'
+import { airportRoutesFor } from '@/lib/transit/from-airport'
 
 // Static per area; the hotel budget rides along as ?price=min-max and is read in the browser.
 export const ensureStatic = 'navigation'
@@ -41,7 +42,7 @@ export default async function AreaWeekendPage(props: PageProps<'/[locale]/[city]
   return (
     <>
       <JsonLd data={placeListLd(strings(locale).weekendPage.title(t(a.name, locale)), `/${locale}/${city}/weekend/${area}`, a.pins.map((p) => pinNode(p, locale, cityName)))} />
-      <WeekendPage locale={locale} cityId={city} area={a} areas={bundle.areas.map(slimArea)} stations={stationsFor(bundle.stations, [...a.pins, ...borrowedPins])} routes={loadRoutes(city).map(slimRoute)} borrowed={borrowed} />
+      <WeekendPage locale={locale} cityId={city} area={a} areas={bundle.areas.map(slimArea)} stations={stationsFor(bundle.stations, [...a.pins, ...borrowedPins])} routes={loadRoutes(city).map(slimRoute)} borrowed={borrowed} airport={airportRoutesFor(bundle, [...new Set(a.pins.filter((p) => p.kind === 'hotel' && p.walk).map((p) => p.walk!.station))])} />
     </>
   )
 }

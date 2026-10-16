@@ -5,6 +5,8 @@ import Link from 'next/link'
 import { useEffect, useMemo, useState } from 'react'
 import { Share2, X } from 'lucide-react'
 import type { Area, Locale, Pin, Station } from '@/lib/content/types'
+import { FromAirport } from '@/components/stay/from-airport'
+import type { AirportRoutes } from '@/lib/transit/from-airport'
 import { t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
 import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
@@ -31,7 +33,7 @@ export interface SavedEntry {
  * The shortlist. Shows this browser's saved hotels, or the hotels named in
  * "?ids=a,b,c" when the address came from someone else's "Send this list".
  */
-export function SavedPage({ locale, cityId, entries, stations }: { locale: Locale; cityId: string; entries: SavedEntry[]; stations: Station[] }) {
+export function SavedPage({ locale, cityId, entries, stations, airport = {} }: { locale: Locale; cityId: string; entries: SavedEntry[]; stations: Station[]; airport?: Record<string, AirportRoutes> }) {
   const s = strings(locale)
   const stay = useStay()
   const mine = useSaved()
@@ -127,6 +129,7 @@ export function SavedPage({ locale, cityId, entries, stations }: { locale: Local
                 <span className="tm-wk__meta tm-saved__map">{s.saved.showOnMap}</span>
               </span>
             </Link>
+            {pin.kind === 'hotel' && pin.walk && airport[pin.walk.station] && <FromAirport locale={locale} routes={airport[pin.walk.station]} walkMinutes={pin.walk.minutes} />}
             <div className="tm-wk__links">
               <a href={directionsUrl(pin.location.lat, pin.location.lon)} target="_blank" rel="noopener" className="tm-card__link tm-card__link--quiet">{s.card.directions}</a>
               {pin.kind === 'hotel' && !sentIds && areaHotelCount(area.id) > 1 && pickFor(area.id) !== pin.id && (

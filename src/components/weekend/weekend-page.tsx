@@ -6,6 +6,8 @@ import Link from 'next/link'
 import { useEffect, useMemo, useState, useSyncExternalStore, type CSSProperties } from 'react'
 import { CalendarPlus, Share2 } from 'lucide-react'
 import type { Area, Locale, Pin, Station, TripRoute } from '@/lib/content/types'
+import { FromAirport } from '@/components/stay/from-airport'
+import type { AirportRoutes } from '@/lib/transit/from-airport'
 import { t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
 import { distanceM, isFullRange, PRICE_RANGE, WALK_PACE_M_PER_MIN, type PriceRange } from '@/lib/explorer/filters'
@@ -47,7 +49,7 @@ function readPrice(): PriceRange | null {
  * Sunday, the hotels inside the budget, the same map at the side, and a
  * link anyone can share. The page is static; the budget rides in the URL.
  */
-export function WeekendPage({ locale, cityId, area, areas, stations, routes, borrowed = {} }: { locale: Locale; cityId: string; area: Area; areas: Area[]; stations: Station[]; routes: TripRoute[]; borrowed?: Partial<Record<WeekendSlot, BorrowedSlot>> }) {
+export function WeekendPage({ locale, cityId, area, areas, stations, routes, borrowed = {}, airport = {} }: { locale: Locale; cityId: string; area: Area; areas: Area[]; stations: Station[]; routes: TripRoute[]; borrowed?: Partial<Record<WeekendSlot, BorrowedSlot>>; airport?: Record<string, AirportRoutes> }) {
   const s = strings(locale)
   const stay = useStay()
   const detected3D = useSyncExternalStore(noopSubscribe, supports3D, () => null)
@@ -172,6 +174,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
             {pin.kind === 'hotel' && <span className="tm-wk__meta">{s.saved.cmpPlaces(nearbyCount(pin))}</span>}
           </span>
         </button>
+        {pin.kind === 'hotel' && pin.walk && airport[pin.walk.station] && <FromAirport locale={locale} routes={airport[pin.walk.station]} walkMinutes={pin.walk.minutes} />}
         <div className="tm-wk__links">
           <a href={directionsUrl(pin.location.lat, pin.location.lon)} target="_blank" rel="noopener" className="tm-card__link tm-card__link--quiet">{s.card.directions}</a>
           {pin.kind === 'hotel' && !sentHotel && myHotel && myHotel.id !== pin.id && saved.includes(pin.id) && (

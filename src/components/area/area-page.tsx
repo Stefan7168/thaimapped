@@ -5,6 +5,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useMemo, useState, useSyncExternalStore } from 'react'
 import type { Area, Locale, Pin, PinKind, Station } from '@/lib/content/types'
+import { FromAirport } from '@/components/stay/from-airport'
+import type { AirportRoutes } from '@/lib/transit/from-airport'
 import { t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
 import { distanceM, KIND_CHIPS, WALK_PACE_M_PER_MIN } from '@/lib/explorer/filters'
@@ -36,7 +38,7 @@ const noopSubscribe = () => () => {}
  * stations, the places by kind and the hotels, with the map at the side.
  * The same content the map's area card shows, laid out to be read and sent.
  */
-export function AreaPage({ locale, cityId, area, areas, stations, stationSlugs }: { locale: Locale; cityId: string; area: Area; areas: Area[]; stations: Station[]; stationSlugs: Record<string, string> }) {
+export function AreaPage({ locale, cityId, area, areas, stations, stationSlugs, airport = {} }: { locale: Locale; cityId: string; area: Area; areas: Area[]; stations: Station[]; stationSlugs: Record<string, string>; airport?: Record<string, AirportRoutes> }) {
   const s = strings(locale)
   const stay = useStay()
   const detected3D = useSyncExternalStore(noopSubscribe, supports3D, () => null)
@@ -99,6 +101,7 @@ export function AreaPage({ locale, cityId, area, areas, stations, stationSlugs }
             {pin.kind === 'hotel' && <span className="tm-wk__meta">{s.saved.cmpPlaces(nearbyCount(pin))}</span>}
           </span>
         </button>
+        {pin.kind === 'hotel' && pin.walk && airport[pin.walk.station] && <FromAirport locale={locale} routes={airport[pin.walk.station]} walkMinutes={pin.walk.minutes} />}
         <div className="tm-wk__links">
           <a href={directionsUrl(pin.location.lat, pin.location.lon)} target="_blank" rel="noopener" className="tm-card__link tm-card__link--quiet">{s.card.directions}</a>
           {pin.kind === 'hotel' && myHotel && myHotel.id !== pin.id && saved.includes(pin.id) && (

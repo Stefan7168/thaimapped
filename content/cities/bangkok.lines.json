@@ -11,5 +11,28 @@
     { "id": "arl", "system": "ARL", "line": "Airport Rail Link", "color": "#b71c1c" },
     { "id": "srt-dark-red", "system": "SRT", "line": "Dark Red", "color": "#8e1b1b" },
     { "id": "srt-light-red", "system": "SRT", "line": "Light Red", "color": "#d9534f" }
+  ],
+  "interchangesNote": "Station pairs where the operators publish a connection between two lines (a walkway or shared station), by station id. Used for the 'from the airport' line: it counts line changes, never minutes. Pairs under 300 m apart were taken from the station positions; Makkasan-Phetchaburi, Sala Daeng-Si Lom, Ha Yaek Lat Phrao-Phahon Yothin, Hua Mak and Nonthaburi Civic Center are the operators' published interchanges that sit further apart.",
+  "interchanges": [
+    ["arl-airport-rail-link-a8", "bts-sukhumvit-n2"],
+    ["arl-airport-rail-link-a6", "mrt-blue-bl21"],
+    ["arl-airport-rail-link-a4", "mrt-yellow-yl11"],
+    ["bts-silom-cen", "bts-sukhumvit-cen"],
+    ["bts-sukhumvit-e4", "mrt-blue-bl22"],
+    ["bts-silom-s2", "mrt-blue-bl26"],
+    ["bts-sukhumvit-n8", "mrt-blue-bl13"],
+    ["bts-sukhumvit-n9", "mrt-blue-bl14"],
+    ["bts-gold-g1", "bts-silom-s7"],
+    ["bts-silom-s12", "mrt-blue-bl34"],
+    ["bts-sukhumvit-e15", "mrt-yellow-yl23"],
+    ["bts-sukhumvit-n17", "mrt-pink-pk16"],
+    ["mrt-blue-bl10", "mrt-purple-pp16"],
+    ["mrt-blue-bl11", "srt-dark-red-krung-thep-aphiwat"],
+    ["mrt-blue-bl11", "srt-light-red-krung-thep-aphiwat"],
+    ["srt-dark-red-krung-thep-aphiwat", "srt-light-red-krung-thep-aphiwat"],
+    ["mrt-blue-bl15", "mrt-yellow-yl01"],
+    ["mrt-pink-pk14", "srt-dark-red-rn06"],
+    ["mrt-purple-pp15", "srt-light-red-rw02"],
+    ["mrt-pink-pk01", "mrt-purple-pp11"]
   ]
 }

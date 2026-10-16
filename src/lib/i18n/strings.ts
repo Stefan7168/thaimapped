@@ -282,6 +282,17 @@ const en = {
     noResults: 'No places match these filters yet.',
     showAllHere: 'Show everything here',
   },
+  airport: {
+    summary: 'From the airports by train',
+    suvarnabhumi: 'From Suvarnabhumi:',
+    donMueang: 'From Don Mueang:',
+    ride: (line: string, to: string) => `${line} to ${to}`,
+    change: (at: string, line: string, to: string) => `change at ${at} to the ${line} to ${to}`,
+    thenWalk: (n: number) => `then ${n} min on foot`,
+    sameStation: 'the airport station is this hotel\'s station.',
+    noRail: 'no rail line joins up; a taxi or bus.',
+    note: 'Rides and changes from the published lines; times are not given.',
+  },
   city: {
     walkMinutes: (n: number) => `${n} min walk`,
     minutes: (n: number) => `${n} min`,

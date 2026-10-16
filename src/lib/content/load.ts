@@ -38,8 +38,10 @@ export function loadCityBundle(cityId: string): CityBundle | null {
     return area
   })
   const stations = city.stations ? read<{ stations: Station[] }>(city.stations).stations : []
-  const lines = city.lines ? read<{ lines: Line[] }>(city.lines).lines : []
-  return { city, areas, stations, lines }
+  const linesFile = city.lines ? read<{ lines: Line[]; interchanges?: [string, string][] }>(city.lines) : null
+  const lines = linesFile?.lines ?? []
+  const interchanges = linesFile?.interchanges ?? []
+  return { city, areas, stations, lines, interchanges }
 }
 
 export function loadRoutes(cityId: string): TripRoute[] {

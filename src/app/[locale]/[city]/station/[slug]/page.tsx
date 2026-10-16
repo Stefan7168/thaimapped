@@ -7,6 +7,7 @@ import { LOCALES, isLocale, t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
 import { pageMeta } from '@/lib/seo/page-meta'
 import { hotelDoors, slimArea, stationsFor } from '@/lib/content/slim'
+import { airportRoutesFor } from '@/lib/transit/from-airport'
 import { StationPage } from '@/components/station/station-page'
 import { JsonLd, pinNode, placeListLd } from '@/lib/seo/json-ld'
 
@@ -58,7 +59,7 @@ export default async function StationRoute(props: PageProps<'/[locale]/[city]/st
   return (
     <>
       <JsonLd data={placeListLd(`${first.code ? first.code + ' ' : ''}${t(first.name, locale)}`, `/${locale}/${city}/station/${slug}`, pins.map((p) => pinNode(p, locale, cityName)))} />
-      <StationPage locale={locale} cityId={city} page={light} areas={[...slim.values()]} hotelDoors={hotelDoors(bundle.areas)} stations={stationsFor(bundle.stations, pins, page.stations.map((st) => st.id))} others={others} />
+      <StationPage locale={locale} cityId={city} page={light} areas={[...slim.values()]} hotelDoors={hotelDoors(bundle.areas)} stations={stationsFor(bundle.stations, pins, page.stations.map((st) => st.id))} others={others} airport={airportRoutesFor(bundle, [...new Set(page.hotels.map((h) => h.pin).filter((p) => p.kind === 'hotel' && p.walk).map((p) => p.walk!.station))])} />
     </>
   )
 }

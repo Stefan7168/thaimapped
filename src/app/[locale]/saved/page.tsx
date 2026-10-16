@@ -5,6 +5,7 @@ import { LOCALES, isLocale } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
 import { pageMeta } from '@/lib/seo/page-meta'
 import { stationsFor } from '@/lib/content/slim'
+import { airportRoutesFor } from '@/lib/transit/from-airport'
 import { SavedPage, type SavedEntry } from '@/components/saved/saved-page'
 
 // Static shell; which hotels show is read in the browser (this browser's list, or ?ids= from a sent link).
@@ -32,5 +33,5 @@ export default async function SavedRoute(props: PageProps<'/[locale]/saved'>) {
   const entries: SavedEntry[] = bundle.areas.flatMap((a) =>
     a.pins.map((pin) => ({ pin: { ...pin, photos: pin.photos?.slice(0, 1), shape: undefined }, area: { id: a.id, name: a.name, color: a.color } })),
   )
-  return <SavedPage locale={locale} cityId={bundle.city.id} entries={entries} stations={stationsFor(bundle.stations, entries.map((e) => e.pin))} />
+  return <SavedPage locale={locale} cityId={bundle.city.id} entries={entries} stations={stationsFor(bundle.stations, entries.map((e) => e.pin))} airport={airportRoutesFor(bundle, [...new Set(entries.map((e) => e.pin).filter((p) => p.kind === 'hotel' && p.walk).map((p) => p.walk!.station))])} />
 }

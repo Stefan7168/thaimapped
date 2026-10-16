@@ -184,6 +184,11 @@ body {
 .tm-wk__empty { margin: 8px 0 10px; font-size: 14px; color: var(--ink-2); }
 .tm-wk__borrowed { margin: 0 0 10px; padding: 10px 12px; border-left: 3px solid var(--pin, var(--accent)); background: var(--paper-2); border-radius: 0 8px 8px 0; }
 .tm-wk__borrowed-lead { margin: 0 0 6px; }
+.tm-airport { margin: 2px 8px 0 8px; font-size: 13px; color: var(--ink-2); }
+.tm-airport__summary { cursor: pointer; padding: 6px 0; color: var(--ink); font-weight: 600; }
+.tm-airport__line { margin: 2px 0 4px; line-height: 1.45; }
+.tm-airport__line strong { color: var(--ink); font-weight: 600; }
+.tm-airport__note { margin: 0 0 8px; font-size: 12px; }
 .tm-wk__shared { margin: 0 0 14px; padding: 10px 12px; border-left: 3px solid var(--pin, var(--accent)); background: var(--paper-2); border-radius: 0 8px 8px 0; font-size: 14px; line-height: 1.5; color: var(--ink); }
 .tm-wk__shared .tm-link { font: inherit; }
 .tm-wk__shared-done { color: var(--ink-2); }

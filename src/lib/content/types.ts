@@ -133,6 +133,8 @@ export interface CityBundle {
   areas: Area[]
   stations: Station[]
   lines: Line[]
+  /** Station pairs the operators connect (a walkway or a shared station), by station id; see the lines file's note. */
+  interchanges: [string, string][]
 }
 
 export type RouteMode = 'car' | 'scooter' | 'transit' | 'walk' | 'boat'

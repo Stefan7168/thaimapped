@@ -5,6 +5,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useMemo, useState, useSyncExternalStore } from 'react'
 import type { Area, Locale, Pin, Station } from '@/lib/content/types'
+import { FromAirport } from '@/components/stay/from-airport'
+import type { AirportRoutes } from '@/lib/transit/from-airport'
 import { t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
 import type { StationPage as StationPageData, StationPin } from '@/lib/explorer/stations'
@@ -40,7 +42,7 @@ const noopSubscribe = () => () => {}
  */
 const NO_AREAS: Area[] = []
 
-export function StationPage({ locale, cityId, page, areas, hotelDoors, stations, others }: { locale: Locale; cityId: string; page: StationPageData; areas: Area[]; hotelDoors: Record<string, HotelDoor[]>; stations: Station[]; others: (StationPageData & { km?: number })[] }) {
+export function StationPage({ locale, cityId, page, areas, hotelDoors, stations, others, airport = {} }: { locale: Locale; cityId: string; page: StationPageData; areas: Area[]; hotelDoors: Record<string, HotelDoor[]>; stations: Station[]; others: (StationPageData & { km?: number })[]; airport?: Record<string, AirportRoutes> }) {
   const s = strings(locale)
   const stay = useStay()
   // Places of this page inside a ten-minute walk of a hotel, straight-line at walking pace.
@@ -117,6 +119,7 @@ export function StationPage({ locale, cityId, page, areas, hotelDoors, stations,
             {pin.kind !== 'hotel' && hotelFor(area.id) && <span className="tm-wk__meta tm-wk__from">{s.weekendPage.fromHotel(fromHotel(pin, hotelFor(area.id)!), t(hotelFor(area.id)!.name, locale))}</span>}
           </span>
         </button>
+        {pin.kind === 'hotel' && pin.walk && airport[pin.walk.station] && <FromAirport locale={locale} routes={airport[pin.walk.station]} walkMinutes={pin.walk.minutes} />}
         <div className="tm-wk__links">
           <a href={directionsUrl(pin.location.lat, pin.location.lon)} target="_blank" rel="noopener" className="tm-card__link tm-card__link--quiet">{s.card.directions}</a>
             {partners.map((p) => {
