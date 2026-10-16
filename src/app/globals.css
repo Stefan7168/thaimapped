@@ -514,7 +514,12 @@ body {
   .tm-intro { max-width: 78%; padding: 72px 0 96px 20px; }
   .tm-areas, .tm-how { padding: 0 20px 96px; }
   .tm-row__head { min-height: 56px; }
-  .tm-hl { margin-left: 0; max-width: none; }
+  /* Phones: an area's five highlights run sideways as a snap rail, not a 2,000px column per area; the page went from ~20,000px to a scroll a thumb can finish. */
+  .tm-hl { flex-direction: row; gap: 12px; margin: 0 -20px 8px; padding: 0 20px 4px; max-width: none; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+  .tm-hl::-webkit-scrollbar { display: none; }
+  .tm-hl__item { flex: 0 0 min(78%, 320px); scroll-snap-align: start; display: flex; }
+  .tm-hl__card { height: 100%; }
+  .tm-hl__photo--none { aspect-ratio: 16 / 9; height: auto; }
   .tm-quiz { padding: 0 var(--margin) 96px; max-width: none; }
   .tm-hl__link { margin-left: 0; }
   .tm-trips__inner { grid-template-columns: 1fr; }
