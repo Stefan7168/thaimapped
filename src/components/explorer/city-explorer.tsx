@@ -308,7 +308,7 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
   return (
     <div className="flex h-dvh flex-col">
       {/* Phones: brand and filter button on one line, the search on its own line under them. */}
-      <header className="flex flex-wrap items-center gap-x-3 gap-y-2 border-b border-line bg-paper px-3 py-2 md:flex-nowrap md:px-4">
+      <header className="tm-explorer__hdr flex flex-wrap items-center gap-x-3 gap-y-2 border-b border-line bg-paper px-3 py-2 md:flex-nowrap md:px-4">
         <Link href={`/${locale}`} className="shrink-0 font-display text-xl font-semibold tracking-tight">
           {s.brand}
         </Link>

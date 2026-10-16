@@ -534,6 +534,8 @@ body {
 .tm-place--save { padding-right: 44px; }
 .tm-saved-link { display: inline-flex; align-items: center; gap: 6px; }
 .tm-saved-link__count { min-width: 18px; padding: 0 5px; border-radius: 999px; background: var(--accent-text); color: #fff; font-size: 11px; font-weight: 700; line-height: 18px; text-align: center; }
+/* The map's phone header holds the wordmark, Filters and Saved on one row; with a count on both, the word "Saved" is what pushes it onto two. */
+@media (max-width: 767px) { .tm-explorer__hdr .tm-saved-link > span:not(.tm-saved-link__count) { display: none; } }
 .tm-saved .tm-wk__actions { margin-top: 14px; }
 .tm-saved__list { margin-top: 8px; }
 .tm-saved__group { margin-top: 24px; }
