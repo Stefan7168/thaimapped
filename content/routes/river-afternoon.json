@@ -1872,6 +1872,7 @@
     {
       "id": "start-sathorn-pier",
       "kind": "start",
+      "station": "bts-silom-s6",
       "day": 1,
       "name": {
         "en": "Sathorn pier"

@@ -6,6 +6,7 @@ import { pageMeta } from '@/lib/seo/page-meta'
 import { JsonLd, tripLd } from '@/lib/seo/json-ld'
 import { TripPage } from '@/components/explorer/trip-page'
 import { hotelDoors } from '@/lib/content/slim'
+import { railLegsBetween } from '@/lib/transit/from-airport'
 
 export const ensureStatic = 'navigation'
 
@@ -27,10 +28,15 @@ export default async function TripRoutePage(props: PageProps<'/[locale]/[city]/t
   const cityData = loadCity(city)
   const routeData = cityData ? loadRoute(city, route) : null
   if (!cityData || !routeData) notFound()
+  const bundle = loadCityBundle(city)
+  const doors = hotelDoors(bundle?.areas ?? [])
+  const start = routeData.stops[0]?.station
+  const hotelStations = Object.values(doors).flat().map((h) => h.walk?.station).filter((id): id is string => !!id)
+  const startRides = bundle && start ? railLegsBetween(bundle, hotelStations, [start]) : {}
   return (
     <>
       <JsonLd data={tripLd(routeData, locale, `/${locale}/${city}/trip/${route}`)} />
-      <TripPage locale={locale} cityId={city} cityName={t(cityData.name, locale)} route={routeData} hotelDoors={hotelDoors(loadCityBundle(city)?.areas ?? [])} />
+      <TripPage locale={locale} cityId={city} cityName={t(cityData.name, locale)} route={routeData} hotelDoors={doors} startRides={startRides} />
     </>
   )
 }

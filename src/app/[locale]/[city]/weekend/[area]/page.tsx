@@ -45,10 +45,13 @@ export default async function AreaWeekendPage(props: PageProps<'/[locale]/[city]
   // A reader sleeping in another area gets the ride to this area's first station.
   const elsewhere = elsewhereFor(bundle, a)
   const rides = railLegsBetween(bundle, hotelStations, [...a.pins, ...borrowedPins].filter((p) => p.kind !== 'hotel' && p.walk).map((p) => p.walk!.station))
+  const routes = loadRoutes(city)
+  const tripStarts = Object.fromEntries(routes.flatMap((r) => (r.stops[0]?.station ? [[r.id, r.stops[0].station]] : [])))
+  const tripRides = railLegsBetween(bundle, hotelStations, Object.values(tripStarts))
   return (
     <>
       <JsonLd data={placeListLd(strings(locale).weekendPage.title(t(a.name, locale)), `/${locale}/${city}/weekend/${area}`, a.pins.map((p) => pinNode(p, locale, cityName)))} />
-      <WeekendPage locale={locale} cityId={city} area={a} areas={bundle.areas.map(slimArea)} stations={stationsFor(bundle.stations, [...a.pins, ...borrowedPins], [...a.stations.slice(0, 1), ...elsewhere.stations])} routes={loadRoutes(city).map(slimRoute)} borrowed={borrowed} airport={airportRoutesFor(bundle, hotelStations)} rides={rides} hotelDoors={elsewhere.doors} elsewhereRides={elsewhere.rides} />
+      <WeekendPage locale={locale} cityId={city} area={a} areas={bundle.areas.map(slimArea)} stations={stationsFor(bundle.stations, [...a.pins, ...borrowedPins], [...a.stations.slice(0, 1), ...elsewhere.stations])} routes={routes.map(slimRoute)} tripStarts={tripStarts} tripRides={tripRides} borrowed={borrowed} airport={airportRoutesFor(bundle, hotelStations)} rides={rides} hotelDoors={elsewhere.doors} elsewhereRides={elsewhere.rides} />
     </>
   )
 }

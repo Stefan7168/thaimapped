@@ -1647,6 +1647,7 @@
     {
       "id": "start-sanam-chai",
       "kind": "start",
+      "station": "mrt-blue-bl31",
       "day": 1,
       "name": {
         "en": "Sanam Chai MRT"

@@ -56,7 +56,7 @@ function readPrice(): PriceRange | null {
  * Sunday, the hotels inside the budget, the same map at the side, and a
  * link anyone can share. The page is static; the budget rides in the URL.
  */
-export function WeekendPage({ locale, cityId, area, areas, stations, routes, borrowed = {}, airport = {}, rides = {}, hotelDoors = {}, elsewhereRides = {} }: { locale: Locale; cityId: string; area: Area; areas: Area[]; stations: Station[]; routes: TripRoute[]; borrowed?: Partial<Record<WeekendSlot, BorrowedSlot>>; airport?: Record<string, AirportRoutes>; rides?: Record<string, Record<string, AirportLeg[] | null>>; hotelDoors?: Record<string, HotelDoor[]>; elsewhereRides?: Record<string, Record<string, AirportLeg[] | null>> }) {
+export function WeekendPage({ locale, cityId, area, areas, stations, routes, borrowed = {}, airport = {}, rides = {}, hotelDoors = {}, elsewhereRides = {}, tripStarts = {}, tripRides = {} }: { locale: Locale; cityId: string; area: Area; areas: Area[]; stations: Station[]; routes: TripRoute[]; borrowed?: Partial<Record<WeekendSlot, BorrowedSlot>>; airport?: Record<string, AirportRoutes>; rides?: Record<string, Record<string, AirportLeg[] | null>>; hotelDoors?: Record<string, HotelDoor[]>; elsewhereRides?: Record<string, Record<string, AirportLeg[] | null>>; tripStarts?: Record<string, string>; tripRides?: Record<string, Record<string, AirportLeg[] | null>> }) {
   const s = strings(locale)
   const stay = useStay()
   const detected3D = useSyncExternalStore(noopSubscribe, supports3D, () => null)
@@ -102,6 +102,14 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
     if (!myHotel?.walk || !pin.walk || pin.walk.station === myHotel.walk.station) return null
     const legs = rides[myHotel.walk.station]?.[pin.walk.station]
     return legs && legs.length > 0 ? rideSentence(legs, pin.walk.minutes, locale) : null
+  }
+  /** The ride from the saved hotel to a day trip's start, when the trip starts at a station the hotel does not walk from. */
+  function tripByTrain(routeId: string): string | null {
+    const start = tripStarts[routeId]
+    if (!myHotel?.walk || !start) return null
+    if (start === myHotel.walk.station) return s.weekendPage.tripAtYourStation
+    const legs = tripRides[myHotel.walk.station]?.[start]
+    return legs && legs.length > 0 ? s.weekendPage.byTrainFrom(t(myHotel.name, locale), rideSentence(legs, null, locale)) : null
   }
   const fromHotel = (pin: Pin) => (myHotel ? Math.max(1, Math.round(distanceM(myHotel.location.lon, myHotel.location.lat, pin.location.lon, pin.location.lat) / WALK_PACE_M_PER_MIN)) : null)
   // Stops of this weekend inside a ten-minute walk of a hotel, straight-line at walking pace.
@@ -335,6 +343,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
                         <span className="tm-wk__name">{t(r.name, locale)}</span>
                         <span className="tm-wk__why">{t(r.tagline, locale)}</span>
                         {r.duration === 'multi-day' && stay && <span className="tm-wk__meta tm-wk__from">{s.trip.fitsStay(nights(stay))}</span>}
+                        {tripByTrain(r.id) && <span className="tm-wk__meta tm-wk__from">{tripByTrain(r.id)}</span>}
                       </span>
                     </Link>
                   </li>

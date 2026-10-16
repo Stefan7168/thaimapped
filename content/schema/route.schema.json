@@ -109,6 +109,10 @@
             "type": "string",
             "description": "For a hotel stop with no exact pick: the town or area name a hotel search is run on, so the page can offer a dated search instead of nothing."
           },
+          "station": {
+            "type": "string",
+            "description": "For a start stop at or beside a rail station: that station's id, so a page can say the ride from a saved hotel."
+          },
           "note": {
             "type": "string",
             "description": "Editor's note for the content pass. Never shown to visitors."

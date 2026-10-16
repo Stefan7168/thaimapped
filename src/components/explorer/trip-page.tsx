@@ -4,7 +4,9 @@ import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { useEffect, useMemo, useState, useSyncExternalStore } from 'react'
 import { ArrowLeft, CalendarPlus, Share2 } from 'lucide-react'
-import type { Locale, TripRoute } from '@/lib/content/types'
+import type { Locale, RouteStop, TripRoute } from '@/lib/content/types'
+import type { AirportLeg } from '@/lib/transit/from-airport'
+import { rideSentence } from '@/components/stay/from-airport'
 import { t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
 import { buildOutboundUrl, hotelSearchUrl, subIdFor, type Partner } from '@/lib/links/build'
@@ -29,7 +31,7 @@ const TripMap = dynamic(() => import('@/components/map/trip-map').then((m) => m.
 })
 
 /** A trip: the map on the left, the day-by-day plan on the right. */
-export function TripPage({ locale, cityId, cityName, route, hotelDoors = {} }: { locale: Locale; cityId: string; cityName: string; route: TripRoute; hotelDoors?: Record<string, HotelDoor[]> }) {
+export function TripPage({ locale, cityId, cityName, route, hotelDoors = {}, startRides = {} }: { locale: Locale; cityId: string; cityName: string; route: TripRoute; hotelDoors?: Record<string, HotelDoor[]>; startRides?: Record<string, Record<string, AirportLeg[] | null>> }) {
   const s = strings(locale)
   const stay = useStay()
   const saved = useSaved()
@@ -47,6 +49,15 @@ export function TripPage({ locale, cityId, cityName, route, hotelDoors = {} }: {
   const mode = TRAVEL_MODE[route.mode]
   // Getting from the hotel to a walking or boat trip is a train ride, not a walk across the city; a car trip drives from the door.
   const hotelMode = mode === 'driving' ? 'driving' : 'transit'
+  // The line under the first stop: the rail ride from the hotel when the trip starts at a station, else just the hotel's name.
+  function startLine(stop: RouteStop): string {
+    const name = t(myHotel!.name, locale)
+    const from = myHotel!.walk?.station
+    if (!stop.station || !from) return s.trip.startFromHotel(name)
+    if (stop.station === from) return s.trip.startAtYourStation(name)
+    const legs = startRides[from]?.[stop.station]
+    return legs && legs.length > 0 ? s.trip.startByTrain(name, rideSentence(legs, null, locale)) : s.trip.startFromHotel(name)
+  }
   // The first stop's directions start at the hotel and go to the next stop; the last stop's go back to the hotel.
   const directions = (i: number): { href: string; label: string } => {
     const stop = route.stops[i]
@@ -193,7 +204,7 @@ export function TripPage({ locale, cityId, cityName, route, hotelDoors = {} }: {
                             <span className="block text-[16px] text-ink">{t(stop.why, locale)}</span>
                             {stop.placeholder && <span className="tm-stoprow__tbc">{s.trip.placeholder}</span>}
                             {stop.search && <span className="block text-[13px] text-ink-2">{s.trip.searchHotels(stop.search, !!stay)}</span>}
-                            {myHotel && i === 0 && <span className="block text-[13px] tm-wk__from">{s.trip.startFromHotel(t(myHotel.name, locale))}</span>}
+                            {myHotel && i === 0 && <span className="block text-[13px] tm-wk__from">{startLine(stop)}</span>}
                             {myHotel && stop.kind === 'end' && i === route.stops.length - 1 && <span className="block text-[13px] tm-wk__from">{s.trip.endAtHotel(t(myHotel.name, locale))}</span>}
                           </span>
                         </button>
