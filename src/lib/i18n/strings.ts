@@ -122,7 +122,7 @@ const en = {
     anyBudget: 'Hotels at every price; set a budget on the map to narrow them.',
     share: 'Share this weekend',
     slotEmptyLink: 'See what the map has at this time',
-    sharedWithYou: (hotel: string, dates: string | null) => (dates ? `Sent to you, built around ${hotel} for ${dates}.` : `Sent to you, built around ${hotel}.`),
+    sharedWithYou: (hotel: string, dates: string | null) => (dates ? `This plan is built around ${hotel} for ${dates}.` : `This plan is built around ${hotel}.`),
     saveSentHotel: 'Keep this hotel on your list',
     shareText: (area: string, hotel: string | null, dates: string | null) => [`A weekend in ${area}`, hotel ? `from ${hotel}` : null, dates].filter(Boolean).join(', ') + ': Friday night to Sunday, with how far each stop is on foot.',
     sentHotelSaved: 'On your list.',

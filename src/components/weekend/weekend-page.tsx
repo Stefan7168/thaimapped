@@ -254,11 +254,11 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
           <p className="tm-wk__eyebrow">{s.weekendPage.eyebrow}</p>
           <h1 className="tm-h2">{s.weekendPage.title(t(area.name, locale))}</h1>
           <p className="tm-wk__lead">{t(area.tagline, locale)} {price ? s.weekendPage.budget(thb(price.min, locale), thb(price.max, locale)) : s.weekendPage.anyBudget}</p>
-          {sentHotel && myHotel && myHotel.id === sentHotel && (
-            // A link someone sent: name the hotel it was built around and the dates it carried, and offer to keep the hotel.
+          {sentHotel && myHotel && myHotel.id === sentHotel && !saved.includes(myHotel.id) && (
+            // A link that names a hotel (sent by someone, or the reader's own tap on "Plan it"): say so and offer to keep the hotel. Once kept, nothing: the plan is simply theirs.
             <p className="tm-wk__shared">
               {s.weekendPage.sharedWithYou(t(myHotel.name, locale), stay ? new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short' }).formatRange(new Date(`${stay.checkIn}T12:00:00`), new Date(`${stay.checkOut}T12:00:00`)) : null)}{' '}
-              {saved.includes(myHotel.id) ? <span className="tm-wk__shared-done">{s.weekendPage.sentHotelSaved}</span> : <button type="button" className="tm-link tm-link--under" onClick={() => addSaved([myHotel.id])}>{s.weekendPage.saveSentHotel}</button>}
+              <button type="button" className="tm-link tm-link--under" onClick={() => addSaved([myHotel.id])}>{s.weekendPage.saveSentHotel}</button>
             </p>
           )}
           {elsewhere && (
