@@ -108,6 +108,8 @@ const en = {
     pickHotelHint: 'Tap the heart on a hotel and every stop above says how far it is from that door.',
     useHotel: 'Walk from here instead',
     skipStop: 'Not this one',
+    now: 'Now',
+    jumpToNow: 'Jump to now',
     skipped: (names: string) => `Taken out: ${names}.`,
     putBack: 'Put back',
     switchHint: 'Tap "Walk from here instead" on another saved hotel to switch.',

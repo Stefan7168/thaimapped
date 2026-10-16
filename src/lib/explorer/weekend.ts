@@ -88,3 +88,24 @@ export function borrowedSlots(area: Area, areas: Area[], plan: WeekendPlan): Par
   }
   return out
 }
+
+/**
+ * The slot of the plan it is right now in Bangkok: with a Friday-to-Sunday
+ * stay, only while today is one of its days; without dates, any Friday,
+ * Saturday or Sunday. Friday is the night slot whatever the hour (the
+ * reader is arriving); Saturday splits at 12:00 and 17:00.
+ */
+export function slotNow(clock: { date: string; hour: number; weekday: number }, stay: { checkIn: string; checkOut: string } | null): WeekendSlot | null {
+  let weekday = clock.weekday
+  if (stay) {
+    const start = new Date(stay.checkIn + 'T00:00:00')
+    if (start.getDay() !== 5 || clock.date < stay.checkIn || clock.date > stay.checkOut) return null
+    const dayIndex = Math.round((new Date(clock.date + 'T00:00:00').getTime() - start.getTime()) / 86400000)
+    if (dayIndex > 2) return null
+    weekday = [5, 6, 0][dayIndex]
+  }
+  if (weekday === 5) return 'fridayNight'
+  if (weekday === 6) return clock.hour < 12 ? 'saturdayMorning' : clock.hour < 17 ? 'saturdayAfternoon' : 'saturdayNight'
+  if (weekday === 0) return 'sunday'
+  return null
+}

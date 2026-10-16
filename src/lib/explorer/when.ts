@@ -20,3 +20,11 @@ export function bangkokNow(now = new Date()): { time: 'morning' | 'afternoon' | 
   const time = hour >= 5 && hour < 11 ? 'morning' : hour >= 11 && hour < 17 ? 'afternoon' : hour >= 17 && hour < 21 ? 'evening' : 'night'
   return { time, day: weekday === 'Sat' || weekday === 'Sun' ? 'weekend' : 'weekday' }
 }
+
+/** Bangkok's date (YYYY-MM-DD), hour and weekday (0 Sunday to 6 Saturday), for the "Now" mark on a weekend plan. */
+export function bangkokClock(now = new Date()): { date: string; hour: number; weekday: number } {
+  const parts = new Intl.DateTimeFormat('en-US', { timeZone: 'Asia/Bangkok', year: 'numeric', month: '2-digit', day: '2-digit', hour: 'numeric', hour12: false, weekday: 'short' }).formatToParts(now)
+  const get = (type: string) => parts.find((p) => p.type === type)?.value ?? ''
+  const names = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+  return { date: `${get('year')}-${get('month')}-${get('day')}`, hour: Number(get('hour')) % 24, weekday: Math.max(0, names.indexOf(get('weekday'))) }
+}

@@ -701,6 +701,8 @@ a.tm-wk__stop { text-decoration: none; }
 .tm-stay input[type='date'] { width: 148px; min-height: 40px; padding: 0 10px; font: inherit; font-size: var(--step-small); color: var(--ink); background: var(--paper-2); border: 0; border-radius: 0; }
 .tm-stay input[type='date']:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
 .tm-wk__date { font-weight: 500; color: var(--ink-2); text-transform: none; letter-spacing: 0; }
+.tm-wk__now { display: inline-block; margin-left: 8px; padding: 1px 7px; border-radius: 999px; background: var(--accent); color: #fff; font-size: 11px; letter-spacing: 0.04em; }
+.tm-wk__slot--now { scroll-margin-top: 72px; }
 .tm-wk .tm-wk__sheet > .tm-stay { margin: 14px 0 4px; }
 .tm-card__stay { color: var(--ink); font-weight: 600; }
 .tm-stay--bare { margin: 0; }

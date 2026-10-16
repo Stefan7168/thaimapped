@@ -13,8 +13,8 @@ import type { HotelDoor } from '@/lib/content/slim'
 import { t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
 import { distanceM, isFullRange, PRICE_RANGE, WALK_PACE_M_PER_MIN, type PriceRange } from '@/lib/explorer/filters'
-import { WEEKEND_SLOTS, weekendPlan, type WeekendSlot, SLOT_TIMES, type BorrowedSlot } from '@/lib/explorer/weekend'
-import { whenLine } from '@/lib/explorer/when'
+import { WEEKEND_SLOTS, weekendPlan, slotNow, type WeekendSlot, SLOT_TIMES, type BorrowedSlot } from '@/lib/explorer/weekend'
+import { bangkokClock, whenLine } from '@/lib/explorer/when'
 import { thb } from '@/lib/explorer/price'
 import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
 import { directionsUrl } from '@/lib/links/directions'
@@ -38,6 +38,9 @@ const StageMap = dynamic(() => import('@/components/map/stage-map').then((m) => 
 })
 
 const noopSubscribe = () => () => {}
+// Bangkok's clock, read once in the browser; the server renders no "Now".
+let clockCache: ReturnType<typeof bangkokClock> | null = null
+const clockSnapshot = () => clockCache ?? (clockCache = bangkokClock())
 
 /** `?price=min-max` from the address bar, clamped to the slider's range; null when absent or the full range. */
 function readPrice(): PriceRange | null {
@@ -56,6 +59,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
   const s = strings(locale)
   const stay = useStay()
   const detected3D = useSyncExternalStore(noopSubscribe, supports3D, () => null)
+  const clock = useSyncExternalStore(noopSubscribe, clockSnapshot, () => null)
   const [price, setPrice] = useState<PriceRange | null>(null)
   // A hotel named in the address ("?hotel=") by whoever sent the link: used as theirs for this visit, never saved.
   const [sentHotel, setSentHotel] = useState<string | null>(null)
@@ -116,6 +120,8 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
   const fromHotel = (pin: Pin) => (myHotel ? Math.max(1, Math.round(distanceM(myHotel.location.lon, myHotel.location.lat, pin.location.lon, pin.location.lat) / WALK_PACE_M_PER_MIN)) : null)
   // Stops of this weekend inside a ten-minute walk of a hotel, straight-line at walking pace.
   const nearbyCount = (hotel: Pin) => stops.filter((p) => distanceM(hotel.location.lon, hotel.location.lat, p.location.lon, p.location.lat) <= WALK_PACE_M_PER_MIN * 10).length
+  // The slot it is right now in Bangkok, during the stay (or any weekend when no dates are set): marked "Now", with a jump to it.
+  const nowSlot = clock ? slotNow(clock, stay) : null
   // With a Friday-to-Sunday stay picked, each slot heading carries its date.
   const slotDay = (slot: WeekendSlot): Date | null => {
     if (!stay || nights(stay) !== 2) return null
@@ -272,6 +278,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
                 {s.weekendPage.calendar}
               </button>
             )}
+            {nowSlot && <a href={`#tm-slot-${nowSlot}`} className="tm-link tm-link--under">{s.weekendPage.jumpToNow}</a>}
             <Link href={explorerHref} className="tm-link">{s.weekendPage.openMap}</Link>
             <Link href={`/${locale}/${cityId}/area/${area.id}`} className="tm-link">{s.areaPage.link}</Link>
           </div>
@@ -282,8 +289,8 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
           )}
           <ol className="tm-wk__slots">
             {WEEKEND_SLOTS.map((slot) => (
-              <li key={slot} className="tm-wk__slot">
-                <h2 className="tm-wk__time">{s.guide.slots[slot]}{slotDate(slot) && <span className="tm-wk__date"> · {slotDate(slot)}</span>}</h2>
+              <li key={slot} className={`tm-wk__slot${nowSlot === slot ? ' tm-wk__slot--now' : ''}`} id={`tm-slot-${slot}`}>
+                <h2 className="tm-wk__time">{s.guide.slots[slot]}{slotDate(slot) && <span className="tm-wk__date"> · {slotDate(slot)}</span>}{nowSlot === slot && <span className="tm-wk__now">{s.weekendPage.now}</span>}</h2>
                 {plan.slots[slot].length === 0 ? (
                   <>
                     <p className="tm-wk__empty">
