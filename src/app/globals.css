@@ -183,7 +183,7 @@ body {
 .tm-wk__thumb { flex: none; width: 72px; height: 72px; border-radius: 6px; object-fit: cover; background: var(--paper-2); }
 .tm-wk__thumb--empty { display: flex; align-items: center; justify-content: center; border: 1px dashed var(--line); color: var(--pin, var(--accent)); }
 .tm-wk__text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-.tm-pin--num { position: relative; width: 24px; height: 24px; }
+.tm-pin--num { width: 24px; height: 24px; } /* no `position` here: the element is the maplibre marker, which must stay absolute (measured 2026-10-16: `relative` stacked the badges 24 px apart) */
 .tm-pin--num .tm-pin__num { display: flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 9999px; background: #fff; color: var(--ink); font-size: 12px; font-weight: 700; box-shadow: inset 0 0 0 2px var(--pin, var(--accent)), 0 1px 3px rgba(0,0,0,0.3); } /* taste-skill-ignore: map marker over tiles */
 .tm-pin--num.tm-pin--mine .tm-pin__num { background: var(--pin, var(--accent)); color: #fff; } /* taste-skill-ignore: map marker over tiles */
 /* The stop's name beside its number: outside the 24 px box so the marker stays centred on the spot; hidden on a narrow map where the list has the names. */
