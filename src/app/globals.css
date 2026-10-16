@@ -514,6 +514,12 @@ body {
 @media (min-width: 560px) { .tm-filters__label { width: 88px; } }
 .tm-filters__count { display: flex; justify-content: space-between; align-items: center; font-size: var(--step-small); color: var(--ink-2); }
 .tm-filters__count .tm-link { background: none; border: 0; padding: 0; cursor: pointer; font: inherit; }
+.tm-filters__toggle { display: none; align-self: flex-start; }
+@media (max-width: 767px) {
+  /* Trips index on a phone: the chip rows sit behind one Filters button so the list is one scroll away. */
+  .tm-filters__toggle { display: inline-flex; }
+  .tm-filters--closed .tm-filters__row { display: none; }
+}
 .tm-chip { min-height: 40px; padding: 0 14px; background: var(--paper-2); color: var(--ink); font-size: var(--step-small); border: 0; cursor: pointer; transition: background-color var(--t-hover) ease, color var(--t-hover) ease, transform var(--t-press) var(--ease-out); }
 .tm-chip--on { background: var(--ink); color: var(--paper); }
 .tm-chip:active { transform: scale(0.97); }

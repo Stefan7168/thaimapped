@@ -213,7 +213,7 @@ const en = {
     tooLong: (n: number) => (n === 1 ? 'Needs more than your 1 night' : `Needs more than your ${n} nights`),
     copied: 'Link copied',
     copyFailed: 'Copy the address bar to share',
-    filters: { duration: 'How long', days: 'Days', mode: 'How', theme: 'What for', clear: 'Clear', none: 'No trip matches these filters yet.', count: (n: number) => (n === 1 ? '1 trip' : `${n} trips`) },
+    filters: { duration: 'How long', days: 'Days', mode: 'How', theme: 'What for', clear: 'Clear', show: 'Filters', showCount: (n: number) => `Filters · ${n}`, none: 'No trip matches these filters yet.', count: (n: number) => (n === 1 ? '1 trip' : `${n} trips`) },
     duration: { morning: 'Morning', afternoon: 'Afternoon', evening: 'Evening', 'full-day': 'Full day', 'multi-day': 'Multi-day' } as Record<string, string>,
     dayCount: { '1': '1 day', '2': '2 days', '3': '3 days', '4+': '4 days or more' } as Record<string, string>,
     theme: { culture: 'Culture', nature: 'Nature', food: 'Food', city: 'City', beach: 'Beach', nightlife: 'Nightlife' } as Record<string, string>,
