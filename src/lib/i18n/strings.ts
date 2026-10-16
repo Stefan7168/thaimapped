@@ -54,6 +54,7 @@ const en = {
     compare: 'Side by side',
     compareLead: 'Your saved hotels on one line each: where, what it costs, how far to the train, what is walkable.',
     compareWhat: 'What',
+    cmpSwipe: 'Swipe sideways for the rest',
     cmpArea: 'Area',
     cmpPrice: 'A night',
     cmpStay: (n: number) => (n === 1 ? 'Your night' : `Your ${n} nights`),

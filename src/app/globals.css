@@ -571,7 +571,8 @@ a.tm-wk__stop { text-decoration: none; }
 /* Paper: a weekend, area or station page prints as the list alone. */
 @media print {
   .tm-bar__links, .tm-footer__links, .tm-stage__map, .tm-save, .tm-wk__links, .tm-wk__actions, .tm-weekend__share, .tm-kind, .tm-near__note, .tm-stay, .tm-wk__hint, .tm-cmp__links, .tm-cmp tr:has(.tm-cmp__links) { display: none !important; } /* no date inputs, tap hints or booking links on paper; the headings carry the dates */
-  .tm-cmp__wrap { overflow: visible; }
+  .tm-cmp__wrap { overflow: visible; -webkit-mask-image: none !important; mask-image: none !important; }
+  .tm-cmp__hint { display: none; }
   .tm-stage { display: block; }
   .tm-sheet { width: 100%; max-width: none; padding: 0; }
   .tm-wk__stop, .tm-wk__item { break-inside: avoid; }
@@ -602,6 +603,8 @@ a.tm-wk__stop { text-decoration: none; }
 .tm-stay__nights { font-size: var(--step-small); color: var(--ink-2); }
 .tm-stay__clear { font: inherit; font-size: var(--step-small); font-weight: 600; color: var(--accent-text); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
 .tm-cmp__wrap { overflow-x: auto; margin-top: 10px; -webkit-overflow-scrolling: touch; }
+.tm-cmp__wrap[data-more="right"], .tm-cmp__wrap[data-more="both"] { -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 40px), transparent); mask-image: linear-gradient(to right, #000 calc(100% - 40px), transparent); }
+.tm-cmp__hint { margin: 6px 0 0; font-size: 12px; color: var(--ink-2); }
 .tm-cmp { border-collapse: collapse; font-size: 14px; min-width: 100%; }
 .tm-cmp th, .tm-cmp td { text-align: left; vertical-align: top; padding: 8px 12px 8px 0; border-top: 1px solid var(--line); min-width: 124px; }
 .tm-cmp thead th { border-top: 0; font-family: var(--font-display), Georgia, serif; font-size: 16px; font-weight: 600; }

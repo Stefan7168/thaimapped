@@ -5,6 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
 import type { Area, Camera, CityBundle, Locale, Pin, TripRoute } from '@/lib/content/types'
+import { CmpWrap } from '@/components/stay/cmp-wrap'
 import { allPins, TIER_PRICE, TIERS } from '@/lib/explorer/filters'
 import { QUIZ_PACES, QUIZ_PURPOSES, rankAreas, type Pace, type QuizAnswers } from '@/lib/explorer/quiz'
 import { t } from '@/lib/i18n/locales'
@@ -345,7 +346,7 @@ export function HomePage({ locale, bundle, routes }: { locale: Locale; bundle: C
         <div className="tm-areas-cmp__inner" data-reveal>
         <h2 id="tm-areas-cmp-heading" className="tm-h2">{s.home.compare.heading}</h2>
         <p className="tm-saved__note">{s.home.compare.lead}</p>
-        <div className="tm-cmp__wrap">
+        <CmpWrap locale={locale}>
           <table className="tm-cmp tm-cmp--areas">
             <thead>
               <tr>
@@ -380,7 +381,7 @@ export function HomePage({ locale, bundle, routes }: { locale: Locale; bundle: C
               </tr>
             </tbody>
           </table>
-        </div>
+        </CmpWrap>
         </div>
       </section>
 

@@ -8,6 +8,7 @@ import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
 import { nights, useStay } from '@/lib/stay/store'
 import { trackOutbound } from '@/lib/links/track'
 import { thb } from '@/lib/explorer/price'
+import { CmpWrap } from './cmp-wrap'
 
 export interface CompareEntry {
   pin: Pin
@@ -32,7 +33,7 @@ export function HotelCompare({ locale, cityId, entries, stations, nearbyCount, s
   const stationById = new Map(stations.map((st) => [st.id, st]))
   return (
     <>
-      <div className="tm-cmp__wrap">
+      <CmpWrap locale={locale}>
         <table className="tm-cmp">
           <thead>
             <tr>
@@ -84,7 +85,7 @@ export function HotelCompare({ locale, cityId, entries, stations, nearbyCount, s
             </tr>
           </tbody>
         </table>
-      </div>
+      </CmpWrap>
       <p className="tm-saved__note">* {s.guide.priceEstimate}</p>
     </>
   )
