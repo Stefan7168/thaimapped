@@ -255,7 +255,6 @@ const en = {
     back: 'Back to the map',
     share: 'Share this trip',
     fitsStay: (n: number) => (n === 1 ? 'Fits your night away' : `Fits your ${n} nights`),
-    fitsDates: (from: string, to: string) => `${from} to ${to}`,
     tooLong: (n: number) => (n === 1 ? 'Needs more than your 1 night' : `Needs more than your ${n} nights`),
     copied: 'Link copied',
     copyFailed: 'Copy the address bar to share',

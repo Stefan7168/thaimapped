@@ -7,7 +7,8 @@ import type { Locale, RouteDuration, RouteMode, RouteTheme, TripRoute } from '@/
 import { t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
 import { RevealObserver } from '@/components/motion/reveal'
-import { nights, useStay } from '@/lib/stay/store'
+import { addDays, nights, tripStartDefault, useStay } from '@/lib/stay/store'
+import { formatDayRange } from '@/lib/stay/format'
 
 const StageMap = dynamic(() => import('@/components/map/stage-map').then((m) => m.StageMap), {
   ssr: false,
@@ -56,7 +57,12 @@ export function TripList({ locale, cityId, cityCamera, routes }: { locale: Local
   const hoveringRef = useRef(false)
   // With dates set, a multi-day trip says whether it fits inside them (a two-day trip in a Fri to Sun stay) or needs more nights; day trips always fit and say nothing.
   const stay = useStay()
-  const fitTag = (r: TripRoute) => (!stay || r.days < 2 ? null : r.days <= nights(stay) + 1 ? s.trip.fitsStay(nights(stay)) : s.trip.tooLong(nights(stay)))
+  const fitTag = (r: TripRoute) => {
+    if (!stay || r.days < 2) return null
+    if (r.days > nights(stay) + 1) return s.trip.tooLong(nights(stay))
+    const from = tripStartDefault(stay, r.days)
+    return `${s.trip.fitsStay(nights(stay))} · ${formatDayRange(from, addDays(from, r.days - 1), locale)}`
+  }
   const count = f.durations.length + f.days.length + f.modes.length + f.themes.length
 
   // Only offer chips that at least one trip would satisfy, so no filter is a dead end.

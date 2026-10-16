@@ -14,6 +14,7 @@ import { TRAVEL_MODE, directionsUrl } from '@/lib/links/directions'
 import type { HotelDoor } from '@/lib/content/slim'
 import { useSaved } from '@/lib/saved/store'
 import { myHotelChoice, useHotelChoiceVersion } from '@/lib/saved/my-hotel'
+import { formatDay } from '@/lib/stay/format'
 import { addDays, adoptStayFromUrl, stayParam, tripStartDefault, tripStartOptions, useStay } from '@/lib/stay/store'
 import { buildIcs, downloadIcs, type CalendarEvent } from '@/lib/stay/calendar'
 import { STOP_COLORS } from '@/components/map/trip-map'
@@ -81,11 +82,10 @@ export function TripPage({ locale, cityId, cityName, route, hotelDoors = {}, sta
   const startOptions = useMemo(() => (stay && route.days > 1 ? tripStartOptions(stay, route.days) : []), [stay, route.days])
   const startIso = stay ? (pickedStart && startOptions.includes(pickedStart) ? pickedStart : tripStartDefault(stay, route.days)) : null
   const dayIso = (d: number): string | null => (startIso ? addDays(startIso, d - 1) : null)
-  const fmtDay = (date: string) => new Intl.DateTimeFormat(locale, { weekday: 'short', day: 'numeric', month: 'short' }).format(new Date(`${date}T12:00:00`))
   // With dates set, day N is the start date plus N - 1, shown beside the day heading as the weekend page does.
   const dayDate = (d: number): string | null => {
     const date = dayIso(d)
-    return date ? fmtDay(date) : null
+    return date ? formatDay(date, locale) : null
   }
   useEffect(() => {
     adoptStayFromUrl()
@@ -184,7 +184,7 @@ export function TripPage({ locale, cityId, cityName, route, hotelDoors = {}, sta
               <p className="mt-4 flex flex-wrap items-center gap-1.5 text-[15px] text-ink-2">
                 <span className="mr-1">{s.trip.startOn}</span>
                 {startOptions.map((date) => (
-                  <button key={date} type="button" aria-pressed={startIso === date} onClick={() => setPickedStart(date)} className={`tm-chip${startIso === date ? ' tm-chip--on' : ''}`}>{fmtDay(date)}</button>
+                  <button key={date} type="button" aria-pressed={startIso === date} onClick={() => setPickedStart(date)} className={`tm-chip${startIso === date ? ' tm-chip--on' : ''}`}>{formatDay(date, locale)}</button>
                 ))}
               </p>
             )}

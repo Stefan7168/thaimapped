@@ -18,6 +18,7 @@ import { bangkokClock, whenLine } from '@/lib/explorer/when'
 import { thb } from '@/lib/explorer/price'
 import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
 import { directionsUrl } from '@/lib/links/directions'
+import { formatDayRange } from '@/lib/stay/format'
 import { addDays, adoptStayFromUrl, nights, stayParam, tripStartDefault, useStay } from '@/lib/stay/store'
 import { buildIcs, downloadIcs, type CalendarEvent } from '@/lib/stay/calendar'
 import { trackOutbound } from '@/lib/links/track'
@@ -242,8 +243,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
   // A road trip's default days inside the stay: the latest start that is back by check-out.
   const tripDates = (days: number): string => {
     const from = tripStartDefault(stay!, days)
-    const fmt = (date: string) => new Intl.DateTimeFormat(locale, { weekday: 'short', day: 'numeric', month: 'short' }).format(new Date(`${date}T12:00:00`))
-    return s.trip.fitsDates(fmt(from), fmt(addDays(from, days - 1)))
+    return formatDayRange(from, addDays(from, days - 1), locale)
   }
   const dayTrips = [...routes.filter((r) => r.duration !== 'multi-day'), ...routes.filter((r) => r.duration === 'multi-day' && stay && r.days >= 2 && r.days <= nights(stay) + 1)]
   return (
