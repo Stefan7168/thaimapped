@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import type { Locale } from '@/lib/content/types'
 import { strings } from '@/lib/i18n/strings'
-import { clearStay, nextWeekend, nights, setStay, todayIso, useStay, type Stay } from '@/lib/stay/store'
+import { clearStay, nextWeekend, nights, setStay, shiftStay, todayIso, useStay, type Stay } from '@/lib/stay/store'
 
 /**
  * Check-in and check-out, kept in this browser. Every booking link on the
@@ -25,6 +25,9 @@ export function StayPicker({ locale, bare = false }: { locale: Locale; bare?: bo
     return () => window.cancelAnimationFrame(id)
   }, [])
   const isWeekend = !!weekend && stay?.checkIn === weekend.checkIn && stay?.checkOut === weekend.checkOut
+  // The weekend after: for people who plan a week ahead.
+  const after = weekend ? shiftStay(weekend, 7) : null
+  const isAfter = !!after && stay?.checkIn === after.checkIn && stay?.checkOut === after.checkOut
   const onChange = (which: 'in' | 'out', value: string) => {
     const checkIn = which === 'in' ? value : (stay?.checkIn ?? '')
     const checkOut = which === 'out' ? value : (stay?.checkOut ?? '')
@@ -48,11 +51,14 @@ export function StayPicker({ locale, bare = false }: { locale: Locale; bare?: bo
       <button type="button" className={`tm-chip${isWeekend ? ' tm-chip--on' : ''}`} disabled={!weekend} onClick={() => weekend && setStay(weekend.checkIn, weekend.checkOut)}>
         {s.stay.thisWeekend}
       </button>
+      <button type="button" className={`tm-chip${isAfter ? ' tm-chip--on' : ''}`} disabled={!after} onClick={() => after && setStay(after.checkIn, after.checkOut)}>
+        {s.stay.nextWeekend}
+      </button>
       {stay && (
-        <>
+        <span className="tm-stay__tail">
           <span className="tm-stay__nights">{s.stay.nights(nights(stay))}</span>
           <button type="button" className="tm-stay__clear" onClick={clearStay}>{s.stay.clear}</button>
-        </>
+        </span>
       )}
     </div>
   )

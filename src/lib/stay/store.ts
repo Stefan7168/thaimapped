@@ -97,6 +97,12 @@ export function nextWeekend(today = new Date()): Stay {
   return { checkIn: iso(d), checkOut: iso(out) }
 }
 
+/** The same stay moved by whole days, for "next weekend". */
+export function shiftStay(stay: Stay, days: number): Stay {
+  const move = (s: string) => { const d = new Date(s + 'T00:00:00'); d.setDate(d.getDate() + days); return iso(d) }
+  return { checkIn: move(stay.checkIn), checkOut: move(stay.checkOut) }
+}
+
 /** The dates as one URL value, "2026-10-16_2026-10-18", so a shared link carries them. */
 export function stayParam(stay: Stay): string {
   return `${stay.checkIn}_${stay.checkOut}`

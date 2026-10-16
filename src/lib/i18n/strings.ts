@@ -30,6 +30,7 @@ const en = {
     checkIn: 'Check-in',
     checkOut: 'Check-out',
     thisWeekend: 'This weekend',
+    nextWeekend: 'Next weekend',
     nights: (n: number) => (n === 1 ? '1 night' : `${n} nights`),
     clear: 'Clear',
   },
