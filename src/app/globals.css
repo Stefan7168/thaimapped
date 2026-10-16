@@ -186,6 +186,7 @@ body {
 .tm-wk__stop { display: flex; gap: 12px; width: 100%; padding: 8px; border-radius: 8px; border: 1px solid var(--line); background: var(--paper); text-align: left; font: inherit; color: var(--ink); cursor: pointer; transition: border-color var(--t-hover) ease; }
 .tm-wk__stop:hover { border-color: var(--ink-2); }
 .tm-wk__stop--on { border-color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink); }
+.tm-wk__stop--mine { border-color: var(--ink); }
 .tm-wk__thumb { flex: none; width: 72px; height: 72px; border-radius: 6px; object-fit: cover; background: var(--paper-2); }
 .tm-wk__thumb--empty { display: flex; align-items: center; justify-content: center; border: 1px dashed var(--line); color: var(--pin, var(--accent)); }
 .tm-wk__text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }

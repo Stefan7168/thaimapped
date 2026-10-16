@@ -81,14 +81,14 @@ export function AreaPage({ locale, cityId, area, areas, stations, stationSlugs }
     return (
       <li key={pin.id} className="tm-wk__item">
         <SaveButton id={pin.id} locale={locale} className="tm-wk__save" />
-        <button type="button" aria-pressed={on} onClick={() => { setCard(on ? null : { pin, area }); if (!on) showMap() }} onMouseEnter={() => setHoverId(pin.id)} onMouseLeave={() => setHoverId(null)} onFocus={() => setHoverId(pin.id)} onBlur={() => setHoverId(null)} className={`tm-wk__stop${on ? ' tm-wk__stop--on' : ''}${hoverId === pin.id ? ' tm-wk__stop--hover' : ''}`}>
+        <button type="button" aria-pressed={on} onClick={() => { setCard(on ? null : { pin, area }); if (!on) showMap() }} onMouseEnter={() => setHoverId(pin.id)} onMouseLeave={() => setHoverId(null)} onFocus={() => setHoverId(pin.id)} onBlur={() => setHoverId(null)} className={`tm-wk__stop${on ? ' tm-wk__stop--on' : ''}${hoverId === pin.id ? ' tm-wk__stop--hover' : ''}${myHotel?.id === pin.id ? ' tm-wk__stop--mine' : ''}`}>
           {photo ? (
             <Image src={photo.src} alt="" width={72} height={72} sizes="72px" className="tm-wk__thumb" />
           ) : (
             <span aria-hidden="true" className="tm-wk__thumb tm-wk__thumb--empty"><KindIcon className="size-6" /></span>
           )}
           <span className="tm-wk__text">
-            <span className="tm-wk__kind"><span className="tm-wk__num">{n}</span> {pin.kind === 'hotel' && pin.tier ? s.filters.tier[pin.tier] : s.pin[pin.kind]}</span>
+            <span className="tm-wk__kind"><span className="tm-wk__num">{n}</span> {pin.kind === 'hotel' && pin.tier ? s.filters.tier[pin.tier] : s.pin[pin.kind]}{myHotel?.id === pin.id ? ` · ${s.saved.cmpMine}` : ''}</span>
             <span className="tm-wk__name">{t(pin.name, locale)}</span>
             <span className="tm-wk__why">{t(pin.why, locale)}</span>
             {whenLine(pin, locale) && <span className="tm-wk__when">{whenLine(pin, locale)}</span>}
@@ -96,6 +96,7 @@ export function AreaPage({ locale, cityId, area, areas, stations, stationSlugs }
             {pin.price && stay && <span className="tm-wk__meta tm-wk__stay">{s.guide.stayTotal(thb(pin.price.from * nights(stay), locale), nights(stay))}</span>}
             {pin.walk && walkStation && <span className="tm-wk__meta">{s.city.walkMinutes(pin.walk.minutes)} {s.city.from(`${walkStation.code ? walkStation.code + ' ' : ''}${t(walkStation.name, locale)}`)}</span>}
             {pin.kind !== 'hotel' && myHotel && <span className="tm-wk__meta tm-wk__from">{s.weekendPage.fromHotel(fromHotel(pin)!, t(myHotel.name, locale))}</span>}
+            {pin.kind === 'hotel' && <span className="tm-wk__meta">{s.saved.cmpPlaces(nearbyCount(pin))}</span>}
           </span>
         </button>
         <div className="tm-wk__links">
