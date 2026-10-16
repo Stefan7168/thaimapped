@@ -22,7 +22,7 @@ const en = {
     noHotels: 'No hotel listed within a ten-minute walk yet.',
     noPlaces: 'No place listed within a ten-minute walk yet.',
     estimated: 'straight line, not checked',
-    others: 'Other stations',
+    others: 'Nearest stations',
     all: 'All stations',
   },
   stay: {

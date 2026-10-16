@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation'
+import { distanceM } from '@/lib/explorer/filters'
 import type { Metadata } from 'next'
 import { liveCityIds, loadCityBundle } from '@/lib/content/load'
 import { stationPages } from '@/lib/explorer/stations'
@@ -44,7 +45,13 @@ export default async function StationRoute(props: PageProps<'/[locale]/[city]/st
   const slim = new Map(bundle.areas.map((a) => [a.id, slimArea(a)]))
   const rows = (list: typeof page.hotels) => list.map((n) => ({ ...n, area: slim.get(n.area.id) ?? slimArea(n.area) }))
   const light = { ...page, hotels: rows(page.hotels), places: rows(page.places) }
-  const others = pages.filter((p) => p.slug !== slug).slice(0, 12).map((p) => ({ ...p, hotels: [], places: [] }))
+  // The twelve nearest station pages, nearest first, each with its straight-line distance from this one.
+  const here = page.stations[0]
+  const others = pages
+    .filter((p) => p.slug !== slug)
+    .map((p) => ({ ...p, hotels: [], places: [], km: Math.round(distanceM(here.lon, here.lat, p.stations[0].lon, p.stations[0].lat) / 100) / 10 }))
+    .sort((a, b) => a.km - b.km)
+    .slice(0, 12)
   const pins = [...page.hotels, ...page.places].map((n) => n.pin)
   const cityName = t(bundle.city.name, locale)
   const first = page.stations[0]

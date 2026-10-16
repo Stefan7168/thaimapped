@@ -40,7 +40,7 @@ const noopSubscribe = () => () => {}
  */
 const NO_AREAS: Area[] = []
 
-export function StationPage({ locale, cityId, page, areas, hotelDoors, stations, others }: { locale: Locale; cityId: string; page: StationPageData; areas: Area[]; hotelDoors: Record<string, HotelDoor[]>; stations: Station[]; others: StationPageData[] }) {
+export function StationPage({ locale, cityId, page, areas, hotelDoors, stations, others }: { locale: Locale; cityId: string; page: StationPageData; areas: Area[]; hotelDoors: Record<string, HotelDoor[]>; stations: Station[]; others: (StationPageData & { km?: number })[] }) {
   const s = strings(locale)
   const stay = useStay()
   // Places of this page inside a ten-minute walk of a hotel, straight-line at walking pace.
@@ -190,6 +190,7 @@ export function StationPage({ locale, cityId, page, areas, hotelDoors, stations,
                   <Link href={`/${locale}/${cityId}/station/${p.slug}`} className="tm-weekend__stop">
                     <span className="tm-ui__code tm-st__code" style={{ ['--lc' as string]: p.lines[0]?.color }}>{p.stations[0].code}</span>
                     {t(p.stations[0].name, locale)}
+                    {p.km !== undefined && <span className="tm-st__km">{s.trip.km(p.km)}</span>}
                   </Link>
                 </li>
               ))}
