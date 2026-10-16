@@ -292,7 +292,7 @@ body {
 @media (hover: hover) and (pointer: fine) {
   .tm-link:hover { text-decoration-color: currentColor; color: var(--accent-text); }
 }
-.tm-button { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 0 22px; background: var(--accent-strong); color: #fff; font-size: var(--step-body); font-weight: 600; text-decoration: none; transition: transform var(--t-press) var(--ease-out), background-color var(--t-hover) ease; }
+.tm-button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 0 22px; background: var(--accent-strong); color: #fff; font-size: var(--step-body); font-weight: 600; text-decoration: none; transition: transform var(--t-press) var(--ease-out), background-color var(--t-hover) ease; }
 .tm-button--small { min-height: 40px; padding: 0 16px; font-size: var(--step-small); }
 .tm-button:active { transform: scale(0.97); }
 @media (hover: hover) and (pointer: fine) {
