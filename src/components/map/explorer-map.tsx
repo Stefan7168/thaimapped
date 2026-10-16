@@ -262,11 +262,11 @@ export function ExplorerMap(props: ExplorerMapProps) {
         const pts = areas.map((a) => a.camera.center)
         const cam = map.cameraForBounds([[Math.min(...pts.map((p) => p[0])), Math.min(...pts.map((p) => p[1]))], [Math.max(...pts.map((p) => p[0])), Math.max(...pts.map((p) => p[1]))]], { padding: { top: 60, bottom: 120, left: 48, right: 48 }, maxZoom: 13 })
         if (cam) {
-          map.flyTo({ center: cam.center, zoom: cam.zoom, pitch: 0, bearing: 0, duration: 1400, essential: true })
+          map.flyTo({ center: cam.center, zoom: cam.zoom, pitch: 0, bearing: 0, duration: 1400 })
           return
         }
       }
-      map.flyTo({ center: cityCamera.center, zoom: cityCamera.zoom, pitch: threeD ? cityCamera.pitch : 0, bearing: threeD ? cityCamera.bearing : 0, duration: 1400, essential: true })
+      map.flyTo({ center: cityCamera.center, zoom: cityCamera.zoom, pitch: threeD ? cityCamera.pitch : 0, bearing: threeD ? cityCamera.bearing : 0, duration: 1400 })
       return
     }
     // Zoom is worked out flat, then the tilt is applied on top: fitting a
@@ -274,7 +274,7 @@ export function ExplorerMap(props: ExplorerMapProps) {
     // trapezoid, which left a ticked area as a small patch in the middle.
     const cam = map.cameraForBounds(bounds, { padding: stations.length > 0 && pins.length > 0 ? 70 : 28, maxZoom: 16, bearing: threeD ? -12 : 0 })
     if (!cam) return
-    map.flyTo({ center: cam.center, zoom: (cam.zoom ?? cityCamera.zoom) + (threeD ? 0.3 : 0), pitch: threeD ? 50 : 0, bearing: threeD ? -12 : 0, duration: 1400, essential: true })
+    map.flyTo({ center: cam.center, zoom: (cam.zoom ?? cityCamera.zoom) + (threeD ? 0.3 : 0), pitch: threeD ? 50 : 0, bearing: threeD ? -12 : 0, duration: 1400 })
   }, [pins, stations, centres, outlines, near, areas, threeD, cityCamera, mapReady])
 
   useEffect(() => {

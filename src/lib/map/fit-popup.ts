@@ -49,7 +49,7 @@ export function fitPopup(map: MaplibreMap, popup: Popup, insets: Insets, duratio
   if (r.height > maxY - minY || r.top < minY) dy = r.top - minY
   else if (r.bottom > maxY) dy = r.bottom - maxY
   if (Math.abs(dx) < 1 && Math.abs(dy) < 1) return false
-  map.panBy([dx, dy], { duration, essential: true })
+  map.panBy([dx, dy], { duration })
   return true
 }
 

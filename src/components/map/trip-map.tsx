@@ -140,14 +140,14 @@ export function TripMap({ locale, route, day, activeStopId, onSelectStop }: Trip
     if (!map || isGestureActive(map)) return
     const active = route.stops.find((s) => s.id === activeStopId)
     if (active) {
-      map.flyTo({ center: [active.location.lon, active.location.lat], zoom: Math.max(map.getZoom(), 13), duration: 1200, essential: true })
+      map.flyTo({ center: [active.location.lon, active.location.lat], zoom: Math.max(map.getZoom(), 13), duration: 1200 })
       return
     }
     const stops = day === null ? route.stops : route.stops.filter((s) => s.day === day)
     const pts: [number, number][] = stops.map((s) => [s.location.lon, s.location.lat])
     if (day === null) pts.push(...(route.path ?? route.waypoints))
     if (pts.length < 2) return
-    map.fitBounds(bounds(pts), { padding: 70, duration: 1200, essential: true })
+    map.fitBounds(bounds(pts), { padding: 70, duration: 1200 })
   }, [route, day, activeStopId, mapReady])
 
   return <div ref={containerRef} className="h-full w-full bg-paper" />
