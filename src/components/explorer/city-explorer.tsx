@@ -10,7 +10,7 @@ import { t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
 import { supports3D } from '@/lib/map/device'
 import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
-import { useStay } from '@/lib/stay/store'
+import { nights, useStay } from '@/lib/stay/store'
 import { trackOutbound } from '@/lib/links/track'
 import { whenLine } from '@/lib/explorer/when'
 import { WEEKEND_SLOTS, weekendPlan } from '@/lib/explorer/weekend'
@@ -248,6 +248,7 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
               <span className="block text-ink-2">{t(pin.why, locale)}</span>
               {whenLine(pin, locale) && <span className="block text-xs font-medium text-accent">{whenLine(pin, locale)}</span>}
               {pin.price && <span className="block text-xs text-ink-2">{s.guide.priceFrom(thb(pin.price.from, locale))}{pin.price.basis === 'tier-estimate' ? ` (${s.guide.priceEstimate})` : ''}</span>}
+              {pin.price && stay && <span className="tm-wk__stay block text-xs">{s.guide.stayTotal(thb(pin.price.from * nights(stay), locale), nights(stay))}</span>}
               {pin.walk && walkStation && (
                 <span className="block text-xs text-ink-2">
                   {s.city.walkMinutes(pin.walk.minutes)} {s.city.from(`${walkStation.code ? walkStation.code + ' ' : ''}${t(walkStation.name, locale)}`)}
