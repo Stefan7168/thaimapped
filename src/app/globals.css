@@ -680,6 +680,7 @@ a.tm-wk__stop { text-decoration: none; }
 .tm-cmp { border-collapse: collapse; font-size: 14px; min-width: 100%; }
 .tm-cmp th, .tm-cmp td { text-align: left; vertical-align: top; padding: 8px 12px 8px 0; border-top: 1px solid var(--line); min-width: 124px; }
 .tm-cmp thead th { border-top: 0; font-family: var(--font-display), Georgia, serif; font-size: 16px; font-weight: 600; }
+.tm-cmp__mine { display: block; margin-top: 2px; font-family: var(--font-sans), system-ui, sans-serif; font-size: 12px; font-weight: 600; color: var(--accent-text); }
 .tm-cmp tbody th { font-weight: 600; color: var(--ink-2); font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; min-width: 92px; position: sticky; left: 0; background: var(--paper); }
 .tm-cmp__links a { margin-right: 10px; }
 .tm-areas-cmp { padding: clamp(56px, 8vw, 120px) clamp(16px, 2.2vw, 32px) clamp(40px, 6vw, 96px); }

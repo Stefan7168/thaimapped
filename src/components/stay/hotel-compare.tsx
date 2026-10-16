@@ -20,13 +20,15 @@ export interface CompareEntry {
  * to the train, what is walkable, where to book. The saved page shows the
  * area row and a "Plan it" row too; an area or weekend page leaves both out.
  */
-export function HotelCompare({ locale, cityId, entries, stations, nearbyCount, showArea = true }: {
+export function HotelCompare({ locale, cityId, entries, stations, nearbyCount, showArea = true, mine }: {
   locale: Locale
   cityId: string
   entries: CompareEntry[]
   stations: Station[]
   nearbyCount: (hotel: Pin) => number
   showArea?: boolean
+  /** The hotel the plan walks from, when one is picked: its column says so under the name. */
+  mine?: string | null
 }) {
   const s = strings(locale)
   const stay = useStay()
@@ -38,7 +40,12 @@ export function HotelCompare({ locale, cityId, entries, stations, nearbyCount, s
           <thead>
             <tr>
               <th scope="col"><span className="sr-only">{s.saved.compareWhat}</span></th>
-              {entries.map((e) => <th key={e.pin.id} scope="col">{t(e.pin.name, locale)}</th>)}
+              {entries.map((e) => (
+                <th key={e.pin.id} scope="col">
+                  {t(e.pin.name, locale)}
+                  {e.pin.id === mine && <span className="tm-cmp__mine">{s.saved.cmpMine}</span>}
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody>
