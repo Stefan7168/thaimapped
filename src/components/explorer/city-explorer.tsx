@@ -12,8 +12,8 @@ import { supports3D } from '@/lib/map/device'
 import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
 import { nights, useStay } from '@/lib/stay/store'
 import { trackOutbound } from '@/lib/links/track'
-import { whenLine } from '@/lib/explorer/when'
-import { WEEKEND_SLOTS, borrowedSlots, weekendPlan } from '@/lib/explorer/weekend'
+import { bangkokClock, whenLine } from '@/lib/explorer/when'
+import { WEEKEND_SLOTS, borrowedSlots, slotNow, weekendPlan } from '@/lib/explorer/weekend'
 import { airportRoutesFor } from '@/lib/transit/from-airport'
 import { activeFilterCount, allPins, DAYS, KIND_CHIPS, distanceM, EMPTY_FILTERS, isFullRange, PRICE_RANGE, TIMES, selectedPlaceCentres, selectedStations, subareaKey, TIER_PRICE, TIERS, visiblePins, WALK_PACE_M_PER_MIN, type FilterState, type PriceRange, type Tier } from '@/lib/explorer/filters'
 import { thb } from '@/lib/explorer/price'
@@ -46,6 +46,9 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
   const stay = useStay()
   const { city, areas } = bundle
   const detected3D = useSyncExternalStore(noopSubscribe, supports3D, () => null)
+  // Bangkok's clock, read once in the browser: the weekend tab marks the slot it is right now.
+  const clock = useSyncExternalStore(noopSubscribe, clockSnapshot, () => null)
+  const nowSlot = clock ? slotNow(clock, stay) : null
   const [override3D, setOverride3D] = useState<boolean | null>(null)
   const threeD = override3D ?? detected3D
   const [filters, setFilters] = useState<FilterState>(EMPTY_FILTERS)
@@ -224,7 +227,7 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
       <ol className="tm-weekend__slots">
         {WEEKEND_SLOTS.map((slot) => (
           <li key={slot} className="tm-weekend__slot">
-            <span className="tm-weekend__time">{s.guide.slots[slot]}</span>
+            <span className="tm-weekend__time">{s.guide.slots[slot]}{nowSlot === slot && <span className="tm-wk__now">{s.weekendPage.now}</span>}</span>
             {plan.slots[slot].length === 0 ? (
               <span className="tm-weekend__stops tm-weekend__stops--borrowed">
                 <span className="tm-weekend__empty">{s.guide.slotEmpty}{borrowed[slot] ? ` · ${s.weekendPage.borrowed(t(borrowed[slot].area.name, locale))}` : ''}</span>
@@ -533,6 +536,9 @@ function AreaGuide({ locale, bundle, routes, onPickArea, onPickSubarea, onPickSt
     </div>
   )
 }
+
+let clockCache: ReturnType<typeof bangkokClock> | null = null
+const clockSnapshot = () => clockCache ?? (clockCache = bangkokClock())
 
 function noopSubscribe() {
   return () => {}
