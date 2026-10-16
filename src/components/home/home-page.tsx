@@ -15,7 +15,7 @@ import { bangkokClock, bangkokNow } from '@/lib/explorer/when'
 import { slotNow } from '@/lib/explorer/weekend'
 import { addSaved, useSaved } from '@/lib/saved/store'
 import { StayPicker } from '@/components/stay/stay-picker'
-import { chooseHotel, myHotelChoice, useHotelChoiceVersion } from '@/lib/saved/my-hotel'
+import { chooseHotel, myHotelAcross, useHotelChoiceVersion } from '@/lib/saved/my-hotel'
 import { nights, useStay } from '@/lib/stay/store'
 import { thb } from '@/lib/explorer/price'
 import { RevealObserver } from '@/components/motion/reveal'
@@ -67,14 +67,11 @@ export function HomePage({ locale, bundle, routes }: { locale: Locale; bundle: C
   // A returning visitor with a hearted hotel gets a way straight back to their plan.
   const saved = useSaved()
   const stay = useStay()
-  // The first saved hotel, unless its area has a chosen one (picked on a plan page): then that hotel, so the line and the plan agree.
+  // The saved hotel the weekend sleeps in (the home area's chosen one, else the last saved), so the line and the plan pages agree.
   const choiceVersion = useHotelChoiceVersion()
   const myHotel = useMemo(() => {
-    const hotels = allPins(bundle).filter((x) => x.pin.kind === 'hotel' && saved.includes(x.pin.id))
-    const first = hotels[0]
-    if (!first) return null
-    const chosen = myHotelChoice(first.area.id)
-    return hotels.find((x) => x.area.id === first.area.id && x.pin.id === chosen) ?? first
+    const byArea = Object.fromEntries(bundle.areas.map((a) => [a.id, a.pins.filter((p) => p.kind === 'hotel').map((pin) => ({ id: pin.id, pin, area: a }))]))
+    return myHotelAcross(byArea, saved)?.hotel ?? null
     // choiceVersion is read so a new choice recomputes the line.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bundle, saved, choiceVersion])

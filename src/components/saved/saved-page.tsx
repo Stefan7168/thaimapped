@@ -19,7 +19,7 @@ import { thb } from '@/lib/explorer/price'
 import { distanceM, WALK_PACE_M_PER_MIN } from '@/lib/explorer/filters'
 import { whenLine } from '@/lib/explorer/when'
 import { addSaved, clearSaved, toggleSaved, useSaved } from '@/lib/saved/store'
-import { chooseHotel, myHotelChoice, useHotelChoiceVersion } from '@/lib/saved/my-hotel'
+import { chooseHotel, myHotelAcross, myHotelChoice, useHotelChoiceVersion } from '@/lib/saved/my-hotel'
 import { SiteHeader } from '@/components/explorer/site-header'
 import { SiteFooter } from '@/components/explorer/site-footer'
 import { KIND_ICONS } from '@/components/explorer/kind-bar'
@@ -73,6 +73,14 @@ export function SavedPage({ locale, cityId, entries, stations, airport = {} }: {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hotelRows, choiceVersion])
   const areaHotelCount = (areaId: string) => hotelRows.filter((h) => h.area.id === areaId).length
+  // Hotels saved in two or more areas: the one the city-wide pages sleep in gets a tag, the others a button to take over.
+  const cityPick = useMemo(() => {
+    const byArea: Record<string, { id: string }[]> = {}
+    for (const e of hotelRows) (byArea[e.area.id] ??= []).push({ id: e.pin.id })
+    return Object.keys(byArea).length > 1 ? myHotelAcross(byArea, mine) : null
+    // choiceVersion is read so a new choice recomputes the pick.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hotelRows, mine, choiceVersion])
   // The hotel a saved place measures its walk from: the area's pick (one saved hotel is its own pick).
   const hotelFor = (areaId: string) => hotelRows.find((h) => h.area.id === areaId && h.pin.id === pickFor(areaId))
 
@@ -135,6 +143,10 @@ export function SavedPage({ locale, cityId, entries, stations, airport = {} }: {
               {pin.kind === 'hotel' && !sentIds && areaHotelCount(area.id) > 1 && pickFor(area.id) !== pin.id && (
                 <button type="button" className="tm-card__link tm-card__link--quiet" onClick={() => chooseHotel(area.id, pin.id)}>{s.weekendPage.useHotel}</button>
               )}
+              {pin.kind === 'hotel' && !sentIds && cityPick && cityPick.hotel.id !== pin.id && pickFor(area.id) === pin.id && (
+                <button type="button" className="tm-card__link tm-card__link--quiet" onClick={() => chooseHotel(area.id, pin.id)}>{s.saved.sleepHere}</button>
+              )}
+              {pin.kind === 'hotel' && cityPick && cityPick.hotel.id === pin.id && <span className="tm-card__link tm-card__link--quiet tm-wk__shared-done">{s.saved.weekendHotel}</span>}
                 {partners.map((p) => {
                   const subId = subIdFor(`${cityId}-${area.id}`, pin.id)
                   return (

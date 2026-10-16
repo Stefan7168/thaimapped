@@ -13,7 +13,7 @@ import { buildOutboundUrl, hotelSearchUrl, subIdFor, type Partner } from '@/lib/
 import { TRAVEL_MODE, directionsUrl } from '@/lib/links/directions'
 import type { HotelDoor } from '@/lib/content/slim'
 import { useSaved } from '@/lib/saved/store'
-import { myHotelChoice, useHotelChoiceVersion } from '@/lib/saved/my-hotel'
+import { myHotelAcross, useHotelChoiceVersion } from '@/lib/saved/my-hotel'
 import { formatDay } from '@/lib/stay/format'
 import { addDays, adoptStayFromUrl, stayParam, tripStartDefault, tripStartOptions, useStay } from '@/lib/stay/store'
 import { buildIcs, downloadIcs, type CalendarEvent } from '@/lib/stay/calendar'
@@ -37,16 +37,11 @@ export function TripPage({ locale, cityId, cityName, route, hotelDoors = {}, sta
   const stay = useStay()
   const saved = useSaved()
   const choiceVersion = useHotelChoiceVersion()
-  // The reader's hotel in the city (first saved, or the one chosen for its area): the trip then starts and ends at its door.
-  const myHotel = useMemo(() => {
-    for (const [areaId, doors] of Object.entries(hotelDoors)) {
-      const mine = doors.filter((h) => saved.includes(h.id))
-      if (mine.length > 0) return mine.find((h) => h.id === myHotelChoice(areaId)) ?? mine[0]
-    }
-    return null
+  // The reader's hotel in the city (the home area's chosen one, else the last saved): the trip then starts and ends at its door.
+  const myHotel = useMemo(() => myHotelAcross(hotelDoors, saved)?.hotel ?? null,
     // choiceVersion is read so a new choice recomputes the pick.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hotelDoors, saved, choiceVersion])
+    [hotelDoors, saved, choiceVersion])
   const mode = TRAVEL_MODE[route.mode]
   // Getting from the hotel to a walking or boat trip is a train ride, not a walk across the city; a car trip drives from the door.
   const hotelMode = mode === 'driving' ? 'driving' : 'transit'

@@ -57,6 +57,8 @@ const en = {
     showOnMap: 'Show on the map',
     yourPick: (area: string) => `The ${area} plan walks from here`,
     cmpMine: 'Your hotel',
+    sleepHere: 'Sleep here this weekend instead',
+    weekendHotel: 'Your hotel this weekend',
     clear: 'Clear the list',
     compare: 'Side by side',
     compareLead: 'Your saved hotels on one line each: where, what it costs, how far to the train, what is walkable.',
