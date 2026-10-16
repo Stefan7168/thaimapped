@@ -71,6 +71,8 @@ export function SavedPage({ locale, cityId, entries, stations }: { locale: Local
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hotelRows, choiceVersion])
   const areaHotelCount = (areaId: string) => hotelRows.filter((h) => h.area.id === areaId).length
+  // The hotel a saved place measures its walk from: the area's pick (one saved hotel is its own pick).
+  const hotelFor = (areaId: string) => hotelRows.find((h) => h.area.id === areaId && h.pin.id === pickFor(areaId))
 
   const share = async () => {
     const url = `${window.location.origin}/${locale}/saved?ids=${encodeURIComponent(ids.join(','))}${stay ? `&stay=${stayParam(stay)}` : ''}`
@@ -120,6 +122,7 @@ export function SavedPage({ locale, cityId, entries, stations }: { locale: Local
             {pin.price && stay && <span className="tm-wk__meta tm-wk__stay">{s.guide.stayTotal(thb(pin.price.from * nights(stay), locale), nights(stay))}</span>}
                 {pin.walk && walkStation && <span className="tm-wk__meta">{s.city.walkMinutes(pin.walk.minutes)} {s.city.from(`${walkStation.code ? walkStation.code + ' ' : ''}${t(walkStation.name, locale)}`)}</span>}
                 {pin.kind === 'hotel' && !sentIds && areaHotelCount(area.id) > 1 && pickFor(area.id) === pin.id && <span className="tm-wk__meta tm-wk__from">{s.saved.yourPick(t(area.name, locale))}</span>}
+                {pin.kind !== 'hotel' && hotelFor(area.id) && <span className="tm-wk__meta tm-wk__from">{s.weekendPage.fromHotel(Math.max(1, Math.round(distanceM(hotelFor(area.id)!.pin.location.lon, hotelFor(area.id)!.pin.location.lat, pin.location.lon, pin.location.lat) / WALK_PACE_M_PER_MIN)), t(hotelFor(area.id)!.pin.name, locale))}</span>}
                 <span className="tm-wk__meta tm-saved__map">{s.saved.showOnMap}</span>
               </span>
             </Link>
