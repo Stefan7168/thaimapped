@@ -128,6 +128,8 @@ const en = {
     nowLine: (slot: string) => `It is ${slot} in Bangkok right now.`,
     nowLink: (slot: string) => (slot === 'morning' ? 'What is good this morning' : slot === 'afternoon' ? 'What is good this afternoon' : 'What is good tonight'),
     weekendLink: 'Plan this weekend',
+    yourWeekend: (hotel: string, area: string) => `Your weekend: ${hotel} in ${area}`,
+    yourWeekendLink: 'Open your plan',
     intro: [
       'ThaiMapped is one map of Bangkok drawn like paper. Eight areas, 193 BTS, MRT, Airport Link and SRT stations, the landmarks you have heard of, and hotels placed where they really stand.',
       'Pick a station and you see what sits inside a ten-minute walk of it. Pick an area and you see its streets, its sub-areas and the trains that reach it.',

@@ -5,12 +5,14 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
 import type { Area, Camera, CityBundle, Locale, Pin, TripRoute } from '@/lib/content/types'
-import { TIER_PRICE, TIERS } from '@/lib/explorer/filters'
+import { allPins, TIER_PRICE, TIERS } from '@/lib/explorer/filters'
 import { QUIZ_PACES, QUIZ_PURPOSES, rankAreas, type Pace, type QuizAnswers } from '@/lib/explorer/quiz'
 import { t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
 import { supports3D } from '@/lib/map/device'
 import { bangkokNow } from '@/lib/explorer/when'
+import { useSaved } from '@/lib/saved/store'
+import { nights, useStay } from '@/lib/stay/store'
 import { RevealObserver } from '@/components/motion/reveal'
 import { SiteFooter } from '@/components/explorer/site-footer'
 import { HotelFragment, StationFragment, TripStopsFragment } from './ui-fragments'
@@ -55,6 +57,11 @@ export function HomePage({ locale, bundle, routes }: { locale: Locale; bundle: C
     })
   // The highlight the reader tapped open.
   const [cardPin, setCardPin] = useState<{ pin: Pin; area: Area } | null>(null)
+  // A returning visitor with a hearted hotel gets a way straight back to their plan.
+  const saved = useSaved()
+  const stay = useStay()
+  const myHotel = useMemo(() => allPins(bundle).find((x) => x.pin.kind === 'hotel' && saved.includes(x.pin.id)) ?? null, [bundle, saved])
+  const stayLabel = stay ? new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short' }).formatRange(new Date(`${stay.checkIn}T12:00:00`), new Date(`${stay.checkOut}T12:00:00`)) : null
   // Bangkok's clock, read in the browser only, so the server's HTML carries no time of its own.
   const now = useSyncExternalStore(noopSubscribe, nowSnapshot, () => null)
   // On a phone the map is a sticky band above the scrolling text, so a tapped card would open out of sight: bring the map back first.
@@ -158,6 +165,13 @@ export function HomePage({ locale, bundle, routes }: { locale: Locale; bundle: C
                   <Link href={`/${locale}/${city.id}#time=${now.time === 'night' ? 'night' : now.time === 'evening' ? 'evening,night' : now.time}`} className="tm-link tm-link--under">{s.home.nowLink(now.time)}</Link>
                   {' · '}
                   <a href="#tm-quiz" className="tm-link tm-link--under">{s.home.weekendLink}</a>
+                </p>
+              )}
+              {myHotel && (
+                <p className="tm-hero__now tm-hero__mine">
+                  {s.home.yourWeekend(t(myHotel.pin.name, locale), t(myHotel.area.name, locale))}
+                  {stay && stayLabel ? ` · ${stayLabel}, ${s.stay.nights(nights(stay))}` : ''}{' · '}
+                  <Link href={`/${locale}/${city.id}/weekend/${myHotel.area.id}?hotel=${myHotel.pin.id}`} className="tm-link tm-link--under">{s.home.yourWeekendLink}</Link>
                 </p>
               )}
             </div>
