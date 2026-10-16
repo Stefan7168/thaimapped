@@ -3,7 +3,7 @@
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useEffect, useMemo, useState, useSyncExternalStore } from 'react'
+import { useEffect, useMemo, useRef, useState, useSyncExternalStore, type TouchEvent as ReactTouchEvent } from 'react'
 import { ArrowLeft, SlidersHorizontal, X } from 'lucide-react'
 import type { CityBundle, DayKind, Locale, Pin, PinKind, Station, TimeOfDay, TripRoute } from '@/lib/content/types'
 import { t } from '@/lib/i18n/locales'
@@ -83,6 +83,18 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
   const [sheetOpen, setSheetOpen] = useState(false)
   // Phones: the place list starts as a one-line handle so the map stays visible.
   const [listOpen, setListOpen] = useState(false)
+  // Phones: a swipe up on the sheet's header makes it tall, a swipe down shrinks it, then closes it.
+  const [listTall, setListTall] = useState(false)
+  const swipeY = useRef<number | null>(null)
+  const onSheetTouchStart = (e: ReactTouchEvent) => { swipeY.current = e.touches[0]?.clientY ?? null }
+  const onSheetTouchEnd = (e: ReactTouchEvent) => {
+    const y0 = swipeY.current; swipeY.current = null
+    const y1 = e.changedTouches[0]?.clientY
+    if (y0 === null || y1 === undefined) return
+    const dy = y1 - y0
+    if (dy < -40) { setListOpen(true); setListTall(true); if (activePin) setActivePin(null) }
+    else if (dy > 40) { if (listTall) setListTall(false); else setListOpen(false) }
+  }
   // On a phone an open card and an open list fight for the same half of the screen: the card wins, the list folds to its header.
   const listShown = listOpen && !activePin
   // The list column's tabs once something is picked: the places, the trips out of town, the weekend plan.
@@ -391,8 +403,9 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
 
           {/* Phones: the places found float over the map. */}
           {count > 0 && (
-            <div data-map-overlay="bottom" className={`absolute inset-x-3 bottom-3 flex flex-col rounded-xl border border-line bg-paper/95 shadow-lg md:hidden ${listShown ? 'max-h-[45%]' : ''}`}>
-              <button type="button" aria-expanded={listShown} onClick={() => { if (activePin) { setActivePin(null); setListOpen(true) } else setListOpen((o) => !o) }} className="flex min-h-11 items-center justify-between px-3 text-sm font-semibold">
+            <div data-map-overlay="bottom" className={`absolute inset-x-3 bottom-3 z-10 flex flex-col rounded-xl border border-line bg-paper/95 shadow-lg md:hidden ${listShown ? (listTall ? 'max-h-[88%]' : 'max-h-[45%]') : ''}`}>
+              <span aria-hidden="true" className="absolute left-1/2 top-1.5 h-1 w-9 -translate-x-1/2 rounded-full bg-line" />
+              <button type="button" aria-expanded={listShown} onTouchStart={onSheetTouchStart} onTouchEnd={onSheetTouchEnd} onClick={() => { if (activePin) { setActivePin(null); setListOpen(true) } else setListOpen((o) => !o) }} className="flex min-h-11 items-center justify-between px-3 pt-1 text-sm font-semibold">
                 <span>{s.filters.results(pins.length)}</span>
                 <span className="text-xs font-medium text-ink-2">{listShown ? s.filters.hideList : s.filters.showList}</span>
               </button>
