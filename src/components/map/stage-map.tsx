@@ -256,13 +256,17 @@ export function StageMap({ locale, camera, threeD, areas, route, routes = [], fo
   }, [route, routes, mapReady])
 
   // Camera: the route's extent when one is drawn, otherwise the camera prop.
+  // The first framing is a cut, not a flight: a flight from the default camera shows the labels colliding for over a second on a phone.
+  const framedOnce = useRef(false)
   useEffect(() => {
     const map = mapRef.current
     if (!map || isGestureActive(map)) return
+    const duration = framedOnce.current ? 1600 : 0
+    framedOnce.current = true
     const framed = route ?? (routes.length ? routes : null)
     if (framed) {
       const list = Array.isArray(framed) ? framed : [framed]
-      map.fitBounds(routesBounds(list), { padding: 56, maxZoom: 15, pitch: 0, bearing: 0, duration: 1600, essential: true })
+      map.fitBounds(routesBounds(list), { padding: 56, maxZoom: 15, pitch: 0, bearing: 0, duration, essential: true })
       return
     }
     if (focus?.pins.length) {
@@ -273,7 +277,7 @@ export function StageMap({ locale, camera, threeD, areas, route, routes = [], fo
       // The labels hang to the right of their dots, so the right padding is the widest label; a phone's narrow band gets tighter margins.
       const narrow = map.getContainer().clientWidth < 600
       map.fitBounds([[Math.min(...lons), Math.min(...lats)], [Math.max(...lons), Math.max(...lats)]], {
-        padding: narrow ? { top: 36, bottom: 72, left: 20, right: 120 } : { top: 80, bottom: 80, left: 80, right: 160 }, maxZoom: camera.zoom, pitch: threeD ? camera.pitch : 0, bearing: threeD ? camera.bearing : 0, duration: 1600, essential: true,
+        padding: narrow ? { top: 36, bottom: 72, left: 20, right: 120 } : { top: 80, bottom: 80, left: 80, right: 160 }, maxZoom: camera.zoom, pitch: threeD ? camera.pitch : 0, bearing: threeD ? camera.bearing : 0, duration, essential: true,
       })
       return
     }
@@ -281,11 +285,11 @@ export function StageMap({ locale, camera, threeD, areas, route, routes = [], fo
       // A phone's narrow band cannot hold the city camera's frame: fit every area dot instead, with room on the right for the names.
       const lons = areas.map((a) => a.camera.center[0]), lats = areas.map((a) => a.camera.center[1])
       map.fitBounds([[Math.min(...lons), Math.min(...lats)], [Math.max(...lons), Math.max(...lats)]], {
-        padding: { top: 32, bottom: 72, left: 48, right: 48 }, maxZoom: camera.zoom, pitch: 0, bearing: 0, duration: 1600, essential: true,
+        padding: { top: 32, bottom: 72, left: 48, right: 48 }, maxZoom: camera.zoom, pitch: 0, bearing: 0, duration, essential: true,
       })
       return
     }
-    map.flyTo({ center: camera.center, zoom: camera.zoom, pitch: threeD ? camera.pitch : 0, bearing: threeD ? camera.bearing : 0, duration: 1600, essential: true })
+    map.flyTo({ center: camera.center, zoom: camera.zoom, pitch: threeD ? camera.pitch : 0, bearing: threeD ? camera.bearing : 0, duration, essential: true })
   }, [camera, route, routes, threeD, focus, marker, mapReady, areas])
 
   return <div ref={containerRef} className="h-full w-full bg-paper" />

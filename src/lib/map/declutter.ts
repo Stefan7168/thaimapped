@@ -26,7 +26,11 @@ function rank(el: HTMLElement): number {
 export function declutterLabels(markers: Marker[], container: HTMLElement | null) {
   const ordered = markers.map((m, i) => ({ el: m.getElement(), i })).sort((a, b) => rank(a.el) - rank(b.el) || a.i - b.i)
   const labels = ordered.map(({ el }) => el.querySelector<HTMLElement>(LABEL)).filter((l): l is HTMLElement => !!l)
-  for (const l of labels) l.classList.remove(OFF)
+  // Every pass starts from the resting places: a box measured with last pass's lift or side shift still on would be stale once that class is stripped below.
+  for (const l of labels) {
+    l.classList.remove(OFF)
+    l.closest<HTMLElement>('.tm-pin')?.classList.remove(UP, SIDE_R, SIDE_L)
+  }
   // A label that would run off the right edge sits on the left of its dot instead.
   const bounds = container?.getBoundingClientRect()
   if (bounds) {
@@ -47,7 +51,6 @@ export function declutterLabels(markers: Marker[], container: HTMLElement | null
     let r = rects[i]
     if (r.width === 0) return
     const pin = l.closest<HTMLElement>('.tm-pin')
-    pin?.classList.remove(UP, SIDE_R, SIDE_L)
     let hit = hits(r)
     // A stacked name that would cover a neighbour tries above its dot, then
     // beside it (right, then left), before giving up; a spot off the map does not count.
@@ -125,9 +128,9 @@ export function watchDeclutter(map: { on: (ev: string, fn: () => void) => void; 
       declutterLabels(markers(), map.getContainer())
     })
   }
-  for (const ev of ['move', 'moveend', 'resize']) map.on(ev, run)
+  for (const ev of ['move', 'moveend', 'resize', 'idle']) map.on(ev, run)
   return () => {
     cancelAnimationFrame(frame)
-    for (const ev of ['move', 'moveend', 'resize']) map.off(ev, run)
+    for (const ev of ['move', 'moveend', 'resize', 'idle']) map.off(ev, run)
   }
 }
