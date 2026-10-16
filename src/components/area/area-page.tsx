@@ -6,7 +6,8 @@ import Link from 'next/link'
 import { useMemo, useState, useSyncExternalStore } from 'react'
 import type { Area, Locale, Pin, PinKind, Station } from '@/lib/content/types'
 import { FromAirport } from '@/components/stay/from-airport'
-import type { AirportRoutes } from '@/lib/transit/from-airport'
+import type { AirportLeg, AirportRoutes } from '@/lib/transit/from-airport'
+import { rideSentence } from '@/components/stay/from-airport'
 import { t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
 import { distanceM, KIND_CHIPS, WALK_PACE_M_PER_MIN } from '@/lib/explorer/filters'
@@ -38,7 +39,7 @@ const noopSubscribe = () => () => {}
  * stations, the places by kind and the hotels, with the map at the side.
  * The same content the map's area card shows, laid out to be read and sent.
  */
-export function AreaPage({ locale, cityId, area, areas, stations, stationSlugs, airport = {} }: { locale: Locale; cityId: string; area: Area; areas: Area[]; stations: Station[]; stationSlugs: Record<string, string>; airport?: Record<string, AirportRoutes> }) {
+export function AreaPage({ locale, cityId, area, areas, stations, stationSlugs, airport = {}, rides = {} }: { locale: Locale; cityId: string; area: Area; areas: Area[]; stations: Station[]; stationSlugs: Record<string, string>; airport?: Record<string, AirportRoutes>; rides?: Record<string, Record<string, AirportLeg[] | null>> }) {
   const s = strings(locale)
   const stay = useStay()
   const detected3D = useSyncExternalStore(noopSubscribe, supports3D, () => null)
@@ -54,6 +55,12 @@ export function AreaPage({ locale, cityId, area, areas, stations, stationSlugs, 
   const saved = useSaved()
   const chosenHotel = useMyHotelChoice(area.id)
   const myHotel = useMemo(() => hotels.find((h) => h.id === chosenHotel && saved.includes(h.id)) ?? hotels.find((h) => saved.includes(h.id)) ?? null, [hotels, saved, chosenHotel])
+  // A place more than twenty minutes on foot from the hotel, when both walk from a station and the chain is a real ride.
+  const byTrain = (pin: Pin): string | null => {
+    if (!myHotel?.walk || !pin.walk || pin.walk.station === myHotel.walk.station) return null
+    const legs = rides[myHotel.walk.station]?.[pin.walk.station]
+    return legs && legs.length > 0 ? rideSentence(legs, pin.walk.minutes, locale) : null
+  }
   const fromHotel = (pin: Pin) => (myHotel ? Math.max(1, Math.round(distanceM(myHotel.location.lon, myHotel.location.lat, pin.location.lon, pin.location.lat) / WALK_PACE_M_PER_MIN)) : null)
   const pinned = useMemo(() => [...kinds.flatMap((g) => g.pins), ...hotels], [kinds, hotels])
   // Stable map props: a new object on every render would rebuild the markers and re-frame the map on each hover or card change.
@@ -98,6 +105,7 @@ export function AreaPage({ locale, cityId, area, areas, stations, stationSlugs, 
             {pin.price && stay && <span className="tm-wk__meta tm-wk__stay">{s.guide.stayTotal(thb(pin.price.from * nights(stay), locale), nights(stay))}</span>}
             {pin.walk && walkStation && <span className="tm-wk__meta">{s.city.walkMinutes(pin.walk.minutes)} {s.city.from(`${walkStation.code ? walkStation.code + ' ' : ''}${t(walkStation.name, locale)}`)}</span>}
             {pin.kind !== 'hotel' && myHotel && <span className="tm-wk__meta tm-wk__from">{s.weekendPage.fromHotel(fromHotel(pin)!, t(myHotel.name, locale))}</span>}
+            {pin.kind !== 'hotel' && myHotel && fromHotel(pin)! > 20 && byTrain(pin) && <span className="tm-wk__meta tm-wk__train">{s.weekendPage.byTrain(byTrain(pin)!)}</span>}
             {pin.kind === 'hotel' && <span className="tm-wk__meta">{s.saved.cmpPlaces(nearbyCount(pin))}</span>}
           </span>
         </button>

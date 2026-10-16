@@ -6,7 +6,7 @@ import { LOCALES, isLocale, t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
 import { pageMeta, areaPhoto } from '@/lib/seo/page-meta'
 import { slimArea, stationsFor } from '@/lib/content/slim'
-import { airportRoutesFor } from '@/lib/transit/from-airport'
+import { airportRoutesFor, railLegsBetween } from '@/lib/transit/from-airport'
 import { AreaPage } from '@/components/area/area-page'
 import { JsonLd, pinNode, placeListLd } from '@/lib/seo/json-ld'
 
@@ -39,10 +39,11 @@ export default async function AreaRoute(props: PageProps<'/[locale]/[city]/area/
   // Station id to the station page's address, for the stations that have one.
   const stationSlugs = Object.fromEntries(stationPages(bundle).flatMap((p) => p.stations.map((st) => [st.id, p.slug] as const)))
   const cityName = t(bundle.city.name, locale)
+  const hotelStations = [...new Set(a.pins.filter((p) => p.kind === 'hotel' && p.walk).map((p) => p.walk!.station))]
   return (
     <>
       <JsonLd data={placeListLd(strings(locale).areaPage.title(t(a.name, locale), cityName), `/${locale}/${city}/area/${area}`, a.pins.map((p) => pinNode(p, locale, cityName)))} />
-      <AreaPage locale={locale} cityId={city} area={a} areas={bundle.areas.map(slimArea)} stations={stationsFor(bundle.stations, a.pins, a.stations)} stationSlugs={stationSlugs} airport={airportRoutesFor(bundle, [...new Set(a.pins.filter((p) => p.kind === 'hotel' && p.walk).map((p) => p.walk!.station))])} />
+      <AreaPage locale={locale} cityId={city} area={a} areas={bundle.areas.map(slimArea)} stations={stationsFor(bundle.stations, a.pins, a.stations)} stationSlugs={stationSlugs} airport={airportRoutesFor(bundle, hotelStations)} rides={railLegsBetween(bundle, hotelStations, a.pins.filter((p) => p.kind !== 'hotel' && p.walk).map((p) => p.walk!.station))} />
     </>
   )
 }
