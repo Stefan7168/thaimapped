@@ -64,6 +64,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes }: {
   }, [])
   const plan = useMemo(() => weekendPlan(area, price), [area, price])
   const [card, setCard] = useState<{ pin: Pin; area: Area } | null>(null)
+  const [hoverId, setHoverId] = useState<string | null>(null)
   const [shared, setShared] = useState<'idle' | 'copied' | 'failed'>('idle')
   const stationById = useMemo(() => new Map(stations.map((st) => [st.id, st])), [stations])
   const stops = useMemo(() => WEEKEND_SLOTS.flatMap((slot) => plan.slots[slot]), [plan])
@@ -73,6 +74,9 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes }: {
   const pinned = useMemo(() => [...stops, ...hotels], [stops, hotels])
   // The hotel the reader saved (hearted) in this area: every stop then says how far it is from that door.
   const myHotel = useMemo(() => hotels.find((h) => h.id === sentHotel) ?? hotels.find((h) => saved.includes(h.id)) ?? null, [hotels, saved, sentHotel])
+  // Stable map props: a new object on every render would rebuild the markers and re-frame the map on each hover or card change.
+  const mapAreas = useMemo(() => [area], [area])
+  const focus = useMemo(() => ({ pins: pinned, area, numbered: true, mine: myHotel?.id }), [pinned, area, myHotel?.id])
   const fromHotel = (pin: Pin) => (myHotel ? Math.max(1, Math.round(distanceM(myHotel.location.lon, myHotel.location.lat, pin.location.lon, pin.location.lat) / WALK_PACE_M_PER_MIN)) : null)
   // Stops of this weekend inside a ten-minute walk of a hotel, straight-line at walking pace.
   const nearbyCount = (hotel: Pin) => stops.filter((p) => distanceM(hotel.location.lon, hotel.location.lat, p.location.lon, p.location.lat) <= WALK_PACE_M_PER_MIN * 10).length
@@ -144,7 +148,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes }: {
     return (
       <li key={pin.id} className="tm-wk__item">
         {<SaveButton id={pin.id} locale={locale} className="tm-wk__save" />}
-        <button type="button" aria-pressed={on} onClick={() => { setCard(on ? null : { pin, area }); if (!on) showMap() }} className={`tm-wk__stop${on ? ' tm-wk__stop--on' : ''}`}>
+        <button type="button" aria-pressed={on} onClick={() => { setCard(on ? null : { pin, area }); if (!on) showMap() }} onMouseEnter={() => setHoverId(pin.id)} onMouseLeave={() => setHoverId(null)} className={`tm-wk__stop${on ? ' tm-wk__stop--on' : ''}${hoverId === pin.id ? ' tm-wk__stop--hover' : ''}`}>
           {photo ? (
             <Image src={photo.src} alt="" width={72} height={72} sizes="72px" className="tm-wk__thumb" />
           ) : (
@@ -280,7 +284,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes }: {
         </div>
         <div className="tm-stage__map" data-ui>
           {detected3D !== null && (
-            <StageMap locale={locale} camera={area.camera} threeD={detected3D} areas={[area]} route={null} focus={{ pins: pinned, area, numbered: true, mine: myHotel?.id }} card={card} onCloseCard={() => setCard(null)} onSelectPin={(pin) => { setCard({ pin, area }) }} cityId={cityId} stations={stations} />
+            <StageMap locale={locale} camera={area.camera} threeD={detected3D} areas={mapAreas} route={null} focus={focus} card={card} onCloseCard={() => setCard(null)} hoverPin={hoverId} onHoverPin={setHoverId} onSelectPin={(pin) => { setCard({ pin, area }) }} cityId={cityId} stations={stations} />
           )}
           <div className="tm-stage__bar tm-stage__bar--page" data-map-overlay="bottom">
             <span className="tm-stage__showing">{s.home.showing(t(area.name, locale))}</span>

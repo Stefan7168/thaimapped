@@ -35,6 +35,8 @@ const noopSubscribe = () => () => {}
  * nearest first, with the station itself marked on the map at the side.
  * "hotels near Asok" is how people search; this is the page that answers.
  */
+const NO_AREAS: Area[] = []
+
 export function StationPage({ locale, cityId, page, areas, stations, others }: { locale: Locale; cityId: string; page: StationPageData; areas: Area[]; stations: Station[]; others: StationPageData[] }) {
   const s = strings(locale)
   const stay = useStay()
@@ -44,6 +46,7 @@ export function StationPage({ locale, cityId, page, areas, stations, others }: {
   const st = page.stations[0]
   const label = `${st.code ? st.code + ' ' : ''}${t(st.name, locale)}`
   const [card, setCard] = useState<{ pin: Pin; area: Area } | null>(null)
+  const [hoverId, setHoverId] = useState<string | null>(null)
   const pinned = useMemo(() => [...page.hotels, ...page.places], [page])
   // The map takes one area for its colour: the area most of the nearby pins belong to.
   const mainArea = useMemo(() => {
@@ -59,6 +62,9 @@ export function StationPage({ locale, cityId, page, areas, stations, others }: {
     return [...counts.values()].sort((a, b) => b.n - a.n).map((x) => x.area)
   }, [pinned])
   const camera = useMemo(() => ({ center: [st.lon, st.lat] as [number, number], zoom: 15, pitch: 0, bearing: 0 }), [st])
+  // Stable map props: a new object on every render would rebuild the markers and re-frame the map on each hover or card change.
+  const focus = useMemo(() => ({ pins: pinned.map((n) => n.pin), area: mainArea, numbered: true }), [pinned, mainArea])
+  const marker = useMemo(() => ({ lon: st.lon, lat: st.lat, label, color: page.lines[0]?.color ?? '#c8553d' }), [st.lon, st.lat, label, page.lines])
   const explorerHref = `/${locale}/${cityId}#station=${st.id}`
 
   const showMap = () => {
@@ -76,7 +82,7 @@ export function StationPage({ locale, cityId, page, areas, stations, others }: {
     return (
       <li key={pin.id} className="tm-wk__item">
         {<SaveButton id={pin.id} locale={locale} className="tm-wk__save" />}
-        <button type="button" aria-pressed={on} onClick={() => { setCard(on ? null : { pin, area }); if (!on) showMap() }} className={`tm-wk__stop${on ? ' tm-wk__stop--on' : ''}`} style={{ ['--pin' as string]: `var(--${area.color})` }}>
+        <button type="button" aria-pressed={on} onClick={() => { setCard(on ? null : { pin, area }); if (!on) showMap() }} onMouseEnter={() => setHoverId(pin.id)} onMouseLeave={() => setHoverId(null)} className={`tm-wk__stop${on ? ' tm-wk__stop--on' : ''}${hoverId === pin.id ? ' tm-wk__stop--hover' : ''}`} style={{ ['--pin' as string]: `var(--${area.color})` }}>
           {photo ? (
             <Image src={photo.src} alt="" width={72} height={72} sizes="72px" className="tm-wk__thumb" />
           ) : (
@@ -173,7 +179,7 @@ export function StationPage({ locale, cityId, page, areas, stations, others }: {
         </div>
         <div className="tm-stage__map" data-ui>
           {detected3D !== null && (
-            <StageMap locale={locale} camera={camera} threeD={detected3D} areas={[]} route={null} focus={{ pins: pinned.map((n) => n.pin), area: mainArea, numbered: true }} marker={{ lon: st.lon, lat: st.lat, label, color: page.lines[0]?.color ?? '#c8553d' }} card={card} onCloseCard={() => setCard(null)} onSelectPin={(pin) => { const e = pinned.find((n) => n.pin.id === pin.id); if (e) setCard({ pin: e.pin, area: e.area }) }} cityId={cityId} stations={stations} />
+            <StageMap locale={locale} camera={camera} threeD={detected3D} areas={NO_AREAS} route={null} focus={focus} marker={marker} card={card} onCloseCard={() => setCard(null)} hoverPin={hoverId} onHoverPin={setHoverId} onSelectPin={(pin) => { const e = pinned.find((n) => n.pin.id === pin.id); if (e) setCard({ pin: e.pin, area: e.area }) }} cityId={cityId} stations={stations} />
           )}
           <div className="tm-stage__bar tm-stage__bar--page" data-map-overlay="bottom">
             <span className="tm-stage__showing">{s.home.showing(label)}</span>

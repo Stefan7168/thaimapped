@@ -41,6 +41,10 @@ export interface StageMapProps {
   onSelectArea?: (areaId: string) => void
   /** A plan's stop clicked (or tapped) on the map: the page opens its card, as a tap on the list row does. */
   onSelectPin?: (pin: Pin) => void
+  /** The stop whose list row the pointer is on: its pin is lifted on the map. */
+  hoverPin?: string | null
+  /** The pointer entered (id) or left (null) a stop on the map: the page lifts its list row. */
+  onHoverPin?: (id: string | null) => void
 }
 
 /** A numbered badge in the area's colour, for a plan's stops. */
@@ -101,10 +105,19 @@ function routesBounds(routes: TripRoute[]): [[number, number], [number, number]]
  * It only follows the page: the camera prop moves it, a route prop draws a
  * trip on it. Wheel zoom is off so the page keeps scrolling over it.
  */
-export function StageMap({ locale, camera, threeD, areas, route, routes = [], focus = null, marker = null, card = null, onCloseCard, cityId = '', stations = [], onSelectArea, onSelectPin }: StageMapProps) {
+export function StageMap({ locale, camera, threeD, areas, route, routes = [], focus = null, marker = null, card = null, onCloseCard, cityId = '', stations = [], onSelectArea, onSelectPin, hoverPin = null, onHoverPin }: StageMapProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const onSelectAreaRef = useRef(onSelectArea)
   const onSelectPinRef = useRef(onSelectPin)
+  const onHoverPinRef = useRef(onHoverPin)
+  useEffect(() => {
+    onHoverPinRef.current = onHoverPin
+  }, [onHoverPin])
+  const pinElsRef = useRef(new Map<string, HTMLElement>())
+  const hoverPinRef = useRef(hoverPin)
+  useEffect(() => {
+    hoverPinRef.current = hoverPin
+  }, [hoverPin])
   useEffect(() => {
     onSelectPinRef.current = onSelectPin
   }, [onSelectPin])
@@ -120,8 +133,13 @@ export function StageMap({ locale, camera, threeD, areas, route, routes = [], fo
   }, [onCloseCard])
   const stationById = useMemo(() => new Map(stations.map((st) => [st.id, st])), [stations])
   const [mapReady, setMapReady] = useState(0)
+  // The hovered row's pin is lifted; the class is swapped in place so the markers are not rebuilt on every hover.
+  useEffect(() => {
+    for (const [id, el] of pinElsRef.current) el.classList.toggle('tm-pin--hover', id === hoverPin)
+  }, [hoverPin, mapReady])
 
   useEffect(() => {
+    const pinEls = pinElsRef.current
     let cancelled = false
     let map: MaplibreMap | null = null
     let ro: ResizeObserver | null = null
@@ -171,6 +189,7 @@ export function StageMap({ locale, camera, threeD, areas, route, routes = [], fo
       ro?.disconnect()
       markersRef.current.forEach((m) => m.remove())
       markersRef.current = []
+      pinEls.clear()
       hover?.remove()
       popupRef.current?.remove()
       popupRef.current = null
@@ -191,6 +210,7 @@ export function StageMap({ locale, camera, threeD, areas, route, routes = [], fo
       if (cancelled) return
       markersRef.current.forEach((m) => m.remove())
       markersRef.current = []
+      pinElsRef.current.clear()
       if (route) {
         route.stops.forEach((stop, i) => {
           const el = stopElement(i + 1, t(stop.name, locale), STOP_COLORS[stop.kind] ?? '#6f6a5f')
@@ -215,6 +235,10 @@ export function StageMap({ locale, camera, threeD, areas, route, routes = [], fo
         el.classList.add('tm-pin--active')
         if (focus!.mine && pin.id === focus!.mine) el.classList.add('tm-pin--mine')
         el.addEventListener('click', (e) => { e.stopPropagation(); onSelectPinRef.current?.(pin) })
+        el.addEventListener('mouseenter', () => onHoverPinRef.current?.(pin.id))
+        el.addEventListener('mouseleave', () => onHoverPinRef.current?.(null))
+        if (pin.id === hoverPinRef.current) el.classList.add('tm-pin--hover')
+        pinElsRef.current.set(pin.id, el)
         markersRef.current.push(new maplibregl.Marker({ element: el, anchor: focus!.numbered ? 'center' : 'left' }).setLngLat([pin.location.lon, pin.location.lat]).addTo(map))
       })
       if (marker) {
