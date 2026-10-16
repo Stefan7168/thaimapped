@@ -14,7 +14,7 @@ import { TRAVEL_MODE, directionsUrl } from '@/lib/links/directions'
 import type { HotelDoor } from '@/lib/content/slim'
 import { useSaved } from '@/lib/saved/store'
 import { myHotelChoice, useHotelChoiceVersion } from '@/lib/saved/my-hotel'
-import { adoptStayFromUrl, stayParam, useStay } from '@/lib/stay/store'
+import { addDays, adoptStayFromUrl, stayParam, tripStartDefault, tripStartOptions, useStay } from '@/lib/stay/store'
 import { buildIcs, downloadIcs, type CalendarEvent } from '@/lib/stay/calendar'
 import { STOP_COLORS } from '@/components/map/trip-map'
 import { bangkokClock } from '@/lib/explorer/when'
@@ -76,31 +76,37 @@ export function TripPage({ locale, cityId, cityName, route, hotelDoors = {}, sta
   const [hoverStop, setHoverStop] = useState<string | null>(null)
   const days = Array.from({ length: route.days }, (_, i) => i + 1)
   const [shared, setShared] = useState<'idle' | 'copied' | 'failed'>('idle')
-  // With dates set, day N is the check-in date plus N - 1, shown beside the day heading as the weekend page does.
+  // A multi-day trip inside the stay starts on a day of the reader's choosing (?start=, or the chips); by default the latest day that is back by check-out.
+  const [pickedStart, setPickedStart] = useState<string | null>(null)
+  const startOptions = useMemo(() => (stay && route.days > 1 ? tripStartOptions(stay, route.days) : []), [stay, route.days])
+  const startIso = stay ? (pickedStart && startOptions.includes(pickedStart) ? pickedStart : tripStartDefault(stay, route.days)) : null
+  const dayIso = (d: number): string | null => (startIso ? addDays(startIso, d - 1) : null)
+  const fmtDay = (date: string) => new Intl.DateTimeFormat(locale, { weekday: 'short', day: 'numeric', month: 'short' }).format(new Date(`${date}T12:00:00`))
+  // With dates set, day N is the start date plus N - 1, shown beside the day heading as the weekend page does.
   const dayDate = (d: number): string | null => {
-    if (!stay) return null
-    const date = new Date(`${stay.checkIn}T12:00:00`)
-    date.setDate(date.getDate() + d - 1)
-    return new Intl.DateTimeFormat(locale, { weekday: 'short', day: 'numeric', month: 'short' }).format(date)
+    const date = dayIso(d)
+    return date ? fmtDay(date) : null
   }
-  useEffect(() => { adoptStayFromUrl() }, [])
+  useEffect(() => {
+    adoptStayFromUrl()
+    const id = window.requestAnimationFrame(() => {
+      const sent = new URLSearchParams(window.location.search).get('start')
+      if (sent && /^\d{4}-\d{2}-\d{2}$/.test(sent)) setPickedStart(sent)
+    })
+    return () => window.cancelAnimationFrame(id)
+  }, [])
   // With dates set, the day whose date is today in Bangkok is marked.
   const clock = useSyncExternalStore(noopSubscribe, clockSnapshot, () => null)
-  const isToday = (d: number): boolean => {
-    if (!stay || !clock) return false
-    const date = new Date(`${stay.checkIn}T12:00:00`)
-    date.setDate(date.getDate() + d - 1)
-    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}` === clock.date
-  }
+  const isToday = (d: number): boolean => !!clock && dayIso(d) === clock.date
+  // A hotel stop on the road sleeps that one night, so its search opens on that night, not on the Bangkok stay.
+  const nightAt = (stop: RouteStop) => (startIso && stop.kind === 'hotel' ? { checkIn: addDays(startIso, stop.day - 1), checkOut: addDays(startIso, stop.day) } : stay)
   // The trip as a calendar file: one all-day-ish event per day (08:00 to 20:00 Bangkok), the day's stops in the description. Needs the dates.
   const addToCalendar = () => {
     if (!stay) return
     const url = window.location.href.split('#')[0]
     const name = t(route.name, locale)
     const events: CalendarEvent[] = days.map((d) => {
-      const date = new Date(`${stay.checkIn}T12:00:00`)
-      date.setDate(date.getDate() + d - 1)
-      const iso = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
+      const iso = dayIso(d)!
       const stops = route.stops.filter((st) => st.day === d)
       const stopsText = stops.map((st, i) => `${i + 1}. ${t(st.name, locale)}: ${t(st.why, locale)}`).join('\n')
       return {
@@ -119,6 +125,8 @@ export function TripPage({ locale, cityId, cityName, route, hotelDoors = {}, sta
     const u = new URL(window.location.href)
     if (stay) u.searchParams.set('stay', stayParam(stay))
     else u.searchParams.delete('stay')
+    if (startIso && route.days > 1) u.searchParams.set('start', startIso)
+    else u.searchParams.delete('start')
     const url = u.toString()
     const text = `${t(route.tagline, locale)} ${route.duration === 'multi-day' ? s.trip.days(route.days) : s.trip.duration[route.duration]} · ${s.trip.mode[route.mode].toLowerCase()}${route.distanceKm !== undefined ? ` · ${s.trip.km(route.distanceKm)}` : ''}.`
     try {
@@ -172,6 +180,14 @@ export function TripPage({ locale, cityId, cityName, route, hotelDoors = {}, sta
                 </button>
               )}
             </p>
+            {startOptions.length > 1 && (
+              <p className="mt-4 flex flex-wrap items-center gap-1.5 text-[15px] text-ink-2">
+                <span className="mr-1">{s.trip.startOn}</span>
+                {startOptions.map((date) => (
+                  <button key={date} type="button" aria-pressed={startIso === date} onClick={() => setPickedStart(date)} className={`tm-chip${startIso === date ? ' tm-chip--on' : ''}`}>{fmtDay(date)}</button>
+                ))}
+              </p>
+            )}
             {route.days > 1 && (
             <div className="mt-4 flex gap-1.5">
               <button type="button" aria-pressed={day === null} onClick={() => { setDay(null); setActiveStop(null) }} className={`tm-chip${day === null ? ' tm-chip--on' : ''}`}>
@@ -206,16 +222,17 @@ export function TripPage({ locale, cityId, cityName, route, hotelDoors = {}, sta
                             {stop.search && <span className="block text-[13px] text-ink-2">{s.trip.searchHotels(stop.search, !!stay)}</span>}
                             {myHotel && i === 0 && <span className="block text-[13px] tm-wk__from">{startLine(stop)}</span>}
                             {myHotel && stop.kind === 'end' && i === route.stops.length - 1 && <span className="block text-[13px] tm-wk__from">{s.trip.endAtHotel(t(myHotel.name, locale))}</span>}
+                            {myHotel && stop.kind === 'hotel' && <span className="block text-[13px] tm-wk__from">{s.trip.nightAway(t(myHotel.name, locale))}</span>}
                           </span>
                         </button>
                         {active && (
                           <div className="mt-1 flex flex-wrap gap-2 pl-12">
                             <a href={directions(i).href} target="_blank" rel="noopener" className="tm-button tm-button--small tm-button--quiet">{directions(i).label}</a>
                             {partners.map((p) => (
-                              <a key={p} href={buildOutboundUrl(p, stop.links[p]!, subIdFor(`${cityId}-trip-${route.id}`, stop.id), stay)} target="_blank" rel="noopener sponsored" className="tm-button tm-button--small">{p}</a>
+                              <a key={p} href={buildOutboundUrl(p, stop.links[p]!, subIdFor(`${cityId}-trip-${route.id}`, stop.id), nightAt(stop))} target="_blank" rel="noopener sponsored" className="tm-button tm-button--small">{p}</a>
                             ))}
                             {stop.search && partners.length === 0 && (['agoda', 'booking'] as const).map((p) => (
-                              <a key={p} href={hotelSearchUrl(p, stop.search!, subIdFor(`${cityId}-trip-${route.id}`, stop.id), stay)} target="_blank" rel="noopener sponsored" className="tm-button tm-button--small">{s.trip.searchOn(p.charAt(0).toUpperCase() + p.slice(1))}</a>
+                              <a key={p} href={hotelSearchUrl(p, stop.search!, subIdFor(`${cityId}-trip-${route.id}`, stop.id), nightAt(stop))} target="_blank" rel="noopener sponsored" className="tm-button tm-button--small">{s.trip.searchOn(p.charAt(0).toUpperCase() + p.slice(1))}</a>
                             ))}
                           </div>
                         )}

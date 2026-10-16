@@ -97,6 +97,26 @@ export function nextWeekend(today = new Date()): Stay {
   return { checkIn: iso(d), checkOut: iso(out) }
 }
 
+/** A date moved by whole days, as YYYY-MM-DD. */
+export function addDays(date: string, days: number): string {
+  const d = new Date(date + 'T00:00:00')
+  d.setDate(d.getDate() + days)
+  return iso(d)
+}
+
+/** The days of a stay a trip of `days` days can start on and still end by check-out; check-in alone when the trip is longer than the stay. */
+export function tripStartOptions(stay: Stay, days: number): string[] {
+  const out: string[] = []
+  for (let n = 0; n <= nights(stay) - (days - 1); n++) out.push(addDays(stay.checkIn, n))
+  return out.length > 0 ? out : [stay.checkIn]
+}
+
+/** The default start of a trip inside a stay: the latest day that gets you back by check-out, so a two-day trip in a Friday to Sunday stay runs Saturday to Sunday. */
+export function tripStartDefault(stay: Stay, days: number): string {
+  const options = tripStartOptions(stay, days)
+  return options[options.length - 1]
+}
+
 /** The same stay moved by whole days, for "next weekend". */
 export function shiftStay(stay: Stay, days: number): Stay {
   const move = (s: string) => { const d = new Date(s + 'T00:00:00'); d.setDate(d.getDate() + days); return iso(d) }

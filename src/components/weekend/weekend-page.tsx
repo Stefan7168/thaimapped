@@ -18,7 +18,7 @@ import { bangkokClock, whenLine } from '@/lib/explorer/when'
 import { thb } from '@/lib/explorer/price'
 import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
 import { directionsUrl } from '@/lib/links/directions'
-import { adoptStayFromUrl, nights, stayParam, useStay } from '@/lib/stay/store'
+import { addDays, adoptStayFromUrl, nights, stayParam, tripStartDefault, useStay } from '@/lib/stay/store'
 import { buildIcs, downloadIcs, type CalendarEvent } from '@/lib/stay/calendar'
 import { trackOutbound } from '@/lib/links/track'
 import { supports3D } from '@/lib/map/device'
@@ -239,6 +239,12 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
 
   const others = areas.filter((a) => a.id !== area.id)
   // Trips that fit inside one weekend day, plus, with dates set, the multi-day trips that fit inside the stay (a two-day trip in a Fri to Sun stay).
+  // A road trip's default days inside the stay: the latest start that is back by check-out.
+  const tripDates = (days: number): string => {
+    const from = tripStartDefault(stay!, days)
+    const fmt = (date: string) => new Intl.DateTimeFormat(locale, { weekday: 'short', day: 'numeric', month: 'short' }).format(new Date(`${date}T12:00:00`))
+    return s.trip.fitsDates(fmt(from), fmt(addDays(from, days - 1)))
+  }
   const dayTrips = [...routes.filter((r) => r.duration !== 'multi-day'), ...routes.filter((r) => r.duration === 'multi-day' && stay && r.days >= 2 && r.days <= nights(stay) + 1)]
   return (
     <>
@@ -342,7 +348,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
                         <span className="tm-wk__kind">{r.duration === 'multi-day' ? s.trip.days(r.days) : s.trip.duration[r.duration]} · {s.trip.mode[r.mode]}{r.distanceKm !== undefined ? ` · ${s.trip.km(r.distanceKm)}` : ''}</span>
                         <span className="tm-wk__name">{t(r.name, locale)}</span>
                         <span className="tm-wk__why">{t(r.tagline, locale)}</span>
-                        {r.duration === 'multi-day' && stay && <span className="tm-wk__meta tm-wk__from">{s.trip.fitsStay(nights(stay))}</span>}
+                        {r.duration === 'multi-day' && stay && <span className="tm-wk__meta tm-wk__from">{s.trip.fitsStay(nights(stay))} · {tripDates(r.days)}</span>}
                         {tripByTrain(r.id) && <span className="tm-wk__meta tm-wk__from">{tripByTrain(r.id)}</span>}
                       </span>
                     </Link>
