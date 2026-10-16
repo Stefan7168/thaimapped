@@ -129,9 +129,12 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
     else u.searchParams.delete('hotel')
     const url = u.toString()
     const title = s.weekendPage.title(t(area.name, locale))
+    // The share sheet's text names the hotel and the dates, so the message reads as a plan, not a bare link.
+    const dates = stay ? new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short' }).formatRange(new Date(`${stay.checkIn}T12:00:00`), new Date(`${stay.checkOut}T12:00:00`)) : null
+    const text = s.weekendPage.shareText(t(area.name, locale), myHotel ? t(myHotel.name, locale) : null, dates)
     try {
       if (navigator.share) {
-        await navigator.share({ title, url })
+        await navigator.share({ title, text, url })
         return
       }
       await navigator.clipboard.writeText(url)
