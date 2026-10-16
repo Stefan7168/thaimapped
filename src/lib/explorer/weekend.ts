@@ -29,8 +29,8 @@ const PER_SLOT = 2
  * overlap fills the gaps. Weekend-only places are kept for Sunday; a place
  * with no `when` goes to Saturday afternoon. A slot with nothing stays empty.
  */
-export function weekendPlan(area: Area, price: PriceRange | null = null): WeekendPlan {
-  const places = area.pins.filter((p) => p.kind !== 'hotel')
+export function weekendPlan(area: Area, price: PriceRange | null = null, exclude: ReadonlySet<string> = new Set()): WeekendPlan {
+  const places = area.pins.filter((p) => p.kind !== 'hotel' && !exclude.has(p.id))
   const used = new Set<string>()
   const slots: Record<WeekendSlot, Pin[]> = { fridayNight: [], saturdayMorning: [], saturdayAfternoon: [], saturdayNight: [], sunday: [] }
   const weekendOnly = (p: Pin) => Boolean(p.when?.days && !p.when.days.includes('weekday'))

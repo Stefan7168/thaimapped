@@ -29,6 +29,7 @@ import { StayPicker } from '@/components/stay/stay-picker'
 import { HotelCompare } from '@/components/stay/hotel-compare'
 import { addSaved, useSaved } from '@/lib/saved/store'
 import { chooseHotel, myHotelChoice, useMyHotelChoice } from '@/lib/saved/my-hotel'
+import { skipStop, unskipStops, useSkipped } from '@/lib/saved/skipped'
 import { KIND_ICONS } from '@/components/explorer/kind-bar'
 
 const StageMap = dynamic(() => import('@/components/map/stage-map').then((m) => m.StageMap), {
@@ -69,7 +70,10 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
     })
     return () => window.cancelAnimationFrame(id)
   }, [])
-  const plan = useMemo(() => weekendPlan(area, price), [area, price])
+  // Stops the reader took out: the plan refills from the area's other places.
+  const skipped = useSkipped()
+  const skippedHere = useMemo(() => area.pins.filter((p) => p.kind !== 'hotel' && skipped.includes(p.id)), [area, skipped])
+  const plan = useMemo(() => weekendPlan(area, price, new Set(skipped)), [area, price, skipped])
   const [card, setCard] = useState<{ pin: Pin; area: Area } | null>(null)
   const [hoverId, setHoverId] = useState<string | null>(null)
   const [shared, setShared] = useState<'idle' | 'copied' | 'failed'>('idle')
@@ -205,6 +209,9 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
           {pin.kind === 'hotel' && !sentHotel && myHotel && myHotel.id !== pin.id && saved.includes(pin.id) && (
             <button type="button" className="tm-card__link tm-card__link--quiet" onClick={() => chooseHotel(area.id, pin.id)}>{s.weekendPage.useHotel}</button>
           )}
+          {pin.kind !== 'hotel' && (
+            <button type="button" className="tm-card__link tm-card__link--quiet" onClick={() => skipStop(pin.id)}>{s.weekendPage.skipStop}</button>
+          )}
           {pin.kind === 'hotel' && (Object.keys(pin.links) as Partner[]).map((p) => {
               const subId = subIdFor(`${cityId}-${area.id}`, pin.id)
               return (
@@ -263,6 +270,11 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
             <Link href={explorerHref} className="tm-link">{s.weekendPage.openMap}</Link>
             <Link href={`/${locale}/${cityId}/area/${area.id}`} className="tm-link">{s.areaPage.link}</Link>
           </div>
+          {skippedHere.length > 0 && (
+            <p className="tm-wk__empty tm-wk__skipped">
+              {s.weekendPage.skipped(skippedHere.map((p) => t(p.name, locale)).join(', '))} <button type="button" className="tm-link tm-link--under" onClick={() => unskipStops(skippedHere.map((p) => p.id))}>{s.weekendPage.putBack}</button>
+            </p>
+          )}
           <ol className="tm-wk__slots">
             {WEEKEND_SLOTS.map((slot) => (
               <li key={slot} className="tm-wk__slot">
