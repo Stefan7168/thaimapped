@@ -11,7 +11,8 @@ const en = {
   stationPage: {
     compareLead: 'Which area, a night, the walk to the train, and how many places on this page are within ten minutes on foot. Prices are typical for the class, not checked.',
     indexTitle: 'Hotels near a station',
-    indexLead: (n: number) => `${n} stations with hotels or places inside a ten-minute walk. Each page lists them nearest first, with the walk in minutes.`,
+    indexLead: (n: number) => `${n} stations with hotels or places inside a ten-minute walk. Each page lists them nearest first, with the walk in minutes. Where it says so, the station is one ride from Suvarnabhumi airport, no change.`,
+    fromAirport: (rides: number) => (rides === 1 ? 'one ride from the airport' : 'one change from the airport'),
     title: (station: string) => `Near ${station}`,
     areasNear: (station: string) => `Areas around ${station}`,
     description: (station: string, hotels: number, places: number) => `${hotels === 1 ? '1 hotel' : `${hotels} hotels`} and ${places === 1 ? '1 place' : `${places} places`} within a ten-minute walk of ${station} station, nearest first, with booking links.`,

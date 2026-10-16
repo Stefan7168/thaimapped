@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { liveCityIds, loadCityBundle } from '@/lib/content/load'
 import { stationPages } from '@/lib/explorer/stations'
+import { AIRPORT_STATIONS, railLegs } from '@/lib/transit/from-airport'
 import { LOCALES, isLocale, t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
 import { pageMeta } from '@/lib/seo/page-meta'
@@ -32,6 +33,9 @@ export default async function StationIndex(props: PageProps<'/[locale]/[city]/st
   if (!bundle) notFound()
   const s = strings(locale)
   const pages = stationPages(bundle)
+  // How many rides from Suvarnabhumi to each station page's first station: a direct ride is the easiest arrival.
+  const airport = AIRPORT_STATIONS[bundle.city.id]
+  const ridesFromAirport = (id: string) => (airport ? railLegs(bundle.stations, bundle.interchanges, airport.suvarnabhumi, id)?.length ?? null : null)
   const byLine = bundle.lines.map((line) => ({ line, pages: pages.filter((p) => p.lines.some((l) => l.id === line.id)) })).filter((g) => g.pages.length > 0)
   return (
     <>
@@ -51,7 +55,7 @@ export default async function StationIndex(props: PageProps<'/[locale]/[city]/st
                     <Link href={`/${locale}/${city}/station/${p.slug}`} className="tm-st__index-row">
                       <span className="tm-ui__code tm-st__code" style={{ ['--lc' as string]: line.color }}>{st.code}</span>
                       <span className="tm-st__index-name">{t(st.name, locale)}</span>
-                      <span className="tm-st__index-meta">{s.stationPage.counts(p.hotels.length, p.places.length)}</span>
+                      <span className="tm-st__index-meta">{s.stationPage.counts(p.hotels.length, p.places.length)}{(() => { const n = ridesFromAirport(st.id); return n === 1 ? ` · ${s.stationPage.fromAirport(n)}` : '' })()}</span>
                     </Link>
                   </li>
                 )
