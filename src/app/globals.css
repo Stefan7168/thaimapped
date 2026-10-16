@@ -554,6 +554,10 @@ body {
 .tm-saved .tm-wk__actions { margin-top: 14px; }
 .tm-saved__list { margin-top: 8px; }
 .tm-saved__group { margin-top: 24px; }
+.tm-saved { max-width: 1120px; }
+.tm-saved > .tm-wk__lead, .tm-saved__note, .tm-saved__plan { max-width: 72ch; }
+/* Wide screens: saved hotels and saved places side by side under the comparison, instead of one narrow column with half the screen empty. */
+@media (min-width: 1024px) { .tm-saved__cols { display: grid; grid-template-columns: 1fr 1fr; gap: 0 48px; align-items: start; } }
 .tm-saved__plan { display: flex; flex-wrap: wrap; gap: 8px 20px; margin: 12px 0 0; font-size: 16px; }
 .tm-saved__note { margin-top: 12px; font-size: 13px; color: var(--ink-2); }
 .tm-saved__map { color: var(--accent-text); font-weight: 600; }
