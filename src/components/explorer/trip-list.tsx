@@ -9,6 +9,11 @@ import { strings } from '@/lib/i18n/strings'
 import { RevealObserver } from '@/components/motion/reveal'
 import { addDays, nights, tripStartDefault, useStay } from '@/lib/stay/store'
 import { formatDayRange } from '@/lib/stay/format'
+import type { HotelDoor } from '@/lib/content/slim'
+import type { AirportLeg } from '@/lib/transit/from-airport'
+import { rideSentence } from '@/components/stay/from-airport'
+import { useSaved } from '@/lib/saved/store'
+import { myHotelAcross, useHotelChoiceVersion } from '@/lib/saved/my-hotel'
 
 const StageMap = dynamic(() => import('@/components/map/stage-map').then((m) => m.StageMap), {
   ssr: false,
@@ -44,7 +49,7 @@ function toggle<T>(list: T[], v: T): T[] {
  * the list at the right holds the trips as rows, with the chip filters above.
  * Hover, focus, tap or scrolling a row to the middle makes it active.
  */
-export function TripList({ locale, cityId, cityCamera, routes }: { locale: Locale; cityId: string; cityCamera: { center: [number, number]; zoom: number; pitch: number; bearing: number }; routes: TripRoute[] }) {
+export function TripList({ locale, cityId, cityCamera, routes, hotelDoors = {}, tripStarts = {}, tripRides = {} }: { locale: Locale; cityId: string; cityCamera: { center: [number, number]; zoom: number; pitch: number; bearing: number }; routes: TripRoute[]; hotelDoors?: Record<string, HotelDoor[]>; tripStarts?: Record<string, string>; tripRides?: Record<string, Record<string, AirportLeg[] | null>> }) {
   const s = strings(locale)
   const [f, setF] = useState<TripFilters>(EMPTY)
   // Phones: the four chip rows fold behind one button, closed until tapped, so the trips come first.
@@ -64,6 +69,20 @@ export function TripList({ locale, cityId, cityCamera, routes }: { locale: Local
     return `${s.trip.fitsStay(nights(stay))} · ${formatDayRange(from, addDays(from, r.days - 1), locale)}`
   }
   const count = f.durations.length + f.days.length + f.modes.length + f.themes.length
+  // The weekend's hotel: a trip that starts at a station says the ride there from its door, or that it starts at the hotel's own station.
+  const saved = useSaved()
+  const choiceVersion = useHotelChoiceVersion()
+  const myHotel = useMemo(() => myHotelAcross(hotelDoors, saved)?.hotel ?? null,
+    // choiceVersion is read so a new choice recomputes the pick.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [hotelDoors, saved, choiceVersion])
+  const byTrain = (r: TripRoute): string | null => {
+    const start = tripStarts[r.id]
+    if (!myHotel?.walk || !start) return null
+    if (start === myHotel.walk.station) return s.weekendPage.tripAtYourStation
+    const legs = tripRides[myHotel.walk.station]?.[start]
+    return legs && legs.length > 0 ? s.weekendPage.byTrainFrom(t(myHotel.name, locale), rideSentence(legs, null, locale)) : null
+  }
 
   // Only offer chips that at least one trip would satisfy, so no filter is a dead end.
   const available = useMemo(
@@ -166,6 +185,7 @@ export function TripList({ locale, cityId, cityCamera, routes }: { locale: Local
                   </span>
                   <span className="tm-row__tag">{t(r.tagline, locale)}</span>
                   {fitTag(r) && <span className="tm-row__fit">{fitTag(r)}</span>}
+                  {byTrain(r) && <span className="tm-row__fit">{byTrain(r)}</span>}
                 </button>
                 <div className="tm-row__body" hidden={!on}>
                   <p>
