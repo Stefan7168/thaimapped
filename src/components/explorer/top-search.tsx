@@ -30,10 +30,17 @@ export function TopSearch({ locale, bundle, onPick }: { locale: Locale; bundle: 
         if (t(sub.name, locale).toLowerCase().includes(q)) out.push({ kind: 'subarea', id: subareaKey(a.id, sub.id), label: t(sub.name, locale), color: `var(--${a.color})`, sub: s.search.kindSubarea(t(a.name, locale)) })
       }
     }
+    // An interchange is one station record per line; the box shows it once, naming every line.
+    const seen = new Map<string, SearchHit & { kind: 'station' }>()
     for (const st of bundle.stations) {
       if (st.name.en.toLowerCase().includes(q) || st.code.toLowerCase() === q) {
         const line = bundle.lines.find((l) => l.system === st.system && l.line === st.line)
-        out.push({ kind: 'station', id: st.id, label: stationLabel(st, locale), color: line?.color ?? '#6f6a5f', sub: `${st.system} ${st.line}` })
+        const key = `${st.code}|${st.name.en}`
+        const prev = st.code ? seen.get(key) : undefined
+        if (prev) { prev.sub = `${prev.sub} · ${st.system} ${st.line}`; continue }
+        const hit = { kind: 'station' as const, id: st.id, label: stationLabel(st, locale), color: line?.color ?? '#6f6a5f', sub: `${st.system} ${st.line}` }
+        seen.set(key, hit)
+        out.push(hit)
       }
     }
     for (const a of bundle.areas) {
