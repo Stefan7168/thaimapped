@@ -184,7 +184,8 @@ export function HomePage({ locale, bundle, routes }: { locale: Locale; bundle: C
               {myHotel && (
                 <p className="tm-hero__now tm-hero__mine">
                   {s.home.yourWeekend(t(myHotel.pin.name, locale), t(myHotel.area.name, locale))}
-                  {stay && stayLabel ? ` · ${stayLabel}, ${s.stay.nights(nights(stay))}` : ''}{' · '}
+                  {/* With dates: the range, then the stay's cost at the hotel's class-typical rate (which names the nights), else the range and the nights. */}
+                  {stay && stayLabel ? (myHotel.pin.price ? <>{` · ${stayLabel} · `}<span title={myHotel.pin.price.basis === 'tier-estimate' ? s.guide.priceEstimate : undefined}>{s.guide.stayTotal(thb(myHotel.pin.price.from * nights(stay), locale), nights(stay))}{myHotel.pin.price.basis === 'tier-estimate' ? '*' : ''}</span></> : ` · ${stayLabel}, ${s.stay.nights(nights(stay))}`) : ''}{' · '}
                   <Link href={`/${locale}/${city.id}/weekend/${myHotel.area.id}?hotel=${myHotel.pin.id}`} className="tm-link tm-link--under">{s.home.yourWeekendLink}</Link>
                 </p>
               )}
