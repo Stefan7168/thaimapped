@@ -7,6 +7,7 @@ import type { Locale, RouteDuration, RouteMode, RouteTheme, TripRoute } from '@/
 import { t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
 import { RevealObserver } from '@/components/motion/reveal'
+import { nights, useStay } from '@/lib/stay/store'
 
 const StageMap = dynamic(() => import('@/components/map/stage-map').then((m) => m.StageMap), {
   ssr: false,
@@ -51,6 +52,9 @@ export function TripList({ locale, cityId, cityCamera, routes }: { locale: Local
   // observer stays quiet: opening a row shifts the rows below it, and the
   // observer would otherwise answer that shift by picking a different one.
   const hoveringRef = useRef(false)
+  // With dates set, a multi-day trip says whether it fits inside them (a two-day trip in a Fri to Sun stay) or needs more nights; day trips always fit and say nothing.
+  const stay = useStay()
+  const fitTag = (r: TripRoute) => (!stay || r.days < 2 ? null : r.days <= nights(stay) + 1 ? s.trip.fitsStay(nights(stay)) : s.trip.tooLong(nights(stay)))
   const count = f.durations.length + f.days.length + f.modes.length + f.themes.length
 
   // Only offer chips that at least one trip would satisfy, so no filter is a dead end.
@@ -148,6 +152,7 @@ export function TripList({ locale, cityId, cityCamera, routes }: { locale: Local
                     {r.duration === 'multi-day' ? s.trip.days(r.days) : s.trip.duration[r.duration]}
                     {r.distanceKm !== undefined ? ` · ${s.trip.km(r.distanceKm)}` : ''}
                   </span>
+                  {fitTag(r) && <span className="tm-row__fit">{fitTag(r)}</span>}
                 </button>
                 <div className="tm-row__body" hidden={!on}>
                   <p>

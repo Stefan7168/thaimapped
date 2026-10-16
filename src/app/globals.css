@@ -376,6 +376,7 @@ body {
 .tm-row__dot { width: 12px; height: 12px; border-radius: 999px; align-self: center; }
 .tm-row__name { font-family: var(--font-display), Georgia, serif; font-weight: 500; font-size: var(--step-row); line-height: 1.1; letter-spacing: -0.01em; }
 .tm-row__meta { font-size: var(--step-small); white-space: nowrap; }
+.tm-row__fit { grid-column: 1 / -1; margin-top: -6px; padding-bottom: 12px; font-size: 13px; font-weight: 600; color: var(--accent-text); }
 .tm-row--on .tm-row__head { color: var(--ink); }
 .tm-row--on .tm-row__name { font-weight: 600; }
 .tm-row__body { max-width: 34ch; padding: 4px 0 20px 26px; font-size: 16px; line-height: 1.5; color: var(--ink); }

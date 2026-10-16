@@ -206,6 +206,8 @@ const en = {
     pathNote: 'Straight lines between stops for now. The road-following line comes from the routing step.',
     back: 'Back to the map',
     share: 'Share this trip',
+    fitsStay: (n: number) => (n === 1 ? 'Fits your night away' : `Fits your ${n} nights`),
+    tooLong: (n: number) => (n === 1 ? 'Needs more than your 1 night' : `Needs more than your ${n} nights`),
     copied: 'Link copied',
     copyFailed: 'Copy the address bar to share',
     filters: { duration: 'How long', days: 'Days', mode: 'How', theme: 'What for', clear: 'Clear', none: 'No trip matches these filters yet.', count: (n: number) => (n === 1 ? '1 trip' : `${n} trips`) },
