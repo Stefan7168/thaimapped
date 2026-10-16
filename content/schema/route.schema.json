@@ -105,6 +105,10 @@
             "type": "boolean",
             "description": "The exact spot is not picked yet; the page says so instead of naming one."
           },
+          "search": {
+            "type": "string",
+            "description": "For a hotel stop with no exact pick: the town or area name a hotel search is run on, so the page can offer a dated search instead of nothing."
+          },
           "note": {
             "type": "string",
             "description": "Editor's note for the content pass. Never shown to visitors."

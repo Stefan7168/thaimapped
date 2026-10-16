@@ -7,7 +7,7 @@ import { ArrowLeft, Share2 } from 'lucide-react'
 import type { Locale, TripRoute } from '@/lib/content/types'
 import { t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
-import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
+import { buildOutboundUrl, hotelSearchUrl, subIdFor, type Partner } from '@/lib/links/build'
 import { directionsUrl } from '@/lib/links/directions'
 import { adoptStayFromUrl, stayParam, useStay } from '@/lib/stay/store'
 import { STOP_COLORS } from '@/components/map/trip-map'
@@ -118,6 +118,7 @@ export function TripPage({ locale, cityId, cityName, route }: { locale: Locale; 
                             </span>
                             <span className="block text-[16px] text-ink">{t(stop.why, locale)}</span>
                             {stop.placeholder && <span className="tm-stoprow__tbc">{s.trip.placeholder}</span>}
+                            {stop.search && <span className="block text-[13px] text-ink-2">{s.trip.searchHotels(stop.search, !!stay)}</span>}
                           </span>
                         </button>
                         {active && (
@@ -125,6 +126,9 @@ export function TripPage({ locale, cityId, cityName, route }: { locale: Locale; 
                             <a href={directionsUrl(stop.location.lat, stop.location.lon)} target="_blank" rel="noopener" className="tm-button tm-button--small tm-button--quiet">{s.card.directions}</a>
                             {partners.map((p) => (
                               <a key={p} href={buildOutboundUrl(p, stop.links[p]!, subIdFor(`${cityId}-trip-${route.id}`, stop.id), stay)} target="_blank" rel="noopener sponsored" className="tm-button tm-button--small">{p}</a>
+                            ))}
+                            {stop.search && partners.length === 0 && (['agoda', 'booking'] as const).map((p) => (
+                              <a key={p} href={hotelSearchUrl(p, stop.search!, subIdFor(`${cityId}-trip-${route.id}`, stop.id), stay)} target="_blank" rel="noopener sponsored" className="tm-button tm-button--small">{s.trip.searchOn(p.charAt(0).toUpperCase() + p.slice(1))}</a>
                             ))}
                           </div>
                         )}

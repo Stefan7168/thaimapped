@@ -148,6 +148,8 @@ export interface RouteStop {
   why: Localized
   /** The exact spot is not picked yet: the page says so rather than naming one. */
   placeholder?: boolean
+  /** A hotel stop with no exact pick: the town or area a hotel search is run on. */
+  search?: string
   /** Editor's note for the content pass; never rendered. */
   note?: string
   location: { lon: number; lat: number }

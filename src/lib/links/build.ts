@@ -63,6 +63,18 @@ export function buildOutboundUrl(partner: Partner, destination: string, subId: s
   return u.toString()
 }
 
+/**
+ * A plain hotel search on a partner for a town or area, used where a trip
+ * sleeps somewhere not yet picked. Both sites take a free-text place and the
+ * dates ride along through withStay. Neither URL shape is checked on a live
+ * page yet; an unknown parameter is ignored and the search still opens.
+ */
+export function hotelSearchUrl(partner: 'agoda' | 'booking', place: string, subId: string, stay: Stay | null = null): string {
+  const u = partner === 'agoda' ? new URL('https://www.agoda.com/search') : new URL('https://www.booking.com/searchresults.html')
+  u.searchParams.set(partner === 'agoda' ? 'textToSearch' : 'ss', place)
+  return buildOutboundUrl(partner, u.toString(), subId, stay)
+}
+
 export function subIdFor(page: string, pin: string): string {
   return `${page}.${pin}`.replace(/[^a-z0-9._-]/gi, '-').slice(0, 64)
 }

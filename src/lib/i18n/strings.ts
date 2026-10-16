@@ -208,6 +208,8 @@ const en = {
     intro: 'Road trips with the route, the stops and a place to sleep, day by day. Pick a row and the map moves to it.',
     open: 'Open this trip',
     placeholder: 'Exact spot still to be picked',
+    searchHotels: (place: string, dated: boolean) => (dated ? `Tap for hotel searches in ${place} on your dates.` : `Tap for hotel searches in ${place}.`),
+    searchOn: (partner: string) => `Hotels on ${partner}`,
     day: (n: number) => `Day ${n}`,
     days: (n: number) => (n === 1 ? '1 day' : `${n} days`),
     km: (n: number) => `${n} km`,
