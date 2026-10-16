@@ -15,7 +15,7 @@ import type { HotelDoor } from '@/lib/content/slim'
 import { useSaved } from '@/lib/saved/store'
 import { myHotelAcross, useHotelChoiceVersion } from '@/lib/saved/my-hotel'
 import { formatDay, formatDayRange } from '@/lib/stay/format'
-import { addDays, adoptStayFromUrl, stayParam, tripStartDefault, tripStartOptions, useStay } from '@/lib/stay/store'
+import { addDays, adoptStayFromUrl, nights, stayParam, tripStartDefault, tripStartOptions, useStay } from '@/lib/stay/store'
 import { buildIcs, downloadIcs, type CalendarEvent } from '@/lib/stay/calendar'
 import { StayPicker } from '@/components/stay/stay-picker'
 import { STOP_COLORS } from '@/components/map/trip-map'
@@ -181,6 +181,8 @@ export function TripPage({ locale, cityId, cityName, route, hotelDoors = {}, sta
             </p>
             {/* The dates, as on the weekend and station pages: with them the days get dates, the road hotel its night, the calendar its file. */}
             <div className="mt-4"><StayPicker locale={locale} /></div>
+            {/* A trip longer than the stay says so here too, as the trips index does; the days still get dates from check-in. */}
+            {stay && route.days > nights(stay) + 1 && <p className="mt-3 text-[15px] tm-wk__from">{s.trip.tooLong(nights(stay))}</p>}
             {startOptions.length > 1 && (
               <p className="mt-4 flex flex-wrap items-center gap-1.5 text-[15px] text-ink-2 tm-trip__tools">
                 <span className="mr-1">{s.trip.startOn}</span>
