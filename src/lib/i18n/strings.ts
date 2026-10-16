@@ -67,6 +67,7 @@ const en = {
     cmpStay: (n: number) => (n === 1 ? 'Your night' : `Your ${n} nights`),
     cmpStation: 'To the train',
     cmpNearby: 'Walkable',
+    cmpAirport: 'From Suvarnabhumi',
     cmpPlaces: (n: number) => (n === 1 ? '1 place within 10 min' : `${n} places within 10 min`),
     cmpBook: 'Book',
     unknown: (n: number) => (n === 1 ? '1 saved item is no longer on the map.' : `${n} saved items are no longer on the map.`),
@@ -292,6 +293,9 @@ const en = {
     thenWalk: (n: number) => `then ${n} min on foot`,
     sameStation: 'the airport station is this hotel\'s station.',
     noRail: 'no rail line joins up; a taxi or bus.',
+    noRailShort: 'No rail line',
+    sameStationShort: 'Airport station',
+    ridesChange: (n: number, at: string) => `${n} rides, change at ${at}`,
     note: 'Rides and changes from the published lines; times are not given.',
   },
   city: {

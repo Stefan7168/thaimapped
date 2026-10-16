@@ -280,7 +280,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
                 <div className="tm-ar__cmp">
                   <h3 className="tm-wk__time">{s.areaPage.compare}</h3>
                   <p className="tm-saved__note">{s.weekendPage.compareLead}</p>
-                  <HotelCompare locale={locale} cityId={cityId} entries={hotels.map((pin) => ({ pin, area }))} stations={stations} nearbyCount={nearbyCount} showArea={false} mine={myHotel?.id} />
+                  <HotelCompare locale={locale} cityId={cityId} entries={hotels.map((pin) => ({ pin, area }))} stations={stations} nearbyCount={nearbyCount} showArea={false} mine={myHotel?.id} airport={airport} />
                 </div>
               )}
             </li>

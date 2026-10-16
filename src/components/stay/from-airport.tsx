@@ -10,6 +10,19 @@ const stop = (x: AirportLeg['from'], locale: Locale) => `${x.code ? x.code + ' '
 const lineName = (leg: AirportLeg) => (leg.line.toLowerCase().includes(leg.system.toLowerCase()) || leg.system === 'ARL' ? leg.line : `${leg.system} ${leg.line}`)
 
 /**
+ * One short cell for the hotels table: "Airport Rail Link to A8 Phaya Thai",
+ * "2 rides, change at A8 Phaya Thai", "Airport station" or "No rail line".
+ */
+export function airportCell(legs: AirportLeg[] | null | undefined, locale: Locale): string {
+  const s = strings(locale)
+  if (legs === undefined) return ''
+  if (legs === null) return s.airport.noRailShort
+  if (legs.length === 0) return s.airport.sameStationShort
+  if (legs.length === 1) return s.airport.ride(lineName(legs[0]), stop(legs[0].to, locale))
+  return s.airport.ridesChange(legs.length, stop(legs[0].to, locale))
+}
+
+/**
  * How to reach a hotel's station from each airport by rail: the rides and
  * where to change, from the city's lines and published interchanges. No
  * minutes, because none are known. Folded by default under one line.

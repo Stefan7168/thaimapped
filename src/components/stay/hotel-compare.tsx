@@ -9,6 +9,8 @@ import { nights, useStay } from '@/lib/stay/store'
 import { trackOutbound } from '@/lib/links/track'
 import { thb } from '@/lib/explorer/price'
 import { CmpWrap } from './cmp-wrap'
+import { airportCell } from './from-airport'
+import type { AirportRoutes } from '@/lib/transit/from-airport'
 
 export interface CompareEntry {
   pin: Pin
@@ -20,7 +22,7 @@ export interface CompareEntry {
  * to the train, what is walkable, where to book. The saved page shows the
  * area row and a "Plan it" row too; an area or weekend page leaves both out.
  */
-export function HotelCompare({ locale, cityId, entries, stations, nearbyCount, showArea = true, mine }: {
+export function HotelCompare({ locale, cityId, entries, stations, nearbyCount, showArea = true, mine, airport = {} }: {
   locale: Locale
   cityId: string
   entries: CompareEntry[]
@@ -29,10 +31,14 @@ export function HotelCompare({ locale, cityId, entries, stations, nearbyCount, s
   showArea?: boolean
   /** The hotel the plan walks from, when one is picked: its column says so under the name. */
   mine?: string | null
+  /** Rail routes from the airports by station id; the row shows only when some hotel has one. */
+  airport?: Record<string, AirportRoutes>
 }) {
   const s = strings(locale)
   const stay = useStay()
   const stationById = new Map(stations.map((st) => [st.id, st]))
+  const fromAirport = (pin: Pin) => (pin.walk ? airport[pin.walk.station]?.suvarnabhumi : undefined)
+  const airportRow = entries.some((e) => fromAirport(e.pin) !== undefined)
   return (
     <>
       <CmpWrap locale={locale}>
@@ -69,6 +75,12 @@ export function HotelCompare({ locale, cityId, entries, stations, nearbyCount, s
               <th scope="row">{s.saved.cmpStation}</th>
               {entries.map((e) => { const st = e.pin.walk ? stationById.get(e.pin.walk.station) : undefined; return <td key={e.pin.id}>{st && e.pin.walk ? `${s.city.walkMinutes(e.pin.walk.minutes)}, ${st.code ? st.code + ' ' : ''}${t(st.name, locale)}` : ''}</td> })}
             </tr>
+            {airportRow && (
+              <tr>
+                <th scope="row">{s.saved.cmpAirport}</th>
+                {entries.map((e) => <td key={e.pin.id}>{airportCell(fromAirport(e.pin), locale)}</td>)}
+              </tr>
+            )}
             <tr>
               <th scope="row">{s.saved.cmpNearby}</th>
               {entries.map((e) => <td key={e.pin.id}>{s.saved.cmpPlaces(nearbyCount(e.pin))}</td>)}

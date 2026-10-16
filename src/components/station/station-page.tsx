@@ -161,7 +161,7 @@ export function StationPage({ locale, cityId, page, areas, hotelDoors, stations,
                 <div className="tm-ar__cmp">
                   <h3 className="tm-wk__time">{s.areaPage.compare}</h3>
                   <p className="tm-saved__note">{s.stationPage.compareLead}</p>
-                  <HotelCompare locale={locale} cityId={cityId} entries={page.hotels.map((h) => ({ pin: h.pin, area: h.area }))} stations={stations} nearbyCount={nearbyCount} mine={page.hotels.map((h) => hotelFor(h.area.id)?.id).find((id) => id && page.hotels.some((h) => h.pin.id === id))} />
+                  <HotelCompare locale={locale} cityId={cityId} entries={page.hotels.map((h) => ({ pin: h.pin, area: h.area }))} stations={stations} nearbyCount={nearbyCount} mine={page.hotels.map((h) => hotelFor(h.area.id)?.id).find((id) => id && page.hotels.some((h) => h.pin.id === id))} airport={airport} />
                 </div>
               )}
             </li>
