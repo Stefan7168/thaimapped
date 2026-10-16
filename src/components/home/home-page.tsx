@@ -13,6 +13,7 @@ import { strings } from '@/lib/i18n/strings'
 import { supports3D } from '@/lib/map/device'
 import { bangkokNow } from '@/lib/explorer/when'
 import { useSaved } from '@/lib/saved/store'
+import { myHotelChoice, useHotelChoiceVersion } from '@/lib/saved/my-hotel'
 import { nights, useStay } from '@/lib/stay/store'
 import { RevealObserver } from '@/components/motion/reveal'
 import { SiteFooter } from '@/components/explorer/site-footer'
@@ -61,7 +62,17 @@ export function HomePage({ locale, bundle, routes }: { locale: Locale; bundle: C
   // A returning visitor with a hearted hotel gets a way straight back to their plan.
   const saved = useSaved()
   const stay = useStay()
-  const myHotel = useMemo(() => allPins(bundle).find((x) => x.pin.kind === 'hotel' && saved.includes(x.pin.id)) ?? null, [bundle, saved])
+  // The first saved hotel, unless its area has a chosen one (picked on a plan page): then that hotel, so the line and the plan agree.
+  const choiceVersion = useHotelChoiceVersion()
+  const myHotel = useMemo(() => {
+    const hotels = allPins(bundle).filter((x) => x.pin.kind === 'hotel' && saved.includes(x.pin.id))
+    const first = hotels[0]
+    if (!first) return null
+    const chosen = myHotelChoice(first.area.id)
+    return hotels.find((x) => x.area.id === first.area.id && x.pin.id === chosen) ?? first
+    // choiceVersion is read so a new choice recomputes the line.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [bundle, saved, choiceVersion])
   const stayLabel = stay ? new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short' }).formatRange(new Date(`${stay.checkIn}T12:00:00`), new Date(`${stay.checkOut}T12:00:00`)) : null
   // Bangkok's clock, read in the browser only, so the server's HTML carries no time of its own.
   const now = useSyncExternalStore(noopSubscribe, nowSnapshot, () => null)
