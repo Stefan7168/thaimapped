@@ -213,7 +213,7 @@ body {
 .tm-wk__text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .tm-pin--num { width: 24px; height: 24px; } /* no `position` here: the element is the maplibre marker, which must stay absolute (measured 2026-10-16: `relative` stacked the badges 24 px apart) */
 .tm-pin--num .tm-pin__num { display: flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 9999px; background: #fff; color: var(--ink); font-size: 12px; font-weight: 700; box-shadow: inset 0 0 0 2px var(--pin, var(--accent)), 0 1px 3px rgba(0,0,0,0.3); } /* taste-skill-ignore: map marker over tiles */
-.tm-pin--num.tm-pin--mine .tm-pin__num { background: var(--pin, var(--accent)); color: #fff; } /* taste-skill-ignore: map marker over tiles */
+.tm-pin--num.tm-pin--mine .tm-pin__num { background: var(--ink); color: #fff; box-shadow: inset 0 0 0 2px #fff, 0 0 0 2px var(--pin, var(--accent)); } /* taste-skill-ignore: map marker over tiles; ink disc so the number reads on every area colour (axe 2026-10-16) */
 /* The stop's name beside its number: outside the 24 px box so the marker stays centred on the spot; hidden on a narrow map where the list has the names. */
 .tm-pin--num .tm-pin__label { position: absolute; left: 100%; top: 50%; margin-left: 6px; transform: translateY(-50%); }
 .tm-pin--num.tm-pin--left .tm-pin__label { left: auto; right: 100%; margin-left: 0; margin-right: 6px; }
