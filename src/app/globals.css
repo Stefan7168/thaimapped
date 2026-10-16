@@ -226,6 +226,7 @@ body {
 .tm-area-pill { pointer-events: none; padding: 5px 14px; border-radius: 9999px; background: var(--paper); border: 1.5px solid var(--pin, var(--accent)); color: var(--ink); font-size: 14px; font-weight: 600; white-space: nowrap; box-shadow: 0 2px 8px rgba(43, 42, 38, 0.18); }
 /* The picked area's name sits above its dots instead of under them, and lets taps through to the map. */
 .tm-area-pill.maplibregl-marker { z-index: 2; }
+.tm-card-popup { z-index: 3; } /* the open card stays above the name pill */
 @media (hover: none) { .tm-area-hover { display: none; } }
 .tm-range { padding: 6px 0 2px; }
 .tm-range__track { position: relative; height: 28px; }

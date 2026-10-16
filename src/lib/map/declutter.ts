@@ -62,6 +62,12 @@ export function declutterLabels(markers: Marker[], container: HTMLElement | null
         if (!hit) break
         pin.classList.remove(cls)
       }
+    } else if (hit && pin && !pin.classList.contains(LEFT)) {
+      // A name beside its dot (desktop) tries the other side of the dot before giving up.
+      pin.classList.add(LEFT)
+      r = l.getBoundingClientRect()
+      hit = hits(r) || outside(r)
+      if (hit) pin.classList.remove(LEFT)
     }
     if (hit) l.classList.add(OFF)
     else kept.push(r)
