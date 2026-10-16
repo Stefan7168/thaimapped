@@ -110,6 +110,7 @@ const en = {
     sleepHere: (area: string) => `Hotels in ${area}`,
     byTrainFrom: (hotel: string, route: string) => `By train from ${hotel}: ${route}`,
     tripAtYourStation: 'Starts at your hotel\u2019s station',
+    ridesShort: (n: number) => (n === 1 ? '1 ride' : `${n} rides`),
     pickHotelHint: 'Tap the heart on a hotel and every stop above says how far it is from that door.',
     useHotel: 'Walk from here instead',
     skipStop: 'Not this one',

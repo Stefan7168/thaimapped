@@ -14,7 +14,8 @@ import { nights, useStay } from '@/lib/stay/store'
 import { trackOutbound } from '@/lib/links/track'
 import { bangkokClock, whenLine } from '@/lib/explorer/when'
 import { WEEKEND_SLOTS, borrowedSlots, slotNow, weekendPlan } from '@/lib/explorer/weekend'
-import { airportRoutesFor } from '@/lib/transit/from-airport'
+import { airportRoutesFor, railLegs } from '@/lib/transit/from-airport'
+import { rideSentence } from '@/components/stay/from-airport'
 import { activeFilterCount, allPins, DAYS, KIND_CHIPS, distanceM, EMPTY_FILTERS, isFullRange, PRICE_RANGE, TIMES, selectedPlaceCentres, selectedStations, subareaKey, TIER_PRICE, TIERS, visiblePins, WALK_PACE_M_PER_MIN, type FilterState, type PriceRange, type Tier } from '@/lib/explorer/filters'
 import { thb } from '@/lib/explorer/price'
 import { stationPages } from '@/lib/explorer/stations'
@@ -26,7 +27,7 @@ import { KindBar, KIND_ICONS } from './kind-bar'
 import { AreaCard } from './area-card'
 import { SaveButton } from '@/components/saved/save-button'
 import { useSaved } from '@/lib/saved/store'
-import { myHotelChoice, useHotelChoiceVersion } from '@/lib/saved/my-hotel'
+import { myHotelAcross, myHotelChoice, useHotelChoiceVersion } from '@/lib/saved/my-hotel'
 import { useSkipped } from '@/lib/saved/skipped'
 import { SavedLink } from '@/components/saved/saved-link'
 
@@ -114,7 +115,10 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
   // else the first saved hotel on this map; places within a 45-minute walk say how far they are from that door.
   const saved = useSaved()
   const choiceVersion = useHotelChoiceVersion()
-  const myHotel = useMemo(() => allPins(bundle).map((x) => x.pin).find((p) => p.kind === 'hotel' && saved.includes(p.id)) ?? null, [bundle, saved])
+  const myHotel = useMemo(() => myHotelAcross(Object.fromEntries(bundle.areas.map((a) => [a.id, a.pins.filter((p) => p.kind === 'hotel')])), saved)?.hotel ?? null,
+    // choiceVersion is read so a new choice recomputes the pick.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [bundle, saved, choiceVersion])
   const hotelFor = useMemo(() => {
     const byArea = new Map<string, Pin | null>()
     for (const area of bundle.areas) {
@@ -127,6 +131,15 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bundle, saved, myHotel, choiceVersion])
   const fromHotel = (pin: Pin, hotel: Pin) => Math.max(1, Math.round(distanceM(hotel.location.lon, hotel.location.lat, pin.location.lon, pin.location.lat) / WALK_PACE_M_PER_MIN))
+  // The planner's cell beside a stop: the walk from a hotel of this area; from a hotel elsewhere, the rides by train (a walk across the city would be no help).
+  const planCell = (pin: Pin, hotel: Pin, ownArea: boolean): { short: string; long: string } | null => {
+    if (ownArea) return { short: s.city.minutes(fromHotel(pin, hotel)), long: s.weekendPage.fromHotel(fromHotel(pin, hotel), t(hotel.name, locale)) }
+    if (!hotel.walk || !pin.walk) return null
+    const legs = railLegs(bundle.stations, bundle.interchanges, hotel.walk.station, pin.walk.station)
+    if (!legs) return null
+    if (legs.length === 0) return { short: s.city.minutes(pin.walk.minutes), long: s.airport.thenWalk(pin.walk.minutes) }
+    return { short: s.weekendPage.ridesShort(legs.length), long: s.weekendPage.byTrainFrom(t(hotel.name, locale), rideSentence(legs, pin.walk.minutes, locale)) }
+  }
   // "Near me": the browser's position, kept in state only (never in the address). Outside the city it is refused with a note.
   const [locating, setLocating] = useState(false)
   const [nearNote, setNearNote] = useState<string | null>(null)
@@ -244,8 +257,8 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
                   <button key={pin.id} type="button" className={`tm-weekend__stop${activePin?.id === pin.id ? ' tm-weekend__stop--on' : ''}`} onClick={() => { setActivePin(pin); setListOpen(false) }}>
                     <span className="tm-weekend__kind">{s.pin[pin.kind]}</span>
                     {t(pin.name, locale)}
-                    {/* With a hotel of this area saved, each stop carries the walk from its door. */}
-                    {hotelFor(planArea.id) && <span className="tm-weekend__walk" title={s.weekendPage.fromHotel(fromHotel(pin, hotelFor(planArea.id)!), t(hotelFor(planArea.id)!.name, locale))}>{s.city.minutes(fromHotel(pin, hotelFor(planArea.id)!))}</span>}
+                    {/* With a hotel of this area saved, each stop carries the walk from its door; with the hotel elsewhere, the train rides. */}
+                    {hotelFor(planArea.id) && planCell(pin, hotelFor(planArea.id)!, planArea.pins.some((p) => p.id === hotelFor(planArea.id)!.id)) && <span className="tm-weekend__walk" title={planCell(pin, hotelFor(planArea.id)!, planArea.pins.some((p) => p.id === hotelFor(planArea.id)!.id))!.long}>{planCell(pin, hotelFor(planArea.id)!, planArea.pins.some((p) => p.id === hotelFor(planArea.id)!.id))!.short}</span>}
                   </button>
                 ))}
               </span>
