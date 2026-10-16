@@ -510,6 +510,8 @@ function TripList({ locale, cityId, routes }: { locale: Locale; cityId: string; 
         {TRIP_LENGTHS.map((k) => {
           const on = len === k
           const n = routes.filter((r) => tripFits(r, k)).length
+          // A length no trip has yet is not offered; with four trips, "4 days 0" was half the row.
+          if (n === 0 && !on) return null
           return (
             <button key={k} type="button" aria-pressed={on} onClick={() => setLen(on ? null : k)} className={`tm-kind tm-kind--small${on ? ' tm-kind--on' : ''}`}>
               {s.guide.tripLength[k]}
