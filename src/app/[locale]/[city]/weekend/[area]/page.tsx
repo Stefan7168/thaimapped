@@ -43,7 +43,7 @@ export default async function AreaWeekendPage(props: PageProps<'/[locale]/[city]
   const hotelStations = [...new Set(a.pins.filter((p) => p.kind === 'hotel' && p.walk).map((p) => p.walk!.station))]
   // Rides from each hotel's station to each stop's station, for the "or by train" line under a long walk.
   // A reader sleeping in another area gets the ride to this area's first station.
-  const elsewhere = elsewhereFor(bundle, a)
+  const elsewhere = elsewhereFor(bundle, a, [...a.pins, ...borrowedPins].filter((p) => p.kind !== 'hotel' && p.walk).map((p) => p.walk!.station))
   const rides = railLegsBetween(bundle, hotelStations, [...a.pins, ...borrowedPins].filter((p) => p.kind !== 'hotel' && p.walk).map((p) => p.walk!.station))
   const routes = loadRoutes(city)
   const tripStarts = Object.fromEntries(routes.flatMap((r) => (r.stops[0]?.station ? [[r.id, r.stops[0].station]] : [])))

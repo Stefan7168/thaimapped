@@ -107,8 +107,8 @@ export function airportRoutesFor(bundle: CityBundle, stationIds: Iterable<string
  * For an area page or weekend page: the other areas' hotels as doors, their
  * stations, and the rides from those stations to this area's first station.
  */
-export function elsewhereFor(bundle: CityBundle, area: { id: string; stations: string[] }): { doors: Record<string, HotelDoor[]>; stations: string[]; rides: Record<string, Record<string, AirportLeg[] | null>> } {
+export function elsewhereFor(bundle: CityBundle, area: { id: string; stations: string[] }, toStations: Iterable<string> = []): { doors: Record<string, HotelDoor[]>; stations: string[]; rides: Record<string, Record<string, AirportLeg[] | null>> } {
   const doors = hotelDoors(bundle.areas.filter((x) => x.id !== area.id))
   const stations = [...new Set(Object.values(doors).flat().map((h) => h.walk?.station).filter((id): id is string => !!id))]
-  return { doors, stations, rides: railLegsBetween(bundle, stations, area.stations.slice(0, 1)) }
+  return { doors, stations, rides: railLegsBetween(bundle, stations, [...area.stations.slice(0, 1), ...toStations]) }
 }

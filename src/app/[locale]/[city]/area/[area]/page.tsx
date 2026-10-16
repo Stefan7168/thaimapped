@@ -41,7 +41,7 @@ export default async function AreaRoute(props: PageProps<'/[locale]/[city]/area/
   const cityName = t(bundle.city.name, locale)
   const hotelStations = [...new Set(a.pins.filter((p) => p.kind === 'hotel' && p.walk).map((p) => p.walk!.station))]
   // A reader sleeping in another area gets the ride to this area's first station.
-  const elsewhere = elsewhereFor(bundle, a)
+  const elsewhere = elsewhereFor(bundle, a, a.pins.filter((p) => p.kind !== 'hotel' && p.walk).map((p) => p.walk!.station))
   return (
     <>
       <JsonLd data={placeListLd(strings(locale).areaPage.title(t(a.name, locale), cityName), `/${locale}/${city}/area/${area}`, a.pins.map((p) => pinNode(p, locale, cityName)))} />

@@ -64,6 +64,13 @@ export function AreaPage({ locale, cityId, area, areas, stations, stationSlugs, 
     const legs = rides[myHotel.walk.station]?.[pin.walk.station]
     return legs && legs.length > 0 ? rideSentence(legs, pin.walk.minutes, locale) : null
   }
+  // With the hotel in another area: the ride from its station to this place's station, then the walk; the directions start at that door by train.
+  const byTrainElsewhere = (pin: Pin): string | null => {
+    const hotel = elsewhere?.hotel
+    if (myHotel || !hotel?.walk || !pin.walk) return null
+    const legs = elsewhereRides[hotel.walk.station]?.[pin.walk.station]
+    return legs && legs.length > 0 ? s.weekendPage.byTrainFrom(t(hotel.name, locale), rideSentence(legs, pin.walk.minutes, locale)) : null
+  }
   const fromHotel = (pin: Pin) => (myHotel ? Math.max(1, Math.round(distanceM(myHotel.location.lon, myHotel.location.lat, pin.location.lon, pin.location.lat) / WALK_PACE_M_PER_MIN)) : null)
   const pinned = useMemo(() => [...kinds.flatMap((g) => g.pins), ...hotels], [kinds, hotels])
   // Stable map props: a new object on every render would rebuild the markers and re-frame the map on each hover or card change.
@@ -109,12 +116,13 @@ export function AreaPage({ locale, cityId, area, areas, stations, stationSlugs, 
             {pin.walk && walkStation && <span className="tm-wk__meta">{s.city.walkMinutes(pin.walk.minutes)} {s.city.from(`${walkStation.code ? walkStation.code + ' ' : ''}${t(walkStation.name, locale)}`)}</span>}
             {pin.kind !== 'hotel' && myHotel && <span className="tm-wk__meta tm-wk__from">{s.weekendPage.fromHotel(fromHotel(pin)!, t(myHotel.name, locale))}</span>}
             {pin.kind !== 'hotel' && myHotel && fromHotel(pin)! > 20 && byTrain(pin) && <span className="tm-wk__meta tm-wk__train">{s.weekendPage.byTrain(byTrain(pin)!)}</span>}
+            {pin.kind !== 'hotel' && byTrainElsewhere(pin) && <span className="tm-wk__meta tm-wk__from">{byTrainElsewhere(pin)}</span>}
             {pin.kind === 'hotel' && <span className="tm-wk__meta">{s.saved.cmpPlaces(nearbyCount(pin))}</span>}
           </span>
         </button>
         {pin.kind === 'hotel' && pin.walk && airport[pin.walk.station] && <FromAirport locale={locale} routes={airport[pin.walk.station]} walkMinutes={pin.walk.minutes} />}
         <div className="tm-wk__links">
-          <a href={pin.kind !== 'hotel' && myHotel ? directionsUrl(pin.location.lat, pin.location.lon, { from: myHotel.location, mode: fromHotel(pin)! > 20 && byTrain(pin) ? 'transit' : 'walking' }) : directionsUrl(pin.location.lat, pin.location.lon)} target="_blank" rel="noopener" className="tm-card__link tm-card__link--quiet">{pin.kind !== 'hotel' && myHotel ? s.trip.directionsFrom(t(myHotel.name, locale)) : s.card.directions}</a>
+          <a href={pin.kind !== 'hotel' && myHotel ? directionsUrl(pin.location.lat, pin.location.lon, { from: myHotel.location, mode: fromHotel(pin)! > 20 && byTrain(pin) ? 'transit' : 'walking' }) : pin.kind !== 'hotel' && byTrainElsewhere(pin) ? directionsUrl(pin.location.lat, pin.location.lon, { from: elsewhere!.hotel.location, mode: 'transit' }) : directionsUrl(pin.location.lat, pin.location.lon)} target="_blank" rel="noopener" className="tm-card__link tm-card__link--quiet">{pin.kind !== 'hotel' && myHotel ? s.trip.directionsFrom(t(myHotel.name, locale)) : pin.kind !== 'hotel' && byTrainElsewhere(pin) ? s.trip.directionsFrom(t(elsewhere!.hotel.name, locale)) : s.card.directions}</a>
           {pin.kind === 'hotel' && myHotel && myHotel.id !== pin.id && saved.includes(pin.id) && (
             <button type="button" className="tm-card__link tm-card__link--quiet" onClick={() => chooseHotel(area.id, pin.id)}>{s.weekendPage.useHotel}</button>
           )}

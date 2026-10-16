@@ -112,6 +112,13 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
     const legs = tripRides[myHotel.walk.station]?.[start]
     return legs && legs.length > 0 ? s.weekendPage.byTrainFrom(t(myHotel.name, locale), rideSentence(legs, null, locale)) : null
   }
+  // With the hotel in another area: the ride from its station to this place's station, then the walk; the directions start at that door by train.
+  const byTrainElsewhere = (pin: Pin): string | null => {
+    const hotel = elsewhere?.hotel
+    if (myHotel || !hotel?.walk || !pin.walk) return null
+    const legs = elsewhereRides[hotel.walk.station]?.[pin.walk.station]
+    return legs && legs.length > 0 ? s.weekendPage.byTrainFrom(t(hotel.name, locale), rideSentence(legs, pin.walk.minutes, locale)) : null
+  }
   const fromHotel = (pin: Pin) => (myHotel ? Math.max(1, Math.round(distanceM(myHotel.location.lon, myHotel.location.lat, pin.location.lon, pin.location.lat) / WALK_PACE_M_PER_MIN)) : null)
   // Stops of this weekend inside a ten-minute walk of a hotel, straight-line at walking pace.
   const nearbyCount = (hotel: Pin) => stops.filter((p) => distanceM(hotel.location.lon, hotel.location.lat, p.location.lon, p.location.lat) <= WALK_PACE_M_PER_MIN * 10).length
@@ -215,12 +222,13 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
             {pin.walk && walkStation && <span className="tm-wk__meta">{s.city.walkMinutes(pin.walk.minutes)} {s.city.from(`${walkStation.code ? walkStation.code + ' ' : ''}${t(walkStation.name, locale)}`)}</span>}
             {pin.kind !== 'hotel' && myHotel && <span className="tm-wk__meta tm-wk__from">{s.weekendPage.fromHotel(fromHotel(pin)!, t(myHotel.name, locale))}</span>}
             {pin.kind !== 'hotel' && myHotel && fromHotel(pin)! > 20 && byTrain(pin) && <span className="tm-wk__meta tm-wk__train">{s.weekendPage.byTrain(byTrain(pin)!)}</span>}
+            {pin.kind !== 'hotel' && byTrainElsewhere(pin) && <span className="tm-wk__meta tm-wk__from">{byTrainElsewhere(pin)}</span>}
             {pin.kind === 'hotel' && <span className="tm-wk__meta">{s.saved.cmpPlaces(nearbyCount(pin))}</span>}
           </span>
         </button>
         {pin.kind === 'hotel' && pin.walk && airport[pin.walk.station] && <FromAirport locale={locale} routes={airport[pin.walk.station]} walkMinutes={pin.walk.minutes} />}
         <div className="tm-wk__links">
-          <a href={pin.kind !== 'hotel' && myHotel ? directionsUrl(pin.location.lat, pin.location.lon, { from: myHotel.location, mode: fromHotel(pin)! > 20 && byTrain(pin) ? 'transit' : 'walking' }) : directionsUrl(pin.location.lat, pin.location.lon)} target="_blank" rel="noopener" className="tm-card__link tm-card__link--quiet">{pin.kind !== 'hotel' && myHotel ? s.trip.directionsFrom(t(myHotel.name, locale)) : s.card.directions}</a>
+          <a href={pin.kind !== 'hotel' && myHotel ? directionsUrl(pin.location.lat, pin.location.lon, { from: myHotel.location, mode: fromHotel(pin)! > 20 && byTrain(pin) ? 'transit' : 'walking' }) : pin.kind !== 'hotel' && byTrainElsewhere(pin) ? directionsUrl(pin.location.lat, pin.location.lon, { from: elsewhere!.hotel.location, mode: 'transit' }) : directionsUrl(pin.location.lat, pin.location.lon)} target="_blank" rel="noopener" className="tm-card__link tm-card__link--quiet">{pin.kind !== 'hotel' && myHotel ? s.trip.directionsFrom(t(myHotel.name, locale)) : pin.kind !== 'hotel' && byTrainElsewhere(pin) ? s.trip.directionsFrom(t(elsewhere!.hotel.name, locale)) : s.card.directions}</a>
           {pin.kind === 'hotel' && !sentHotel && myHotel && myHotel.id !== pin.id && saved.includes(pin.id) && (
             <button type="button" className="tm-card__link tm-card__link--quiet" onClick={() => chooseHotel(area.id, pin.id)}>{s.weekendPage.useHotel}</button>
           )}
@@ -313,6 +321,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
                               {whenLine(pin, locale) && <span className="tm-wk__meta tm-wk__when">{whenLine(pin, locale)}</span>}
                               {pin.walk && stationById.get(pin.walk.station) && <span className="tm-wk__meta">{s.city.walkMinutes(pin.walk.minutes)} {s.city.from(`${stationById.get(pin.walk.station)!.code ? stationById.get(pin.walk.station)!.code + ' ' : ''}${t(stationById.get(pin.walk.station)!.name, locale)}`)}</span>}
                               {myHotel && byTrain(pin) && <span className="tm-wk__meta tm-wk__train">{s.weekendPage.byTrainFrom(t(myHotel.name, locale), byTrain(pin)!)}</span>}
+                              {byTrainElsewhere(pin) && <span className="tm-wk__meta tm-wk__train">{byTrainElsewhere(pin)}</span>}
                             </li>
                           ))}
                         </ul>
