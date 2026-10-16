@@ -189,13 +189,15 @@ export function cardElement(locale: Locale, cityId: string, pin: Pin, area: Area
     el.append(walk)
     if (pin.kind === 'hotel' && airport) el.append(airportBlock(locale, s, airport, pin.walk.minutes))
   }
-  // A place also says how far it is from the reader's hotel in this area (the chosen one, else the first saved), as the plan pages do.
+  // A place also says how far it is from the reader's hotel in this area (the chosen one, else the first saved), as the plan pages do; its Directions then start at that door.
+  let fromDoor: Pin | undefined
   if (pin.kind !== 'hotel') {
     const saved = savedIds()
     const hotels = area.pins.filter((p) => p.kind === 'hotel' && saved.includes(p.id))
     const chosen = myHotelChoice(area.id)
     const mine = hotels.find((h) => h.id === chosen) ?? hotels[0]
     if (mine) {
+      fromDoor = mine
       const from = document.createElement('p')
       from.className = 'tm-card__walk tm-card__from'
       from.textContent = s.weekendPage.fromHotel(Math.max(1, Math.round(distanceM(mine.location.lon, mine.location.lat, pin.location.lon, pin.location.lat) / WALK_PACE_M_PER_MIN)), t(mine.name, locale))
@@ -223,10 +225,10 @@ export function cardElement(locale: Locale, cityId: string, pin: Pin, area: Area
     links.className = 'tm-card__links'
     const go = document.createElement('a')
     go.className = 'tm-card__link tm-card__link--quiet'
-    go.href = directionsUrl(pin.location.lat, pin.location.lon)
+    go.href = fromDoor ? directionsUrl(pin.location.lat, pin.location.lon, { from: fromDoor.location }) : directionsUrl(pin.location.lat, pin.location.lon)
     go.target = '_blank'
     go.rel = 'noopener'
-    go.textContent = s.card.directions
+    go.textContent = fromDoor ? s.trip.directionsFrom(t(fromDoor.name, locale)) : s.card.directions
     links.append(go)
     for (const partner of partners) {
       const a = document.createElement('a')
