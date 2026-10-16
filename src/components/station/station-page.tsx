@@ -119,6 +119,9 @@ export function StationPage({ locale, cityId, page, areas, stations, others }: {
           </p>
           <h1 className="tm-h2">{s.stationPage.title(label)}</h1>
           <p className="tm-wk__lead">{s.stationPage.lead(page.hotels.length, page.places.length)}</p>
+          <div className="tm-wk__actions">
+            <Link href={explorerHref} className="tm-link">{s.weekendPage.openMap}</Link>
+          </div>
           <ol className="tm-wk__slots">
             <li className="tm-wk__slot">
               <h2 className="tm-wk__time">{s.stationPage.hotels}</h2>
@@ -172,7 +175,7 @@ export function StationPage({ locale, cityId, page, areas, stations, others }: {
           {detected3D !== null && (
             <StageMap locale={locale} camera={camera} threeD={detected3D} areas={[]} route={null} focus={{ pins: pinned.map((n) => n.pin), area: mainArea, numbered: true }} marker={{ lon: st.lon, lat: st.lat, label, color: page.lines[0]?.color ?? '#c8553d' }} card={card} onCloseCard={() => setCard(null)} cityId={cityId} stations={stations} />
           )}
-          <div className="tm-stage__bar" data-map-overlay="bottom">
+          <div className="tm-stage__bar tm-stage__bar--page" data-map-overlay="bottom">
             <span className="tm-stage__showing">{s.home.showing(label)}</span>
             <Link href={explorerHref} className="tm-link">{s.weekendPage.openMap}</Link>
           </div>

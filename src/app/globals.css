@@ -506,6 +506,9 @@ body {
   .tm-stage { flex-direction: column; gap: 0; padding: var(--margin); }
   .tm-stage__map { order: -1; flex: none; width: 100%; height: 56svh; top: var(--margin); z-index: 0; }
   .tm-stage__bar > span:first-child { display: none; }
+  /* The sheet right under the map band carries the same links, so the band's bar would show them twice. */
+  .tm-stage__bar--page { display: none; }
+  .tm-stage__map:has(.tm-stage__bar--page) .maplibregl-ctrl-bottom-right { bottom: 0; }
   .tm-sheet { position: relative; z-index: 1; width: 100%; margin-top: var(--margin); }
   .tm-hero { min-height: auto; padding: 20px 20px 0; }
   .tm-hero__centre { padding-top: 40px; padding-bottom: 64px; }
