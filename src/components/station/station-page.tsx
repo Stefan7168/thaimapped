@@ -6,7 +6,8 @@ import Link from 'next/link'
 import { useMemo, useState, useSyncExternalStore } from 'react'
 import type { Area, Locale, Pin, Station } from '@/lib/content/types'
 import { FromAirport } from '@/components/stay/from-airport'
-import type { AirportRoutes } from '@/lib/transit/from-airport'
+import type { AirportLeg, AirportRoutes } from '@/lib/transit/from-airport'
+import { rideSentence } from '@/components/stay/from-airport'
 import { t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
 import type { StationPage as StationPageData, StationPin } from '@/lib/explorer/stations'
@@ -22,7 +23,7 @@ import { SiteFooter } from '@/components/explorer/site-footer'
 import { SaveButton } from '@/components/saved/save-button'
 import { useSaved } from '@/lib/saved/store'
 import type { HotelDoor } from '@/lib/content/slim'
-import { myHotelChoice, useHotelChoiceVersion } from '@/lib/saved/my-hotel'
+import { myHotelAcross, myHotelChoice, useHotelChoiceVersion } from '@/lib/saved/my-hotel'
 import { StayPicker } from '@/components/stay/stay-picker'
 import { HotelCompare } from '@/components/stay/hotel-compare'
 import { distanceM, WALK_PACE_M_PER_MIN } from '@/lib/explorer/filters'
@@ -42,7 +43,7 @@ const noopSubscribe = () => () => {}
  */
 const NO_AREAS: Area[] = []
 
-export function StationPage({ locale, cityId, page, areas, hotelDoors, stations, others, airport = {} }: { locale: Locale; cityId: string; page: StationPageData; areas: Area[]; hotelDoors: Record<string, HotelDoor[]>; stations: Station[]; others: (StationPageData & { km?: number })[]; airport?: Record<string, AirportRoutes> }) {
+export function StationPage({ locale, cityId, page, areas, hotelDoors, stations, others, airport = {}, fromHotelRides = {} }: { locale: Locale; cityId: string; page: StationPageData; areas: Area[]; hotelDoors: Record<string, HotelDoor[]>; stations: Station[]; others: (StationPageData & { km?: number })[]; airport?: Record<string, AirportRoutes>; fromHotelRides?: Record<string, Record<string, AirportLeg[] | null>> }) {
   const s = strings(locale)
   const stay = useStay()
   // Places of this page inside a ten-minute walk of a hotel, straight-line at walking pace.
@@ -85,6 +86,20 @@ export function StationPage({ locale, cityId, page, areas, hotelDoors, stations,
     // choiceVersion is read so a new choice recomputes the map.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hotelDoors, saved, choiceVersion])
+  // The ride here from the weekend's hotel, when it walks from another station: the station page is the way in to this corner.
+  const fromMyHotel = useMemo(() => {
+    const found = myHotelAcross(hotelDoors, saved)
+    const from = found?.hotel.walk?.station
+    if (!found || !from) return null
+    if (page.stations.some((st) => st.id === from)) return { hotel: found.hotel, route: null }
+    for (const st of page.stations) {
+      const legs = fromHotelRides[from]?.[st.id]
+      if (legs && legs.length > 0) return { hotel: found.hotel, route: rideSentence(legs, null, locale) }
+    }
+    return null
+    // choiceVersion is read so a new choice recomputes the line.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hotelDoors, saved, choiceVersion, fromHotelRides, page.stations, locale])
   const fromHotel = (pin: Pin, hotel: HotelDoor) => Math.max(1, Math.round(distanceM(hotel.location.lon, hotel.location.lat, pin.location.lon, pin.location.lat) / WALK_PACE_M_PER_MIN))
 
   const showMap = () => {
@@ -147,6 +162,7 @@ export function StationPage({ locale, cityId, page, areas, hotelDoors, stations,
           </p>
           <h1 className="tm-h2">{s.stationPage.title(label)}</h1>
           <p className="tm-wk__lead">{s.stationPage.lead(page.hotels.length, page.places.length)}</p>
+          {fromMyHotel && <p className="tm-wk__shared tm-wk__elsewhere">{fromMyHotel.route ? s.stationPage.fromYourHotel(t(fromMyHotel.hotel.name, locale), fromMyHotel.route) : s.stationPage.yourStation(t(fromMyHotel.hotel.name, locale))}</p>}
           <div className="tm-wk__actions">
             {/* The weekend plan of the area most of the nearby places belong to: the station is the way in, the plan is the goal. */}
             <Link href={`/${locale}/${cityId}/weekend/${mainArea.id}`} className="tm-button">{s.home.quiz.plan(t(mainArea.name, locale))}</Link>

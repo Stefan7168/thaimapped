@@ -9,6 +9,8 @@ const en = {
   nav: { cities: 'Cities', map: 'Map', trips: 'Trips', stations: 'Stations', credits: 'Photo credits' },
   a11y: { siteNav: 'Site', footerNav: 'Footer', places: 'Places on the map', filters: 'Filters' },
   stationPage: {
+    fromYourHotel: (hotel: string, route: string) => `From your hotel, ${hotel}: ${route}.`,
+    yourStation: (hotel: string) => `Your hotel, ${hotel}, walks from here.`,
     compareLead: 'Which area, a night, the walk to the train, and how many places on this page are within ten minutes on foot. Prices are typical for the class, not checked.',
     indexTitle: 'Hotels near a station',
     indexLead: (n: number) => `${n} stations with hotels or places inside a ten-minute walk. Each page lists them nearest first, with the walk in minutes. Where it says so, the station is one ride from Suvarnabhumi airport, no change.`,
