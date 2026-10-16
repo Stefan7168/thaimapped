@@ -83,6 +83,8 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
   const [sheetOpen, setSheetOpen] = useState(false)
   // Phones: the place list starts as a one-line handle so the map stays visible.
   const [listOpen, setListOpen] = useState(false)
+  // On a phone an open card and an open list fight for the same half of the screen: the card wins, the list folds to its header.
+  const listShown = listOpen && !activePin
   // The list column's tabs once something is picked: the places, the trips out of town, the weekend plan.
   const [tab, setTab] = useState<'places' | 'trips' | 'weekend'>('places')
 
@@ -389,12 +391,12 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
 
           {/* Phones: the places found float over the map. */}
           {count > 0 && (
-            <div data-map-overlay="bottom" className={`absolute inset-x-3 bottom-3 flex flex-col rounded-xl border border-line bg-paper/95 shadow-lg md:hidden ${listOpen ? 'max-h-[45%]' : ''}`}>
-              <button type="button" aria-expanded={listOpen} onClick={() => setListOpen((o) => !o)} className="flex min-h-11 items-center justify-between px-3 text-sm font-semibold">
+            <div data-map-overlay="bottom" className={`absolute inset-x-3 bottom-3 flex flex-col rounded-xl border border-line bg-paper/95 shadow-lg md:hidden ${listShown ? 'max-h-[45%]' : ''}`}>
+              <button type="button" aria-expanded={listShown} onClick={() => { if (activePin) { setActivePin(null); setListOpen(true) } else setListOpen((o) => !o) }} className="flex min-h-11 items-center justify-between px-3 text-sm font-semibold">
                 <span>{s.filters.results(pins.length)}</span>
-                <span className="text-xs font-medium text-ink-2">{listOpen ? s.filters.hideList : s.filters.showList}</span>
+                <span className="text-xs font-medium text-ink-2">{listShown ? s.filters.hideList : s.filters.showList}</span>
               </button>
-              {listOpen && (
+              {listShown && (
                 <div className="overflow-y-auto px-2 pb-2">
                   {tabs}
                   {column}
