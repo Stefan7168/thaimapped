@@ -28,7 +28,7 @@ import { AreaCard } from './area-card'
 import { SaveButton } from '@/components/saved/save-button'
 import { useSaved } from '@/lib/saved/store'
 import { myHotelAcross, myHotelChoice, useHotelChoiceVersion } from '@/lib/saved/my-hotel'
-import { useSkipped } from '@/lib/saved/skipped'
+import { skipStop, unskipStops, useSkipped } from '@/lib/saved/skipped'
 import { SavedLink } from '@/components/saved/saved-link'
 
 const ExplorerMap = dynamic(() => import('@/components/map/explorer-map').then((m) => m.ExplorerMap), {
@@ -254,17 +254,29 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
             ) : (
               <span className={`tm-weekend__stops${hotelFor(planArea.id) ? ' tm-weekend__stops--rows' : ''}`}>
                 {plan.slots[slot].map((pin) => (
-                  <button key={pin.id} type="button" className={`tm-weekend__stop${activePin?.id === pin.id ? ' tm-weekend__stop--on' : ''}`} onClick={() => { setActivePin(pin); setListOpen(false) }}>
-                    <span className="tm-weekend__kind">{s.pin[pin.kind]}</span>
-                    {t(pin.name, locale)}
-                    {/* With a hotel of this area saved, each stop carries the walk from its door; with the hotel elsewhere, the train rides. */}
-                    {hotelFor(planArea.id) && planCell(pin, hotelFor(planArea.id)!, planArea.pins.some((p) => p.id === hotelFor(planArea.id)!.id)) && <span className="tm-weekend__walk" title={planCell(pin, hotelFor(planArea.id)!, planArea.pins.some((p) => p.id === hotelFor(planArea.id)!.id))!.long}>{planCell(pin, hotelFor(planArea.id)!, planArea.pins.some((p) => p.id === hotelFor(planArea.id)!.id))!.short}</span>}
-                  </button>
+                  <span key={pin.id} className="tm-weekend__row">
+                    <button type="button" className={`tm-weekend__stop${activePin?.id === pin.id ? ' tm-weekend__stop--on' : ''}`} onClick={() => { setActivePin(pin); setListOpen(false) }}>
+                      <span className="tm-weekend__kind">{s.pin[pin.kind]}</span>
+                      {t(pin.name, locale)}
+                      {/* With a hotel of this area saved, each stop carries the walk from its door; with the hotel elsewhere, the train rides. */}
+                      {hotelFor(planArea.id) && planCell(pin, hotelFor(planArea.id)!, planArea.pins.some((p) => p.id === hotelFor(planArea.id)!.id)) && <span className="tm-weekend__walk" title={planCell(pin, hotelFor(planArea.id)!, planArea.pins.some((p) => p.id === hotelFor(planArea.id)!.id))!.long}>{planCell(pin, hotelFor(planArea.id)!, planArea.pins.some((p) => p.id === hotelFor(planArea.id)!.id))!.short}</span>}
+                    </button>
+                    {/* The same "Not this one" as the weekend page: the slot refills from the area's other places, and the choice is kept across pages. */}
+                    <button type="button" className="tm-weekend__skip" aria-label={`${s.weekendPage.skipStop}: ${t(pin.name, locale)}`} title={s.weekendPage.skipStop} onClick={() => { skipStop(pin.id); if (activePin?.id === pin.id) setActivePin(null) }}>×</button>
+                  </span>
                 ))}
               </span>
             )}
           </li>
         ))}
+        {planArea.pins.some((p) => p.kind !== 'hotel' && skipped.includes(p.id)) && (
+          <li className="tm-weekend__slot">
+            <p className="tm-weekend__empty tm-wk__skipped">
+              {s.weekendPage.skipped(planArea.pins.filter((p) => p.kind !== 'hotel' && skipped.includes(p.id)).map((p) => t(p.name, locale)).join(', '))}{' '}
+              <button type="button" className="tm-link tm-link--under" onClick={() => unskipStops(planArea.pins.filter((p) => skipped.includes(p.id)).map((p) => p.id))}>{s.weekendPage.putBack}</button>
+            </p>
+          </li>
+        )}
         <li className="tm-weekend__slot tm-weekend__slot--stay">
           <span className="tm-weekend__time">{s.guide.stay}</span>
           {plan.hotels.length === 0 ? (
