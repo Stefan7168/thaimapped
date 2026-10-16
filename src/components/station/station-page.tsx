@@ -121,7 +121,7 @@ export function StationPage({ locale, cityId, page, areas, hotelDoors, stations,
         </button>
         {pin.kind === 'hotel' && pin.walk && airport[pin.walk.station] && <FromAirport locale={locale} routes={airport[pin.walk.station]} walkMinutes={pin.walk.minutes} />}
         <div className="tm-wk__links">
-          <a href={directionsUrl(pin.location.lat, pin.location.lon)} target="_blank" rel="noopener" className="tm-card__link tm-card__link--quiet">{s.card.directions}</a>
+          <a href={pin.kind !== 'hotel' && hotelFor(area.id) ? directionsUrl(pin.location.lat, pin.location.lon, { from: hotelFor(area.id)!.location }) : directionsUrl(pin.location.lat, pin.location.lon)} target="_blank" rel="noopener" className="tm-card__link tm-card__link--quiet">{pin.kind !== 'hotel' && hotelFor(area.id) ? s.trip.directionsFrom(t(hotelFor(area.id)!.name, locale)) : s.card.directions}</a>
             {partners.map((p) => {
               const subId = subIdFor(`${cityId}-${area.id}`, pin.id)
               return (

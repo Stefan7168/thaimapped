@@ -184,7 +184,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
         </button>
         {pin.kind === 'hotel' && pin.walk && airport[pin.walk.station] && <FromAirport locale={locale} routes={airport[pin.walk.station]} walkMinutes={pin.walk.minutes} />}
         <div className="tm-wk__links">
-          <a href={directionsUrl(pin.location.lat, pin.location.lon)} target="_blank" rel="noopener" className="tm-card__link tm-card__link--quiet">{s.card.directions}</a>
+          <a href={pin.kind !== 'hotel' && myHotel ? directionsUrl(pin.location.lat, pin.location.lon, { from: myHotel.location, mode: fromHotel(pin)! > 20 && byTrain(pin) ? 'transit' : 'walking' }) : directionsUrl(pin.location.lat, pin.location.lon)} target="_blank" rel="noopener" className="tm-card__link tm-card__link--quiet">{pin.kind !== 'hotel' && myHotel ? s.trip.directionsFrom(t(myHotel.name, locale)) : s.card.directions}</a>
           {pin.kind === 'hotel' && !sentHotel && myHotel && myHotel.id !== pin.id && saved.includes(pin.id) && (
             <button type="button" className="tm-card__link tm-card__link--quiet" onClick={() => chooseHotel(area.id, pin.id)}>{s.weekendPage.useHotel}</button>
           )}
