@@ -279,7 +279,7 @@ export function HomePage({ locale, bundle, routes }: { locale: Locale; bundle: C
                   <p className="tm-quiz__name">{s.home.quiz.result(t(best.area.name, locale))}</p>
                   <p className="tm-quiz__why">{t(best.area.tagline, locale)}</p>
                   {/* A hotel already on the list: say so, and the ride from its door when it sleeps in another area. */}
-                  {myHotel && (myHotel.area.id === best.area.id ? (
+                  {myHotel && myHotel.pin.id !== best.hotel?.id && (myHotel.area.id === best.area.id ? (
                     <p className="tm-quiz__hotel tm-wk__shared">{s.home.quiz.yourHotelHere(t(myHotel.pin.name, locale))}</p>
                   ) : (
                     <p className="tm-quiz__hotel tm-wk__shared">{s.weekendPage.sleepElsewhere(t(myHotel.pin.name, locale), t(myHotel.area.name, locale))}{(() => {

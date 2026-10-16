@@ -17,6 +17,7 @@ import { myHotelAcross, useHotelChoiceVersion } from '@/lib/saved/my-hotel'
 import { formatDay } from '@/lib/stay/format'
 import { addDays, adoptStayFromUrl, stayParam, tripStartDefault, tripStartOptions, useStay } from '@/lib/stay/store'
 import { buildIcs, downloadIcs, type CalendarEvent } from '@/lib/stay/calendar'
+import { StayPicker } from '@/components/stay/stay-picker'
 import { STOP_COLORS } from '@/components/map/trip-map'
 import { bangkokClock } from '@/lib/explorer/when'
 
@@ -176,6 +177,8 @@ export function TripPage({ locale, cityId, cityName, route, hotelDoors = {}, sta
                 </button>
               )}
             </p>
+            {/* The dates, as on the weekend and station pages: with them the days get dates, the road hotel its night, the calendar its file. */}
+            <div className="mt-4"><StayPicker locale={locale} /></div>
             {startOptions.length > 1 && (
               <p className="mt-4 flex flex-wrap items-center gap-1.5 text-[15px] text-ink-2">
                 <span className="mr-1">{s.trip.startOn}</span>
