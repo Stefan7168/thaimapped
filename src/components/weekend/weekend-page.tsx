@@ -9,6 +9,7 @@ import type { Area, Locale, Pin, Station, TripRoute } from '@/lib/content/types'
 import { FromAirport } from '@/components/stay/from-airport'
 import type { AirportLeg, AirportRoutes } from '@/lib/transit/from-airport'
 import { rideSentence } from '@/components/stay/from-airport'
+import type { HotelDoor } from '@/lib/content/slim'
 import { t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
 import { distanceM, isFullRange, PRICE_RANGE, WALK_PACE_M_PER_MIN, type PriceRange } from '@/lib/explorer/filters'
@@ -27,7 +28,7 @@ import { SaveButton } from '@/components/saved/save-button'
 import { StayPicker } from '@/components/stay/stay-picker'
 import { HotelCompare } from '@/components/stay/hotel-compare'
 import { addSaved, useSaved } from '@/lib/saved/store'
-import { chooseHotel, useMyHotelChoice } from '@/lib/saved/my-hotel'
+import { chooseHotel, myHotelChoice, useMyHotelChoice } from '@/lib/saved/my-hotel'
 import { KIND_ICONS } from '@/components/explorer/kind-bar'
 
 const StageMap = dynamic(() => import('@/components/map/stage-map').then((m) => m.StageMap), {
@@ -50,7 +51,7 @@ function readPrice(): PriceRange | null {
  * Sunday, the hotels inside the budget, the same map at the side, and a
  * link anyone can share. The page is static; the budget rides in the URL.
  */
-export function WeekendPage({ locale, cityId, area, areas, stations, routes, borrowed = {}, airport = {}, rides = {} }: { locale: Locale; cityId: string; area: Area; areas: Area[]; stations: Station[]; routes: TripRoute[]; borrowed?: Partial<Record<WeekendSlot, BorrowedSlot>>; airport?: Record<string, AirportRoutes>; rides?: Record<string, Record<string, AirportLeg[] | null>> }) {
+export function WeekendPage({ locale, cityId, area, areas, stations, routes, borrowed = {}, airport = {}, rides = {}, hotelDoors = {}, elsewhereRides = {} }: { locale: Locale; cityId: string; area: Area; areas: Area[]; stations: Station[]; routes: TripRoute[]; borrowed?: Partial<Record<WeekendSlot, BorrowedSlot>>; airport?: Record<string, AirportRoutes>; rides?: Record<string, Record<string, AirportLeg[] | null>>; hotelDoors?: Record<string, HotelDoor[]>; elsewhereRides?: Record<string, Record<string, AirportLeg[] | null>> }) {
   const s = strings(locale)
   const stay = useStay()
   const detected3D = useSyncExternalStore(noopSubscribe, supports3D, () => null)
@@ -83,6 +84,22 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
   // Stable map props: a new object on every render would rebuild the markers and re-frame the map on each hover or card change.
   const mapAreas = useMemo(() => [area], [area])
   const focus = useMemo(() => ({ pins: pinned, area, numbered: true, mine: myHotel?.id }), [pinned, area, myHotel?.id])
+  // No hotel of this area saved, but one elsewhere: name it and the ride to this area's first station.
+  const elsewhere = useMemo(() => {
+    if (myHotel) return null
+    for (const [areaId, doors] of Object.entries(hotelDoors)) {
+      if (areaId === area.id) continue
+      const mine = doors.filter((h) => saved.includes(h.id))
+      if (mine.length === 0) continue
+      const hotel = mine.find((h) => h.id === myHotelChoice(areaId)) ?? mine[0]
+      const other = areas.find((a) => a.id === areaId)
+      const legs = hotel.walk && area.stations[0] ? elsewhereRides[hotel.walk.station]?.[area.stations[0]] : undefined
+      return { hotel, areaName: other ? t(other.name, locale) : areaId, route: legs && legs.length > 0 ? rideSentence(legs, null, locale) : null }
+    }
+    return null
+    // chosenHotel is read so a new choice recomputes the pick.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [myHotel, hotelDoors, saved, area.id, area.stations, areas, elsewhereRides, locale, chosenHotel])
   // A stop more than twenty minutes on foot from the hotel, when both walk from a station and the chain is a real ride.
   const byTrain = (pin: Pin): string | null => {
     if (!myHotel?.walk || !pin.walk || pin.walk.station === myHotel.walk.station) return null
@@ -226,6 +243,11 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
               {saved.includes(myHotel.id) ? <span className="tm-wk__shared-done">{s.weekendPage.sentHotelSaved}</span> : <button type="button" className="tm-link tm-link--under" onClick={() => addSaved([myHotel.id])}>{s.weekendPage.saveSentHotel}</button>}
             </p>
           )}
+          {elsewhere && (
+            <p className="tm-wk__shared tm-wk__elsewhere">
+              {s.weekendPage.sleepElsewhere(t(elsewhere.hotel.name, locale), elsewhere.areaName)}{elsewhere.route ? ` ${s.weekendPage.gettingHere(elsewhere.route)}` : ''} <a href="#tm-stay" className="tm-link tm-link--under">{s.weekendPage.sleepHere(t(area.name, locale))}</a>
+            </p>
+          )}
           <StayPicker locale={locale} />
           <div className="tm-wk__actions">
             <button type="button" onClick={share} className="tm-button">
@@ -271,7 +293,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
                 ) : <ul className="tm-wk__stops">{plan.slots[slot].map(stop)}</ul>}
               </li>
             ))}
-            <li className="tm-wk__slot tm-wk__slot--stay">
+            <li className="tm-wk__slot tm-wk__slot--stay" id="tm-stay">
               <h2 className="tm-wk__time">{s.guide.stay}</h2>
               {hotels.length > 0 && <p className={myHotel ? 'tm-wk__empty' : 'tm-wk__empty tm-wk__hint'}>{myHotel ? s.weekendPage.hotelPicked(t(myHotel.name, locale)) : s.weekendPage.pickHotelHint}{myHotel && hotels.filter((h) => saved.includes(h.id)).length > 1 ? ` ${s.weekendPage.switchHint}` : ''}</p>}
               {hotels.length === 0 ? (

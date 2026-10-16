@@ -11,11 +11,11 @@ export function slimArea(area: Area): Area {
 }
 
 /** A hotel reduced to what a "how far from your hotel" line needs: its id, name and door. */
-export type HotelDoor = Pick<Pin, 'id' | 'name' | 'location'>
+export type HotelDoor = Pick<Pin, 'id' | 'name' | 'location' | 'walk'>
 
 /** The hotels of each area as doors only, so a page can measure walks from a saved hotel without carrying every hotel whole. */
 export function hotelDoors(areas: Area[]): Record<string, HotelDoor[]> {
-  return Object.fromEntries(areas.map((a) => [a.id, a.pins.filter((p) => p.kind === 'hotel').map(({ id, name, location }) => ({ id, name, location }))]))
+  return Object.fromEntries(areas.map((a) => [a.id, a.pins.filter((p) => p.kind === 'hotel').map(({ id, name, location, walk }) => ({ id, name, location, walk }))]))
 }
 
 /** Only the stations the given pins walk from, plus any the page names itself. */

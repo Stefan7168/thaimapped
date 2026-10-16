@@ -194,6 +194,7 @@ body {
 .tm-wk__shared { margin: 0 0 14px; padding: 10px 12px; border-left: 3px solid var(--pin, var(--accent)); background: var(--paper-2); border-radius: 0 8px 8px 0; font-size: 14px; line-height: 1.5; color: var(--ink); }
 .tm-wk__shared .tm-link { font: inherit; }
 .tm-wk__shared-done { color: var(--ink-2); }
+.tm-wk__elsewhere { border-left-color: var(--ink-3, var(--ink-2)); }
 .tm-st__km { margin-left: 6px; font-size: 12px; color: var(--ink-2); }
 .tm-wk__borrowed-list { display: flex; flex-direction: column; gap: 8px; margin: 0; padding: 0; list-style: none; }
 .tm-wk__borrowed-list li { display: flex; flex-direction: column; gap: 2px; }
