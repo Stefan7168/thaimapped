@@ -328,7 +328,16 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
                       </div>
                     )}
                   </>
-                ) : <ul className="tm-wk__stops">{plan.slots[slot].map(stop)}</ul>}
+                ) : (
+                  <>
+                    <ul className="tm-wk__stops">{plan.slots[slot].map(stop)}</ul>
+                    {/* The night ends at the hotel: the way back from the slot's last stop, by train when it is a real ride. */}
+                    {myHotel && (slot === 'fridayNight' || slot === 'saturdayNight') && (() => {
+                      const last = plan.slots[slot][plan.slots[slot].length - 1]
+                      return <p className="tm-wk__back"><a href={directionsUrl(myHotel.location.lat, myHotel.location.lon, { from: last.location, mode: fromHotel(last)! > 20 && byTrain(last) ? 'transit' : 'walking' })} target="_blank" rel="noopener" className="tm-link tm-link--under">{s.trip.endAtHotel(t(myHotel.name, locale))}</a></p>
+                    })()}
+                  </>
+                )}
               </li>
             ))}
             <li className="tm-wk__slot tm-wk__slot--stay" id="tm-stay">
