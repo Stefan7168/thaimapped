@@ -18,6 +18,9 @@ import { supports3D } from '@/lib/map/device'
 import { SiteHeader } from '@/components/explorer/site-header'
 import { SiteFooter } from '@/components/explorer/site-footer'
 import { SaveButton } from '@/components/saved/save-button'
+import { useSaved } from '@/lib/saved/store'
+import type { HotelDoor } from '@/lib/content/slim'
+import { myHotelChoice, useHotelChoiceVersion } from '@/lib/saved/my-hotel'
 import { StayPicker } from '@/components/stay/stay-picker'
 import { HotelCompare } from '@/components/stay/hotel-compare'
 import { distanceM, WALK_PACE_M_PER_MIN } from '@/lib/explorer/filters'
@@ -37,7 +40,7 @@ const noopSubscribe = () => () => {}
  */
 const NO_AREAS: Area[] = []
 
-export function StationPage({ locale, cityId, page, areas, stations, others }: { locale: Locale; cityId: string; page: StationPageData; areas: Area[]; stations: Station[]; others: StationPageData[] }) {
+export function StationPage({ locale, cityId, page, areas, hotelDoors, stations, others }: { locale: Locale; cityId: string; page: StationPageData; areas: Area[]; hotelDoors: Record<string, HotelDoor[]>; stations: Station[]; others: StationPageData[] }) {
   const s = strings(locale)
   const stay = useStay()
   // Places of this page inside a ten-minute walk of a hotel, straight-line at walking pace.
@@ -66,6 +69,21 @@ export function StationPage({ locale, cityId, page, areas, stations, others }: {
   const focus = useMemo(() => ({ pins: pinned.map((n) => n.pin), area: mainArea, numbered: true }), [pinned, mainArea])
   const marker = useMemo(() => ({ lon: st.lon, lat: st.lat, label, color: page.lines[0]?.color ?? '#c8553d' }), [st.lon, st.lat, label, page.lines])
   const explorerHref = `/${locale}/${cityId}#station=${st.id}`
+  // The reader's hotel in a place's area (the chosen one, else the first saved): places then say how far they are from that door, as on the plan pages.
+  const saved = useSaved()
+  const choiceVersion = useHotelChoiceVersion()
+  const hotelFor = useMemo(() => {
+    const byArea = new Map<string, HotelDoor | null>()
+    for (const [areaId, doors] of Object.entries(hotelDoors)) {
+      const hotels = doors.filter((h) => saved.includes(h.id))
+      const chosen = myHotelChoice(areaId)
+      byArea.set(areaId, hotels.find((h) => h.id === chosen) ?? hotels[0] ?? null)
+    }
+    return (areaId: string) => byArea.get(areaId) ?? null
+    // choiceVersion is read so a new choice recomputes the map.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hotelDoors, saved, choiceVersion])
+  const fromHotel = (pin: Pin, hotel: HotelDoor) => Math.max(1, Math.round(distanceM(hotel.location.lon, hotel.location.lat, pin.location.lon, pin.location.lat) / WALK_PACE_M_PER_MIN))
 
   const showMap = () => {
     if (window.innerWidth > 1023) return
@@ -96,6 +114,7 @@ export function StationPage({ locale, cityId, page, areas, stations, others }: {
             {pin.price && <span className="tm-wk__meta">{s.guide.priceFrom(thb(pin.price.from, locale))}{pin.price.basis === 'tier-estimate' ? ` (${s.guide.priceEstimate})` : ''}</span>}
             {pin.price && stay && <span className="tm-wk__meta tm-wk__stay">{s.guide.stayTotal(thb(pin.price.from * nights(stay), locale), nights(stay))}</span>}
             <span className="tm-wk__meta">{s.city.walkMinutes(minutes)} {s.city.from(label)}{estimated ? ` (${s.stationPage.estimated})` : ''}</span>
+            {pin.kind !== 'hotel' && hotelFor(area.id) && <span className="tm-wk__meta tm-wk__from">{s.weekendPage.fromHotel(fromHotel(pin, hotelFor(area.id)!), t(hotelFor(area.id)!.name, locale))}</span>}
           </span>
         </button>
         <div className="tm-wk__links">
@@ -139,7 +158,7 @@ export function StationPage({ locale, cityId, page, areas, stations, others }: {
                 <div className="tm-ar__cmp">
                   <h3 className="tm-wk__time">{s.areaPage.compare}</h3>
                   <p className="tm-saved__note">{s.stationPage.compareLead}</p>
-                  <HotelCompare locale={locale} cityId={cityId} entries={page.hotels.map((h) => ({ pin: h.pin, area: h.area }))} stations={stations} nearbyCount={nearbyCount} />
+                  <HotelCompare locale={locale} cityId={cityId} entries={page.hotels.map((h) => ({ pin: h.pin, area: h.area }))} stations={stations} nearbyCount={nearbyCount} mine={page.hotels.map((h) => hotelFor(h.area.id)?.id).find((id) => id && page.hotels.some((h) => h.pin.id === id))} />
                 </div>
               )}
             </li>

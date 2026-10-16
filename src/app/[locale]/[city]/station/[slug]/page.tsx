@@ -5,7 +5,7 @@ import { stationPages } from '@/lib/explorer/stations'
 import { LOCALES, isLocale, t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
 import { pageMeta } from '@/lib/seo/page-meta'
-import { slimArea, stationsFor } from '@/lib/content/slim'
+import { hotelDoors, slimArea, stationsFor } from '@/lib/content/slim'
 import { StationPage } from '@/components/station/station-page'
 import { JsonLd, pinNode, placeListLd } from '@/lib/seo/json-ld'
 
@@ -51,7 +51,7 @@ export default async function StationRoute(props: PageProps<'/[locale]/[city]/st
   return (
     <>
       <JsonLd data={placeListLd(`${first.code ? first.code + ' ' : ''}${t(first.name, locale)}`, `/${locale}/${city}/station/${slug}`, pins.map((p) => pinNode(p, locale, cityName)))} />
-      <StationPage locale={locale} cityId={city} page={light} areas={[...slim.values()]} stations={stationsFor(bundle.stations, pins, page.stations.map((st) => st.id))} others={others} />
+      <StationPage locale={locale} cityId={city} page={light} areas={[...slim.values()]} hotelDoors={hotelDoors(bundle.areas)} stations={stationsFor(bundle.stations, pins, page.stations.map((st) => st.id))} others={others} />
     </>
   )
 }
