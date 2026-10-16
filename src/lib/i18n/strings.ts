@@ -196,6 +196,8 @@ const en = {
       noHotel: 'No hotel in this budget listed here yet.',
       open: (name: string) => `Open ${name} with these filters`,
       plan: (name: string) => `Plan the weekend in ${name}`,
+      yourHotelHere: (hotel: string) => `Your hotel, ${hotel}, is here.`,
+      fromYourHotel: (route: string) => `From there: ${route}.`,
       empty: 'Answer at least one question to see your area.',
     },
     areasHeading: 'Eight areas',

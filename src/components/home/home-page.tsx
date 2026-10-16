@@ -9,6 +9,8 @@ import { CmpWrap } from '@/components/stay/cmp-wrap'
 import { allPins, TIER_PRICE, TIERS } from '@/lib/explorer/filters'
 import { QUIZ_PACES, QUIZ_PURPOSES, rankAreas, type Pace, type QuizAnswers } from '@/lib/explorer/quiz'
 import { t } from '@/lib/i18n/locales'
+import { railLegs } from '@/lib/transit/from-airport'
+import { rideSentence } from '@/components/stay/from-airport'
 import { strings } from '@/lib/i18n/strings'
 import { supports3D } from '@/lib/map/device'
 import { bangkokClock, bangkokNow } from '@/lib/explorer/when'
@@ -276,6 +278,15 @@ export function HomePage({ locale, bundle, routes }: { locale: Locale; bundle: C
                 <div className="tm-quiz__card" style={{ ['--pin' as string]: `var(--${best.area.color})` }}>
                   <p className="tm-quiz__name">{s.home.quiz.result(t(best.area.name, locale))}</p>
                   <p className="tm-quiz__why">{t(best.area.tagline, locale)}</p>
+                  {/* A hotel already on the list: say so, and the ride from its door when it sleeps in another area. */}
+                  {myHotel && (myHotel.area.id === best.area.id ? (
+                    <p className="tm-quiz__hotel tm-wk__shared">{s.home.quiz.yourHotelHere(t(myHotel.pin.name, locale))}</p>
+                  ) : (
+                    <p className="tm-quiz__hotel tm-wk__shared">{s.weekendPage.sleepElsewhere(t(myHotel.pin.name, locale), t(myHotel.area.name, locale))}{(() => {
+                      const legs = myHotel.pin.walk && best.area.stations[0] ? railLegs(bundle.stations, bundle.interchanges, myHotel.pin.walk.station, best.area.stations[0]) : null
+                      return legs && legs.length > 0 ? ` ${s.home.quiz.fromYourHotel(rideSentence(legs, null, locale))}` : ''
+                    })()}</p>
+                  ))}
                   {answers.tier && (best.hotel ? (
                     <p className="tm-quiz__hotel">
                       <span className="tm-quiz__label">{s.home.quiz.hotelPick}</span>
