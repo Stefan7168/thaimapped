@@ -198,8 +198,8 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
   }
 
   const others = areas.filter((a) => a.id !== area.id)
-  // Trips that fit inside one weekend day; the multi-day ones belong to the trips index.
-  const dayTrips = routes.filter((r) => r.duration !== 'multi-day')
+  // Trips that fit inside one weekend day, plus, with dates set, the multi-day trips that fit inside the stay (a two-day trip in a Fri to Sun stay).
+  const dayTrips = [...routes.filter((r) => r.duration !== 'multi-day'), ...routes.filter((r) => r.duration === 'multi-day' && stay && r.days >= 2 && r.days <= nights(stay) + 1)]
   return (
     <>
       <SiteHeader locale={locale} cityId={cityId} />
@@ -285,15 +285,16 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
           {dayTrips.length > 0 && (
             <section className="tm-wk__others">
               <h2 className="tm-wk__time">{s.weekendPage.dayOut}</h2>
-              <p className="tm-wk__empty">{s.weekendPage.dayOutLead}</p>
+              <p className="tm-wk__empty">{stay && dayTrips.some((r) => r.duration === 'multi-day') ? s.weekendPage.dayOutLeadStay(nights(stay)) : s.weekendPage.dayOutLead}</p>
               <ul className="tm-wk__stops">
                 {dayTrips.map((r) => (
                   <li key={r.id}>
                     <Link href={`/${locale}/${cityId}/trip/${r.id}`} className="tm-wk__stop tm-wk__trip">
                       <span className="tm-wk__text">
-                        <span className="tm-wk__kind">{s.trip.duration[r.duration]} · {s.trip.mode[r.mode]}{r.distanceKm !== undefined ? ` · ${s.trip.km(r.distanceKm)}` : ''}</span>
+                        <span className="tm-wk__kind">{r.duration === 'multi-day' ? s.trip.days(r.days) : s.trip.duration[r.duration]} · {s.trip.mode[r.mode]}{r.distanceKm !== undefined ? ` · ${s.trip.km(r.distanceKm)}` : ''}</span>
                         <span className="tm-wk__name">{t(r.name, locale)}</span>
                         <span className="tm-wk__why">{t(r.tagline, locale)}</span>
+                        {r.duration === 'multi-day' && stay && <span className="tm-wk__meta tm-wk__from">{s.trip.fitsStay(nights(stay))}</span>}
                       </span>
                     </Link>
                   </li>

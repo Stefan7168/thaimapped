@@ -119,6 +119,7 @@ const en = {
     others: 'Other weekends',
     dayOut: 'Or a day out of town',
     dayOutLead: 'Trips that fit a Saturday or a Sunday, from the trips index.',
+    dayOutLeadStay: (n: number) => `Trips that fit a Saturday or a Sunday, and the road trips that fit your ${n === 1 ? 'night' : `${n} nights`} instead of the city.`,
     shareFromMap: 'Open as a page you can share',
     calendar: 'Add to calendar',
     calendarName: (area: string) => `Weekend in ${area}`,
