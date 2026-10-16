@@ -96,6 +96,7 @@ const en = {
     fromHotel: (n: number, hotel: string) => `about ${n} min on foot from ${hotel}`,
     pickHotelHint: 'Tap the heart on a hotel and every stop above says how far it is from that door.',
     useHotel: 'Walk from here instead',
+    switchHint: 'Tap "Walk from here instead" on another saved hotel to switch.',
     hotelPicked: (hotel: string) => `Your hotel is ${hotel}: each stop above says how far it is on foot (straight line, not checked).`,
     calendarYourHotel: 'Your hotel',
     compareLead: 'A night, the walk to the train, and how many of this weekend\'s stops are within ten minutes on foot. Prices are typical for the class, not checked.',

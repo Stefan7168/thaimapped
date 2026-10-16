@@ -233,7 +233,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes }: {
             ))}
             <li className="tm-wk__slot tm-wk__slot--stay">
               <h2 className="tm-wk__time">{s.guide.stay}</h2>
-              {hotels.length > 0 && <p className={myHotel ? 'tm-wk__empty' : 'tm-wk__empty tm-wk__hint'}>{myHotel ? s.weekendPage.hotelPicked(t(myHotel.name, locale)) : s.weekendPage.pickHotelHint}</p>}
+              {hotels.length > 0 && <p className={myHotel ? 'tm-wk__empty' : 'tm-wk__empty tm-wk__hint'}>{myHotel ? s.weekendPage.hotelPicked(t(myHotel.name, locale)) : s.weekendPage.pickHotelHint}{myHotel && hotels.filter((h) => saved.includes(h.id)).length > 1 ? ` ${s.weekendPage.switchHint}` : ''}</p>}
               {hotels.length === 0 ? (
                 <p className="tm-wk__empty">
                   {s.guide.stayNone}
