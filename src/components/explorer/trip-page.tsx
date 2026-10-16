@@ -2,7 +2,7 @@
 
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState, useSyncExternalStore } from 'react'
 import { ArrowLeft, CalendarPlus, Share2 } from 'lucide-react'
 import type { Locale, TripRoute } from '@/lib/content/types'
 import { t } from '@/lib/i18n/locales'
@@ -15,6 +15,12 @@ import { myHotelChoice, useHotelChoiceVersion } from '@/lib/saved/my-hotel'
 import { adoptStayFromUrl, stayParam, useStay } from '@/lib/stay/store'
 import { buildIcs, downloadIcs, type CalendarEvent } from '@/lib/stay/calendar'
 import { STOP_COLORS } from '@/components/map/trip-map'
+import { bangkokClock } from '@/lib/explorer/when'
+
+// Bangkok's date, read once in the browser; the server renders no "Today".
+let clockCache: ReturnType<typeof bangkokClock> | null = null
+const clockSnapshot = () => clockCache ?? (clockCache = bangkokClock())
+const noopSubscribe = () => () => {}
 import { SiteFooter } from './site-footer'
 
 const TripMap = dynamic(() => import('@/components/map/trip-map').then((m) => m.TripMap), {
@@ -67,6 +73,14 @@ export function TripPage({ locale, cityId, cityName, route, hotelDoors = {} }: {
     return new Intl.DateTimeFormat(locale, { weekday: 'short', day: 'numeric', month: 'short' }).format(date)
   }
   useEffect(() => { adoptStayFromUrl() }, [])
+  // With dates set, the day whose date is today in Bangkok is marked.
+  const clock = useSyncExternalStore(noopSubscribe, clockSnapshot, () => null)
+  const isToday = (d: number): boolean => {
+    if (!stay || !clock) return false
+    const date = new Date(`${stay.checkIn}T12:00:00`)
+    date.setDate(date.getDate() + d - 1)
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}` === clock.date
+  }
   // The trip as a calendar file: one all-day-ish event per day (08:00 to 20:00 Bangkok), the day's stops in the description. Needs the dates.
   const addToCalendar = () => {
     if (!stay) return
@@ -161,7 +175,7 @@ export function TripPage({ locale, cityId, cityName, route, hotelDoors = {} }: {
             )}
             {days.map((d) => (
               <section key={d} className={`mt-5 ${day !== null && day !== d ? 'opacity-50' : ''}`}>
-                {route.days > 1 && <h2 className="text-[17px] font-semibold">{s.trip.day(d)}{dayDate(d) && <span className="tm-wk__date"> · {dayDate(d)}</span>}</h2>}
+                {route.days > 1 && <h2 className="text-[17px] font-semibold">{s.trip.day(d)}{dayDate(d) && <span className="tm-wk__date"> · {dayDate(d)}</span>}{isToday(d) && <span className="tm-wk__now">{s.trip.today}</span>}</h2>}
                 <ol className="mt-2 space-y-1.5">
                   {route.stops.map((stop, i) => {
                     if (stop.day !== d) return null
