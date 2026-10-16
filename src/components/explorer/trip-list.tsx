@@ -155,13 +155,15 @@ export function TripList({ locale, cityId, cityCamera, routes }: { locale: Local
                   <span className="tm-row__name">{t(r.name, locale)}</span>
                   <span className="tm-row__meta">
                     {r.duration === 'multi-day' ? s.trip.days(r.days) : s.trip.duration[r.duration]}
+                    {` · ${s.trip.mode[r.mode].toLowerCase()}`}
                     {r.distanceKm !== undefined ? ` · ${s.trip.km(r.distanceKm)}` : ''}
                   </span>
+                  <span className="tm-row__tag">{t(r.tagline, locale)}</span>
                   {fitTag(r) && <span className="tm-row__fit">{fitTag(r)}</span>}
                 </button>
                 <div className="tm-row__body" hidden={!on}>
                   <p>
-                    {t(r.tagline, locale)} {s.trip.mode[r.mode]}. {r.themes.map((th) => s.trip.theme[th]).join(', ')}.
+                    {r.themes.map((th) => s.trip.theme[th]).join(', ')}.
                   </p>
                   <Link href={`/${locale}/${cityId}/trip/${r.id}`} className="tm-button tm-button--small">{s.trip.open}</Link>
                 </div>
