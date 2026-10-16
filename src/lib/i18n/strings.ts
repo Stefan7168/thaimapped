@@ -152,6 +152,7 @@ const en = {
       purposes: { 'first-time': 'My first time here', nightlife: 'Nights out', food: 'Eating', shopping: 'Shopping', culture: 'Temples and history', romantic: 'A romantic break', quiet: 'Peace and quiet' } as Record<string, string>,
       tier: 'Hotel budget',
       pace: 'The pace',
+      when: 'When (optional)',
       paces: { lively: 'Lively', calm: 'Calm and local' } as Record<string, string>,
       result: (name: string) => `Stay in ${name}`,
       alsoFitsLead: 'Also fits:',

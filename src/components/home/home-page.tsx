@@ -13,6 +13,7 @@ import { strings } from '@/lib/i18n/strings'
 import { supports3D } from '@/lib/map/device'
 import { bangkokNow } from '@/lib/explorer/when'
 import { useSaved } from '@/lib/saved/store'
+import { StayPicker } from '@/components/stay/stay-picker'
 import { myHotelChoice, useHotelChoiceVersion } from '@/lib/saved/my-hotel'
 import { nights, useStay } from '@/lib/stay/store'
 import { RevealObserver } from '@/components/motion/reveal'
@@ -229,6 +230,11 @@ export function HomePage({ locale, bundle, routes }: { locale: Locale; bundle: C
                   <button key={v} type="button" aria-pressed={answers.pace === v} className="tm-quiz__chip" onClick={() => answer({ pace: answers.pace === v ? null : v })}>{s.home.quiz.paces[v]}</button>
                 ))}
               </div>
+            </div>
+            {/* Dates are optional here: set once, they price every hotel and booking link on the site for the stay. */}
+            <div className="tm-quiz__q" data-reveal>
+              <p className="tm-quiz__label">{s.home.quiz.when}</p>
+              <StayPicker locale={locale} bare />
             </div>
             <div className="tm-quiz__result" aria-live="polite">
               {!best ? (
