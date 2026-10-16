@@ -28,7 +28,7 @@ export interface StageMapProps {
   /** Every trip, drawn as quiet lines while no single one is active. */
   routes?: TripRoute[]
   /** The area in view on the home page: all of its highlights are pinned at once. */
-  focus?: { pins: Pin[]; area: Area; /** Number the pins 1, 2, 3 in list order instead of naming them: for a plan whose list carries the names. */ numbered?: boolean } | null
+  focus?: { pins: Pin[]; area: Area; /** Number the pins 1, 2, 3 in list order instead of naming them: for a plan whose list carries the names. */ numbered?: boolean; /** The pin the visitor hearted as their hotel: drawn inside out so it stands out among the numbers. */ mine?: string | null } | null
   /** One fixed, named point such as a station: a labelled marker in the line's colour, on top of the numbered pins. */
   marker?: { lon: number; lat: number; label: string; color: string } | null
   /** A highlight the reader tapped: its card opens on the map. */
@@ -200,6 +200,7 @@ export function StageMap({ locale, camera, threeD, areas, route, routes = [], fo
       ;(focus?.pins ?? []).forEach((pin, i) => {
         const el = focus!.numbered ? numberElement(i + 1, `var(--${focus!.area.color})`) : labelElement(t(pin.name, locale), `var(--${focus!.area.color})`, false)
         el.classList.add('tm-pin--active')
+        if (focus!.mine && pin.id === focus!.mine) el.classList.add('tm-pin--mine')
         markersRef.current.push(new maplibregl.Marker({ element: el, anchor: focus!.numbered ? 'center' : 'left' }).setLngLat([pin.location.lon, pin.location.lat]).addTo(map))
       })
       if (marker) {
