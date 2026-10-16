@@ -165,7 +165,7 @@ export function TripPage({ locale, cityId, cityName, route, hotelDoors = {}, sta
               <span className="bg-paper-2 px-2 py-0.5">{s.trip.mode[route.mode]}</span>
               {route.distanceKm !== undefined && <span className="bg-paper-2 px-2 py-0.5">{s.trip.km(route.distanceKm)}</span>}
             </p>
-            <p className="mt-3">
+            <p className="mt-3 tm-trip__tools">
               <button type="button" onClick={share} className="tm-button tm-button--small tm-button--quiet">
                 <Share2 aria-hidden="true" className="size-4" />
                 {shared === 'copied' ? s.trip.copied : shared === 'failed' ? s.trip.copyFailed : s.trip.share}
@@ -180,7 +180,7 @@ export function TripPage({ locale, cityId, cityName, route, hotelDoors = {}, sta
             {/* The dates, as on the weekend and station pages: with them the days get dates, the road hotel its night, the calendar its file. */}
             <div className="mt-4"><StayPicker locale={locale} /></div>
             {startOptions.length > 1 && (
-              <p className="mt-4 flex flex-wrap items-center gap-1.5 text-[15px] text-ink-2">
+              <p className="mt-4 flex flex-wrap items-center gap-1.5 text-[15px] text-ink-2 tm-trip__tools">
                 <span className="mr-1">{s.trip.startOn}</span>
                 {startOptions.map((date) => (
                   <button key={date} type="button" aria-pressed={startIso === date} onClick={() => setPickedStart(date)} className={`tm-chip${startIso === date ? ' tm-chip--on' : ''}`}>{formatDay(date, locale)}</button>
@@ -188,7 +188,7 @@ export function TripPage({ locale, cityId, cityName, route, hotelDoors = {}, sta
               </p>
             )}
             {route.days > 1 && (
-            <div className="mt-4 flex gap-1.5">
+            <div className="mt-4 flex gap-1.5 tm-trip__tools">
               <button type="button" aria-pressed={day === null} onClick={() => { setDay(null); setActiveStop(null) }} className={`tm-chip${day === null ? ' tm-chip--on' : ''}`}>
                 {s.trip.days(route.days)}
               </button>
@@ -218,7 +218,7 @@ export function TripPage({ locale, cityId, cityName, route, hotelDoors = {}, sta
                             </span>
                             <span className="block text-[16px] text-ink">{t(stop.why, locale)}</span>
                             {stop.placeholder && <span className="tm-stoprow__tbc">{s.trip.placeholder}</span>}
-                            {stop.search && <span className="block text-[13px] text-ink-2">{s.trip.searchHotels(stop.search, !!stay)}</span>}
+                            {stop.search && <span className="block text-[13px] text-ink-2 tm-stoprow__search">{s.trip.searchHotels(stop.search, !!stay)}</span>}
                             {myHotel && i === 0 && <span className="block text-[13px] tm-wk__from">{startLine(stop)}</span>}
                             {myHotel && stop.kind === 'end' && i === route.stops.length - 1 && <span className="block text-[13px] tm-wk__from">{s.trip.endAtHotel(t(myHotel.name, locale))}</span>}
                             {myHotel && stop.kind === 'hotel' && <span className="block text-[13px] tm-wk__from">{s.trip.nightAway(t(myHotel.name, locale))}</span>}

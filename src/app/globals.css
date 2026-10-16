@@ -691,6 +691,8 @@ a.tm-wk__stop { text-decoration: none; }
   .tm-wk:has(+ .tm-wk__book) { padding-bottom: 72px; }
 }
 @media print { .tm-wk__book { display: none !important; } }
+/* A printed trip keeps its map and stops; the controls (share, calendar, start and day chips, zoom) are screen-only. */
+@media print { .tm-trip__tools, .maplibregl-ctrl, .tm-stoprow__search { display: none !important; } .tm-stoprow { break-inside: avoid; } }
 @media (max-width: 480px) {
   .tm-wk__links { margin-left: 0; }
   /* Narrow phones: the booking buttons share the first row half and half; Directions drops to its own row instead of leaving one button orphaned. */
