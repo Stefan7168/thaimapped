@@ -338,6 +338,12 @@ body {
 .tm-credits { max-width: 72ch; padding: 32px clamp(16px, 2.2vw, 32px) 40px; }
 .tm-credits__lead { margin-top: 12px; font-size: 16px; line-height: 1.5; color: var(--ink); max-width: 60ch; }
 .tm-credits__group { margin-top: 36px; }
+/* Station index: the line groups flow into two columns on wide screens instead of leaving the right half empty. */
+@media (min-width: 1024px) {
+  .tm-credits--wide { max-width: 1120px; }
+  .tm-st__lines { columns: 2; column-gap: 48px; }
+  .tm-st__lines .tm-credits__group { break-inside: avoid; margin-top: 0; padding-top: 36px; } /* padding, not margin: a margin is dropped at the top of the second column */
+}
 .tm-credits__area { font-family: var(--font-display), Georgia, serif; font-weight: 600; font-size: 22px; line-height: 1.1; }
 .tm-credits__list { list-style: none; margin: 12px 0 0; padding: 0; }
 .tm-credits__item { display: flex; gap: 12px; align-items: flex-start; padding: 8px 0; border-top: 1px solid var(--line); font-size: 14px; line-height: 1.4; color: var(--ink-2); }
