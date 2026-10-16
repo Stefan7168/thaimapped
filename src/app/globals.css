@@ -189,6 +189,8 @@ body {
 .tm-airport__line { margin: 2px 0 4px; line-height: 1.45; }
 .tm-airport__line strong { color: var(--ink); font-weight: 600; }
 .tm-airport__note { margin: 0 0 8px; font-size: 12px; }
+.tm-card__airport { margin: 4px 0 0; }
+.tm-card__airport .tm-airport__note { margin-bottom: 2px; }
 .tm-wk__shared { margin: 0 0 14px; padding: 10px 12px; border-left: 3px solid var(--pin, var(--accent)); background: var(--paper-2); border-radius: 0 8px 8px 0; font-size: 14px; line-height: 1.5; color: var(--ink); }
 .tm-wk__shared .tm-link { font: inherit; }
 .tm-wk__shared-done { color: var(--ink-2); }

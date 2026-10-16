@@ -11,6 +11,7 @@ import { chooseHotel, myHotelChoice } from '@/lib/saved/my-hotel'
 import { distanceM, WALK_PACE_M_PER_MIN } from '@/lib/explorer/filters'
 import { trackOutbound } from '@/lib/links/track'
 import type { NearbyPin } from '@/lib/explorer/filters'
+import type { AirportLeg, AirportRoutes } from '@/lib/transit/from-airport'
 
 /**
  * The card's pictures: one photograph, or a slider the visitor swipes or
@@ -86,7 +87,37 @@ function photoSlider(photos: AreaPhoto[], s: ReturnType<typeof strings>): HTMLEl
 }
 
 /** The card that opens on a pin: what it is, why it is here, how far from the train, where to book. */
-export function cardElement(locale: Locale, cityId: string, pin: Pin, area: Area, station: Station | undefined, nearby: NearbyPin[], onClose: () => void, onPick: (pin: Pin) => void): HTMLElement {
+/** The same "from the airports" lines the hotel cards on the plan pages fold away, as plain DOM for the map card. */
+function airportBlock(locale: Locale, s: ReturnType<typeof strings>, routes: AirportRoutes, walkMinutes: number): HTMLElement {
+  const stop = (x: AirportLeg['from']) => `${x.code ? x.code + ' ' : ''}${t(x.name, locale)}`
+  const lineName = (leg: AirportLeg) => (leg.line.toLowerCase().includes(leg.system.toLowerCase()) || leg.system === 'ARL' ? leg.line : `${leg.system} ${leg.line}`)
+  const sentence = (legs: AirportLeg[] | null) => {
+    if (!legs) return s.airport.noRail
+    if (legs.length === 0) return s.airport.sameStation
+    return `${legs.map((leg, i) => (i === 0 ? s.airport.ride(lineName(leg), stop(leg.to)) : s.airport.change(stop(leg.from), lineName(leg), stop(leg.to)))).join(', ')}, ${s.airport.thenWalk(walkMinutes)}`
+  }
+  const d = document.createElement('details')
+  d.className = 'tm-airport tm-card__airport'
+  const sum = document.createElement('summary')
+  sum.className = 'tm-airport__summary'
+  sum.textContent = s.airport.summary
+  d.append(sum)
+  for (const [label, legs] of [[s.airport.suvarnabhumi, routes.suvarnabhumi], [s.airport.donMueang, routes.donMueang]] as const) {
+    const p = document.createElement('p')
+    p.className = 'tm-airport__line'
+    const b = document.createElement('strong')
+    b.textContent = label
+    p.append(b, ` ${sentence(legs)}`)
+    d.append(p)
+  }
+  const note = document.createElement('p')
+  note.className = 'tm-airport__note'
+  note.textContent = s.airport.note
+  d.append(note)
+  return d
+}
+
+export function cardElement(locale: Locale, cityId: string, pin: Pin, area: Area, station: Station | undefined, nearby: NearbyPin[], onClose: () => void, onPick: (pin: Pin) => void, airport?: AirportRoutes): HTMLElement {
   const s = strings(locale)
   const el = document.createElement('div')
   el.className = 'tm-card'
@@ -156,6 +187,7 @@ export function cardElement(locale: Locale, cityId: string, pin: Pin, area: Area
     walk.className = 'tm-card__walk'
     walk.textContent = `${s.city.walkMinutes(pin.walk.minutes)} ${s.city.from(`${station.code ? station.code + ' ' : ''}${t(station.name, locale)}`)}`
     el.append(walk)
+    if (pin.kind === 'hotel' && airport) el.append(airportBlock(locale, s, airport, pin.walk.minutes))
   }
   // A place also says how far it is from the reader's hotel in this area (the chosen one, else the first saved), as the plan pages do.
   if (pin.kind !== 'hotel') {

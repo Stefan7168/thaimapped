@@ -14,6 +14,7 @@ import { nights, useStay } from '@/lib/stay/store'
 import { trackOutbound } from '@/lib/links/track'
 import { whenLine } from '@/lib/explorer/when'
 import { WEEKEND_SLOTS, borrowedSlots, weekendPlan } from '@/lib/explorer/weekend'
+import { airportRoutesFor } from '@/lib/transit/from-airport'
 import { activeFilterCount, allPins, DAYS, KIND_CHIPS, distanceM, EMPTY_FILTERS, isFullRange, PRICE_RANGE, TIMES, selectedPlaceCentres, selectedStations, subareaKey, TIER_PRICE, TIERS, visiblePins, WALK_PACE_M_PER_MIN, type FilterState, type PriceRange, type Tier } from '@/lib/explorer/filters'
 import { thb } from '@/lib/explorer/price'
 import { stationPages } from '@/lib/explorer/stations'
@@ -103,6 +104,8 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
   const [tab, setTab] = useState<'places' | 'trips' | 'weekend'>('places')
 
   const pins = useMemo(() => visiblePins(bundle, filters), [bundle, filters])
+  // Rail legs from the airports to every hotel's station, for the map card; a few dozen short searches, once per bundle.
+  const airport = useMemo(() => airportRoutesFor(bundle, bundle.areas.flatMap((a) => a.pins.filter((p) => p.kind === 'hotel' && p.walk).map((p) => p.walk!.station))), [bundle])
   // The hotel the reader hearted: for a place, the saved hotel of its own area (the chosen one when there are several, as on the plan pages),
   // else the first saved hotel on this map; places within a 45-minute walk say how far they are from that door.
   const saved = useSaved()
@@ -407,6 +410,7 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
               pins={pins}
               allPins={everyPin}
               allStations={bundle.stations}
+              airport={airport}
               stations={stations}
               centres={centres}
               near={filters.near}
