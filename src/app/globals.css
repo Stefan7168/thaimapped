@@ -207,6 +207,10 @@ body {
 .tm-wk__when { font-size: 13px; font-weight: 600; color: var(--accent-text); }
 .tm-wk__meta { font-size: 13px; color: var(--ink-2); }
 .tm-wk__links { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0 4px 84px; }
+/* Under a card the links sit in a tray joined to it, so the row reads as that hotel's and not the next one's. */
+.tm-wk__item .tm-wk__stop:has(+ .tm-wk__links) { border-radius: 8px 8px 0 0; }
+.tm-wk__item .tm-wk__links { margin: 0; padding: 8px; border: 1px solid var(--line); border-top: 0; border-radius: 0 0 8px 8px; background: var(--paper-2); }
+.tm-wk__item .tm-wk__stop--on + .tm-wk__links { border-color: var(--ink); }
 .tm-wk__others { margin-top: 36px; padding-top: 14px; border-top: 1px solid var(--line); }
 .tm-wk__other-list { list-style: none; margin: 10px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
 .tm-wk__other-list .tm-weekend__stop { text-decoration: none; }
