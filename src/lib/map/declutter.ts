@@ -46,19 +46,22 @@ export function declutterLabels(markers: Marker[], container: HTMLElement | null
   // The picked area's name pill (area-hover.ts) and every stop number have the spot first.
   const kept: DOMRect[] = [...(container?.querySelectorAll<HTMLElement>('.tm-area-pill, .tm-stop__num, .tm-pin__num') ?? [])].map((el) => el.getBoundingClientRect()).filter((r) => r.width > 0)
   const hits = (r: DOMRect) => kept.some((k) => r.left < k.right + 1 && r.right > k.left - 1 && r.top < k.bottom + 1 && r.bottom > k.top - 1)
+  // Another pin's dot is a spot too: a name may not sit on a neighbour's dot (measured 2026-10-16: up to five did on a picked area).
+  const dots = markers.map((m) => ({ pin: m.getElement(), r: m.getElement().querySelector<HTMLElement>('.tm-pin__dot')?.getBoundingClientRect() })).filter((d): d is { pin: HTMLElement; r: DOMRect } => !!d.r && d.r.width > 0)
+  const onDot = (r: DOMRect, pin: HTMLElement | null) => dots.some((d) => d.pin !== pin && r.left < d.r.right && r.right > d.r.left && r.top < d.r.bottom && r.bottom > d.r.top)
   const outside = (r: DOMRect) => !!bounds && (r.left < bounds.left + 4 || r.right > bounds.right - 4 || r.top < bounds.top + 4)
   labels.forEach((l, i) => {
     let r = rects[i]
     if (r.width === 0) return
     const pin = l.closest<HTMLElement>('.tm-pin')
-    let hit = hits(r)
+    let hit = hits(r) || onDot(r, pin)
     // A stacked name that would cover a neighbour tries above its dot, then
     // beside it (right, then left), before giving up; a spot off the map does not count.
     if (hit && pin?.classList.contains(STACK)) {
       for (const cls of [UP, SIDE_R, SIDE_L]) {
         pin.classList.add(cls)
         r = l.getBoundingClientRect()
-        hit = hits(r) || outside(r)
+        hit = hits(r) || onDot(r, pin) || outside(r)
         if (!hit) break
         pin.classList.remove(cls)
       }
@@ -66,7 +69,7 @@ export function declutterLabels(markers: Marker[], container: HTMLElement | null
       // A name beside its dot (desktop) tries the other side of the dot before giving up.
       pin.classList.add(LEFT)
       r = l.getBoundingClientRect()
-      hit = hits(r) || outside(r)
+      hit = hits(r) || onDot(r, pin) || outside(r)
       if (hit) pin.classList.remove(LEFT)
     }
     if (hit) l.classList.add(OFF)
@@ -81,7 +84,7 @@ export function declutterLabels(markers: Marker[], container: HTMLElement | null
     if (!l.classList.contains(OFF) || !pin?.classList.contains(STACK)) continue
     const r = l.getBoundingClientRect()
     const blockers = labels.filter((o) => o !== l && !o.classList.contains(OFF) && overlaps(r, o.getBoundingClientRect()))
-    if (blockers.length !== 1 || kept.some((k) => !labels.some((o) => !o.classList.contains(OFF) && o.getBoundingClientRect().left === k.left && o.getBoundingClientRect().top === k.top) && overlaps(r, k))) continue
+    if (blockers.length !== 1 || onDot(r, pin) || kept.some((k) => !labels.some((o) => !o.classList.contains(OFF) && o.getBoundingClientRect().left === k.left && o.getBoundingClientRect().top === k.top) && overlaps(r, k))) continue
     const other = blockers[0]
     const otherPin = other.closest<HTMLElement>('.tm-pin')
     if (!otherPin?.classList.contains(STACK) || moved(otherPin)) continue
