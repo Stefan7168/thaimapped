@@ -3,13 +3,13 @@
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useEffect, useMemo, useState, useSyncExternalStore } from 'react'
+import { useEffect, useMemo, useState, useSyncExternalStore, type CSSProperties } from 'react'
 import { CalendarPlus, Share2 } from 'lucide-react'
 import type { Area, Locale, Pin, Station, TripRoute } from '@/lib/content/types'
 import { t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
 import { distanceM, isFullRange, PRICE_RANGE, WALK_PACE_M_PER_MIN, type PriceRange } from '@/lib/explorer/filters'
-import { WEEKEND_SLOTS, weekendPlan, type WeekendSlot, SLOT_TIMES } from '@/lib/explorer/weekend'
+import { WEEKEND_SLOTS, weekendPlan, type WeekendSlot, SLOT_TIMES, type BorrowedSlot } from '@/lib/explorer/weekend'
 import { whenLine } from '@/lib/explorer/when'
 import { thb } from '@/lib/explorer/price'
 import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
@@ -47,7 +47,7 @@ function readPrice(): PriceRange | null {
  * Sunday, the hotels inside the budget, the same map at the side, and a
  * link anyone can share. The page is static; the budget rides in the URL.
  */
-export function WeekendPage({ locale, cityId, area, areas, stations, routes }: { locale: Locale; cityId: string; area: Area; areas: Area[]; stations: Station[]; routes: TripRoute[] }) {
+export function WeekendPage({ locale, cityId, area, areas, stations, routes, borrowed = {} }: { locale: Locale; cityId: string; area: Area; areas: Area[]; stations: Station[]; routes: TripRoute[]; borrowed?: Partial<Record<WeekendSlot, BorrowedSlot>> }) {
   const s = strings(locale)
   const stay = useStay()
   const detected3D = useSyncExternalStore(noopSubscribe, supports3D, () => null)
@@ -225,10 +225,27 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes }: {
               <li key={slot} className="tm-wk__slot">
                 <h2 className="tm-wk__time">{s.guide.slots[slot]}{slotDate(slot) && <span className="tm-wk__date"> · {slotDate(slot)}</span>}</h2>
                 {plan.slots[slot].length === 0 ? (
-                  <p className="tm-wk__empty">
-                    {s.guide.slotEmpty}{' · '}
-                    <Link href={`/${locale}/${cityId}#area=${area.id}&time=${SLOT_TIMES[slot].join(',')}`} className="tm-link tm-link--under">{s.weekendPage.slotEmptyLink}</Link>
-                  </p>
+                  <>
+                    <p className="tm-wk__empty">
+                      {s.guide.slotEmpty}{' · '}
+                      <Link href={`/${locale}/${cityId}#area=${area.id}&time=${SLOT_TIMES[slot].join(',')}`} className="tm-link tm-link--under">{s.weekendPage.slotEmptyLink}</Link>
+                    </p>
+                    {borrowed[slot] && (
+                      <div className="tm-wk__borrowed" style={{ '--pin': `var(--${borrowed[slot].area.color})` } as CSSProperties}>
+                        <p className="tm-wk__empty tm-wk__borrowed-lead">{s.weekendPage.borrowed(t(borrowed[slot].area.name, locale))}</p>
+                        <ul className="tm-wk__borrowed-list">
+                          {borrowed[slot].pins.map((pin) => (
+                            <li key={pin.id}>
+                              <Link href={`/${locale}/${cityId}#area=${borrowed[slot]!.area.id}&pin=${pin.id}`} className="tm-wk__borrowed-name">{t(pin.name, locale)}</Link>
+                              <span className="tm-wk__why">{t(pin.why, locale)}</span>
+                              {whenLine(pin, locale) && <span className="tm-wk__meta tm-wk__when">{whenLine(pin, locale)}</span>}
+                              {pin.walk && stationById.get(pin.walk.station) && <span className="tm-wk__meta">{s.city.walkMinutes(pin.walk.minutes)} {s.city.from(`${stationById.get(pin.walk.station)!.code ? stationById.get(pin.walk.station)!.code + ' ' : ''}${t(stationById.get(pin.walk.station)!.name, locale)}`)}</span>}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </>
                 ) : <ul className="tm-wk__stops">{plan.slots[slot].map(stop)}</ul>}
               </li>
             ))}

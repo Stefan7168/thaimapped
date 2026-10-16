@@ -54,3 +54,37 @@ export function weekendPlan(area: Area, price: PriceRange | null = null): Weeken
   const hotels = area.pins.filter((p) => p.kind === 'hotel' && fitsPrice(p, price))
   return { slots, hotels }
 }
+
+/** A slot's stand-in from the nearest other area, when this area has nothing listed for it. */
+export interface BorrowedSlot {
+  area: Area
+  pins: Pin[]
+}
+
+const CENTER_M = 111_000
+
+/**
+ * For each slot the area leaves empty, the nearest other area (by camera
+ * centre) that has places fitting the slot's times, with up to two of them;
+ * a morning place never lands on a night, just as in the plan.
+ */
+export function borrowedSlots(area: Area, areas: Area[], plan: WeekendPlan): Partial<Record<WeekendSlot, BorrowedSlot>> {
+  const out: Partial<Record<WeekendSlot, BorrowedSlot>> = {}
+  const [lon0, lat0] = area.camera.center
+  const others = areas
+    .filter((a) => a.id !== area.id && a.pins.length > 0)
+    .map((a) => ({ a, d: Math.hypot((a.camera.center[0] - lon0) * Math.cos((lat0 * Math.PI) / 180) * CENTER_M, (a.camera.center[1] - lat0) * CENTER_M) }))
+    .sort((x, y) => x.d - y.d)
+  for (const slot of WEEKEND_SLOTS) {
+    if (plan.slots[slot].length > 0) continue
+    for (const { a } of others) {
+      const night = slot === 'fridayNight' || slot === 'saturdayNight'
+      const pins = a.pins.filter((p) => p.kind !== 'hotel' && p.when && p.when.times.filter((x) => SLOT_TIMES[slot].includes(x)).length / p.when.times.length >= 0.5 && !(night && p.when.times.includes('morning'))).slice(0, PER_SLOT)
+      if (pins.length > 0) {
+        out[slot] = { area: { ...a, boundary: undefined, pins: [], subareas: [] }, pins }
+        break
+      }
+    }
+  }
+  return out
+}

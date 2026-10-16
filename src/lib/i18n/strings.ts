@@ -106,6 +106,7 @@ const en = {
     anyBudget: 'Hotels at every price; set a budget on the map to narrow them.',
     share: 'Share this weekend',
     slotEmptyLink: 'See what the map has at this time',
+    borrowed: (area: string) => `The nearest listed, in ${area}:`,
     copied: 'Link copied',
     copyFailed: 'Copy the address bar to share',
     openMap: 'Open on the map',

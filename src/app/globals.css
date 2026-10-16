@@ -182,6 +182,12 @@ body {
 .tm-wk__slot--stay { border-top: 2px solid var(--pin, var(--accent)); }
 .tm-wk__time { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-2); }
 .tm-wk__empty { margin: 8px 0 10px; font-size: 14px; color: var(--ink-2); }
+.tm-wk__borrowed { margin: 0 0 10px; padding: 10px 12px; border-left: 3px solid var(--pin, var(--accent)); background: var(--paper-2); border-radius: 0 8px 8px 0; }
+.tm-wk__borrowed-lead { margin: 0 0 6px; }
+.tm-wk__borrowed-list { display: flex; flex-direction: column; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.tm-wk__borrowed-list li { display: flex; flex-direction: column; gap: 2px; }
+.tm-wk__borrowed-name { font-family: var(--font-display), Georgia, serif; font-size: 17px; font-weight: 600; color: var(--ink); text-decoration: none; }
+.tm-wk__borrowed-name:hover { text-decoration: underline; }
 .tm-wk__stops { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 8px; }
 .tm-wk__stop { display: flex; gap: 12px; width: 100%; padding: 8px; border-radius: 8px; border: 1px solid var(--line); background: var(--paper); text-align: left; font: inherit; color: var(--ink); cursor: pointer; transition: border-color var(--t-hover) ease; }
 .tm-wk__stop:hover { border-color: var(--ink-2); }
