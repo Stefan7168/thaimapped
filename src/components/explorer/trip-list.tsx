@@ -115,9 +115,9 @@ export function TripList({ locale, cityId, cityCamera, routes }: { locale: Local
         <StageMap locale={locale} camera={cityCamera} threeD={false} areas={[]} route={active} routes={routes} />
       </div>
       <div className="tm-trips-index__list">
-        <h1 className="tm-h2" data-reveal>{s.trip.heading}</h1>
-        <p className="tm-trips-index__intro" data-reveal style={{ ['--i' as string]: 1 }}>{s.trip.intro}</p>
-        <div className="tm-filters" data-reveal style={{ ['--i' as string]: 2 }}>
+        <h1 className="tm-h2" data-rise>{s.trip.heading}</h1>
+        <p className="tm-trips-index__intro" data-rise style={{ ['--i' as string]: 1 }}>{s.trip.intro}</p>
+        <div className="tm-filters" data-rise style={{ ['--i' as string]: 2 }}>
           <Row label={s.trip.filters.duration}>
             {DURATIONS.filter((d) => available.durations.has(d)).map((d) => chip(f.durations.includes(d), s.trip.duration[d], () => setF({ ...f, durations: toggle(f.durations, d) }), d))}
           </Row>
@@ -145,7 +145,7 @@ export function TripList({ locale, cityId, cityCamera, routes }: { locale: Local
             const on = r.id === activeId
             return (
               <li key={r.id} ref={setRow(r.id)} data-trip={r.id} className={`tm-row${on ? ' tm-row--on' : ''}`}>
-                <div data-reveal style={{ ['--i' as string]: i }}>
+                <div data-rise style={{ ['--i' as string]: i + 3 }}>
                 <button type="button" className="tm-row__head" aria-expanded={on} onMouseEnter={() => setActiveId(r.id)} onFocus={() => setActiveId(r.id)} onClick={() => setActiveId(r.id)}>
                   <span className="tm-row__name">{t(r.name, locale)}</span>
                   <span className="tm-row__meta">
