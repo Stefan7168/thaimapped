@@ -1,5 +1,6 @@
 import type { CityBundle, Localized, Station } from '@/lib/content/types'
 import { hotelDoors, type HotelDoor } from '@/lib/content/slim'
+import { distanceM } from '@/lib/explorer/filters'
 
 /** One ride on one line, from the station you board to the one you leave. */
 export interface AirportLeg {
@@ -37,27 +38,31 @@ export function railLegs(stations: Station[], interchanges: [string, string][], 
     change.set(a, [...(change.get(a) ?? []), b])
     change.set(b, [...(change.get(b) ?? []), a])
   }
-  // 0-1 search: a change costs nothing, a ride costs one; the first time a station is settled is with the fewest rides.
-  const rides = new Map<string, number>([[fromId, 0]])
+  // Fewest rides first, shortest distance second: a change costs no ride, a ride costs one ride plus its straight-line
+  // length, so of two two-ride chains the one that does not loop round the city wins (Siam to Sanam Chai via Si Lom, not via Bang Wa).
+  const RIDE = 1_000_000
+  const cost = new Map<string, number>([[fromId, 0]])
   const prev = new Map<string, { id: string; ride: boolean }>()
-  const queue: string[] = [fromId]
-  while (queue.length > 0) {
-    const id = queue.shift()!
-    const cost = rides.get(id)!
+  const open = new Set<string>([fromId])
+  const done = new Set<string>()
+  while (open.size > 0) {
+    let id = ''
+    let best = Infinity
+    for (const candidate of open) if (cost.get(candidate)! < best) { best = cost.get(candidate)!; id = candidate }
+    open.delete(id)
+    done.add(id)
+    if (id === toId) break
     const st = byId.get(id)!
-    for (const other of change.get(id) ?? []) {
-      if (!byId.has(other) || (rides.get(other) ?? Infinity) <= cost) continue
-      rides.set(other, cost)
-      prev.set(other, { id, ride: false })
-      queue.unshift(other)
+    const relax = (other: string, extra: number, ride: boolean) => {
+      if (done.has(other) || (cost.get(other) ?? Infinity) <= best + extra) return
+      cost.set(other, best + extra)
+      prev.set(other, { id, ride })
+      open.add(other)
     }
-    for (const other of byLine.get(st.line) ?? []) {
-      if (other.id === id || (rides.get(other.id) ?? Infinity) <= cost + 1) continue
-      rides.set(other.id, cost + 1)
-      prev.set(other.id, { id, ride: true })
-      queue.push(other.id)
-    }
+    for (const other of change.get(id) ?? []) if (byId.has(other)) relax(other, 0, false)
+    for (const other of byLine.get(st.line) ?? []) if (other.id !== id) relax(other.id, RIDE + distanceM(st.lon, st.lat, other.lon, other.lat), true)
   }
+  const rides = cost
   if (!rides.has(toId)) return null
   const legs: AirportLeg[] = []
   let at = toId
