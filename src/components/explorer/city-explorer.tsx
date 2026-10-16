@@ -452,9 +452,10 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
           <div className="absolute inset-0 z-40 lg:hidden">
             <button type="button" aria-label={s.filters.close} onClick={() => setSheetOpen(false)} className="absolute inset-0 bg-black/40" />
             <div role="dialog" aria-modal="true" aria-label={s.filters.title} className="absolute inset-x-0 bottom-0 flex h-[74dvh] flex-col rounded-t-2xl border-t border-line bg-paper shadow-2xl">
-              <div className="flex items-center justify-between px-3 pt-2">
-                <span className="mx-auto h-1.5 w-10 rounded-full bg-ink-2/30" />
-                <button type="button" aria-label={s.filters.close} onClick={() => setSheetOpen(false)} className="absolute right-2 top-2 flex size-8 items-center justify-center rounded-full text-ink-2">
+              {/* The handle row is as tall as the X button, so the panel's own header (title, Clear all) starts below it instead of under it. */}
+              <div className="relative flex h-10 shrink-0 items-center justify-center">
+                <span className="h-1.5 w-10 rounded-full bg-ink-2/30" />
+                <button type="button" aria-label={s.filters.close} onClick={() => setSheetOpen(false)} className="absolute right-2 top-1 flex size-8 items-center justify-center rounded-full text-ink-2">
                   <X aria-hidden="true" className="size-4" />
                 </button>
               </div>
