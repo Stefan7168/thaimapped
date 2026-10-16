@@ -9,6 +9,7 @@ import { useSyncExternalStore } from 'react'
  */
 const PREFIX = 'tm.hotel.'
 const EVENT = 'tm-hotel-choice'
+let version = 0
 
 function read(areaId: string): string | null {
   if (typeof window === 'undefined') return null
@@ -30,6 +31,7 @@ export function chooseHotel(areaId: string, hotelId: string) {
   } catch {
     // Nothing to do: the choice then lasts until the next page load.
   }
+  version += 1
   window.dispatchEvent(new Event(EVENT))
 }
 
@@ -40,6 +42,11 @@ function subscribe(cb: () => void) {
     window.removeEventListener(EVENT, cb)
     window.removeEventListener('storage', cb)
   }
+}
+
+/** A number that changes with every choice: a component reading several areas' choices with `myHotelChoice` re-renders on it. */
+export function useHotelChoiceVersion(): number {
+  return useSyncExternalStore(subscribe, () => version, () => 0)
 }
 
 /** The chosen hotel id for an area, live; null on the server and until the page is live. */
