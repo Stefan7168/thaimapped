@@ -12,7 +12,8 @@ import { t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
 import { distanceM, KIND_CHIPS, WALK_PACE_M_PER_MIN } from '@/lib/explorer/filters'
 import { whenLine } from '@/lib/explorer/when'
-import { chooseHotel, myHotelChoice, useMyHotelChoice } from '@/lib/saved/my-hotel'
+import { chooseHotel, useMyHotelChoice } from '@/lib/saved/my-hotel'
+import { HotelElsewhere, useHotelElsewhere } from '@/components/stay/hotel-elsewhere'
 import type { HotelDoor } from '@/lib/content/slim'
 import { thb } from '@/lib/explorer/price'
 import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
@@ -56,22 +57,7 @@ export function AreaPage({ locale, cityId, area, areas, stations, stationSlugs, 
   const saved = useSaved()
   const chosenHotel = useMyHotelChoice(area.id)
   const myHotel = useMemo(() => hotels.find((h) => h.id === chosenHotel && saved.includes(h.id)) ?? hotels.find((h) => saved.includes(h.id)) ?? null, [hotels, saved, chosenHotel])
-  // No hotel of this area saved, but one elsewhere: name it and the ride to this area's first station, as the weekend page does.
-  const elsewhere = useMemo(() => {
-    if (myHotel) return null
-    for (const [areaId, doors] of Object.entries(hotelDoors)) {
-      if (areaId === area.id) continue
-      const mine = doors.filter((h) => saved.includes(h.id))
-      if (mine.length === 0) continue
-      const hotel = mine.find((h) => h.id === myHotelChoice(areaId)) ?? mine[0]
-      const other = areas.find((a) => a.id === areaId)
-      const legs = hotel.walk && area.stations[0] ? elsewhereRides[hotel.walk.station]?.[area.stations[0]] : undefined
-      return { hotel, areaName: other ? t(other.name, locale) : areaId, route: legs && legs.length > 0 ? rideSentence(legs, null, locale) : null }
-    }
-    return null
-    // chosenHotel is read so a new choice recomputes the pick.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [myHotel, hotelDoors, saved, area.id, area.stations, areas, elsewhereRides, locale, chosenHotel])
+  const elsewhere = useHotelElsewhere(area, areas, hotelDoors, elsewhereRides, saved, !!myHotel, locale, chosenHotel)
   // A place more than twenty minutes on foot from the hotel, when both walk from a station and the chain is a real ride.
   const byTrain = (pin: Pin): string | null => {
     if (!myHotel?.walk || !pin.walk || pin.walk.station === myHotel.walk.station) return null
@@ -165,11 +151,7 @@ export function AreaPage({ locale, cityId, area, areas, stations, stationSlugs, 
             </ul>
           )}
           {area.about && <p className="tm-ar__about">{t(area.about, locale)}</p>}
-          {elsewhere && (
-            <p className="tm-wk__shared tm-wk__elsewhere">
-              {s.weekendPage.sleepElsewhere(t(elsewhere.hotel.name, locale), elsewhere.areaName)}{elsewhere.route ? ` ${s.weekendPage.gettingHere(elsewhere.route)}` : ''} <a href="#tm-stay" className="tm-link tm-link--under">{s.weekendPage.sleepHere(t(area.name, locale))}</a>
-            </p>
-          )}
+          {elsewhere && <HotelElsewhere locale={locale} area={area} elsewhere={elsewhere} />}
           <div className="tm-wk__actions">
             <Link href={weekendHref} className="tm-button tm-button--small">{s.areaPage.weekend}</Link>
             <Link href={explorerHref} className="tm-link">{s.weekendPage.openMap}</Link>

@@ -4,11 +4,11 @@ import { liveCityIds, loadCityBundle, loadRoutes } from '@/lib/content/load'
 import { LOCALES, isLocale, t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
 import { pageMeta, areaPhoto } from '@/lib/seo/page-meta'
-import { hotelDoors, slimArea, slimRoute, stationsFor } from '@/lib/content/slim'
+import { slimArea, slimRoute, stationsFor } from '@/lib/content/slim'
 import { WeekendPage } from '@/components/weekend/weekend-page'
 import { JsonLd, pinNode, placeListLd } from '@/lib/seo/json-ld'
 import { borrowedSlots, weekendPlan } from '@/lib/explorer/weekend'
-import { airportRoutesFor, railLegsBetween } from '@/lib/transit/from-airport'
+import { airportRoutesFor, elsewhereFor, railLegsBetween } from '@/lib/transit/from-airport'
 
 // Static per area; the hotel budget rides along as ?price=min-max and is read in the browser.
 export const ensureStatic = 'navigation'
@@ -42,15 +42,13 @@ export default async function AreaWeekendPage(props: PageProps<'/[locale]/[city]
   const borrowedPins = Object.values(borrowed).flatMap((b) => b.pins)
   const hotelStations = [...new Set(a.pins.filter((p) => p.kind === 'hotel' && p.walk).map((p) => p.walk!.station))]
   // Rides from each hotel's station to each stop's station, for the "or by train" line under a long walk.
-  // Hotels of the other areas, as doors: a reader sleeping elsewhere gets the ride to this area's first station.
-  const doors = hotelDoors(bundle.areas.filter((x) => x.id !== a.id))
-  const elsewhereStations = [...new Set(Object.values(doors).flat().map((h) => h.walk?.station).filter((id): id is string => !!id))]
-  const elsewhereRides = railLegsBetween(bundle, elsewhereStations, a.stations.slice(0, 1))
+  // A reader sleeping in another area gets the ride to this area's first station.
+  const elsewhere = elsewhereFor(bundle, a)
   const rides = railLegsBetween(bundle, hotelStations, [...a.pins, ...borrowedPins].filter((p) => p.kind !== 'hotel' && p.walk).map((p) => p.walk!.station))
   return (
     <>
       <JsonLd data={placeListLd(strings(locale).weekendPage.title(t(a.name, locale)), `/${locale}/${city}/weekend/${area}`, a.pins.map((p) => pinNode(p, locale, cityName)))} />
-      <WeekendPage locale={locale} cityId={city} area={a} areas={bundle.areas.map(slimArea)} stations={stationsFor(bundle.stations, [...a.pins, ...borrowedPins], [...a.stations.slice(0, 1), ...elsewhereStations])} routes={loadRoutes(city).map(slimRoute)} borrowed={borrowed} airport={airportRoutesFor(bundle, hotelStations)} rides={rides} hotelDoors={doors} elsewhereRides={elsewhereRides} />
+      <WeekendPage locale={locale} cityId={city} area={a} areas={bundle.areas.map(slimArea)} stations={stationsFor(bundle.stations, [...a.pins, ...borrowedPins], [...a.stations.slice(0, 1), ...elsewhere.stations])} routes={loadRoutes(city).map(slimRoute)} borrowed={borrowed} airport={airportRoutesFor(bundle, hotelStations)} rides={rides} hotelDoors={elsewhere.doors} elsewhereRides={elsewhere.rides} />
     </>
   )
 }

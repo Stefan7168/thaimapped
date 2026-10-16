@@ -1,4 +1,5 @@
 import type { CityBundle, Localized, Station } from '@/lib/content/types'
+import { hotelDoors, type HotelDoor } from '@/lib/content/slim'
 
 /** One ride on one line, from the station you board to the one you leave. */
 export interface AirportLeg {
@@ -95,4 +96,14 @@ export function airportRoutesFor(bundle: CityBundle, stationIds: Iterable<string
     }
   }
   return out
+}
+
+/**
+ * For an area page or weekend page: the other areas' hotels as doors, their
+ * stations, and the rides from those stations to this area's first station.
+ */
+export function elsewhereFor(bundle: CityBundle, area: { id: string; stations: string[] }): { doors: Record<string, HotelDoor[]>; stations: string[]; rides: Record<string, Record<string, AirportLeg[] | null>> } {
+  const doors = hotelDoors(bundle.areas.filter((x) => x.id !== area.id))
+  const stations = [...new Set(Object.values(doors).flat().map((h) => h.walk?.station).filter((id): id is string => !!id))]
+  return { doors, stations, rides: railLegsBetween(bundle, stations, area.stations.slice(0, 1)) }
 }
