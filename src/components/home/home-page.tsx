@@ -115,10 +115,14 @@ export function HomePage({ locale, bundle, routes }: { locale: Locale; bundle: C
   // Every highlight of the area in view (or of the tapped card's area) is pinned at once.
   // Keyed on the area id, not the card object, so opening a card does not re-frame the map.
   const focusAreaId = cardPin?.area.id ?? activeArea
+  // When the quiz has answered with this area and a hotel, that hotel joins the pins, drawn as "mine".
+  const quizHotel = best && best.area.id === focusAreaId ? best.hotel : null
   const focusArea = useMemo(() => {
     const area = areas.find((a) => a.id === focusAreaId)
-    return area ? { area, pins: area.pins.filter((p) => p.kind !== 'hotel').slice(0, 5) } : null
-  }, [areas, focusAreaId])
+    if (!area) return null
+    const pins = area.pins.filter((p) => p.kind !== 'hotel').slice(0, 5)
+    return quizHotel ? { area, pins: [...pins, quizHotel], mine: quizHotel.id } : { area, pins }
+  }, [areas, focusAreaId, quizHotel])
 
   const setRow = useCallback((id: string) => (el: HTMLElement | null) => {
     if (el) rowsRef.current.set(id, el)

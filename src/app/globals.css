@@ -60,6 +60,8 @@ body {
 .tm-pin--minor .tm-pin__label { font-weight: 500; color: var(--ink-2); }
 .tm-pin--active .tm-pin__dot { box-shadow: 0 0 0 3px rgba(200,85,61,0.35), 0 1px 3px rgba(0,0,0,0.3); } /* taste-skill-ignore: map marker halo */
 .tm-pin--active .tm-pin__label { border-color: var(--ink); }
+.tm-pin:not(.tm-pin--num).tm-pin--mine .tm-pin__dot { width: 16px; height: 16px; box-shadow: 0 0 0 3px var(--paper), 0 0 0 5px var(--pin, var(--accent)); } /* taste-skill-ignore: map marker halo; the quiz's hotel pick */
+.tm-pin:not(.tm-pin--num).tm-pin--mine .tm-pin__label { font-weight: 700; }
 .tm-map--dots .tm-pin:not(.tm-pin--active):not(.tm-pin--area) .tm-pin__label { display: none; }
 .tm-pin--left .tm-pin__label { position: absolute; right: 100%; top: 50%; transform: translateY(-50%); margin-right: 6px; }
 /* Beside-the-dot names that find no room on either side go above or below the dot (lib/map/declutter.ts); the stacked phone names have their own rules below. */
