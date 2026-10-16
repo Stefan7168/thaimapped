@@ -161,6 +161,13 @@ export function SavedPage({ locale, cityId, entries, stations }: { locale: Local
             <h2 className="tm-wk__time">{s.stationPage.hotels}</h2>
             {hotelRows.length < 2 && <StayPicker locale={locale} />}
             <ol className="tm-wk__stops tm-saved__list">{hotelRows.map(row)}</ol>
+            {!sentIds && (
+              <p className="tm-saved__plan">
+                {[...new Map(hotelRows.map((e) => [e.area.id, e.area])).values()].map((a) => (
+                  <Link key={a.id} href={`/${locale}/${cityId}/weekend/${a.id}`} className="tm-link tm-link--under">{s.home.quiz.plan(t(a.name, locale))}</Link>
+                ))}
+              </p>
+            )}
           </section>
         )}
         {placeRows.length > 0 && (
