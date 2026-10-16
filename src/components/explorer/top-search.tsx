@@ -59,7 +59,7 @@ export function TopSearch({ locale, bundle, onPick }: { locale: Locale; bundle: 
           onBlur={() => setTimeout(() => setOpen(false), 150)}
           aria-label={s.search.placeholder}
           placeholder={s.search.placeholder}
-          className="h-10 w-full appearance-none rounded-full border border-line bg-white pl-9 pr-9 text-sm outline-none focus:border-accent [&::-webkit-search-cancel-button]:appearance-none"
+          className="h-10 w-full appearance-none rounded-full border border-line bg-white pl-9 pr-9 text-sm outline-none focus:border-accent focus-visible:outline-[3px] focus-visible:outline-solid focus-visible:outline-ink focus-visible:outline-offset-2 [&::-webkit-search-cancel-button]:appearance-none"
         />
         {query && (
           <button type="button" aria-label={s.filters.transitClear} onClick={() => setQuery('')} className="absolute right-1.5 top-1/2 flex size-7 -translate-y-1/2 items-center justify-center rounded-full text-ink-2 hover:bg-paper-2">
