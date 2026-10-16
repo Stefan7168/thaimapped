@@ -269,6 +269,7 @@ const en = {
   },
   city: {
     walkMinutes: (n: number) => `${n} min walk`,
+    minutes: (n: number) => `${n} min`,
     from: (station: string) => `from ${station}`,
     flat: '2D',
     tilt: '3D',

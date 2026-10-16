@@ -160,7 +160,7 @@ body {
 .tm-weekend__heading { font-family: var(--font-display), Georgia, serif; font-weight: 600; font-size: 20px; line-height: 1.15; }
 .tm-weekend__lead { margin: 4px 0 10px; font-size: 13px; color: var(--ink-2); }
 .tm-weekend__slots { list-style: none; margin: 0; padding: 0; }
-.tm-weekend__slot { display: grid; grid-template-columns: 96px 1fr; gap: 6px 10px; align-items: start; padding: 7px 0; border-top: 1px solid var(--line); }
+.tm-weekend__slot { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 6px 10px; align-items: start; padding: 7px 0; border-top: 1px solid var(--line); }
 .tm-weekend__slot--stay { margin-top: 4px; border-top-width: 2px; }
 .tm-weekend__time { padding-top: 5px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink-2); }
 .tm-weekend__stops { display: flex; flex-wrap: wrap; gap: 6px; }
@@ -227,6 +227,12 @@ body {
 .tm-wk__others { margin-top: 36px; padding-top: 14px; border-top: 1px solid var(--line); }
 .tm-wk__other-list { list-style: none; margin: 10px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
 .tm-wk__other-list .tm-weekend__stop { text-decoration: none; }
+.tm-weekend__stop--mine { border-color: var(--ink); }
+/* With a hotel known, the stops stack as full-width rows so the walk from its door fits at the right. */
+.tm-weekend__stops--rows { flex-direction: column; align-items: stretch; }
+.tm-weekend__stop { max-width: 100%; }
+.tm-weekend__stops--rows .tm-weekend__stop { width: 100%; border-radius: 12px; flex-wrap: wrap; }
+.tm-weekend__walk { margin-left: auto; padding-left: 8px; font-size: 12px; color: var(--accent-text); white-space: nowrap; }
 .tm-wk__dot { width: 8px; height: 8px; border-radius: 9999px; background: var(--pin, var(--accent)); }
 .tm-weekend__kind { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; opacity: 0.7; }
 .tm-area-hover { position: absolute; z-index: 5; pointer-events: none; width: 220px; background: var(--paper); border-left: 3px solid var(--pin, var(--accent)); box-shadow: 0 4px 16px rgba(43, 42, 38, 0.22); font-size: 13px; line-height: 1.35; color: var(--ink-2); overflow: hidden; }

@@ -220,11 +220,13 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
             {plan.slots[slot].length === 0 ? (
               <span className="tm-weekend__empty">{s.guide.slotEmpty}</span>
             ) : (
-              <span className="tm-weekend__stops">
+              <span className={`tm-weekend__stops${hotelFor(planArea.id) ? ' tm-weekend__stops--rows' : ''}`}>
                 {plan.slots[slot].map((pin) => (
                   <button key={pin.id} type="button" className={`tm-weekend__stop${activePin?.id === pin.id ? ' tm-weekend__stop--on' : ''}`} onClick={() => { setActivePin(pin); setListOpen(false) }}>
                     <span className="tm-weekend__kind">{s.pin[pin.kind]}</span>
                     {t(pin.name, locale)}
+                    {/* With a hotel of this area saved, each stop carries the walk from its door. */}
+                    {hotelFor(planArea.id) && <span className="tm-weekend__walk" title={s.weekendPage.fromHotel(fromHotel(pin, hotelFor(planArea.id)!), t(hotelFor(planArea.id)!.name, locale))}>{s.city.minutes(fromHotel(pin, hotelFor(planArea.id)!))}</span>}
                   </button>
                 ))}
               </span>
@@ -238,8 +240,8 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
           ) : (
             <span className="tm-weekend__stops">
               {plan.hotels.map((pin) => (
-                <button key={pin.id} type="button" className={`tm-weekend__stop${activePin?.id === pin.id ? ' tm-weekend__stop--on' : ''}`} onClick={() => { setActivePin(pin); setListOpen(false) }}>
-                  <span className="tm-weekend__kind">{pin.tier ? s.filters.tier[pin.tier] : s.pin.hotel}</span>
+                <button key={pin.id} type="button" className={`tm-weekend__stop${activePin?.id === pin.id ? ' tm-weekend__stop--on' : ''}${hotelFor(planArea.id)?.id === pin.id ? ' tm-weekend__stop--mine' : ''}`} onClick={() => { setActivePin(pin); setListOpen(false) }}>
+                  <span className="tm-weekend__kind">{hotelFor(planArea.id)?.id === pin.id ? s.saved.cmpMine : pin.tier ? s.filters.tier[pin.tier] : s.pin.hotel}</span>
                   {t(pin.name, locale)}
                 </button>
               ))}
