@@ -247,7 +247,7 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
         return (
           <li key={pin.id} className="relative">
             {<SaveButton id={pin.id} locale={locale} className="absolute right-2 top-2" />}
-            <button type="button" onClick={() => { setActivePin(pin); setListOpen(false) }} onMouseEnter={() => setHoverPin(pin.id)} onMouseLeave={() => setHoverPin(null)} className={`tm-place tm-place--save ${active ? 'border-ink bg-white' : hoverPin === pin.id ? 'border-ink-2 bg-white' : 'border-line bg-white/70'}`}>
+            <button type="button" onClick={() => { setActivePin(pin); setListOpen(false) }} onMouseEnter={() => setHoverPin(pin.id)} onMouseLeave={() => setHoverPin(null)} onFocus={() => setHoverPin(pin.id)} onBlur={() => setHoverPin(null)} className={`tm-place tm-place--save ${active ? 'border-ink bg-white' : hoverPin === pin.id ? 'border-ink-2 bg-white' : 'border-line bg-white/70'}`}>
               {/* A square picture on the left: the place's first photo, or its kind's icon on paper until one is fetched. */}
               {thumb ? (
                 <Image src={thumb.src} alt="" width={72} height={72} sizes="72px" className="tm-place__thumb" />

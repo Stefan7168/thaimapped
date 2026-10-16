@@ -82,7 +82,7 @@ export function StationPage({ locale, cityId, page, areas, stations, others }: {
     return (
       <li key={pin.id} className="tm-wk__item">
         {<SaveButton id={pin.id} locale={locale} className="tm-wk__save" />}
-        <button type="button" aria-pressed={on} onClick={() => { setCard(on ? null : { pin, area }); if (!on) showMap() }} onMouseEnter={() => setHoverId(pin.id)} onMouseLeave={() => setHoverId(null)} className={`tm-wk__stop${on ? ' tm-wk__stop--on' : ''}${hoverId === pin.id ? ' tm-wk__stop--hover' : ''}`} style={{ ['--pin' as string]: `var(--${area.color})` }}>
+        <button type="button" aria-pressed={on} onClick={() => { setCard(on ? null : { pin, area }); if (!on) showMap() }} onMouseEnter={() => setHoverId(pin.id)} onMouseLeave={() => setHoverId(null)} onFocus={() => setHoverId(pin.id)} onBlur={() => setHoverId(null)} className={`tm-wk__stop${on ? ' tm-wk__stop--on' : ''}${hoverId === pin.id ? ' tm-wk__stop--hover' : ''}`} style={{ ['--pin' as string]: `var(--${area.color})` }}>
           {photo ? (
             <Image src={photo.src} alt="" width={72} height={72} sizes="72px" className="tm-wk__thumb" />
           ) : (
