@@ -98,6 +98,7 @@ const en = {
     budget: (min: string, max: string) => `Hotels from ${min} to ${max} a night.`,
     anyBudget: 'Hotels at every price; set a budget on the map to narrow them.',
     share: 'Share this weekend',
+    slotEmptyLink: 'See what the map has at this time',
     copied: 'Link copied',
     copyFailed: 'Copy the address bar to share',
     openMap: 'Open on the map',

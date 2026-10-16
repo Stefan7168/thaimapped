@@ -9,7 +9,7 @@ import type { Area, Locale, Pin, Station, TripRoute } from '@/lib/content/types'
 import { t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
 import { distanceM, isFullRange, PRICE_RANGE, WALK_PACE_M_PER_MIN, type PriceRange } from '@/lib/explorer/filters'
-import { WEEKEND_SLOTS, weekendPlan, type WeekendSlot } from '@/lib/explorer/weekend'
+import { WEEKEND_SLOTS, weekendPlan, type WeekendSlot, SLOT_TIMES } from '@/lib/explorer/weekend'
 import { whenLine } from '@/lib/explorer/when'
 import { thb } from '@/lib/explorer/price'
 import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
@@ -213,7 +213,12 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes }: {
             {WEEKEND_SLOTS.map((slot) => (
               <li key={slot} className="tm-wk__slot">
                 <h2 className="tm-wk__time">{s.guide.slots[slot]}{slotDate(slot) && <span className="tm-wk__date"> · {slotDate(slot)}</span>}</h2>
-                {plan.slots[slot].length === 0 ? <p className="tm-wk__empty">{s.guide.slotEmpty}</p> : <ul className="tm-wk__stops">{plan.slots[slot].map(stop)}</ul>}
+                {plan.slots[slot].length === 0 ? (
+                  <p className="tm-wk__empty">
+                    {s.guide.slotEmpty}{' · '}
+                    <Link href={`/${locale}/${cityId}#area=${area.id}&time=${SLOT_TIMES[slot].join(',')}`} className="tm-link tm-link--under">{s.weekendPage.slotEmptyLink}</Link>
+                  </p>
+                ) : <ul className="tm-wk__stops">{plan.slots[slot].map(stop)}</ul>}
               </li>
             ))}
             <li className="tm-wk__slot tm-wk__slot--stay">

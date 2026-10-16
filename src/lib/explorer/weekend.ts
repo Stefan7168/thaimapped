@@ -10,7 +10,8 @@ export interface WeekendPlan {
   hotels: Pin[]
 }
 
-const SLOT_TIMES: Record<WeekendSlot, TimeOfDay[]> = {
+/** The times of day each slot draws from; exported so an empty slot can link to the map at those times. */
+export const SLOT_TIMES: Record<WeekendSlot, TimeOfDay[]> = {
   fridayNight: ['evening', 'night'],
   saturdayMorning: ['morning'],
   saturdayAfternoon: ['afternoon'],
