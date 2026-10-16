@@ -17,6 +17,7 @@ import { thb } from '@/lib/explorer/price'
 import { distanceM, WALK_PACE_M_PER_MIN } from '@/lib/explorer/filters'
 import { whenLine } from '@/lib/explorer/when'
 import { addSaved, clearSaved, toggleSaved, useSaved } from '@/lib/saved/store'
+import { chooseHotel, myHotelChoice, useHotelChoiceVersion } from '@/lib/saved/my-hotel'
 import { SiteHeader } from '@/components/explorer/site-header'
 import { SiteFooter } from '@/components/explorer/site-footer'
 import { KIND_ICONS } from '@/components/explorer/kind-bar'
@@ -56,6 +57,20 @@ export function SavedPage({ locale, cityId, entries, stations }: { locale: Local
   const missing = ids.length - rows.length
   const hotelRows = rows.filter((e) => e.pin.kind === 'hotel')
   const placeRows = rows.filter((e) => e.pin.kind !== 'hotel')
+  // In an area with two or more saved hotels, one is the pick the plan pages walk from (the chosen one, else the first saved); only on the reader's own list.
+  const choiceVersion = useHotelChoiceVersion()
+  const pickFor = useMemo(() => {
+    const byArea = new Map<string, string>()
+    for (const e of hotelRows) {
+      if (byArea.has(e.area.id)) continue
+      const chosen = myHotelChoice(e.area.id)
+      byArea.set(e.area.id, hotelRows.find((h) => h.area.id === e.area.id && h.pin.id === chosen)?.pin.id ?? e.pin.id)
+    }
+    return (areaId: string) => byArea.get(areaId)
+    // choiceVersion is read so a new choice recomputes the picks.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hotelRows, choiceVersion])
+  const areaHotelCount = (areaId: string) => hotelRows.filter((h) => h.area.id === areaId).length
 
   const share = async () => {
     const url = `${window.location.origin}/${locale}/saved?ids=${encodeURIComponent(ids.join(','))}${stay ? `&stay=${stayParam(stay)}` : ''}`
@@ -104,11 +119,15 @@ export function SavedPage({ locale, cityId, entries, stations }: { locale: Local
                 {pin.price && <span className="tm-wk__meta">{s.guide.priceFrom(thb(pin.price.from, locale))}{pin.price.basis === 'tier-estimate' ? ` (${s.guide.priceEstimate})` : ''}</span>}
             {pin.price && stay && <span className="tm-wk__meta tm-wk__stay">{s.guide.stayTotal(thb(pin.price.from * nights(stay), locale), nights(stay))}</span>}
                 {pin.walk && walkStation && <span className="tm-wk__meta">{s.city.walkMinutes(pin.walk.minutes)} {s.city.from(`${walkStation.code ? walkStation.code + ' ' : ''}${t(walkStation.name, locale)}`)}</span>}
+                {pin.kind === 'hotel' && !sentIds && areaHotelCount(area.id) > 1 && pickFor(area.id) === pin.id && <span className="tm-wk__meta tm-wk__from">{s.saved.yourPick(t(area.name, locale))}</span>}
                 <span className="tm-wk__meta tm-saved__map">{s.saved.showOnMap}</span>
               </span>
             </Link>
             <div className="tm-wk__links">
               <a href={directionsUrl(pin.location.lat, pin.location.lon)} target="_blank" rel="noopener" className="tm-card__link tm-card__link--quiet">{s.card.directions}</a>
+              {pin.kind === 'hotel' && !sentIds && areaHotelCount(area.id) > 1 && pickFor(area.id) !== pin.id && (
+                <button type="button" className="tm-card__link tm-card__link--quiet" onClick={() => chooseHotel(area.id, pin.id)}>{s.weekendPage.useHotel}</button>
+              )}
                 {partners.map((p) => {
                   const subId = subIdFor(`${cityId}-${area.id}`, pin.id)
                   return (
