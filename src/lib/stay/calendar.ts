@@ -12,6 +12,8 @@ export type CalendarEvent = {
   title: string
   description: string
   location?: string
+  /** The first stop's door, so a calendar app can map the event and warn when to leave. */
+  geo?: { lat: number; lon: number }
   url: string
 }
 
@@ -67,6 +69,7 @@ export function buildIcs(events: CalendarEvent[], calendarName: string): string 
       `SUMMARY:${escapeText(e.title)}`,
       `DESCRIPTION:${escapeText(e.description)}`,
       ...(e.location ? [`LOCATION:${escapeText(e.location)}`] : []),
+      ...(e.geo ? [`GEO:${e.geo.lat.toFixed(5)};${e.geo.lon.toFixed(5)}`] : []),
       `URL:${e.url}`,
       'END:VEVENT',
     )

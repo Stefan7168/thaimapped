@@ -139,6 +139,9 @@ const en = {
     calendar: 'Add to calendar',
     calendarName: (area: string) => `Weekend in ${area}`,
     calendarStops: 'Stops',
+    calendarCheckIn: (hotel: string) => `Check in: ${hotel}`,
+    calendarCheckOut: (hotel: string) => `Check out: ${hotel}`,
+    calendarTimesVary: 'Check-in and check-out times vary by hotel; your booking has the real ones.',
     calendarHotel: 'Where to sleep',
   },
   notFound: {

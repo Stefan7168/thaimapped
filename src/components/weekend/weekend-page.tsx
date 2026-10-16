@@ -146,9 +146,18 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
         title: `${s.guide.slots[slot]}, ${areaName}`,
         description: [`${s.weekendPage.calendarStops}:`, stopsText, hotelLine, url].filter(Boolean).join('\n'),
         location: `${t(items[0].name, locale)}, ${areaName}`,
+        geo: items[0].location,
         url,
       }]
     })
+    // The hotel's own two moments, so the weekend reads as one row in the calendar; times are the usual ones, the booking has the real ones.
+    if (myHotel && stay) {
+      const name = t(myHotel.name, locale)
+      events.push(
+        { date: stay.checkIn, start: '14:00', end: '15:00', title: s.weekendPage.calendarCheckIn(name), description: [s.weekendPage.calendarTimesVary, url].join('\n'), location: `${name}, ${areaName}`, geo: myHotel.location, url },
+        { date: stay.checkOut, start: '11:00', end: '12:00', title: s.weekendPage.calendarCheckOut(name), description: [s.weekendPage.calendarTimesVary, url].join('\n'), location: `${name}, ${areaName}`, geo: myHotel.location, url },
+      )
+    }
     downloadIcs(`weekend-${area.id}.ics`, buildIcs(events, s.weekendPage.calendarName(areaName)))
   }
   const priceQuery = price ? `price=${price.min}-${price.max}` : ''

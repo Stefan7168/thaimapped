@@ -114,6 +114,7 @@ export function TripPage({ locale, cityId, cityName, route, hotelDoors = {}, sta
         title: s.trip.calendarDay(name, d, route.days),
         description: [`${s.weekendPage.calendarStops}:`, stopsText, myHotel && d === 1 ? `${s.weekendPage.calendarYourHotel}: ${t(myHotel.name, locale)}` : '', url].filter(Boolean).join('\n'),
         location: stops[0] ? t(stops[0].name, locale) : undefined,
+        geo: stops[0]?.location,
         url,
       }
     })
