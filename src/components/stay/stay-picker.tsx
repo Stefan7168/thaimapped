@@ -28,6 +28,13 @@ export function StayPicker({ locale, bare = false }: { locale: Locale; bare?: bo
   // The weekend after: for people who plan a week ahead.
   const after = weekend ? shiftStay(weekend, 7) : null
   const isAfter = !!after && stay?.checkIn === after.checkIn && stay?.checkOut === after.checkOut
+  // One tap turns the weekend into a long one, or back: the check-out moves a day.
+  const moveOut = (days: number) => {
+    if (!stay) return
+    const d = new Date(stay.checkOut + 'T00:00:00')
+    d.setDate(d.getDate() + days)
+    setStay(stay.checkIn, `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`)
+  }
   const onChange = (which: 'in' | 'out', value: string) => {
     const checkIn = which === 'in' ? value : (stay?.checkIn ?? '')
     const checkOut = which === 'out' ? value : (stay?.checkOut ?? '')
@@ -57,6 +64,8 @@ export function StayPicker({ locale, bare = false }: { locale: Locale; bare?: bo
       {stay && (
         <span className="tm-stay__tail">
           <span className="tm-stay__nights">{s.stay.nights(nights(stay))}</span>
+          <button type="button" className="tm-stay__clear" onClick={() => moveOut(1)} aria-label={`${s.stay.addNight} (${s.stay.nights(nights(stay) + 1)})`}>{s.stay.addNight}</button>
+          {nights(stay) > 1 && <button type="button" className="tm-stay__clear" onClick={() => moveOut(-1)} aria-label={`${s.stay.dropNight} (${s.stay.nights(nights(stay) - 1)})`}>{s.stay.dropNight}</button>}
           <button type="button" className="tm-stay__clear" onClick={clearStay}>{s.stay.clear}</button>
         </span>
       )}
