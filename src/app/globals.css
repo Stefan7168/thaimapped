@@ -196,6 +196,7 @@ body {
 .tm-wk__shared-done { color: var(--ink-2); }
 .tm-wk__elsewhere { border-left-color: var(--ink-3, var(--ink-2)); }
 .tm-wk__skipped { margin: 12px 0 0; }
+.tm-st__mine { color: var(--accent-text); font-weight: 600; }
 .tm-wk__skipped .tm-link { font: inherit; font-weight: 600; }
 .tm-st__km { margin-left: 6px; font-size: 12px; color: var(--ink-2); }
 .tm-wk__borrowed-list { display: flex; flex-direction: column; gap: 8px; margin: 0; padding: 0; list-style: none; }

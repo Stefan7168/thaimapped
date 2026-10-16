@@ -9,6 +9,7 @@ import { strings } from '@/lib/i18n/strings'
 import { pageMeta } from '@/lib/seo/page-meta'
 import { SiteHeader } from '@/components/explorer/site-header'
 import { SiteFooter } from '@/components/explorer/site-footer'
+import { YourHotelTag } from '@/components/station/your-hotel-tag'
 
 export const ensureStatic = 'navigation'
 
@@ -32,6 +33,8 @@ export default async function StationIndex(props: PageProps<'/[locale]/[city]/st
   const bundle = loadCityBundle(city)
   if (!bundle) notFound()
   const s = strings(locale)
+  // Hotels that name this station as their walk, even past the ten-minute ring the page lists.
+  const walkers = (stationId: string) => bundle.areas.flatMap((a) => a.pins).filter((x) => x.kind === 'hotel' && x.walk?.station === stationId).map((x) => x.id)
   const pages = stationPages(bundle)
   // How many rides from Suvarnabhumi to each station page's first station: a direct ride is the easiest arrival.
   const airport = AIRPORT_STATIONS[bundle.city.id]
@@ -55,7 +58,7 @@ export default async function StationIndex(props: PageProps<'/[locale]/[city]/st
                     <Link href={`/${locale}/${city}/station/${p.slug}`} className="tm-st__index-row">
                       <span className="tm-ui__code tm-st__code" style={{ ['--lc' as string]: line.color }}>{st.code}</span>
                       <span className="tm-st__index-name">{t(st.name, locale)}</span>
-                      <span className="tm-st__index-meta">{s.stationPage.counts(p.hotels.length, p.places.length)}{(() => { const n = ridesFromAirport(st.id); return n === 1 ? ` · ${s.stationPage.fromAirport(n)}` : '' })()}</span>
+                      <span className="tm-st__index-meta">{s.stationPage.counts(p.hotels.length, p.places.length)}{(() => { const n = ridesFromAirport(st.id); return n === 1 ? ` · ${s.stationPage.fromAirport(n)}` : '' })()}<YourHotelTag locale={locale} hotelIds={[...new Set([...p.hotels.map((h) => h.pin.id), ...walkers(st.id)])]} /></span>
                     </Link>
                   </li>
                 )
