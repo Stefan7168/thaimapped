@@ -76,6 +76,8 @@ export function HomePage({ locale, bundle, routes }: { locale: Locale; bundle: C
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bundle, saved, choiceVersion])
   const stayLabel = stay ? new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short' }).formatRange(new Date(`${stay.checkIn}T12:00:00`), new Date(`${stay.checkOut}T12:00:00`)) : null
+  // With no hotel saved, the first saved place still names an area to plan; shown only when there is no hotel line.
+  const myPlace = useMemo(() => (myHotel ? null : allPins(bundle).find((x) => x.pin.kind !== 'hotel' && saved.includes(x.pin.id)) ?? null), [bundle, saved, myHotel])
   // Bangkok's clock, read in the browser only, so the server's HTML carries no time of its own.
   const now = useSyncExternalStore(noopSubscribe, nowSnapshot, () => null)
   // On a phone the map is a sticky band above the scrolling text, so a tapped card would open out of sight: bring the map back first.
@@ -191,6 +193,24 @@ export function HomePage({ locale, bundle, routes }: { locale: Locale; bundle: C
                   {/* With dates: the range, then the stay's cost at the hotel's class-typical rate (which names the nights), else the range and the nights. */}
                   {stay && stayLabel ? (myHotel.pin.price ? <>{` · ${stayLabel} · `}<span title={myHotel.pin.price.basis === 'tier-estimate' ? s.guide.priceEstimate : undefined}>{s.guide.stayTotal(thb(myHotel.pin.price.from * nights(stay), locale), nights(stay))}{myHotel.pin.price.basis === 'tier-estimate' ? '*' : ''}</span></> : ` · ${stayLabel}, ${s.stay.nights(nights(stay))}`) : ''}{' · '}
                   <Link href={`/${locale}/${city.id}/weekend/${myHotel.area.id}?hotel=${myHotel.pin.id}`} className="tm-link tm-link--under">{s.home.yourWeekendLink}</Link>
+                  {!stay && <>{' · '}<a href="#tm-quiz" className="tm-link tm-link--under">{s.home.setDates}</a></>}
+                </p>
+              )}
+              {/* Half a plan: dates with no hotel, or a saved place with no hotel. Each line says what it knows and the one next step. */}
+              {!myHotel && stay && stayLabel && (
+                <p className="tm-hero__now tm-hero__mine">
+                  {s.home.yourDates(stayLabel, s.stay.nights(nights(stay)))}{' · '}
+                  {myPlace ? (
+                    <Link href={`/${locale}/${city.id}/weekend/${myPlace.area.id}`} className="tm-link tm-link--under">{s.home.quiz.plan(t(myPlace.area.name, locale))}</Link>
+                  ) : (
+                    <a href="#tm-quiz" className="tm-link tm-link--under">{s.home.pickArea}</a>
+                  )}
+                </p>
+              )}
+              {!myHotel && !stay && myPlace && (
+                <p className="tm-hero__now tm-hero__mine">
+                  {s.home.yourPlace(t(myPlace.pin.name, locale), t(myPlace.area.name, locale))}{' · '}
+                  <Link href={`/${locale}/${city.id}/weekend/${myPlace.area.id}`} className="tm-link tm-link--under">{s.home.quiz.plan(t(myPlace.area.name, locale))}</Link>
                 </p>
               )}
             </div>
