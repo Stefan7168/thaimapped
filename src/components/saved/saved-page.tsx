@@ -76,9 +76,10 @@ export function SavedPage({ locale, cityId, entries, stations }: { locale: Local
 
   const share = async () => {
     const url = `${window.location.origin}/${locale}/saved?ids=${encodeURIComponent(ids.join(','))}${stay ? `&stay=${stayParam(stay)}` : ''}`
+    const text = s.saved.shareText(hotelRows.length, placeRows.length, hotelRows[0] ? t(hotelRows[0].pin.name, locale) : null)
     try {
       if (navigator.share) {
-        await navigator.share({ title: s.saved.title, url })
+        await navigator.share({ title: s.saved.title, text, url })
         return
       }
       await navigator.clipboard.writeText(url)

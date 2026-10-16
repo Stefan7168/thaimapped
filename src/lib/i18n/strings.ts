@@ -57,6 +57,7 @@ const en = {
     clear: 'Clear the list',
     compare: 'Side by side',
     compareLead: 'Your saved hotels on one line each: where, what it costs, how far to the train, what is walkable.',
+    shareText: (hotels: number, places: number, firstHotel: string | null) => [hotels === 1 ? '1 hotel' : hotels ? `${hotels} hotels` : null, places === 1 ? '1 place' : places ? `${places} places` : null].filter(Boolean).join(' and ') + (firstHotel ? `, starting with ${firstHotel}` : '') + '.',
     compareLeadSent: 'The hotels on this list, one line each: where, what it costs, how far to the train, what is walkable.',
     compareWhat: 'What',
     cmpSwipe: 'Swipe sideways for the rest',

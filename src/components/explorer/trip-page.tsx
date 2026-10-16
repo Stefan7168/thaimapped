@@ -42,9 +42,10 @@ export function TripPage({ locale, cityId, cityName, route }: { locale: Locale; 
     if (stay) u.searchParams.set('stay', stayParam(stay))
     else u.searchParams.delete('stay')
     const url = u.toString()
+    const text = `${t(route.tagline, locale)} ${route.duration === 'multi-day' ? s.trip.days(route.days) : s.trip.duration[route.duration]} · ${s.trip.mode[route.mode].toLowerCase()}${route.distanceKm !== undefined ? ` · ${s.trip.km(route.distanceKm)}` : ''}.`
     try {
       if (navigator.share) {
-        await navigator.share({ title: t(route.name, locale), url })
+        await navigator.share({ title: t(route.name, locale), text, url })
         return
       }
       await navigator.clipboard.writeText(url)
