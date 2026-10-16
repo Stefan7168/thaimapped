@@ -160,6 +160,14 @@ export function cardElement(locale: Locale, cityId: string, pin: Pin, area: Area
       a.textContent = partner === 'official' ? s.card.official : s.card.open(partner.charAt(0).toUpperCase() + partner.slice(1))
       links.append(a)
     }
+    if (pin.kind === 'hotel') {
+      // A hotel leads to the weekend plan built around it: the stops say how far they are from this hotel on foot.
+      const plan = document.createElement('a')
+      plan.className = 'tm-card__link tm-card__link--quiet'
+      plan.href = `/${locale}/${cityId}/weekend/${area.id}?hotel=${pin.id}`
+      plan.textContent = s.card.planWeekend
+      links.append(plan)
+    }
     el.append(links)
   }
   if (nearby.length > 0) {
