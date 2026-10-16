@@ -142,7 +142,7 @@ export function SavedPage({ locale, cityId, entries, stations }: { locale: Local
           {rows.length === 0 && !sentIds && (
             <>
               <Link href={`/${locale}/${cityId}`} className="tm-button tm-button--small">{s.saved.emptyLink}</Link>
-              <Link href={`/${locale}#tm-quiz`} className="tm-link">{s.saved.emptyQuiz}</Link>
+              <Link href={`/${locale}#tm-quiz`} className="tm-link tm-link--under">{s.saved.emptyQuiz}</Link>
             </>
           )}
           {rows.length > 0 && !sentIds && <button type="button" onClick={clearSaved} className="tm-link">{s.saved.clear}</button>}

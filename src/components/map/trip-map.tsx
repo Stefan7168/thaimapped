@@ -58,6 +58,7 @@ function stopElement(index: number, label: string, color: string, active: boolea
 export function TripMap({ locale, route, day, activeStopId, onSelectStop }: TripMapProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const mapRef = useRef<MaplibreMap | null>(null)
+  const framedOnce = useRef(false)
   const markersRef = useRef<Marker[]>([])
   const onSelect = useRef(onSelectStop)
   useEffect(() => {
@@ -147,7 +148,9 @@ export function TripMap({ locale, route, day, activeStopId, onSelectStop }: Trip
     const pts: [number, number][] = stops.map((s) => [s.location.lon, s.location.lat])
     if (day === null) pts.push(...(route.path ?? route.waypoints))
     if (pts.length < 2) return
-    map.fitBounds(bounds(pts), { padding: 70, duration: 1200 })
+    // The first framing is a cut, so the stops land spread out instead of piling up for a second of flight.
+    map.fitBounds(bounds(pts), { padding: 70, duration: framedOnce.current ? 1200 : 0 })
+    framedOnce.current = true
   }, [route, day, activeStopId, mapReady])
 
   return <div ref={containerRef} className="h-full w-full bg-paper" />
