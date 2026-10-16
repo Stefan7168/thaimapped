@@ -1,10 +1,11 @@
 import { notFound } from 'next/navigation'
-import { liveCityIds, loadCity, loadRoute, loadRoutes } from '@/lib/content/load'
+import { liveCityIds, loadCity, loadCityBundle, loadRoute, loadRoutes } from '@/lib/content/load'
 import type { Metadata } from 'next'
 import { LOCALES, isLocale, t } from '@/lib/i18n/locales'
 import { pageMeta } from '@/lib/seo/page-meta'
 import { JsonLd, tripLd } from '@/lib/seo/json-ld'
 import { TripPage } from '@/components/explorer/trip-page'
+import { hotelDoors } from '@/lib/content/slim'
 
 export const ensureStatic = 'navigation'
 
@@ -29,7 +30,7 @@ export default async function TripRoutePage(props: PageProps<'/[locale]/[city]/t
   return (
     <>
       <JsonLd data={tripLd(routeData, locale, `/${locale}/${city}/trip/${route}`)} />
-      <TripPage locale={locale} cityId={city} cityName={t(cityData.name, locale)} route={routeData} />
+      <TripPage locale={locale} cityId={city} cityName={t(cityData.name, locale)} route={routeData} hotelDoors={hotelDoors(loadCityBundle(city)?.areas ?? [])} />
     </>
   )
 }

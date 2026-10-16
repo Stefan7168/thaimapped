@@ -2,13 +2,16 @@
 
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { ArrowLeft, Share2 } from 'lucide-react'
 import type { Locale, TripRoute } from '@/lib/content/types'
 import { t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
 import { buildOutboundUrl, hotelSearchUrl, subIdFor, type Partner } from '@/lib/links/build'
-import { directionsUrl } from '@/lib/links/directions'
+import { TRAVEL_MODE, directionsUrl } from '@/lib/links/directions'
+import type { HotelDoor } from '@/lib/content/slim'
+import { useSaved } from '@/lib/saved/store'
+import { myHotelChoice, useHotelChoiceVersion } from '@/lib/saved/my-hotel'
 import { adoptStayFromUrl, stayParam, useStay } from '@/lib/stay/store'
 import { STOP_COLORS } from '@/components/map/trip-map'
 import { SiteFooter } from './site-footer'
@@ -19,9 +22,37 @@ const TripMap = dynamic(() => import('@/components/map/trip-map').then((m) => m.
 })
 
 /** A trip: the map on the left, the day-by-day plan on the right. */
-export function TripPage({ locale, cityId, cityName, route }: { locale: Locale; cityId: string; cityName: string; route: TripRoute }) {
+export function TripPage({ locale, cityId, cityName, route, hotelDoors = {} }: { locale: Locale; cityId: string; cityName: string; route: TripRoute; hotelDoors?: Record<string, HotelDoor[]> }) {
   const s = strings(locale)
   const stay = useStay()
+  const saved = useSaved()
+  const choiceVersion = useHotelChoiceVersion()
+  // The reader's hotel in the city (first saved, or the one chosen for its area): the trip then starts and ends at its door.
+  const myHotel = useMemo(() => {
+    for (const [areaId, doors] of Object.entries(hotelDoors)) {
+      const mine = doors.filter((h) => saved.includes(h.id))
+      if (mine.length > 0) return mine.find((h) => h.id === myHotelChoice(areaId)) ?? mine[0]
+    }
+    return null
+    // choiceVersion is read so a new choice recomputes the pick.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hotelDoors, saved, choiceVersion])
+  const mode = TRAVEL_MODE[route.mode]
+  // Getting from the hotel to a walking or boat trip is a train ride, not a walk across the city; a car trip drives from the door.
+  const hotelMode = mode === 'driving' ? 'driving' : 'transit'
+  // The first stop's directions start at the hotel and go to the next stop; the last stop's go back to the hotel.
+  const directions = (i: number): { href: string; label: string } => {
+    const stop = route.stops[i]
+    if (myHotel && i === 0) {
+      const to = route.stops[1] ?? stop
+      return { href: directionsUrl(to.location.lat, to.location.lon, { mode: hotelMode, from: myHotel.location }), label: s.trip.directionsFrom(t(myHotel.name, locale)) }
+    }
+    if (myHotel && stop.kind === 'end' && i === route.stops.length - 1) {
+      const from = route.stops[i - 1]
+      return { href: directionsUrl(myHotel.location.lat, myHotel.location.lon, { mode: hotelMode, from: from?.location }), label: s.trip.directionsTo(t(myHotel.name, locale)) }
+    }
+    return { href: directionsUrl(stop.location.lat, stop.location.lon, { mode }), label: s.card.directions }
+  }
   const [day, setDay] = useState<number | null>(null)
   const [activeStop, setActiveStop] = useState<string | null>(null)
   const [hoverStop, setHoverStop] = useState<string | null>(null)
@@ -120,11 +151,13 @@ export function TripPage({ locale, cityId, cityName, route }: { locale: Locale; 
                             <span className="block text-[16px] text-ink">{t(stop.why, locale)}</span>
                             {stop.placeholder && <span className="tm-stoprow__tbc">{s.trip.placeholder}</span>}
                             {stop.search && <span className="block text-[13px] text-ink-2">{s.trip.searchHotels(stop.search, !!stay)}</span>}
+                            {myHotel && i === 0 && <span className="block text-[13px] tm-wk__from">{s.trip.startFromHotel(t(myHotel.name, locale))}</span>}
+                            {myHotel && stop.kind === 'end' && i === route.stops.length - 1 && <span className="block text-[13px] tm-wk__from">{s.trip.endAtHotel(t(myHotel.name, locale))}</span>}
                           </span>
                         </button>
                         {active && (
                           <div className="mt-1 flex flex-wrap gap-2 pl-12">
-                            <a href={directionsUrl(stop.location.lat, stop.location.lon)} target="_blank" rel="noopener" className="tm-button tm-button--small tm-button--quiet">{s.card.directions}</a>
+                            <a href={directions(i).href} target="_blank" rel="noopener" className="tm-button tm-button--small tm-button--quiet">{directions(i).label}</a>
                             {partners.map((p) => (
                               <a key={p} href={buildOutboundUrl(p, stop.links[p]!, subIdFor(`${cityId}-trip-${route.id}`, stop.id), stay)} target="_blank" rel="noopener sponsored" className="tm-button tm-button--small">{p}</a>
                             ))}
