@@ -10,7 +10,9 @@ import { isGestureActive } from '@/lib/map/gesture'
 import { fitPopupSoon, overlayInsets } from '@/lib/map/fit-popup'
 import { t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
-import type { AirportRoutes } from '@/lib/transit/from-airport'
+import { railLegs, type AirportRoutes } from '@/lib/transit/from-airport'
+import { myHotelAcross } from '@/lib/saved/my-hotel'
+import { savedIds } from '@/lib/saved/store'
 import { cardElement } from './pin-card'
 import { NEAR_RADIUS_M, WALK_RADIUS_M, nearbyPins, type VisiblePin } from '@/lib/explorer/filters'
 import { declutterLabels, watchDeclutter } from '@/lib/map/declutter'
@@ -45,6 +47,8 @@ export interface ExplorerMapProps {
   allStations: Station[]
   /** Rail legs from the airports, by station id, for the hotel cards. */
   airport?: Record<string, AirportRoutes>
+  /** The city's interchanges, so a place's card can say the ride from a hotel saved in another area. */
+  interchanges?: [string, string][]
   /** Stations that draw a walking circle. */
   stations: Station[]
   /** Centres of picked areas and sub-areas, framed even when no pin matches. */
@@ -123,7 +127,7 @@ function focusBounds(pins: VisiblePin[], stations: Station[], centres: [number, 
 }
 
 export function ExplorerMap(props: ExplorerMapProps) {
-  const { locale, cityId, cityCamera, threeD, areas, pins, allPins, allStations, airport, stations, centres, near = null, outlines, activePinId, onSelectArea, onSelectPin, onClosePin, hoverPinId = null, onHoverPin } = props
+  const { locale, cityId, cityCamera, threeD, areas, pins, allPins, allStations, airport, interchanges = [], stations, centres, near = null, outlines, activePinId, onSelectArea, onSelectPin, onClosePin, hoverPinId = null, onHoverPin } = props
   const containerRef = useRef<HTMLDivElement>(null)
   const mapRef = useRef<MaplibreMap | null>(null)
   const markersRef = useRef<Marker[]>([])
@@ -330,11 +334,19 @@ export function ExplorerMap(props: ExplorerMapProps) {
       if (cancelled) return
       const { pin, area } = hit
       const station = pin.walk ? stationById.get(pin.walk.station) : undefined
+      // A place with the weekend's hotel in another area: the ride from that hotel's station, for the card's "by train" line.
+      const elsewhere = (() => {
+        if (pin.kind === 'hotel' || !pin.walk) return undefined
+        const found = myHotelAcross(Object.fromEntries(areas.map((a) => [a.id, a.pins.filter((p) => p.kind === 'hotel')])), savedIds(), area.id)
+        if (!found?.hotel.walk) return undefined
+        const legs = railLegs(allStations, interchanges, found.hotel.walk.station, pin.walk.station)
+        return legs && legs.length > 0 ? { hotel: found.hotel, legs } : undefined
+      })()
       // On a phone the card always hangs above the pin (the pin is eased down to make room); a wide screen lets MapLibre pick the side.
       const narrowScreen = map.getContainer().clientWidth < 768
       const popup = new maplibregl.Popup({ closeButton: false, closeOnClick: false, offset: 14, maxWidth: '300px', className: 'tm-card-popup', anchor: narrowScreen ? 'bottom' : undefined })
         .setLngLat([pin.location.lon, pin.location.lat])
-        .setDOMContent(cardElement(locale, cityId, pin, area, station, nearby, () => callbacks.current.onClosePin(), (next) => callbacks.current.onSelectPin(next), pin.walk ? airport?.[pin.walk.station] : undefined))
+        .setDOMContent(cardElement(locale, cityId, pin, area, station, nearby, () => callbacks.current.onClosePin(), (next) => callbacks.current.onSelectPin(next), pin.walk ? airport?.[pin.walk.station] : undefined, elsewhere))
         .addTo(map)
       popup.on('close', () => {
         if (popupRef.current === popup) callbacks.current.onClosePin()

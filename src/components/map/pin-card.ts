@@ -12,6 +12,7 @@ import { distanceM, WALK_PACE_M_PER_MIN } from '@/lib/explorer/filters'
 import { trackOutbound } from '@/lib/links/track'
 import type { NearbyPin } from '@/lib/explorer/filters'
 import type { AirportLeg, AirportRoutes } from '@/lib/transit/from-airport'
+import { rideSentence } from '@/components/stay/from-airport'
 
 /**
  * The card's pictures: one photograph, or a slider the visitor swipes or
@@ -117,7 +118,7 @@ function airportBlock(locale: Locale, s: ReturnType<typeof strings>, routes: Air
   return d
 }
 
-export function cardElement(locale: Locale, cityId: string, pin: Pin, area: Area, station: Station | undefined, nearby: NearbyPin[], onClose: () => void, onPick: (pin: Pin) => void, airport?: AirportRoutes): HTMLElement {
+export function cardElement(locale: Locale, cityId: string, pin: Pin, area: Area, station: Station | undefined, nearby: NearbyPin[], onClose: () => void, onPick: (pin: Pin) => void, airport?: AirportRoutes, elsewhere?: { hotel: Pin; legs: AirportLeg[] }): HTMLElement {
   const s = strings(locale)
   const el = document.createElement('div')
   el.className = 'tm-card'
@@ -191,6 +192,7 @@ export function cardElement(locale: Locale, cityId: string, pin: Pin, area: Area
   }
   // A place also says how far it is from the reader's hotel in this area (the chosen one, else the first saved), as the plan pages do; its Directions then start at that door.
   let fromDoor: Pin | undefined
+  let byTrain = false
   if (pin.kind !== 'hotel') {
     const saved = savedIds()
     const hotels = area.pins.filter((p) => p.kind === 'hotel' && saved.includes(p.id))
@@ -201,6 +203,14 @@ export function cardElement(locale: Locale, cityId: string, pin: Pin, area: Area
       const from = document.createElement('p')
       from.className = 'tm-card__walk tm-card__from'
       from.textContent = s.weekendPage.fromHotel(Math.max(1, Math.round(distanceM(mine.location.lon, mine.location.lat, pin.location.lon, pin.location.lat) / WALK_PACE_M_PER_MIN)), t(mine.name, locale))
+      el.append(from)
+    } else if (elsewhere && pin.walk) {
+      // The hotel is in another area: the ride from its station, then the walk from this one.
+      fromDoor = elsewhere.hotel
+      byTrain = true
+      const from = document.createElement('p')
+      from.className = 'tm-card__walk tm-card__from'
+      from.textContent = s.weekendPage.byTrainFrom(t(elsewhere.hotel.name, locale), rideSentence(elsewhere.legs, pin.walk.minutes, locale))
       el.append(from)
     }
   }
@@ -225,7 +235,7 @@ export function cardElement(locale: Locale, cityId: string, pin: Pin, area: Area
     links.className = 'tm-card__links'
     const go = document.createElement('a')
     go.className = 'tm-card__link tm-card__link--quiet'
-    go.href = fromDoor ? directionsUrl(pin.location.lat, pin.location.lon, { from: fromDoor.location }) : directionsUrl(pin.location.lat, pin.location.lon)
+    go.href = fromDoor ? directionsUrl(pin.location.lat, pin.location.lon, { from: fromDoor.location, mode: byTrain ? 'transit' : 'walking' }) : directionsUrl(pin.location.lat, pin.location.lon)
     go.target = '_blank'
     go.rel = 'noopener'
     go.textContent = fromDoor ? s.trip.directionsFrom(t(fromDoor.name, locale)) : s.card.directions

@@ -417,6 +417,7 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
               allPins={everyPin}
               allStations={bundle.stations}
               airport={airport}
+              interchanges={bundle.interchanges}
               stations={stations}
               centres={centres}
               near={filters.near}
