@@ -73,6 +73,17 @@ export function railLegs(stations: Station[], interchanges: [string, string][], 
 }
 
 /** The legs from both airports to each of the given stations, for a page to carry with its hotels. */
+/** Rail legs from each `fromIds` station to each `toIds` station, keyed from -> to. Pairs with no rail chain are null; the same station is []. */
+export function railLegsBetween(bundle: CityBundle, fromIds: Iterable<string>, toIds: Iterable<string>): Record<string, Record<string, AirportLeg[] | null>> {
+  const out: Record<string, Record<string, AirportLeg[] | null>> = {}
+  const tos = [...new Set(toIds)]
+  for (const from of new Set(fromIds)) {
+    out[from] = {}
+    for (const to of tos) out[from][to] = railLegs(bundle.stations, bundle.interchanges, from, to)
+  }
+  return out
+}
+
 export function airportRoutesFor(bundle: CityBundle, stationIds: Iterable<string>): Record<string, AirportRoutes> {
   const airports = AIRPORT_STATIONS[bundle.city.id]
   const out: Record<string, AirportRoutes> = {}

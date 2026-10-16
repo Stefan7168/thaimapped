@@ -9,6 +9,13 @@ const stop = (x: AirportLeg['from'], locale: Locale) => `${x.code ? x.code + ' '
 /** "Airport Rail Link" stays as it is; the others read "BTS Sukhumvit", "MRT Blue". */
 const lineName = (leg: AirportLeg) => (leg.line.toLowerCase().includes(leg.system.toLowerCase()) || leg.system === 'ARL' ? leg.line : `${leg.system} ${leg.line}`)
 
+/** The rides of a chain in words, with the first stop named: "BTS Sukhumvit from N7 Saphan Khwai to N8 Mo Chit, change at A8 Phaya Thai to the ..., then 5 min on foot". */
+export function rideSentence(legs: AirportLeg[], walkMinutes: number, locale: Locale): string {
+  const s = strings(locale)
+  const rides = legs.map((leg, i) => (i === 0 ? s.airport.rideFrom(lineName(leg), stop(leg.from, locale), stop(leg.to, locale)) : s.airport.change(stop(leg.from, locale), lineName(leg), stop(leg.to, locale))))
+  return `${rides.join(', ')}, ${s.airport.thenWalk(walkMinutes)}`
+}
+
 /**
  * One short cell for the hotels table: "Airport Rail Link to A8 Phaya Thai",
  * "2 rides, change at A8 Phaya Thai", "Airport station" or "No rail line".

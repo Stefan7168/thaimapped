@@ -7,7 +7,8 @@ import { useEffect, useMemo, useState, useSyncExternalStore, type CSSProperties 
 import { CalendarPlus, Share2 } from 'lucide-react'
 import type { Area, Locale, Pin, Station, TripRoute } from '@/lib/content/types'
 import { FromAirport } from '@/components/stay/from-airport'
-import type { AirportRoutes } from '@/lib/transit/from-airport'
+import type { AirportLeg, AirportRoutes } from '@/lib/transit/from-airport'
+import { rideSentence } from '@/components/stay/from-airport'
 import { t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
 import { distanceM, isFullRange, PRICE_RANGE, WALK_PACE_M_PER_MIN, type PriceRange } from '@/lib/explorer/filters'
@@ -49,7 +50,7 @@ function readPrice(): PriceRange | null {
  * Sunday, the hotels inside the budget, the same map at the side, and a
  * link anyone can share. The page is static; the budget rides in the URL.
  */
-export function WeekendPage({ locale, cityId, area, areas, stations, routes, borrowed = {}, airport = {} }: { locale: Locale; cityId: string; area: Area; areas: Area[]; stations: Station[]; routes: TripRoute[]; borrowed?: Partial<Record<WeekendSlot, BorrowedSlot>>; airport?: Record<string, AirportRoutes> }) {
+export function WeekendPage({ locale, cityId, area, areas, stations, routes, borrowed = {}, airport = {}, rides = {} }: { locale: Locale; cityId: string; area: Area; areas: Area[]; stations: Station[]; routes: TripRoute[]; borrowed?: Partial<Record<WeekendSlot, BorrowedSlot>>; airport?: Record<string, AirportRoutes>; rides?: Record<string, Record<string, AirportLeg[] | null>> }) {
   const s = strings(locale)
   const stay = useStay()
   const detected3D = useSyncExternalStore(noopSubscribe, supports3D, () => null)
@@ -82,6 +83,12 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
   // Stable map props: a new object on every render would rebuild the markers and re-frame the map on each hover or card change.
   const mapAreas = useMemo(() => [area], [area])
   const focus = useMemo(() => ({ pins: pinned, area, numbered: true, mine: myHotel?.id }), [pinned, area, myHotel?.id])
+  // A stop more than twenty minutes on foot from the hotel, when both walk from a station and the chain is a real ride.
+  const byTrain = (pin: Pin): string | null => {
+    if (!myHotel?.walk || !pin.walk || pin.walk.station === myHotel.walk.station) return null
+    const legs = rides[myHotel.walk.station]?.[pin.walk.station]
+    return legs && legs.length > 0 ? rideSentence(legs, pin.walk.minutes, locale) : null
+  }
   const fromHotel = (pin: Pin) => (myHotel ? Math.max(1, Math.round(distanceM(myHotel.location.lon, myHotel.location.lat, pin.location.lon, pin.location.lat) / WALK_PACE_M_PER_MIN)) : null)
   // Stops of this weekend inside a ten-minute walk of a hotel, straight-line at walking pace.
   const nearbyCount = (hotel: Pin) => stops.filter((p) => distanceM(hotel.location.lon, hotel.location.lat, p.location.lon, p.location.lat) <= WALK_PACE_M_PER_MIN * 10).length
@@ -171,6 +178,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
             {pin.price && stay && <span className="tm-wk__meta tm-wk__stay">{s.guide.stayTotal(thb(pin.price.from * nights(stay), locale), nights(stay))}</span>}
             {pin.walk && walkStation && <span className="tm-wk__meta">{s.city.walkMinutes(pin.walk.minutes)} {s.city.from(`${walkStation.code ? walkStation.code + ' ' : ''}${t(walkStation.name, locale)}`)}</span>}
             {pin.kind !== 'hotel' && myHotel && <span className="tm-wk__meta tm-wk__from">{s.weekendPage.fromHotel(fromHotel(pin)!, t(myHotel.name, locale))}</span>}
+            {pin.kind !== 'hotel' && myHotel && fromHotel(pin)! > 20 && byTrain(pin) && <span className="tm-wk__meta tm-wk__train">{s.weekendPage.byTrain(byTrain(pin)!)}</span>}
             {pin.kind === 'hotel' && <span className="tm-wk__meta">{s.saved.cmpPlaces(nearbyCount(pin))}</span>}
           </span>
         </button>
@@ -253,6 +261,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
                               <span className="tm-wk__why">{t(pin.why, locale)}</span>
                               {whenLine(pin, locale) && <span className="tm-wk__meta tm-wk__when">{whenLine(pin, locale)}</span>}
                               {pin.walk && stationById.get(pin.walk.station) && <span className="tm-wk__meta">{s.city.walkMinutes(pin.walk.minutes)} {s.city.from(`${stationById.get(pin.walk.station)!.code ? stationById.get(pin.walk.station)!.code + ' ' : ''}${t(stationById.get(pin.walk.station)!.name, locale)}`)}</span>}
+                              {myHotel && byTrain(pin) && <span className="tm-wk__meta tm-wk__train">{s.weekendPage.byTrainFrom(t(myHotel.name, locale), byTrain(pin)!)}</span>}
                             </li>
                           ))}
                         </ul>

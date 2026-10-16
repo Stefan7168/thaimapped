@@ -734,3 +734,4 @@ a.tm-wk__stop { text-decoration: none; }
 
 /* The walk from the hotel the reader picked, on each weekend stop. */
 .tm-wk__from, .tm-card__from { color: var(--accent-text); }
+.tm-wk__train { display: block; }

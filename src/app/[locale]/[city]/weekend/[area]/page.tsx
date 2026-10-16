@@ -8,7 +8,7 @@ import { slimArea, slimRoute, stationsFor } from '@/lib/content/slim'
 import { WeekendPage } from '@/components/weekend/weekend-page'
 import { JsonLd, pinNode, placeListLd } from '@/lib/seo/json-ld'
 import { borrowedSlots, weekendPlan } from '@/lib/explorer/weekend'
-import { airportRoutesFor } from '@/lib/transit/from-airport'
+import { airportRoutesFor, railLegsBetween } from '@/lib/transit/from-airport'
 
 // Static per area; the hotel budget rides along as ?price=min-max and is read in the browser.
 export const ensureStatic = 'navigation'
@@ -39,10 +39,13 @@ export default async function AreaWeekendPage(props: PageProps<'/[locale]/[city]
   // A slot this area leaves empty borrows from the nearest area; those stops need their stations too.
   const borrowed = borrowedSlots(a, bundle.areas, weekendPlan(a))
   const borrowedPins = Object.values(borrowed).flatMap((b) => b.pins)
+  const hotelStations = [...new Set(a.pins.filter((p) => p.kind === 'hotel' && p.walk).map((p) => p.walk!.station))]
+  // Rides from each hotel's station to each stop's station, for the "or by train" line under a long walk.
+  const rides = railLegsBetween(bundle, hotelStations, [...a.pins, ...borrowedPins].filter((p) => p.kind !== 'hotel' && p.walk).map((p) => p.walk!.station))
   return (
     <>
       <JsonLd data={placeListLd(strings(locale).weekendPage.title(t(a.name, locale)), `/${locale}/${city}/weekend/${area}`, a.pins.map((p) => pinNode(p, locale, cityName)))} />
-      <WeekendPage locale={locale} cityId={city} area={a} areas={bundle.areas.map(slimArea)} stations={stationsFor(bundle.stations, [...a.pins, ...borrowedPins])} routes={loadRoutes(city).map(slimRoute)} borrowed={borrowed} airport={airportRoutesFor(bundle, [...new Set(a.pins.filter((p) => p.kind === 'hotel' && p.walk).map((p) => p.walk!.station))])} />
+      <WeekendPage locale={locale} cityId={city} area={a} areas={bundle.areas.map(slimArea)} stations={stationsFor(bundle.stations, [...a.pins, ...borrowedPins])} routes={loadRoutes(city).map(slimRoute)} borrowed={borrowed} airport={airportRoutesFor(bundle, hotelStations)} rides={rides} />
     </>
   )
 }
