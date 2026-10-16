@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import type { Locale } from '@/lib/content/types'
 import { strings } from '@/lib/i18n/strings'
-import { clearStay, nextWeekend, nights, setStay, shiftStay, todayIso, useStay, type Stay } from '@/lib/stay/store'
+import { MAX_ADULTS, adultsOf, clearStay, nextWeekend, nights, setAdults, setStay, shiftStay, todayIso, type Stay, useStay } from '@/lib/stay/store'
 
 /**
  * Check-in and check-out, kept in this browser. Every booking link on the
@@ -66,6 +66,9 @@ export function StayPicker({ locale, bare = false }: { locale: Locale; bare?: bo
           <span className="tm-stay__nights">{s.stay.nights(nights(stay))}</span>
           <button type="button" className="tm-stay__clear" onClick={() => moveOut(1)} aria-label={`${s.stay.addNight} (${s.stay.nights(nights(stay) + 1)})`}>{s.stay.addNight}</button>
           {nights(stay) > 1 && <button type="button" className="tm-stay__clear" onClick={() => moveOut(-1)} aria-label={`${s.stay.dropNight} (${s.stay.nights(nights(stay) - 1)})`}>{s.stay.dropNight}</button>}
+          <span className="tm-stay__nights">{s.stay.adults(adultsOf(stay))}</span>
+          {adultsOf(stay) < MAX_ADULTS && <button type="button" className="tm-stay__clear" onClick={() => setAdults(adultsOf(stay) + 1)} aria-label={`${s.stay.addAdult} (${s.stay.adults(adultsOf(stay) + 1)})`}>{s.stay.addAdult}</button>}
+          {adultsOf(stay) > 1 && <button type="button" className="tm-stay__clear" onClick={() => setAdults(adultsOf(stay) - 1)} aria-label={`${s.stay.dropAdult} (${s.stay.adults(adultsOf(stay) - 1)})`}>{s.stay.dropAdult}</button>}
           <button type="button" className="tm-stay__clear" onClick={clearStay}>{s.stay.clear}</button>
         </span>
       )}

@@ -6,7 +6,9 @@ import { useSyncExternalStore } from 'react'
  * carries them, so the hotel page opens priced for the stay instead of for
  * "tonight". Null means no dates picked and the links stay plain.
  */
-export type Stay = { checkIn: string; checkOut: string }
+/** The dates, and who is going (adults in one room; 2 when unset), so booking searches open on the right party. */
+export type Stay = { checkIn: string; checkOut: string; adults?: number }
+export const MAX_ADULTS = 6
 
 const KEY = 'tm.stay.v1'
 const EVENT = 'tm-stay'
@@ -17,8 +19,9 @@ let cache: Stay | null = null
 
 function valid(x: unknown): x is Stay {
   if (!x || typeof x !== 'object') return false
-  const { checkIn, checkOut } = x as Record<string, unknown>
-  return typeof checkIn === 'string' && typeof checkOut === 'string' && DATE.test(checkIn) && DATE.test(checkOut) && checkOut > checkIn
+  const { checkIn, checkOut, adults } = x as Record<string, unknown>
+  const party = adults === undefined || (Number.isInteger(adults) && (adults as number) >= 1 && (adults as number) <= MAX_ADULTS)
+  return typeof checkIn === 'string' && typeof checkOut === 'string' && DATE.test(checkIn) && DATE.test(checkOut) && checkOut > checkIn && party
 }
 
 function read(): Stay | null {
@@ -48,9 +51,22 @@ export function stayNow(): Stay | null {
   return typeof window === 'undefined' ? null : read()
 }
 
-/** Stores the dates when both are present and in order; anything else clears them. */
-export function setStay(checkIn: string, checkOut: string) {
-  write(valid({ checkIn, checkOut }) ? { checkIn, checkOut } : null)
+/** Stores the dates when both are present and in order; anything else clears them. The party size carries over unless given. */
+export function setStay(checkIn: string, checkOut: string, adults: number | undefined = stayNow()?.adults) {
+  const next = adults === undefined ? { checkIn, checkOut } : { checkIn, checkOut, adults }
+  write(valid(next) ? next : null)
+}
+
+/** How many adults the booking searches open for; needs dates to live in. */
+export function setAdults(adults: number) {
+  const cur = stayNow()
+  if (!cur) return
+  const n = Math.min(MAX_ADULTS, Math.max(1, Math.round(adults)))
+  write({ ...cur, adults: n })
+}
+
+export function adultsOf(stay: Stay | null): number {
+  return stay?.adults ?? 2
 }
 
 export function clearStay() {

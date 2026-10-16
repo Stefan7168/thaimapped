@@ -37,6 +37,9 @@ const en = {
     nights: (n: number) => (n === 1 ? '1 night' : `${n} nights`),
     addNight: '+1 night',
     dropNight: '−1 night',
+    adults: (n: number) => (n === 1 ? '1 adult' : `${n} adults`),
+    addAdult: '+1 adult',
+    dropAdult: '−1 adult',
     clear: 'Clear',
   },
   saved: {

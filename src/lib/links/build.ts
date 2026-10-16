@@ -38,12 +38,12 @@ export function withStay(partner: Partner, destination: string, stay: Stay | nul
     u.searchParams.set('checkIn', stay.checkIn)
     u.searchParams.set('checkOut', stay.checkOut)
     u.searchParams.set('los', String(nights(stay)))
-    u.searchParams.set('adults', '2')
+    u.searchParams.set('adults', String(stay.adults ?? 2))
     u.searchParams.set('rooms', '1')
   } else {
     u.searchParams.set('checkin', stay.checkIn)
     u.searchParams.set('checkout', stay.checkOut)
-    u.searchParams.set('group_adults', '2')
+    u.searchParams.set('group_adults', String(stay.adults ?? 2))
     u.searchParams.set('no_rooms', '1')
   }
   return u.toString()
