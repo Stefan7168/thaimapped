@@ -12,9 +12,9 @@ import { t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
 import { supports3D } from '@/lib/map/device'
 import { bangkokNow } from '@/lib/explorer/when'
-import { useSaved } from '@/lib/saved/store'
+import { addSaved, useSaved } from '@/lib/saved/store'
 import { StayPicker } from '@/components/stay/stay-picker'
-import { myHotelChoice, useHotelChoiceVersion } from '@/lib/saved/my-hotel'
+import { chooseHotel, myHotelChoice, useHotelChoiceVersion } from '@/lib/saved/my-hotel'
 import { nights, useStay } from '@/lib/stay/store'
 import { thb } from '@/lib/explorer/price'
 import { RevealObserver } from '@/components/motion/reveal'
@@ -275,6 +275,8 @@ export function HomePage({ locale, bundle, routes }: { locale: Locale; bundle: C
                       <strong>{t(best.hotel.name, locale)}</strong> {t(best.hotel.why, locale)}
                       {/* With dates set in the row above, the pick says what the stay comes to (a class-typical estimate, marked as such). */}
                       {best.hotel.price && stay && <span className="tm-quiz__total">{s.guide.stayTotal(thb(best.hotel.price.from * nights(stay), locale), nights(stay))}{best.hotel.price.basis === 'tier-estimate' ? ` (${s.guide.priceEstimate})` : ''}</span>}
+                      {/* One tap keeps the pick: every page then walks from this door, and the hero line above says so on the next visit. */}
+                      <span className="tm-quiz__keep">{saved.includes(best.hotel.id) ? <span className="tm-wk__shared-done">{s.weekendPage.sentHotelSaved}</span> : <button type="button" className="tm-link tm-link--under" onClick={() => { addSaved([best.hotel!.id]); chooseHotel(best.area.id, best.hotel!.id) }}>{s.weekendPage.saveSentHotel}</button>}</span>
                     </p>
                   ) : (
                     <p className="tm-quiz__hotel">{s.home.quiz.noHotel}</p>

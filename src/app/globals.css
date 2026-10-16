@@ -429,6 +429,8 @@ body {
 .tm-quiz__hotel { margin: 14px 0 0; font-size: 16px; line-height: 1.5; }
 .tm-quiz__hotel .tm-quiz__label { display: block; margin-bottom: 2px; }
 .tm-quiz__total { display: block; margin-top: 4px; font-weight: 600; }
+.tm-quiz__keep { display: block; margin-top: 6px; font-size: 15px; }
+.tm-quiz__keep .tm-link { font: inherit; font-weight: 600; }
 .tm-quiz__also { margin: 10px 0 0; font-size: var(--step-small); color: var(--ink-2); }
 .tm-quiz__card .tm-button { margin-top: 18px; }
 @media (hover: hover) and (pointer: fine) {
