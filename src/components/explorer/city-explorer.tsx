@@ -27,6 +27,7 @@ import { AreaCard } from './area-card'
 import { SaveButton } from '@/components/saved/save-button'
 import { useSaved } from '@/lib/saved/store'
 import { myHotelChoice, useHotelChoiceVersion } from '@/lib/saved/my-hotel'
+import { useSkipped } from '@/lib/saved/skipped'
 import { SavedLink } from '@/components/saved/saved-link'
 
 const ExplorerMap = dynamic(() => import('@/components/map/explorer-map').then((m) => m.ExplorerMap), {
@@ -208,7 +209,9 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
 
   // One area picked, nothing narrower: the weekend plan sits above the list.
   const planArea = filters.areas.length === 1 && filters.subareas.length === 0 && filters.stations.length === 0 && filters.lines.length === 0 ? areas.find((a) => a.id === filters.areas[0]) : undefined
-  const plan = useMemo(() => (planArea ? weekendPlan(planArea, filters.price) : null), [planArea, filters.price])
+  // The stops the reader took out on the weekend page stay out here too.
+  const skipped = useSkipped()
+  const plan = useMemo(() => (planArea ? weekendPlan(planArea, filters.price, new Set(skipped)) : null), [planArea, filters.price, skipped])
   // A slot the area leaves empty borrows from the nearest area, as the weekend page does; a tap moves the map to that area and opens the pin.
   const borrowed = useMemo(() => (planArea && plan ? borrowedSlots(planArea, bundle.areas, plan) : {}), [planArea, plan, bundle.areas])
   const weekend = !(planArea && plan) ? (
