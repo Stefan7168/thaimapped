@@ -95,6 +95,8 @@ body {
 .tm-card__head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .tm-card__kind { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-2); }
 .tm-card__kind::before { content: ''; width: 8px; height: 8px; border-radius: 9999px; background: var(--pin, var(--accent)); } /* the colour moves to a dot: the light greens failed 4.5:1 as text */
+.tm-card__tools { display: inline-flex; align-items: center; gap: 6px; flex: none; }
+.tm-card__save { width: 28px; height: 28px; margin-top: -4px; }
 .tm-card__close { width: 28px; height: 28px; margin: -4px -6px 0 0; border-radius: 9999px; font-size: 20px; line-height: 1; color: var(--ink-2); cursor: pointer; }
 .tm-card__close:hover { background: var(--paper-2); color: var(--ink); }
 .tm-card__name { margin-top: 2px; font-family: var(--font-display), Georgia, serif; font-size: 18px; font-weight: 600; line-height: 1.15; }
@@ -618,8 +620,8 @@ a.tm-wk__stop { text-decoration: none; }
 @media (max-width: 480px) {
   .tm-wk__links { margin-left: 0; }
   /* Narrow phones: the booking buttons share the first row half and half; Directions drops to its own row instead of leaving one button orphaned. */
-  .tm-wk__links .tm-card__link:not(.tm-card__link--quiet) { flex: 1 1 calc(50% - 3px); justify-content: center; }
-  .tm-wk__links .tm-card__link--quiet { order: 1; }
+  .tm-wk__links .tm-card__link:not(.tm-card__link--quiet), .tm-card__links .tm-card__link:not(.tm-card__link--quiet) { flex: 1 1 calc(50% - 3px); justify-content: center; }
+  .tm-wk__links .tm-card__link--quiet, .tm-card__links .tm-card__link--quiet { order: 1; }
 }
 
 /* Saved page: the hotels side by side. Scrolls sideways on a phone; the row names stay put. */

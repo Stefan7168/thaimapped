@@ -6,6 +6,7 @@ import { thb } from '@/lib/explorer/price'
 import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
 import { directionsUrl } from '@/lib/links/directions'
 import { nights, stayNow } from '@/lib/stay/store'
+import { savedIds, toggleSaved } from '@/lib/saved/store'
 import { trackOutbound } from '@/lib/links/track'
 import type { NearbyPin } from '@/lib/explorer/filters'
 
@@ -117,7 +118,23 @@ export function cardElement(locale: Locale, cityId: string, pin: Pin, area: Area
   close.setAttribute('aria-label', s.card.close)
   close.textContent = '×'
   close.addEventListener('click', onClose)
-  head.append(kind, close)
+  // The heart: the same shortlist as the list rows, so a card on the map can save too.
+  const save = document.createElement('button')
+  save.type = 'button'
+  const paint = () => {
+    const on = savedIds().includes(pin.id)
+    save.className = `tm-save tm-card__save${on ? ' tm-save--on' : ''}`
+    save.setAttribute('aria-label', on ? s.saved.remove : s.saved.save)
+    save.setAttribute('aria-pressed', String(on))
+    save.title = on ? s.saved.remove : s.saved.save
+  }
+  save.innerHTML = '<svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>'
+  paint()
+  save.addEventListener('click', () => { toggleSaved(pin.id); paint() })
+  const tools = document.createElement('span')
+  tools.className = 'tm-card__tools'
+  tools.append(save, close)
+  head.append(kind, tools)
   const name = document.createElement('p')
   name.className = 'tm-card__name'
   name.textContent = t(pin.name, locale)
