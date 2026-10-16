@@ -11,6 +11,7 @@ const LABEL = '.tm-pin__label, .tm-stop__label'
 const OFF = 'tm-label--off'
 const LEFT = 'tm-pin--left'
 const STACK = 'tm-pin--stack'
+const DOWN = 'tm-pin--down'
 const UP = 'tm-pin--up'
 const SIDE_R = 'tm-pin--sr'
 const SIDE_L = 'tm-pin--sl'
@@ -29,7 +30,7 @@ export function declutterLabels(markers: Marker[], container: HTMLElement | null
   // Every pass starts from the resting places: a box measured with last pass's lift or side shift still on would be stale once that class is stripped below.
   for (const l of labels) {
     l.classList.remove(OFF)
-    l.closest<HTMLElement>('.tm-pin')?.classList.remove(UP, SIDE_R, SIDE_L)
+    l.closest<HTMLElement>('.tm-pin')?.classList.remove(UP, SIDE_R, SIDE_L, DOWN)
   }
   // A label that would run off the right edge sits on the left of its dot instead.
   const bounds = container?.getBoundingClientRect()
@@ -49,7 +50,7 @@ export function declutterLabels(markers: Marker[], container: HTMLElement | null
   // Another pin's dot is a spot too: a name may not sit on a neighbour's dot (measured 2026-10-16: up to five did on a picked area).
   const dots = markers.map((m) => ({ pin: m.getElement(), r: m.getElement().querySelector<HTMLElement>('.tm-pin__dot')?.getBoundingClientRect() })).filter((d): d is { pin: HTMLElement; r: DOMRect } => !!d.r && d.r.width > 0)
   const onDot = (r: DOMRect, pin: HTMLElement | null) => dots.some((d) => d.pin !== pin && r.left < d.r.right && r.right > d.r.left && r.top < d.r.bottom && r.bottom > d.r.top)
-  const outside = (r: DOMRect) => !!bounds && (r.left < bounds.left + 4 || r.right > bounds.right - 4 || r.top < bounds.top + 4)
+  const outside = (r: DOMRect) => !!bounds && (r.left < bounds.left + 4 || r.right > bounds.right - 4 || r.top < bounds.top + 4 || r.bottom > bounds.bottom - 4)
   labels.forEach((l, i) => {
     let r = rects[i]
     if (r.width === 0) return
@@ -65,12 +66,17 @@ export function declutterLabels(markers: Marker[], container: HTMLElement | null
         if (!hit) break
         pin.classList.remove(cls)
       }
-    } else if (hit && pin && !pin.classList.contains(LEFT)) {
-      // A name beside its dot (desktop) tries the other side of the dot before giving up.
-      pin.classList.add(LEFT)
-      r = l.getBoundingClientRect()
-      hit = hits(r) || onDot(r, pin) || outside(r)
-      if (hit) pin.classList.remove(LEFT)
+    } else if (hit && pin) {
+      // A name beside its dot (desktop) tries the other side of the dot, then above it, then below it, before giving up.
+      const spots = pin.classList.contains(LEFT) ? [UP, DOWN] : [LEFT, UP, DOWN]
+      for (const cls of spots) {
+        pin.classList.remove(LEFT, UP, DOWN)
+        pin.classList.add(cls)
+        r = l.getBoundingClientRect()
+        hit = hits(r) || onDot(r, pin) || outside(r)
+        if (!hit) break
+      }
+      if (hit) pin.classList.remove(LEFT, UP, DOWN)
     }
     if (hit) l.classList.add(OFF)
     else kept.push(r)
