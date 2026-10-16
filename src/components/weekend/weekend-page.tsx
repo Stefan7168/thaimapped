@@ -280,7 +280,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes }: {
         </div>
         <div className="tm-stage__map" data-ui>
           {detected3D !== null && (
-            <StageMap locale={locale} camera={area.camera} threeD={detected3D} areas={[area]} route={null} focus={{ pins: pinned, area, numbered: true, mine: myHotel?.id }} card={card} onCloseCard={() => setCard(null)} cityId={cityId} stations={stations} />
+            <StageMap locale={locale} camera={area.camera} threeD={detected3D} areas={[area]} route={null} focus={{ pins: pinned, area, numbered: true, mine: myHotel?.id }} card={card} onCloseCard={() => setCard(null)} onSelectPin={(pin) => { setCard({ pin, area }) }} cityId={cityId} stations={stations} />
           )}
           <div className="tm-stage__bar tm-stage__bar--page" data-map-overlay="bottom">
             <span className="tm-stage__showing">{s.home.showing(t(area.name, locale))}</span>

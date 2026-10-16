@@ -39,6 +39,8 @@ export interface StageMapProps {
   stations?: Station[]
   /** An area clicked (or tapped) on the map. */
   onSelectArea?: (areaId: string) => void
+  /** A plan's stop clicked (or tapped) on the map: the page opens its card, as a tap on the list row does. */
+  onSelectPin?: (pin: Pin) => void
 }
 
 /** A numbered badge in the area's colour, for a plan's stops. */
@@ -99,9 +101,13 @@ function routesBounds(routes: TripRoute[]): [[number, number], [number, number]]
  * It only follows the page: the camera prop moves it, a route prop draws a
  * trip on it. Wheel zoom is off so the page keeps scrolling over it.
  */
-export function StageMap({ locale, camera, threeD, areas, route, routes = [], focus = null, marker = null, card = null, onCloseCard, cityId = '', stations = [], onSelectArea }: StageMapProps) {
+export function StageMap({ locale, camera, threeD, areas, route, routes = [], focus = null, marker = null, card = null, onCloseCard, cityId = '', stations = [], onSelectArea, onSelectPin }: StageMapProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const onSelectAreaRef = useRef(onSelectArea)
+  const onSelectPinRef = useRef(onSelectPin)
+  useEffect(() => {
+    onSelectPinRef.current = onSelectPin
+  }, [onSelectPin])
   useEffect(() => {
     onSelectAreaRef.current = onSelectArea
   }, [onSelectArea])
@@ -208,6 +214,7 @@ export function StageMap({ locale, camera, threeD, areas, route, routes = [], fo
         const el = focus!.numbered ? numberElement(i + 1, t(pin.name, locale), `var(--${focus!.area.color})`) : labelElement(t(pin.name, locale), `var(--${focus!.area.color})`, false)
         el.classList.add('tm-pin--active')
         if (focus!.mine && pin.id === focus!.mine) el.classList.add('tm-pin--mine')
+        el.addEventListener('click', (e) => { e.stopPropagation(); onSelectPinRef.current?.(pin) })
         markersRef.current.push(new maplibregl.Marker({ element: el, anchor: focus!.numbered ? 'center' : 'left' }).setLngLat([pin.location.lon, pin.location.lat]).addTo(map))
       })
       if (marker) {

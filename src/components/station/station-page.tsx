@@ -173,7 +173,7 @@ export function StationPage({ locale, cityId, page, areas, stations, others }: {
         </div>
         <div className="tm-stage__map" data-ui>
           {detected3D !== null && (
-            <StageMap locale={locale} camera={camera} threeD={detected3D} areas={[]} route={null} focus={{ pins: pinned.map((n) => n.pin), area: mainArea, numbered: true }} marker={{ lon: st.lon, lat: st.lat, label, color: page.lines[0]?.color ?? '#c8553d' }} card={card} onCloseCard={() => setCard(null)} cityId={cityId} stations={stations} />
+            <StageMap locale={locale} camera={camera} threeD={detected3D} areas={[]} route={null} focus={{ pins: pinned.map((n) => n.pin), area: mainArea, numbered: true }} marker={{ lon: st.lon, lat: st.lat, label, color: page.lines[0]?.color ?? '#c8553d' }} card={card} onCloseCard={() => setCard(null)} onSelectPin={(pin) => { const e = pinned.find((n) => n.pin.id === pin.id); if (e) setCard({ pin: e.pin, area: e.area }) }} cityId={cityId} stations={stations} />
           )}
           <div className="tm-stage__bar tm-stage__bar--page" data-map-overlay="bottom">
             <span className="tm-stage__showing">{s.home.showing(label)}</span>
