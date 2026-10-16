@@ -3,7 +3,7 @@
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { useEffect, useMemo, useState } from 'react'
-import { ArrowLeft, Share2 } from 'lucide-react'
+import { ArrowLeft, CalendarPlus, Share2 } from 'lucide-react'
 import type { Locale, TripRoute } from '@/lib/content/types'
 import { t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
@@ -13,6 +13,7 @@ import type { HotelDoor } from '@/lib/content/slim'
 import { useSaved } from '@/lib/saved/store'
 import { myHotelChoice, useHotelChoiceVersion } from '@/lib/saved/my-hotel'
 import { adoptStayFromUrl, stayParam, useStay } from '@/lib/stay/store'
+import { buildIcs, downloadIcs, type CalendarEvent } from '@/lib/stay/calendar'
 import { STOP_COLORS } from '@/components/map/trip-map'
 import { SiteFooter } from './site-footer'
 
@@ -66,6 +67,27 @@ export function TripPage({ locale, cityId, cityName, route, hotelDoors = {} }: {
     return new Intl.DateTimeFormat(locale, { weekday: 'short', day: 'numeric', month: 'short' }).format(date)
   }
   useEffect(() => { adoptStayFromUrl() }, [])
+  // The trip as a calendar file: one all-day-ish event per day (08:00 to 20:00 Bangkok), the day's stops in the description. Needs the dates.
+  const addToCalendar = () => {
+    if (!stay) return
+    const url = window.location.href.split('#')[0]
+    const name = t(route.name, locale)
+    const events: CalendarEvent[] = days.map((d) => {
+      const date = new Date(`${stay.checkIn}T12:00:00`)
+      date.setDate(date.getDate() + d - 1)
+      const iso = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
+      const stops = route.stops.filter((st) => st.day === d)
+      const stopsText = stops.map((st, i) => `${i + 1}. ${t(st.name, locale)}: ${t(st.why, locale)}`).join('\n')
+      return {
+        date: iso, start: '08:00', end: '20:00',
+        title: s.trip.calendarDay(name, d, route.days),
+        description: [`${s.weekendPage.calendarStops}:`, stopsText, myHotel && d === 1 ? `${s.weekendPage.calendarYourHotel}: ${t(myHotel.name, locale)}` : '', url].filter(Boolean).join('\n'),
+        location: stops[0] ? t(stops[0].name, locale) : undefined,
+        url,
+      }
+    })
+    downloadIcs(`trip-${route.id}.ics`, buildIcs(events, name))
+  }
 
   const share = async () => {
     // The link carries the dates, so the booking links open on the same nights for the other person.
@@ -118,6 +140,12 @@ export function TripPage({ locale, cityId, cityName, route, hotelDoors = {} }: {
                 <Share2 aria-hidden="true" className="size-4" />
                 {shared === 'copied' ? s.trip.copied : shared === 'failed' ? s.trip.copyFailed : s.trip.share}
               </button>
+              {stay && (
+                <button type="button" onClick={addToCalendar} className="tm-button tm-button--small tm-button--quiet ml-2">
+                  <CalendarPlus aria-hidden="true" className="size-4" />
+                  {s.weekendPage.calendar}
+                </button>
+              )}
             </p>
             {route.days > 1 && (
             <div className="mt-4 flex gap-1.5">

@@ -222,6 +222,7 @@ const en = {
   },
   trip: {
     heading: 'Trips from Bangkok',
+    calendarDay: (name: string, d: number, days: number) => (days > 1 ? `${name}, day ${d} of ${days}` : name),
     startFromHotel: (hotel: string) => `From your hotel, ${hotel}`,
     endAtHotel: (hotel: string) => `Back to your hotel, ${hotel}`,
     directionsFrom: (hotel: string) => `Directions from ${hotel}`,
