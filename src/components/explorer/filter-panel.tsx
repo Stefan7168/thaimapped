@@ -37,7 +37,7 @@ export function FilterPanel({ locale, bundle, filters, onChange }: FilterPanelPr
       <div className="flex items-center justify-between">
         <h2 className="text-sm font-semibold">{s.filters.title}{count > 0 ? ` (${count})` : ''}</h2>
         {count > 0 && (
-          <button type="button" onClick={() => onChange(EMPTY_FILTERS)} className="text-xs font-medium text-accent underline underline-offset-2">
+          <button type="button" onClick={() => onChange(EMPTY_FILTERS)} className="text-xs font-medium text-accent-text underline underline-offset-2">
             {s.filters.clearAll}
           </button>
         )}

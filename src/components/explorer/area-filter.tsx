@@ -133,7 +133,7 @@ export function AreaFilter({ locale, bundle, areas, subareas, onChange }: AreaFi
 
 function Chip({ color, label, onRemove, removeLabel }: { color: string; label: string; onRemove: () => void; removeLabel: string }) {
   return (
-    <button type="button" aria-label={removeLabel} onClick={onRemove} className="flex min-h-9 max-w-full items-center gap-1.5 rounded-full border border-accent bg-accent/10 py-1.5 pl-2.5 pr-2 text-sm font-medium text-accent">
+    <button type="button" aria-label={removeLabel} onClick={onRemove} className="flex min-h-9 max-w-full items-center gap-1.5 rounded-full border border-accent bg-accent/10 py-1.5 pl-2.5 pr-2 text-sm font-medium text-accent-text">
       <span aria-hidden="true" className="size-2.5 shrink-0 rounded-full" style={{ background: color }} />
       <span className="truncate">{label}</span>
       <X aria-hidden="true" className="size-3.5 shrink-0" />

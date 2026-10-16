@@ -29,6 +29,7 @@
   --color-ink-2: var(--ink-2);
   --color-line: var(--line);
   --color-accent: var(--accent);
+  --color-accent-text: var(--accent-text); /* the accent for small text: 5.2:1 on paper */
   --color-area-1: var(--area-1);
   --color-area-2: var(--area-2);
   --color-area-3: var(--area-3);

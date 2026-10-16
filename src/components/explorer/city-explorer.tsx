@@ -275,7 +275,7 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
                 <span className="truncate font-medium">{t(pin.name, locale)}</span>
               </span>
               <span className="block text-ink-2">{t(pin.why, locale)}</span>
-              {whenLine(pin, locale) && <span className="block text-xs font-medium text-accent">{whenLine(pin, locale)}</span>}
+              {whenLine(pin, locale) && <span className="tm-wk__when block text-xs">{whenLine(pin, locale)}</span>}
               {pin.price && <span className="block text-xs text-ink-2">{s.guide.priceFrom(thb(pin.price.from, locale))}{pin.price.basis === 'tier-estimate' ? ` (${s.guide.priceEstimate})` : ''}</span>}
               {pin.price && stay && <span className="tm-wk__stay block text-xs">{s.guide.stayTotal(thb(pin.price.from * nights(stay), locale), nights(stay))}</span>}
               {pin.walk && walkStation && (
@@ -454,7 +454,7 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
             <div role="dialog" aria-modal="true" aria-label={s.filters.title} className="absolute inset-x-0 bottom-0 flex h-[74dvh] flex-col rounded-t-2xl border-t border-line bg-paper shadow-2xl">
               <div className="flex items-center justify-between px-3 pt-2">
                 <span className="mx-auto h-1.5 w-10 rounded-full bg-ink-2/30" />
-                <button type="button" onClick={() => setSheetOpen(false)} className="absolute right-2 top-2 flex size-8 items-center justify-center rounded-full text-ink-2">
+                <button type="button" aria-label={s.filters.close} onClick={() => setSheetOpen(false)} className="absolute right-2 top-2 flex size-8 items-center justify-center rounded-full text-ink-2">
                   <X aria-hidden="true" className="size-4" />
                 </button>
               </div>
