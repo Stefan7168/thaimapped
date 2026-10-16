@@ -41,6 +41,7 @@ const en = {
     lead: (n: number) => (n === 1 ? '1 saved in this browser.' : `${n} saved in this browser.`),
     empty: 'Nothing saved yet. Tap the heart on a hotel or a place on the map and it lands here.',
     emptyLink: 'Open the map',
+    emptyQuiz: 'Not sure where to stay? Three taps find your area',
     save: 'Save this',
     remove: 'Remove from saved',
     share: 'Send this list',

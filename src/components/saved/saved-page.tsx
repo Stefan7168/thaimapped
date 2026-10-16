@@ -139,7 +139,12 @@ export function SavedPage({ locale, cityId, entries, stations }: { locale: Local
             <button type="button" onClick={keep} className="tm-button tm-button--small">{shared === 'kept' ? s.saved.kept : s.saved.keep}</button>
           )}
           {sentIds && <button type="button" onClick={() => { setSentIds(null); window.history.replaceState(null, '', window.location.pathname) }} className="tm-link">{s.saved.mine}</button>}
-          {rows.length === 0 && <Link href={`/${locale}/${cityId}`} className="tm-link">{s.saved.emptyLink}</Link>}
+          {rows.length === 0 && !sentIds && (
+            <>
+              <Link href={`/${locale}/${cityId}`} className="tm-button tm-button--small">{s.saved.emptyLink}</Link>
+              <Link href={`/${locale}#tm-quiz`} className="tm-link">{s.saved.emptyQuiz}</Link>
+            </>
+          )}
           {rows.length > 0 && !sentIds && <button type="button" onClick={clearSaved} className="tm-link">{s.saved.clear}</button>}
         </div>
         {missing > 0 && <p className="tm-saved__note">{s.saved.unknown(missing)}</p>}
