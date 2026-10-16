@@ -1,6 +1,6 @@
 import { env } from '@/lib/env'
 import type { PinLinks } from '@/lib/content/types'
-import { nights, type Stay } from '@/lib/stay/store'
+import { nights, roomsOf, type Stay } from '@/lib/stay/store'
 
 /**
  * Outbound link builder. Content stores plain destination URLs; the
@@ -39,12 +39,12 @@ export function withStay(partner: Partner, destination: string, stay: Stay | nul
     u.searchParams.set('checkOut', stay.checkOut)
     u.searchParams.set('los', String(nights(stay)))
     u.searchParams.set('adults', String(stay.adults ?? 2))
-    u.searchParams.set('rooms', '1')
+    u.searchParams.set('rooms', String(roomsOf(stay)))
   } else {
     u.searchParams.set('checkin', stay.checkIn)
     u.searchParams.set('checkout', stay.checkOut)
     u.searchParams.set('group_adults', String(stay.adults ?? 2))
-    u.searchParams.set('no_rooms', '1')
+    u.searchParams.set('no_rooms', String(roomsOf(stay)))
   }
   return u.toString()
 }

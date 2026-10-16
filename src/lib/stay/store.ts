@@ -69,6 +69,11 @@ export function adultsOf(stay: Stay | null): number {
   return stay?.adults ?? 2
 }
 
+/** Rooms for the party, two to a room: a search for 5 adults in 1 room shows almost nothing. */
+export function roomsOf(stay: Stay | null): number {
+  return Math.ceil(adultsOf(stay) / 2)
+}
+
 export function clearStay() {
   write(null)
 }

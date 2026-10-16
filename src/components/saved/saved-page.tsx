@@ -11,7 +11,7 @@ import { t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
 import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
 import { directionsUrl } from '@/lib/links/directions'
-import { adoptStayFromUrl, nights, stayParam, useStay } from '@/lib/stay/store'
+import { adoptStayFromUrl, nights, stayParam, useStay, roomsOf } from '@/lib/stay/store'
 import { StayPicker } from '@/components/stay/stay-picker'
 import { HotelCompare } from '@/components/stay/hotel-compare'
 import { trackOutbound } from '@/lib/links/track'
@@ -130,7 +130,7 @@ export function SavedPage({ locale, cityId, entries, stations, airport = {} }: {
                 <span className="tm-wk__why">{t(pin.why, locale)}</span>
                 {whenLine(pin, locale) && <span className="tm-wk__when">{whenLine(pin, locale)}</span>}
                 {pin.price && <span className="tm-wk__meta">{s.guide.priceFrom(thb(pin.price.from, locale))}{pin.price.basis === 'tier-estimate' ? ` (${s.guide.priceEstimate})` : ''}</span>}
-            {pin.price && stay && <span className="tm-wk__meta tm-wk__stay">{s.guide.stayTotal(thb(pin.price.from * nights(stay), locale), nights(stay))}</span>}
+            {pin.price && stay && <span className="tm-wk__meta tm-wk__stay">{s.guide.stayTotal(thb(pin.price.from * nights(stay) * roomsOf(stay), locale), nights(stay), roomsOf(stay))}</span>}
                 {pin.walk && walkStation && <span className="tm-wk__meta">{s.city.walkMinutes(pin.walk.minutes)} {s.city.from(`${walkStation.code ? walkStation.code + ' ' : ''}${t(walkStation.name, locale)}`)}</span>}
                 {pin.kind === 'hotel' && !sentIds && areaHotelCount(area.id) > 1 && pickFor(area.id) === pin.id && <span className="tm-wk__meta tm-wk__from">{s.saved.yourPick(t(area.name, locale))}</span>}
                 {pin.kind !== 'hotel' && hotelFor(area.id) && <span className="tm-wk__meta tm-wk__from">{s.weekendPage.fromHotel(Math.max(1, Math.round(distanceM(hotelFor(area.id)!.pin.location.lon, hotelFor(area.id)!.pin.location.lat, pin.location.lon, pin.location.lat) / WALK_PACE_M_PER_MIN)), t(hotelFor(area.id)!.pin.name, locale))}</span>}

@@ -5,7 +5,7 @@ import { strings } from '@/lib/i18n/strings'
 import { thb } from '@/lib/explorer/price'
 import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
 import { directionsUrl } from '@/lib/links/directions'
-import { nights, stayNow } from '@/lib/stay/store'
+import { nights, stayNow, roomsOf } from '@/lib/stay/store'
 import { savedIds, toggleSaved } from '@/lib/saved/store'
 import { chooseHotel, myHotelChoice } from '@/lib/saved/my-hotel'
 import { distanceM, WALK_PACE_M_PER_MIN } from '@/lib/explorer/filters'
@@ -142,7 +142,7 @@ export function cardElement(locale: Locale, cityId: string, pin: Pin, area: Area
     if (stay) {
       const total = document.createElement('p')
       total.className = 'tm-card__price tm-card__stay'
-      total.textContent = s.guide.stayTotal(thb(pin.price.from * nights(stay), locale), nights(stay))
+      total.textContent = s.guide.stayTotal(thb(pin.price.from * nights(stay) * roomsOf(stay), locale), nights(stay), roomsOf(stay))
       priceLines.push(total)
     }
   }

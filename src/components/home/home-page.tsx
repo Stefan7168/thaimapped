@@ -18,7 +18,7 @@ import { slotNow } from '@/lib/explorer/weekend'
 import { addSaved, useSaved } from '@/lib/saved/store'
 import { StayPicker } from '@/components/stay/stay-picker'
 import { chooseHotel, myHotelAcross, useHotelChoiceVersion } from '@/lib/saved/my-hotel'
-import { nights, useStay } from '@/lib/stay/store'
+import { nights, useStay, roomsOf } from '@/lib/stay/store'
 import { thb } from '@/lib/explorer/price'
 import { RevealObserver } from '@/components/motion/reveal'
 import { SiteFooter } from '@/components/explorer/site-footer'
@@ -196,7 +196,7 @@ export function HomePage({ locale, bundle, routes }: { locale: Locale; bundle: C
                 <p className="tm-hero__now tm-hero__mine">
                   {s.home.yourWeekend(t(myHotel.pin.name, locale), t(myHotel.area.name, locale))}
                   {/* With dates: the range, then the stay's cost at the hotel's class-typical rate (which names the nights), else the range and the nights. */}
-                  {stay && stayLabel ? (myHotel.pin.price ? <>{` · ${stayLabel} · `}<span title={myHotel.pin.price.basis === 'tier-estimate' ? s.guide.priceEstimate : undefined}>{s.guide.stayTotal(thb(myHotel.pin.price.from * nights(stay), locale), nights(stay))}{myHotel.pin.price.basis === 'tier-estimate' ? '*' : ''}</span></> : ` · ${stayLabel}, ${s.stay.nights(nights(stay))}`) : ''}{' · '}
+                  {stay && stayLabel ? (myHotel.pin.price ? <>{` · ${stayLabel} · `}<span title={myHotel.pin.price.basis === 'tier-estimate' ? s.guide.priceEstimate : undefined}>{s.guide.stayTotal(thb(myHotel.pin.price.from * nights(stay) * roomsOf(stay), locale), nights(stay), roomsOf(stay))}{myHotel.pin.price.basis === 'tier-estimate' ? '*' : ''}</span></> : ` · ${stayLabel}, ${s.stay.nights(nights(stay))}`) : ''}{' · '}
                   {nowSlot ? (
                     <Link href={`/${locale}/${city.id}/weekend/${myHotel.area.id}?hotel=${myHotel.pin.id}#tm-slot-${nowSlot}`} className="tm-link tm-link--under">{s.home.jumpNow(s.guide.slots[nowSlot].toLowerCase())}</Link>
                   ) : (
@@ -292,7 +292,7 @@ export function HomePage({ locale, bundle, routes }: { locale: Locale; bundle: C
                       <span className="tm-quiz__label">{s.home.quiz.hotelPick}</span>
                       <strong>{t(best.hotel.name, locale)}</strong> {t(best.hotel.why, locale)}
                       {/* With dates set in the row above, the pick says what the stay comes to (a class-typical estimate, marked as such). */}
-                      {best.hotel.price && stay && <span className="tm-quiz__total">{s.guide.stayTotal(thb(best.hotel.price.from * nights(stay), locale), nights(stay))}{best.hotel.price.basis === 'tier-estimate' ? ` (${s.guide.priceEstimate})` : ''}</span>}
+                      {best.hotel.price && stay && <span className="tm-quiz__total">{s.guide.stayTotal(thb(best.hotel.price.from * nights(stay) * roomsOf(stay), locale), nights(stay), roomsOf(stay))}{best.hotel.price.basis === 'tier-estimate' ? ` (${s.guide.priceEstimate})` : ''}</span>}
                       {/* One tap keeps the pick: every page then walks from this door, and the hero line above says so on the next visit. */}
                       <span className="tm-quiz__keep">{saved.includes(best.hotel.id) ? <span className="tm-wk__shared-done">{s.weekendPage.sentHotelSaved}</span> : <button type="button" className="tm-link tm-link--under" onClick={() => { addSaved([best.hotel!.id]); chooseHotel(best.area.id, best.hotel!.id) }}>{s.weekendPage.saveSentHotel}</button>}</span>
                     </p>

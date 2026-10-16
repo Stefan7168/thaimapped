@@ -19,7 +19,7 @@ import { thb } from '@/lib/explorer/price'
 import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
 import { directionsUrl } from '@/lib/links/directions'
 import { formatDayRange } from '@/lib/stay/format'
-import { addDays, adoptStayFromUrl, nights, stayParam, tripStartDefault, useStay } from '@/lib/stay/store'
+import { addDays, adoptStayFromUrl, nights, stayParam, tripStartDefault, useStay, roomsOf } from '@/lib/stay/store'
 import { buildIcs, downloadIcs, type CalendarEvent } from '@/lib/stay/calendar'
 import { trackOutbound } from '@/lib/links/track'
 import { supports3D } from '@/lib/map/device'
@@ -218,7 +218,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
             <span className="tm-wk__why">{t(pin.why, locale)}</span>
             {whenLine(pin, locale) && <span className="tm-wk__when">{whenLine(pin, locale)}</span>}
             {pin.price && <span className="tm-wk__meta">{s.guide.priceFrom(thb(pin.price.from, locale))}{pin.price.basis === 'tier-estimate' ? ` (${s.guide.priceEstimate})` : ''}</span>}
-            {pin.price && stay && <span className="tm-wk__meta tm-wk__stay">{s.guide.stayTotal(thb(pin.price.from * nights(stay), locale), nights(stay))}</span>}
+            {pin.price && stay && <span className="tm-wk__meta tm-wk__stay">{s.guide.stayTotal(thb(pin.price.from * nights(stay) * roomsOf(stay), locale), nights(stay), roomsOf(stay))}</span>}
             {pin.walk && walkStation && <span className="tm-wk__meta">{s.city.walkMinutes(pin.walk.minutes)} {s.city.from(`${walkStation.code ? walkStation.code + ' ' : ''}${t(walkStation.name, locale)}`)}</span>}
             {pin.kind !== 'hotel' && myHotel && <span className="tm-wk__meta tm-wk__from">{s.weekendPage.fromHotel(fromHotel(pin)!, t(myHotel.name, locale))}</span>}
             {pin.kind !== 'hotel' && myHotel && fromHotel(pin)! > 20 && byTrain(pin) && <span className="tm-wk__meta tm-wk__train">{s.weekendPage.byTrain(byTrain(pin)!)}</span>}
@@ -420,7 +420,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
         <div className="tm-wk__book" data-ui>
           <span className="tm-wk__book-text">
             <span className="tm-wk__book-name">{t(myHotel.name, locale)}</span>
-            {myHotel.price && stay && <span className="tm-wk__book-total" title={myHotel.price.basis === 'tier-estimate' ? s.guide.priceEstimate : undefined}>{s.guide.stayTotal(thb(myHotel.price.from * nights(stay), locale), nights(stay))}{myHotel.price.basis === 'tier-estimate' ? '*' : ''}</span>}
+            {myHotel.price && stay && <span className="tm-wk__book-total" title={myHotel.price.basis === 'tier-estimate' ? s.guide.priceEstimate : undefined}>{s.guide.stayTotal(thb(myHotel.price.from * nights(stay) * roomsOf(stay), locale), nights(stay), roomsOf(stay))}{myHotel.price.basis === 'tier-estimate' ? '*' : ''}</span>}
           </span>
           {(Object.keys(myHotel.links) as Partner[]).filter((p) => p !== 'official').map((p) => {
             const subId = subIdFor(`${cityId}-${area.id}`, myHotel.id)
