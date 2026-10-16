@@ -595,7 +595,12 @@ a.tm-wk__stop { text-decoration: none; }
 
 .tm-list__head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
 .tm-list__share { font: inherit; text-transform: none; letter-spacing: 0; font-weight: 600; color: var(--accent-text); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
-@media (max-width: 480px) { .tm-wk__links { margin-left: 0; } }
+@media (max-width: 480px) {
+  .tm-wk__links { margin-left: 0; }
+  /* Narrow phones: the booking buttons share the first row half and half; Directions drops to its own row instead of leaving one button orphaned. */
+  .tm-wk__links .tm-card__link:not(.tm-card__link--quiet) { flex: 1 1 calc(50% - 3px); justify-content: center; }
+  .tm-wk__links .tm-card__link--quiet { order: 1; }
+}
 
 /* Saved page: the hotels side by side. Scrolls sideways on a phone; the row names stay put. */
 .tm-stay { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; margin: 2px 0 14px; }
