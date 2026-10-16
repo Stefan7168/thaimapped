@@ -44,7 +44,7 @@ export function declutterLabels(markers: Marker[], container: HTMLElement | null
   }
   const rects = labels.map((l) => l.getBoundingClientRect())
   // The picked area's name pill (area-hover.ts) and every stop number have the spot first.
-  const kept: DOMRect[] = [...(container?.querySelectorAll<HTMLElement>('.tm-area-pill, .tm-stop__num') ?? [])].map((el) => el.getBoundingClientRect()).filter((r) => r.width > 0)
+  const kept: DOMRect[] = [...(container?.querySelectorAll<HTMLElement>('.tm-area-pill, .tm-stop__num, .tm-pin__num') ?? [])].map((el) => el.getBoundingClientRect()).filter((r) => r.width > 0)
   const hits = (r: DOMRect) => kept.some((k) => r.left < k.right + 1 && r.right > k.left - 1 && r.top < k.bottom + 1 && r.bottom > k.top - 1)
   const outside = (r: DOMRect) => !!bounds && (r.left < bounds.left + 4 || r.right > bounds.right - 4 || r.top < bounds.top + 4)
   labels.forEach((l, i) => {

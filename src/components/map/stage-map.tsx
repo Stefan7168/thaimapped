@@ -42,11 +42,18 @@ export interface StageMapProps {
 }
 
 /** A numbered badge in the area's colour, for a plan's stops. */
-function numberElement(n: number, color: string): HTMLElement {
+function numberElement(n: number, name: string, color: string): HTMLElement {
   const el = document.createElement('div')
   el.className = 'tm-pin tm-pin--num'
   el.style.setProperty('--pin', color)
-  el.textContent = String(n)
+  const num = document.createElement('span')
+  num.className = 'tm-pin__num'
+  num.textContent = String(n)
+  // The name sits beside the number on a wide map; a narrow map hides it (tm-map--nums), the list carries the names there.
+  const label = document.createElement('span')
+  label.className = 'tm-pin__label'
+  label.textContent = name
+  el.append(num, label)
   return el
 }
 
@@ -141,7 +148,7 @@ export function StageMap({ locale, camera, threeD, areas, route, routes = [], fo
         mapRef.current = map
         watchDeclutter(map, () => markersRef.current)
         // Narrow stage: the trip stops show their numbers only (the list under the map carries the names).
-        const numsOnly = () => map!.getContainer().classList.toggle('tm-map--nums', map!.getContainer().clientWidth < 768)
+        const numsOnly = () => map!.getContainer().classList.toggle('tm-map--nums', map!.getContainer().clientWidth < 560)
         numsOnly()
         map.on('resize', numsOnly)
         setMapReady((n) => n + 1)
@@ -198,7 +205,7 @@ export function StageMap({ locale, camera, threeD, areas, route, routes = [], fo
         markersRef.current.push(new maplibregl.Marker({ element: el, anchor: narrow && !focus ? 'top' : 'left' }).setLngLat(a.camera.center).addTo(map))
       }
       ;(focus?.pins ?? []).forEach((pin, i) => {
-        const el = focus!.numbered ? numberElement(i + 1, `var(--${focus!.area.color})`) : labelElement(t(pin.name, locale), `var(--${focus!.area.color})`, false)
+        const el = focus!.numbered ? numberElement(i + 1, t(pin.name, locale), `var(--${focus!.area.color})`) : labelElement(t(pin.name, locale), `var(--${focus!.area.color})`, false)
         el.classList.add('tm-pin--active')
         if (focus!.mine && pin.id === focus!.mine) el.classList.add('tm-pin--mine')
         markersRef.current.push(new maplibregl.Marker({ element: el, anchor: focus!.numbered ? 'center' : 'left' }).setLngLat([pin.location.lon, pin.location.lat]).addTo(map))
