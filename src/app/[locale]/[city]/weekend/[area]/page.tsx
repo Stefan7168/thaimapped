@@ -37,7 +37,8 @@ export default async function AreaWeekendPage(props: PageProps<'/[locale]/[city]
   // Other areas are only named and linked; the stations are only the ones this area's places walk from.
   const cityName = t(bundle.city.name, locale)
   // A slot this area leaves empty borrows from the nearest area; those stops need their stations too.
-  const borrowed = borrowedSlots(a, bundle.areas, weekendPlan(a))
+  // Stand-ins for every slot, not only the empty ones: the reader can take stops out in the browser, and an emptied slot then borrows too.
+  const borrowed = borrowedSlots(a, bundle.areas, { ...weekendPlan(a), slots: { fridayNight: [], saturdayMorning: [], saturdayAfternoon: [], saturdayNight: [], sunday: [] } })
   const borrowedPins = Object.values(borrowed).flatMap((b) => b.pins)
   const hotelStations = [...new Set(a.pins.filter((p) => p.kind === 'hotel' && p.walk).map((p) => p.walk!.station))]
   // Rides from each hotel's station to each stop's station, for the "or by train" line under a long walk.
