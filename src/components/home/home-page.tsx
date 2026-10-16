@@ -16,6 +16,7 @@ import { useSaved } from '@/lib/saved/store'
 import { StayPicker } from '@/components/stay/stay-picker'
 import { myHotelChoice, useHotelChoiceVersion } from '@/lib/saved/my-hotel'
 import { nights, useStay } from '@/lib/stay/store'
+import { thb } from '@/lib/explorer/price'
 import { RevealObserver } from '@/components/motion/reveal'
 import { SiteFooter } from '@/components/explorer/site-footer'
 import { HotelFragment, StationFragment, TripStopsFragment } from './ui-fragments'
@@ -244,7 +245,12 @@ export function HomePage({ locale, bundle, routes }: { locale: Locale; bundle: C
                   <p className="tm-quiz__name">{s.home.quiz.result(t(best.area.name, locale))}</p>
                   <p className="tm-quiz__why">{t(best.area.tagline, locale)}</p>
                   {answers.tier && (best.hotel ? (
-                    <p className="tm-quiz__hotel"><span className="tm-quiz__label">{s.home.quiz.hotelPick}</span><strong>{t(best.hotel.name, locale)}</strong> {t(best.hotel.why, locale)}</p>
+                    <p className="tm-quiz__hotel">
+                      <span className="tm-quiz__label">{s.home.quiz.hotelPick}</span>
+                      <strong>{t(best.hotel.name, locale)}</strong> {t(best.hotel.why, locale)}
+                      {/* With dates set in the row above, the pick says what the stay comes to (a class-typical estimate, marked as such). */}
+                      {best.hotel.price && stay && <span className="tm-quiz__total">{s.guide.stayTotal(thb(best.hotel.price.from * nights(stay), locale), nights(stay))}{best.hotel.price.basis === 'tier-estimate' ? ` (${s.guide.priceEstimate})` : ''}</span>}
+                    </p>
                   ) : (
                     <p className="tm-quiz__hotel">{s.home.quiz.noHotel}</p>
                   ))}
