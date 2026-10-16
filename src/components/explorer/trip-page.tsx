@@ -14,7 +14,7 @@ import { TRAVEL_MODE, directionsUrl } from '@/lib/links/directions'
 import type { HotelDoor } from '@/lib/content/slim'
 import { useSaved } from '@/lib/saved/store'
 import { myHotelAcross, useHotelChoiceVersion } from '@/lib/saved/my-hotel'
-import { formatDay } from '@/lib/stay/format'
+import { formatDay, formatDayRange } from '@/lib/stay/format'
 import { addDays, adoptStayFromUrl, stayParam, tripStartDefault, tripStartOptions, useStay } from '@/lib/stay/store'
 import { buildIcs, downloadIcs, type CalendarEvent } from '@/lib/stay/calendar'
 import { StayPicker } from '@/components/stay/stay-picker'
@@ -125,7 +125,9 @@ export function TripPage({ locale, cityId, cityName, route, hotelDoors = {}, sta
     if (startIso && route.days > 1) u.searchParams.set('start', startIso)
     else u.searchParams.delete('start')
     const url = u.toString()
-    const text = `${t(route.tagline, locale)} ${route.duration === 'multi-day' ? s.trip.days(route.days) : s.trip.duration[route.duration]} · ${s.trip.mode[route.mode].toLowerCase()}${route.distanceKm !== undefined ? ` · ${s.trip.km(route.distanceKm)}` : ''}.`
+    // The text names the days and the hotel the trip starts from, so the other person reads the plan before opening it.
+    const when = startIso && route.days > 1 ? formatDayRange(startIso, addDays(startIso, route.days - 1), locale) : null
+    const text = `${t(route.tagline, locale)} ${route.duration === 'multi-day' ? s.trip.days(route.days) : s.trip.duration[route.duration]} · ${s.trip.mode[route.mode].toLowerCase()}${route.distanceKm !== undefined ? ` · ${s.trip.km(route.distanceKm)}` : ''}${when ? ` · ${when}` : ''}${myHotel ? ` · ${s.trip.shareFromHotel(t(myHotel.name, locale))}` : ''}.`
     try {
       if (navigator.share) {
         await navigator.share({ title: t(route.name, locale), text, url })

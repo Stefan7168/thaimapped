@@ -245,6 +245,7 @@ const en = {
     today: 'Today',
     calendarDay: (name: string, d: number, days: number) => (days > 1 ? `${name}, day ${d} of ${days}` : name),
     startFromHotel: (hotel: string) => `From your hotel, ${hotel}`,
+    shareFromHotel: (hotel: string) => `from your hotel, ${hotel}`,
     startOn: 'Start on',
     nightAway: (hotel: string) => `This night is away from ${hotel}`,
     startByTrain: (hotel: string, route: string) => `From your hotel, ${hotel}: ${route}`,
