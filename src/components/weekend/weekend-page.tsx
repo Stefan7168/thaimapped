@@ -21,6 +21,7 @@ import { dayDirectionsUrl, directionsUrl } from '@/lib/links/directions'
 import { formatDay, formatDayRange } from '@/lib/stay/format'
 import { seasonOf } from '@/lib/stay/season'
 import { addDays, adoptStayFromUrl, adultsOf, childrenOf, daysUntil, iso, nights, roomsOf, stayParam, tripStartDefault, useStay, type Stay } from '@/lib/stay/store'
+import { weekendFriday } from '@/lib/stay/weekend-friday'
 import { buildIcs, downloadIcs, TRIP_HOURS, type CalendarEvent } from '@/lib/stay/calendar'
 import { trackOutbound } from '@/lib/links/track'
 import { supports3D } from '@/lib/map/device'
@@ -142,9 +143,9 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
   const nowSlot = clock ? slotNow(clock, stay) : null
   // With a Friday-to-Sunday stay picked, each slot heading carries its date.
   const slotDay = (slot: WeekendSlot): Date | null => {
-    if (!stay || nights(stay) !== 2) return null
-    const d = new Date(stay.checkIn + 'T00:00:00')
-    if (d.getDay() !== 5) return null
+    const friday = stay ? weekendFriday(stay) : null
+    if (!friday) return null
+    const d = new Date(friday + 'T00:00:00')
     d.setDate(d.getDate() + (slot === 'fridayNight' ? 0 : slot === 'sunday' ? 2 : 1))
     return d
   }

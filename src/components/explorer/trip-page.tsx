@@ -16,6 +16,7 @@ import { useSaved } from '@/lib/saved/store'
 import { myHotelAcross, useHotelChoiceVersion } from '@/lib/saved/my-hotel'
 import { formatDay, formatDayRange } from '@/lib/stay/format'
 import { addDays, adoptStayFromUrl, dayTripOptions, nights, stayParam, tripStartDefault, tripStartOptions, useStay } from '@/lib/stay/store'
+import { weekendFriday } from '@/lib/stay/weekend-friday'
 import { keepTrip, setTripStartPick, tripClashes, useTripStartPicks } from '@/lib/stay/trip-start'
 import { buildIcs, downloadIcs, TRIP_HOURS, type CalendarEvent } from '@/lib/stay/calendar'
 import { useKeptTrips } from '@/lib/saved/trips'
@@ -117,8 +118,10 @@ export function TripPage({ locale, cityId, cityName, route, hotelDoors = {}, sta
   const weekendHref = (): string | null => {
     if (!kept || !mine || !stay || !startIso) return null
     const base = `/${locale}/${cityId}/weekend/${mine.areaId}`
-    if (nights(stay) !== 2 || new Date(stay.checkIn + 'T00:00:00').getDay() !== 5) return base
-    const offset = Math.round((Date.UTC(+startIso.slice(0, 4), +startIso.slice(5, 7) - 1, +startIso.slice(8, 10)) - Date.UTC(+stay.checkIn.slice(0, 4), +stay.checkIn.slice(5, 7) - 1, +stay.checkIn.slice(8, 10))) / 86400000)
+    const friday = weekendFriday(stay)
+    if (!friday) return base
+    const offset = Math.round((Date.UTC(+startIso.slice(0, 4), +startIso.slice(5, 7) - 1, +startIso.slice(8, 10)) - Date.UTC(+friday.slice(0, 4), +friday.slice(5, 7) - 1, +friday.slice(8, 10))) / 86400000)
+    if (offset < 0 || offset > 2) return base
     const slot = offset === 0 ? 'fridayNight' : offset === 2 ? 'sunday' : route.duration === 'afternoon' ? 'saturdayAfternoon' : route.duration === 'evening' ? 'saturdayNight' : 'saturdayMorning'
     return `${base}#tm-slot-${slot}`
   }

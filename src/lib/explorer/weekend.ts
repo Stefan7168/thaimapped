@@ -1,5 +1,6 @@
 import type { Area, Pin, TimeOfDay } from '@/lib/content/types'
 import { fitsPrice, type PriceRange } from './filters'
+import { weekendFriday } from '@/lib/stay/weekend-friday'
 
 export const WEEKEND_SLOTS = ['fridayNight', 'saturdayMorning', 'saturdayAfternoon', 'saturdayNight', 'sunday'] as const
 export type WeekendSlot = (typeof WEEKEND_SLOTS)[number]
@@ -98,8 +99,10 @@ export function borrowedSlots(area: Area, areas: Area[], plan: WeekendPlan): Par
 export function slotNow(clock: { date: string; hour: number; weekday: number }, stay: { checkIn: string; checkOut: string } | null): WeekendSlot | null {
   let weekday = clock.weekday
   if (stay) {
-    const start = new Date(stay.checkIn + 'T00:00:00')
-    if (start.getDay() !== 5 || clock.date < stay.checkIn || clock.date > stay.checkOut) return null
+    const friday = weekendFriday(stay)
+    if (!friday) return null
+    const start = new Date(friday + 'T00:00:00')
+    if (clock.date < friday || clock.date > stay.checkOut) return null
     const dayIndex = Math.round((new Date(clock.date + 'T00:00:00').getTime() - start.getTime()) / 86400000)
     if (dayIndex > 2) return null
     weekday = [5, 6, 0][dayIndex]
