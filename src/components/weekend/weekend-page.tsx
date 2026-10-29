@@ -32,7 +32,7 @@ import { HotelCompare } from '@/components/stay/hotel-compare'
 import { addSaved, useSaved } from '@/lib/saved/store'
 import { chooseHotel, useMyHotelChoice } from '@/lib/saved/my-hotel'
 import { addKeptTrips, toggleKeptTrip, useKeptTrips } from '@/lib/saved/trips'
-import { awayNights, tripClashes, tripDayOptions, tripStartFor, useTripStartPicks } from '@/lib/stay/trip-start'
+import { awayNights, parseStarts, startsParam, tripClashes, tripDayOptions, tripStartFor, useTripStartPicks } from '@/lib/stay/trip-start'
 import { HotelElsewhere, useHotelElsewhere } from '@/components/stay/hotel-elsewhere'
 import { skipStop, unskipStops, useSkipped } from '@/lib/saved/skipped'
 import { KIND_ICONS } from '@/components/explorer/kind-bar'
@@ -72,10 +72,13 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
   const [sentSkips, setSentSkips] = useState<readonly string[]>([])
   // Trips the sender had kept ("?trips="): marked and listed first for this visit, never written to this browser's own list.
   const [sentTrips, setSentTrips] = useState<readonly string[]>([])
+  // Sent trips come with their days (starts=); the reader's own picks hold for their own list.
+  const [sentStarts, setSentStarts] = useState<Readonly<Record<string, string>>>({})
   const keptTrips = useKeptTrips()
-  const picks = useTripStartPicks()
+  const ownPicks = useTripStartPicks()
   // The trips in this plan: the sender's on a shared link, else this browser's kept ones. They come first and go into the calendar file.
   const planTrips = sentTrips.length > 0 ? sentTrips : keptTrips
+  const picks = sentTrips.length > 0 ? sentStarts : ownPicks
   // With two or more hotels of this area saved, the reader can say which one the plan walks from (kept per area in this browser).
   const chosenHotel = useMyHotelChoice(area.id)
   // The address is not known on the server; read it once the page is live.
@@ -85,6 +88,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
       setSentHotel(new URLSearchParams(window.location.search).get('hotel'))
       setSentSkips((new URLSearchParams(window.location.search).get('skip') ?? '').split(',').filter(Boolean))
       setSentTrips((new URLSearchParams(window.location.search).get('trips') ?? '').split(',').filter(Boolean))
+      setSentStarts(parseStarts(new URLSearchParams(window.location.search).get('starts')))
       adoptStayFromUrl()
     })
     return () => window.cancelAnimationFrame(id)
@@ -235,6 +239,9 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
     const sharedTrips = routes.filter((r) => keptTrips.includes(r.id))
     if (sharedTrips.length > 0) u.searchParams.set('trips', sharedTrips.map((r) => r.id).join(','))
     else u.searchParams.delete('trips')
+    const starts = startsParam(sharedTrips.map((r) => r.id), picks)
+    if (starts) u.searchParams.set('starts', starts)
+    else u.searchParams.delete('starts')
     const url = u.toString()
     const title = s.weekendPage.title(t(area.name, locale))
     // The share sheet's text names the hotel and the dates, so the message reads as a plan, not a bare link.

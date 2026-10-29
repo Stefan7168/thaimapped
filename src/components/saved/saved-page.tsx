@@ -23,7 +23,7 @@ import { addSaved, clearSaved, toggleSaved, useSaved } from '@/lib/saved/store'
 import { addKeptTrips, clearKeptTrips, toggleKeptTrip, useKeptTrips } from '@/lib/saved/trips'
 import { formatDay } from '@/lib/stay/format'
 import { addDays, dayTripOptions } from '@/lib/stay/store'
-import { awayNights, tripClashes, tripDayOptions, tripStartFor, useTripStartPicks } from '@/lib/stay/trip-start'
+import { awayNights, parseStarts, startsParam, tripClashes, tripDayOptions, tripStartFor, useTripStartPicks } from '@/lib/stay/trip-start'
 import { chooseHotel, myHotelAcross, myHotelChoice, useHotelChoiceVersion } from '@/lib/saved/my-hotel'
 import { SiteHeader } from '@/components/explorer/site-header'
 import { SiteFooter } from '@/components/explorer/site-footer'
@@ -49,6 +49,7 @@ export function SavedPage({ locale, cityId, entries, trips = [], stations, inter
   const [sentIds, setSentIds] = useState<string[] | null>(null)
   // Trips on a sent list ("?trips="): shown with it, kept only on "Keep these".
   const [sentTrips, setSentTrips] = useState<string[]>([])
+  const [sentStarts, setSentStarts] = useState<Readonly<Record<string, string>>>({})
   const [shared, setShared] = useState<'idle' | 'copied' | 'failed' | 'kept'>('idle')
   const byId = useMemo(() => new Map(entries.map((e) => [e.pin.id, e])), [entries])
   const stationById = useMemo(() => new Map(stations.map((st) => [st.id, st])), [stations])
@@ -59,6 +60,7 @@ export function SavedPage({ locale, cityId, entries, trips = [], stations, inter
       const ids = new URLSearchParams(window.location.search).get('ids')
       setSentIds(ids ? ids.split(',').filter((id) => id) : null)
       setSentTrips((new URLSearchParams(window.location.search).get('trips') ?? '').split(',').filter(Boolean))
+      setSentStarts(parseStarts(new URLSearchParams(window.location.search).get('starts')))
       adoptStayFromUrl()
     })
     return () => window.cancelAnimationFrame(id)
@@ -69,7 +71,9 @@ export function SavedPage({ locale, cityId, entries, trips = [], stations, inter
   const nearbyCount = (hotel: Pin) => entries.filter((e) => e.pin.kind !== 'hotel' && distanceM(hotel.location.lon, hotel.location.lat, e.pin.location.lon, e.pin.location.lat) <= WALK_PACE_M_PER_MIN * 10).length
   const rows = ids.map((id) => byId.get(id)).filter((e): e is SavedEntry => !!e)
   const keptIds = useKeptTrips()
-  const picks = useTripStartPicks()
+  const ownPicks = useTripStartPicks()
+  // A sent list shows its trips on the sender's days (starts=); the reader's own list on their own picks.
+  const picks = sentIds ? sentStarts : ownPicks
   const keptTrips = (sentIds ? sentTrips : keptIds).map((id) => trips.find((r) => r.id === id)).filter((r): r is SavedTrip => !!r)
   // A clashing trip with more than one day to choose from links to its start chips.
   const canMove = (r: SavedTrip): boolean => !!stay && clashes(r).length > 0 && tripDayOptions(stay, r).length > 1
@@ -133,7 +137,7 @@ export function SavedPage({ locale, cityId, entries, trips = [], stations, inter
   }
 
   const share = async () => {
-    const url = `${window.location.origin}/${locale}/saved?ids=${encodeURIComponent(ids.join(','))}${stay ? `&stay=${stayParam(stay)}` : ''}${keptTrips.length > 0 ? `&trips=${encodeURIComponent(keptTrips.map((r) => r.id).join(','))}` : ''}`
+    const url = `${window.location.origin}/${locale}/saved?ids=${encodeURIComponent(ids.join(','))}${stay ? `&stay=${stayParam(stay)}` : ''}${keptTrips.length > 0 ? `&trips=${encodeURIComponent(keptTrips.map((r) => r.id).join(','))}` : ''}${startsParam(keptTrips.map((r) => r.id), picks) ? `&starts=${encodeURIComponent(startsParam(keptTrips.map((r) => r.id), picks)!)}` : ''}`
     const text = s.saved.shareText(hotelRows.length, placeRows.length, hotelRows[0] ? t(hotelRows[0].pin.name, locale) : null) + (keptTrips.length > 0 ? s.saved.shareTrips(keptTrips.length) : '')
     try {
       if (navigator.share) {

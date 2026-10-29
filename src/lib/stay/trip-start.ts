@@ -55,6 +55,22 @@ export function useTripStartPicks(): Readonly<Record<string, string>> {
   return useSyncExternalStore(subscribe, read, () => EMPTY)
 }
 
+/** The `starts=` link parameter: `id:YYYY-MM-DD` pairs for the trips with a pick, so a shared plan keeps its days. */
+export function startsParam(ids: readonly string[], picks: Readonly<Record<string, string>>): string | null {
+  const pairs = ids.filter((id) => picks[id]).map((id) => `${id}:${picks[id]}`)
+  return pairs.length > 0 ? pairs.join(',') : null
+}
+
+/** The picks a shared link carries, read from `starts=`; malformed pairs are dropped. */
+export function parseStarts(raw: string | null): Readonly<Record<string, string>> {
+  const out: Record<string, string> = {}
+  for (const pair of (raw ?? '').split(',')) {
+    const i = pair.lastIndexOf(':')
+    if (i > 0 && /^\d{4}-\d{2}-\d{2}$/.test(pair.slice(i + 1))) out[pair.slice(0, i)] = pair.slice(i + 1)
+  }
+  return out
+}
+
 /** The days a trip may start on inside the stay: any day back by check-out for a road trip, the fitting days for a day trip. */
 export function tripDayOptions(stay: Stay, r: Pick<TripRoute, 'days' | 'duration'>): string[] {
   return r.days > 1 ? tripStartOptions(stay, r.days) : dayTripOptions(stay, r.duration)
