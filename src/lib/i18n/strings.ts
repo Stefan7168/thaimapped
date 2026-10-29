@@ -142,6 +142,8 @@ const en = {
     copied: 'Link copied',
     copyFailed: 'Copy the address bar to share',
     openMap: 'Open on the map',
+    print: 'Print or save as PDF',
+    paperHotel: (hotel: string) => `Your hotel: ${hotel}`,
     others: 'Other weekends',
     dayOut: 'Or a day out of town',
     dayOutLead: 'Trips that fit a Saturday or a Sunday, from the trips index.',

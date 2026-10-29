@@ -4,7 +4,7 @@ import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useMemo, useState, useSyncExternalStore, type CSSProperties } from 'react'
-import { CalendarPlus, Share2 } from 'lucide-react'
+import { CalendarPlus, Printer, Share2 } from 'lucide-react'
 import type { Area, Locale, Pin, Station, TripRoute } from '@/lib/content/types'
 import { FromAirport } from '@/components/stay/from-airport'
 import type { AirportLeg, AirportRoutes } from '@/lib/transit/from-airport'
@@ -19,7 +19,7 @@ import { thb } from '@/lib/explorer/price'
 import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
 import { directionsUrl } from '@/lib/links/directions'
 import { formatDayRange } from '@/lib/stay/format'
-import { addDays, adoptStayFromUrl, nights, stayParam, tripStartDefault, useStay, roomsOf } from '@/lib/stay/store'
+import { addDays, adoptStayFromUrl, adultsOf, childrenOf, nights, roomsOf, stayParam, tripStartDefault, useStay } from '@/lib/stay/store'
 import { buildIcs, downloadIcs, type CalendarEvent } from '@/lib/stay/calendar'
 import { trackOutbound } from '@/lib/links/track'
 import { supports3D } from '@/lib/map/device'
@@ -271,6 +271,10 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
           <p className="tm-wk__eyebrow">{s.weekendPage.eyebrow}</p>
           <h1 className="tm-h2">{s.weekendPage.title(t(area.name, locale))}</h1>
           <p className="tm-wk__lead">{t(area.tagline, locale)} {price ? s.weekendPage.budget(thb(price.min, locale), thb(price.max, locale)) : s.weekendPage.anyBudget}</p>
+          {stay && (
+            // Paper only: the dates row and booking bar are screen controls, so the printout states the stay in one line.
+            <p className="tm-wk__paper">{[formatDayRange(stay.checkIn, stay.checkOut, locale), s.stay.nights(nights(stay)), s.stay.adults(adultsOf(stay), roomsOf(stay), childrenOf(stay)), myHotel ? s.weekendPage.paperHotel(t(myHotel.name, locale)) : null].filter(Boolean).join(' · ')}</p>
+          )}
           {sentHotel && myHotel && myHotel.id === sentHotel && !saved.includes(myHotel.id) && (
             // A link that names a hotel (sent by someone, or the reader's own tap on "Plan it"): say so and offer to keep the hotel. Once kept, nothing: the plan is simply theirs.
             <p className="tm-wk__shared">
@@ -292,6 +296,10 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
               </button>
             )}
             {nowSlot && <a href={`#tm-slot-${nowSlot}`} className="tm-link tm-link--under">{s.weekendPage.jumpToNow}</a>}
+            <button type="button" onClick={() => window.print()} className="tm-link tm-link--button">
+              <Printer aria-hidden="true" className="size-4" />
+              {s.weekendPage.print}
+            </button>
             <Link href={explorerHref} className="tm-link">{s.weekendPage.openMap}</Link>
             <Link href={`/${locale}/${cityId}/area/${area.id}`} className="tm-link">{s.areaPage.link}</Link>
           </div>
@@ -384,7 +392,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
               </ul>
             </section>
           )}
-          <section className="tm-wk__others">
+          <section className="tm-wk__others tm-wk__others--chips">
             <h2 className="tm-wk__time">{s.weekendPage.others}</h2>
             <ul className="tm-wk__other-list">
               {others.map((a) => (

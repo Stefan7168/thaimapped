@@ -691,6 +691,13 @@ a.tm-wk__stop { text-decoration: none; }
   .tm-wk:has(+ .tm-wk__book) { padding-bottom: 72px; }
 }
 @media print { .tm-wk__book { display: none !important; } }
+/* The weekend plan on paper: one line states the stay; the links to other weekends, the map and the live hints are screen-only. */
+.tm-wk__paper { display: none; }
+@media print {
+  .tm-wk__paper { display: block; margin: 0 0 12px; font-weight: 600; }
+  .tm-wk__others--chips, .tm-wk__elsewhere a, .tm-wk__shared a, .tm-wk__empty a, .tm-wk__empty button, .tm-wk__skipped { display: none !important; }
+  .tm-wk__stop a[href^='http'], .tm-wk__item a[href^='http'] { display: none !important; }
+}
 /* A printed trip keeps its map and stops; the controls (share, calendar, start and day chips, zoom) are screen-only. */
 @media print { .tm-trip__tools, .maplibregl-ctrl, .tm-stoprow__search { display: none !important; } .tm-stoprow { break-inside: avoid; } }
 @media (max-width: 480px) {
