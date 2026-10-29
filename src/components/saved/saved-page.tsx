@@ -328,8 +328,8 @@ export function SavedPage({ locale, cityId, entries, trips = [], stations, inter
         {keptTrips.length > 0 && (
           // The trips kept from the trip pages, or the ones a sent list carries.
           <section className="tm-saved__group">
-            <h2 className="tm-wk__time">{s.saved.trips}</h2>
-            <p className="tm-saved__note">{s.saved.tripsNote}</p>
+            <h2 className="tm-wk__time">{sentIds ? s.saved.tripsSent : s.saved.trips}</h2>
+            <p className="tm-saved__note">{sentIds ? s.saved.tripsNoteSent : s.saved.tripsNote}</p>
             <ol className="tm-wk__stops tm-saved__list">
               {keptTrips.map((r) => (
                 <li key={r.id}>

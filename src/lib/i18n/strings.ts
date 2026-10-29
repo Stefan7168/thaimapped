@@ -52,6 +52,8 @@ const en = {
     description: 'The hotels and places you saved while looking at the map, kept in this browser. Send the list to whoever is coming with you.',
     trips: 'Your trips',
     tripsNote: 'Kept from the trip pages. Open one for the route, its stops and the day it fits.',
+    tripsSent: 'Trips',
+    tripsNoteSent: 'The trips on this list. Open one for the route, its stops and the day it fits.',
     forget: 'Forget',
     // Two kept trips whose default days and hours overlap.
     sameDay: (name: string) => `Same hours as ${name}`,
