@@ -8,6 +8,7 @@ import { slimArea, slimRoute, stationsFor } from '@/lib/content/slim'
 import { WeekendPage } from '@/components/weekend/weekend-page'
 import { JsonLd, pinNode, placeListLd } from '@/lib/seo/json-ld'
 import { borrowedSlots, weekendPlan } from '@/lib/explorer/weekend'
+import { distanceM, WALK_PACE_M_PER_MIN } from '@/lib/explorer/filters'
 import { airportRoutesFor, elsewhereFor, railLegsBetween } from '@/lib/transit/from-airport'
 
 // Static per area; the hotel budget rides along as ?price=min-max and is read in the browser.
@@ -48,10 +49,16 @@ export default async function AreaWeekendPage(props: PageProps<'/[locale]/[city]
   const routes = loadRoutes(city)
   const tripStarts = Object.fromEntries(routes.flatMap((r) => (r.stops[0]?.station ? [[r.id, r.stops[0].station]] : [])))
   const tripRides = railLegsBetween(bundle, hotelStations, Object.values(tripStarts))
+  // Rides between the stops' own stations, for the "or by train" tail on a long walk from one stop to the next.
+  // Only station pairs some two stops are over 25 minutes apart on foot are shipped: the page never asks for the rest.
+  const stopPins = [...a.pins, ...borrowedPins].filter((p) => p.kind !== 'hotel' && p.walk)
+  const farPairs = new Set(stopPins.flatMap((p) => stopPins.filter((q) => q.walk!.station !== p.walk!.station && distanceM(p.location.lon, p.location.lat, q.location.lon, q.location.lat) / WALK_PACE_M_PER_MIN > 25).map((q) => `${p.walk!.station}>${q.walk!.station}`)))
+  const stopStations = [...new Set(stopPins.map((p) => p.walk!.station))]
+  const stopRides = Object.fromEntries(Object.entries(railLegsBetween(bundle, stopStations, stopStations)).map(([from, tos]) => [from, Object.fromEntries(Object.entries(tos).filter(([to]) => farPairs.has(`${from}>${to}`)))]).filter(([, tos]) => Object.keys(tos).length > 0))
   return (
     <>
       <JsonLd data={placeListLd(strings(locale).weekendPage.title(t(a.name, locale)), `/${locale}/${city}/weekend/${area}`, a.pins.map((p) => pinNode(p, locale, cityName)))} />
-      <WeekendPage locale={locale} cityId={city} area={a} areas={bundle.areas.map(slimArea)} stations={stationsFor(bundle.stations, [...a.pins, ...borrowedPins], [...a.stations.slice(0, 1), ...elsewhere.stations])} routes={routes.map(slimRoute)} tripStarts={tripStarts} tripRides={tripRides} borrowed={borrowed} airport={airportRoutesFor(bundle, hotelStations)} rides={rides} hotelDoors={elsewhere.doors} elsewhereRides={elsewhere.rides} />
+      <WeekendPage locale={locale} cityId={city} area={a} areas={bundle.areas.map(slimArea)} stations={stationsFor(bundle.stations, [...a.pins, ...borrowedPins], [...a.stations.slice(0, 1), ...elsewhere.stations])} routes={routes.map(slimRoute)} tripStarts={tripStarts} tripRides={tripRides} borrowed={borrowed} airport={airportRoutesFor(bundle, hotelStations)} rides={rides} hotelDoors={elsewhere.doors} elsewhereRides={elsewhere.rides} stopRides={stopRides} />
     </>
   )
 }

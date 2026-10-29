@@ -57,7 +57,7 @@ function readPrice(): PriceRange | null {
  * Sunday, the hotels inside the budget, the same map at the side, and a
  * link anyone can share. The page is static; the budget rides in the URL.
  */
-export function WeekendPage({ locale, cityId, area, areas, stations, routes, borrowed = {}, airport = {}, rides = {}, hotelDoors = {}, elsewhereRides = {}, tripStarts = {}, tripRides = {} }: { locale: Locale; cityId: string; area: Area; areas: Area[]; stations: Station[]; routes: TripRoute[]; borrowed?: Partial<Record<WeekendSlot, BorrowedSlot>>; airport?: Record<string, AirportRoutes>; rides?: Record<string, Record<string, AirportLeg[] | null>>; hotelDoors?: Record<string, HotelDoor[]>; elsewhereRides?: Record<string, Record<string, AirportLeg[] | null>>; tripStarts?: Record<string, string>; tripRides?: Record<string, Record<string, AirportLeg[] | null>> }) {
+export function WeekendPage({ locale, cityId, area, areas, stations, routes, borrowed = {}, airport = {}, rides = {}, hotelDoors = {}, elsewhereRides = {}, tripStarts = {}, tripRides = {}, stopRides = {} }: { locale: Locale; cityId: string; area: Area; areas: Area[]; stations: Station[]; routes: TripRoute[]; borrowed?: Partial<Record<WeekendSlot, BorrowedSlot>>; airport?: Record<string, AirportRoutes>; rides?: Record<string, Record<string, AirportLeg[] | null>>; hotelDoors?: Record<string, HotelDoor[]>; elsewhereRides?: Record<string, Record<string, AirportLeg[] | null>>; tripStarts?: Record<string, string>; tripRides?: Record<string, Record<string, AirportLeg[] | null>>; stopRides?: Record<string, Record<string, AirportLeg[] | null>> }) {
   const s = strings(locale)
   const stay = useStay()
   const detected3D = useSyncExternalStore(noopSubscribe, supports3D, () => null)
@@ -345,7 +345,13 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
                       {plan.slots[slot].map((pin, i, arr) => (
                         <Fragment key={pin.id}>
                           {/* The leg between two stops of one slot: a walking estimate, straight line, so the plan reads as a route and not a list. */}
-                          {i > 0 && <li className="tm-wk__leg" title={s.stationPage.estimated}>{s.weekendPage.legWalk(Math.max(1, Math.round(distanceM(arr[i - 1].location.lon, arr[i - 1].location.lat, pin.location.lon, pin.location.lat) / WALK_PACE_M_PER_MIN)), t(arr[i - 1].name, locale))}</li>}
+                          {i > 0 && (() => {
+                            const prev = arr[i - 1]
+                            const walk = Math.max(1, Math.round(distanceM(prev.location.lon, prev.location.lat, pin.location.lon, pin.location.lat) / WALK_PACE_M_PER_MIN))
+                            // Over 25 minutes on foot, and both stops at different stations: the ride between them, when the lines connect.
+                            const legs = walk > 25 && prev.walk && pin.walk && prev.walk.station !== pin.walk.station ? stopRides[prev.walk.station]?.[pin.walk.station] : null
+                            return <li className="tm-wk__leg" title={s.stationPage.estimated}>{s.weekendPage.legWalk(walk, t(prev.name, locale))}{legs && legs.length > 0 && <span className="tm-wk__leg-train">{s.weekendPage.legTrain(rideShort(legs, pin.walk!.minutes, locale))}</span>}</li>
+                          })()}
                           {stop(pin)}
                         </Fragment>
                       ))}
