@@ -163,14 +163,19 @@ export function shiftStay(stay: Stay, days: number): Stay {
 }
 
 /** The dates as one URL value, "2026-10-16_2026-10-18", so a shared link carries them. */
+/** The stay as one address parameter: dates, then the party when it is not the default ("2026-11-06_2026-11-08_3a1c" is 3 adults, 1 child). */
 export function stayParam(stay: Stay): string {
-  return `${stay.checkIn}_${stay.checkOut}`
+  const party = `${stay.adults !== undefined && stay.adults !== 2 ? `${stay.adults}a` : ''}${stay.children ? `${stay.children}c` : ''}`
+  return `${stay.checkIn}_${stay.checkOut}${party ? `_${party}` : ''}`
 }
 
 export function parseStayParam(value: string | null): Stay | null {
-  const m = value?.match(/^(\d{4}-\d{2}-\d{2})_(\d{4}-\d{2}-\d{2})$/)
+  const m = value?.match(/^(\d{4}-\d{2}-\d{2})_(\d{4}-\d{2}-\d{2})(?:_(?:(\d)a)?(?:(\d)c)?)?$/)
   if (!m) return null
-  const stay = { checkIn: m[1], checkOut: m[2] }
+  const stay: Stay = { checkIn: m[1], checkOut: m[2] }
+  // A party outside the range is dropped, the dates kept: the link still works.
+  if (m[3] && Number(m[3]) >= 1 && Number(m[3]) <= MAX_ADULTS) stay.adults = Number(m[3])
+  if (m[4] && Number(m[4]) >= 1 && Number(m[4]) <= MAX_CHILDREN) stay.children = Number(m[4])
   return valid(stay) ? stay : null
 }
 
