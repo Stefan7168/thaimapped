@@ -113,6 +113,22 @@ export function tripDays(stay: Stay, r: Pick<TripRoute, 'id' | 'days' | 'duratio
   return from ? Array.from({ length: r.days }, (_, i) => addDays(from, i)) : []
 }
 
+/** The days of the stay a trip not yet kept could take, split into the free ones and the ones a kept trip already runs on in the same hours (the Ayutthaya weekend on Fri and Sat leaves a boat afternoon only Sunday, which it does not fit). */
+export function freeDays<R extends Pick<TripRoute, 'id' | 'days' | 'duration'>>(stay: Stay, r: R, kept: readonly R[], picks: Readonly<Record<string, string>>): { free: string[]; taken: { day: string; by: R }[] } {
+  const [a0, a1] = TRIP_HOURS[r.duration]
+  const free: string[] = []
+  const taken: { day: string; by: R }[] = []
+  for (const day of tripDayOptions(stay, r)) {
+    const by = kept.find((k) => {
+      const [b0, b1] = TRIP_HOURS[k.duration]
+      return k.id !== r.id && a0 < b1 && b0 < a1 && tripDays(stay, k, picks).includes(day)
+    })
+    if (by) taken.push({ day, by })
+    else free.push(day)
+  }
+  return { free, taken }
+}
+
 /** The other plan trips that run in the same hours on one of this trip's days. */
 export function tripClashes<R extends Pick<TripRoute, 'id' | 'days' | 'duration'>>(stay: Stay, r: R, others: readonly R[], picks: Readonly<Record<string, string>>): R[] {
   const mine = tripDays(stay, r, picks)

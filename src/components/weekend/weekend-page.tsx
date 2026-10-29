@@ -20,7 +20,7 @@ import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
 import { dayDirectionsUrl, directionsUrl } from '@/lib/links/directions'
 import { formatDay, formatDayRange } from '@/lib/stay/format'
 import { seasonOf } from '@/lib/stay/season'
-import { addDays, adoptStayFromUrl, dayTripOptions, adultsOf, childrenOf, daysUntil, iso, nights, roomsOf, stayParam, tripStartDefault, useStay } from '@/lib/stay/store'
+import { addDays, adoptStayFromUrl, adultsOf, childrenOf, daysUntil, iso, nights, roomsOf, stayParam, tripStartDefault, useStay, type Stay } from '@/lib/stay/store'
 import { buildIcs, downloadIcs, TRIP_HOURS, type CalendarEvent } from '@/lib/stay/calendar'
 import { trackOutbound } from '@/lib/links/track'
 import { supports3D } from '@/lib/map/device'
@@ -33,7 +33,7 @@ import { addSaved, useSaved } from '@/lib/saved/store'
 import { chooseHotel, useMyHotelChoice } from '@/lib/saved/my-hotel'
 import { addKeptTrips, toggleKeptTrip, useKeptTrips } from '@/lib/saved/trips'
 import { tripNights } from '@/lib/content/slim'
-import { addTripStartPicks, awayNights, hereStay, parseStarts, placedDay, startsParam, tripClashes, tripDayOptions, tripStartFor, useTripStartPicks } from '@/lib/stay/trip-start'
+import { addTripStartPicks, awayNights, freeDays, hereStay, parseStarts, placedDay, startsParam, tripClashes, tripDayOptions, tripStartFor, useTripStartPicks } from '@/lib/stay/trip-start'
 import { HotelElsewhere, useHotelElsewhere } from '@/components/stay/hotel-elsewhere'
 import { skipStop, unskipStops, useSkipped } from '@/lib/saved/skipped'
 import { KIND_ICONS } from '@/components/explorer/kind-bar'
@@ -336,6 +336,14 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
     const from = tripStartFor(stay!, r, picks) ?? tripStartDefault(stay!, r.days)
     return formatDayRange(from, addDays(from, r.days - 1), locale)
   }
+  // A day trip not in the plan: the days it fits that no plan trip already takes in the same hours, and which trip takes the rest.
+  const freeDayTag = (stay: Stay, r: TripRoute, kept: TripRoute[]): string | null => {
+    const { free, taken } = freeDays(stay, r, kept, picks)
+    if (free.length === 0 && taken.length === 0) return null
+    if (free.length === 0) return s.trip.noFreeDay(t(taken[0].by.name, locale), taken.map((x) => formatDay(x.day, locale)).join(` ${s.trip.and} `))
+    const line = s.trip.fitsDay(free.slice(0, 3).map((d) => formatDay(d, locale)).join(` ${s.trip.or} `))
+    return taken.length > 0 ? line + s.trip.daysTaken(taken.map((x) => formatDay(x.day, locale)).join(` ${s.trip.and} `), t(taken[0].by.name, locale)) : line
+  }
   // A day trip's fit line: a plan trip names the day it sits on (and the others it could move to), the rest the days they fit.
   const dayTag = (r: TripRoute): string | null => {
     if (!stay) return null
@@ -345,8 +353,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
       const others = placed.others.slice(0, 2).map((d) => formatDay(d, locale)).join(` ${s.trip.or} `)
       return others ? s.trip.onDayOr(formatDay(placed.day, locale), others) : s.trip.onDay(formatDay(placed.day, locale))
     }
-    const days = dayTripOptions(stay, r.duration).slice(0, 3).map((d) => formatDay(d, locale))
-    return days.length > 0 ? s.trip.fitsDay(days.join(` ${s.trip.or} `)) : null
+    return freeDayTag(stay, r, planRoutes)
   }
   // Plan trips in the same hours on the same day, as the saved list warns; a trip with more than one day to choose from links to its chips.
   const planRoutes = routes.filter((r) => planTrips.includes(r.id))

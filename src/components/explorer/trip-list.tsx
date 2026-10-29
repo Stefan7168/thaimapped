@@ -7,7 +7,7 @@ import type { Locale, RouteDuration, RouteMode, RouteTheme, TripRoute } from '@/
 import { t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
 import { RevealObserver } from '@/components/motion/reveal'
-import { addDays, dayTripOptions, nights, useStay } from '@/lib/stay/store'
+import { addDays, nights, useStay } from '@/lib/stay/store'
 import { formatDay, formatDayRange } from '@/lib/stay/format'
 import type { HotelDoor } from '@/lib/content/slim'
 import type { AirportLeg } from '@/lib/transit/from-airport'
@@ -15,7 +15,7 @@ import { rideSentence } from '@/components/stay/from-airport'
 import { useSaved } from '@/lib/saved/store'
 import { myHotelAcross, useHotelChoiceVersion } from '@/lib/saved/my-hotel'
 import { toggleKeptTrip, useKeptTrips } from '@/lib/saved/trips'
-import { placedDay, tripStartFor, useTripStartPicks } from '@/lib/stay/trip-start'
+import { freeDays, placedDay, tripStartFor, useTripStartPicks } from '@/lib/stay/trip-start'
 
 const StageMap = dynamic(() => import('@/components/map/stage-map').then((m) => m.StageMap), {
   ssr: false,
@@ -76,8 +76,12 @@ export function TripList({ locale, cityId, cityCamera, routes, hotelDoors = {}, 
         const others = placed.others.slice(0, 2).map((d) => formatDay(d, locale)).join(` ${s.trip.or} `)
         return others ? s.trip.onDayOr(formatDay(placed.day, locale), others) : s.trip.onDay(formatDay(placed.day, locale))
       }
-      const days = dayTripOptions(stay, r.duration).slice(0, 3).map((d) => formatDay(d, locale))
-      return days.length > 0 ? s.trip.fitsDay(days.join(` ${s.trip.or} `)) : null
+      // The days no kept trip already takes in the same hours, and which trip takes the rest.
+      const { free, taken } = freeDays(stay, r, routes.filter((k) => kept.includes(k.id)), picks)
+      if (free.length === 0 && taken.length === 0) return null
+      if (free.length === 0) return s.trip.noFreeDay(t(taken[0].by.name, locale), taken.map((x) => formatDay(x.day, locale)).join(` ${s.trip.and} `))
+      const line = s.trip.fitsDay(free.slice(0, 3).map((d) => formatDay(d, locale)).join(` ${s.trip.or} `))
+      return taken.length > 0 ? line + s.trip.daysTaken(taken.map((x) => formatDay(x.day, locale)).join(` ${s.trip.and} `), t(taken[0].by.name, locale)) : line
     }
     if (r.days > nights(stay) + 1) return s.trip.tooLong(nights(stay))
     const from = tripStartFor(stay, r, picks)!
