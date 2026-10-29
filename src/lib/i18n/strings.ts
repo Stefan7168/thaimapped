@@ -4,6 +4,16 @@ import type { Locale } from '@/lib/content/types'
  * UI strings. Every user-visible label lives here, keyed, so a second locale
  * is a second object and not a hunt through components.
  */
+// "1 hotel, 2 places and 1 trip": only the kinds that are there, joined the English way.
+function countList(hotels: number, places: number, trips: number): string {
+  const parts = [
+    hotels === 1 ? '1 hotel' : hotels > 1 ? `${hotels} hotels` : '',
+    places === 1 ? '1 place' : places > 1 ? `${places} places` : '',
+    trips === 1 ? '1 trip' : trips > 1 ? `${trips} trips` : '',
+  ].filter(Boolean)
+  return parts.length > 1 ? `${parts.slice(0, -1).join(', ')} and ${parts.at(-1)}` : (parts[0] ?? '')
+}
+
 const en = {
   brand: 'ThaiMapped',
   nav: { cities: 'Cities', map: 'Map', trips: 'Trips', stations: 'Stations', credits: 'Photo credits' },
@@ -63,7 +73,7 @@ const en = {
     // A calendar file of the kept trips on their days.
     calendar: 'Add to calendar',
     calendarName: 'Your weekend',
-    lead: (n: number) => (n === 1 ? '1 saved in this browser.' : `${n} saved in this browser.`),
+    lead: (hotels: number, places: number, trips: number) => `${countList(hotels, places, trips)} saved in this browser.`,
     empty: 'Nothing saved yet. Tap the heart on a hotel or a place on the map and it lands here.',
     emptyLink: 'Open the map',
     emptyQuiz: 'Not sure where to stay? Three taps find your area',
@@ -75,16 +85,8 @@ const en = {
     print: 'Print',
     copied: 'Link copied',
     copyFailed: 'Could not copy, use the address bar',
-    sent: (hotels: number, places: number, trips: number) => {
-      const parts = [
-        hotels === 1 ? '1 hotel' : hotels > 1 ? `${hotels} hotels` : '',
-        places === 1 ? '1 place' : places > 1 ? `${places} places` : '',
-        trips === 1 ? '1 trip' : trips > 1 ? `${trips} trips` : '',
-      ].filter(Boolean)
-      if (parts.length === 0) return 'A list someone sent you, but nothing on it is still on the map.'
-      const list = parts.length > 1 ? `${parts.slice(0, -1).join(', ')} and ${parts.at(-1)}` : parts[0]
-      return `A list someone sent you: ${list}.`
-    },
+    sent: (hotels: number, places: number, trips: number) =>
+      hotels + places + trips === 0 ? 'A list someone sent you, but nothing on it is still on the map.' : `A list someone sent you: ${countList(hotels, places, trips)}.`,
     keep: 'Keep these in my list',
     kept: 'Added to your list',
     mine: 'Show my own list',
