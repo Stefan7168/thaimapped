@@ -10,7 +10,7 @@ import { rideSentence } from '@/components/stay/from-airport'
 import { t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
 import { buildOutboundUrl, hotelSearchUrl, subIdFor, type Partner } from '@/lib/links/build'
-import { TRAVEL_MODE, directionsUrl } from '@/lib/links/directions'
+import { TRAVEL_MODE, dayDirectionsUrl, directionsUrl } from '@/lib/links/directions'
 import type { HotelDoor } from '@/lib/content/slim'
 import { useSaved } from '@/lib/saved/store'
 import { myHotelAcross, useHotelChoiceVersion } from '@/lib/saved/my-hotel'
@@ -76,6 +76,14 @@ export function TripPage({ locale, cityId, cityName, route, hotelDoors = {}, sta
   const [hoverStop, setHoverStop] = useState<string | null>(null)
   const days = Array.from({ length: route.days }, (_, i) => i + 1)
   const legs = useMemo(() => tripLegs(route), [route])
+  // The whole day as one Google Maps route: its stops in order, the saved hotel at either end of the trip's first and last day.
+  const dayRouteUrl = (d: number): string | null => {
+    const stops = route.stops.filter((st) => st.day === d)
+    const points = stops.map((st) => st.location)
+    if (myHotel && d === 1 && stops[0]?.kind === 'start') points[0] = myHotel.location
+    if (myHotel && d === route.days && stops[stops.length - 1]?.kind === 'end') points[points.length - 1] = myHotel.location
+    return dayDirectionsUrl(points, TRAVEL_MODE[route.mode])
+  }
   // The day's driving: every leg into a stop of that day (the first stop of day 2 is reached on day 2).
   const dayKm = (d: number): number | null => {
     if (route.mode === 'walk') return null
@@ -272,6 +280,7 @@ export function TripPage({ locale, cityId, cityName, route, hotelDoors = {}, sta
                     )
                   })}
                 </ol>
+                {dayRouteUrl(d) && <p className="mt-2"><a href={dayRouteUrl(d)!} target="_blank" rel="noopener" className="tm-link tm-link--under text-[14px]">{route.days > 1 ? s.trip.openDay(d) : s.trip.openWholeTrip}</a></p>}
               </section>
             ))}
           </div>
