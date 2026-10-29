@@ -261,7 +261,7 @@ export function SavedPage({ locale, cityId, entries, trips = [], stations, inter
       <SiteHeader locale={locale} cityId={cityId} />
       <main className="tm-credits tm-saved">
         <h1 className="tm-h2">{s.saved.title}</h1>
-        <p className="tm-wk__lead">{sentIds ? s.saved.sent(rows.length) : rows.length + keptTrips.length > 0 ? s.saved.lead(rows.length + keptTrips.length) : s.saved.empty}</p>
+        <p className="tm-wk__lead">{sentIds ? s.saved.sent(hotelRows.length, placeRows.length, keptTrips.length) : rows.length + keptTrips.length > 0 ? s.saved.lead(rows.length + keptTrips.length) : s.saved.empty}</p>
         {stay && rows.length > 0 && <p className="tm-wk__paper">{[formatDayRange(stay.checkIn, stay.checkOut, locale), s.stay.nights(nights(stay)), s.stay.adults(adultsOf(stay), roomsOf(stay), childrenOf(stay))].join(' · ')}</p>}
         <div className="tm-wk__actions">
           {rows.length > 0 && !sentIds && (

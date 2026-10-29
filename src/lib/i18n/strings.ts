@@ -73,7 +73,16 @@ const en = {
     print: 'Print',
     copied: 'Link copied',
     copyFailed: 'Could not copy, use the address bar',
-    sent: (n: number) => (n === 1 ? 'A list someone sent you: 1 place.' : `A list someone sent you: ${n} places.`),
+    sent: (hotels: number, places: number, trips: number) => {
+      const parts = [
+        hotels === 1 ? '1 hotel' : hotels > 1 ? `${hotels} hotels` : '',
+        places === 1 ? '1 place' : places > 1 ? `${places} places` : '',
+        trips === 1 ? '1 trip' : trips > 1 ? `${trips} trips` : '',
+      ].filter(Boolean)
+      if (parts.length === 0) return 'A list someone sent you, but nothing on it is still on the map.'
+      const list = parts.length > 1 ? `${parts.slice(0, -1).join(', ')} and ${parts.at(-1)}` : parts[0]
+      return `A list someone sent you: ${list}.`
+    },
     keep: 'Keep these in my list',
     kept: 'Added to your list',
     mine: 'Show my own list',
