@@ -336,6 +336,7 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
               <span className="block text-ink-2">{t(pin.why, locale)}</span>
               {whenLine(pin, locale) && <span className="tm-wk__when block text-xs">{whenLine(pin, locale)}</span>}
               {pin.price && <span className="block text-xs text-ink-2">{s.guide.priceFrom(thb(pin.price.from, locale))}{pin.price.basis === 'tier-estimate' ? ` (${s.guide.priceEstimate})` : ''}</span>}
+              {pin.kind === 'hotel' && stay && hereNights === 0 && away.length > 0 && <span className="tm-wk__from block text-xs">{s.guide.noRoomHere}</span>}
               {pin.price && stay && hereNights > 0 && <span className="tm-wk__stay block text-xs">{s.guide.stayTotal(thb(pin.price.from * hereNights * roomsOf(stay), locale), hereNights, roomsOf(stay))}{away.length > 0 ? s.guide.stayTotalAway(away.length) : ''}</span>}
               {pin.walk && walkStation && (
                 <span className="block text-xs text-ink-2">

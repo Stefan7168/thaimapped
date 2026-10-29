@@ -485,6 +485,7 @@ const en = {
     bookOn: (range: string) => `Booking links open on ${range}`,
     // The booking bar's one line when the links open on fewer nights than the stay.
     stayTotalFor: (total: string, range: string, rooms = 1) => `about ${total} for ${range}${rooms > 1 ? `, ${rooms} rooms` : ''}`,
+    noRoomHere: 'No room needed on your dates: a kept road trip sleeps away every night.',
     stayTotalAway: (away: number) => (away === 1 ? ' (1 night away on your trip)' : ` (${away} nights away on your trips)`),
     stayTotal: (total: string, n: number, rooms = 1) => `${n === 1 ? `about ${total} for your night` : `about ${total} for your ${n} nights`}${rooms > 1 ? `, ${rooms} rooms` : ''}`,
     priceEstimate: 'typical for its class, not checked',

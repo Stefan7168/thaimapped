@@ -147,6 +147,12 @@ export function cardElement(locale: Locale, cityId: string, pin: Pin, area: Area
       total.className = 'tm-card__price tm-card__stay'
       total.textContent = s.guide.stayTotal(thb(pin.price.from * hereNights * roomsOf(stay), locale), hereNights, roomsOf(stay)) + (here && here.away.length > 0 ? s.guide.stayTotalAway(here.away.length) : '')
       priceLines.push(total)
+    } else if (stay && here && here.away.length > 0 && pin.kind === 'hotel') {
+      // Every night of the stay is on a kept road trip: say so instead of a total of nothing.
+      const none = document.createElement('p')
+      none.className = 'tm-card__price tm-wk__from'
+      none.textContent = s.guide.noRoomHere
+      priceLines.push(none)
     }
   }
   const close = document.createElement('button')
