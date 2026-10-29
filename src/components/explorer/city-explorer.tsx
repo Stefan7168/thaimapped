@@ -72,10 +72,10 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
       // "#pin=<id>" (from the saved list) opens that place: its area filtered, its card open.
       const pinId = h.get('pin')
       const pinHit = pinId ? areas.flatMap((a) => a.pins.map((pin) => ({ pin, area: a }))).find((x) => x.pin.id === pinId) : undefined
-      if (pinHit && areaList.length === 0) areaList.push(pinHit.area.id)
-      // "#near=<hotel id>" (a shared "near your hotel" view): the walk circle around that hotel's door.
+      // "#near=<hotel id>" (a shared "near your hotel" view): the walk circle around that hotel's door. The circle spans areas, so a pin in it adds no area tick.
       const nearId = h.get('near')
       const nearHotel = nearId ? areas.flatMap((a) => a.pins).find((p) => p.id === nearId && p.kind === 'hotel') : undefined
+      if (pinHit && areaList.length === 0 && !nearHotel) areaList.push(pinHit.area.id)
       if (!area && !pinHit && !nearHotel && !tier && !priceParam && !station && times.length === 0 && days.length === 0 && kinds.length === 0) return
       const m = priceParam?.match(/^(\d+)-(\d+)$/)
       const fromParam: PriceRange | null = m ? { min: Math.max(PRICE_RANGE.min, Number(m[1])), max: Math.min(PRICE_RANGE.max, Number(m[2])) } : null
@@ -336,7 +336,7 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
                 </span>
               )}
               {pin.kind !== 'hotel' && !filters.nearName && hotelFor(area.id) && fromHotel(pin, hotelFor(area.id)!) <= 45 && <span className="tm-wk__from block text-xs">{s.weekendPage.fromHotel(fromHotel(pin, hotelFor(area.id)!), t(hotelFor(area.id)!.name, locale))}</span>}
-              {filters.near && !(filters.nearName && pin.id === myHotel?.id) && <span className="block text-xs font-medium text-ink">{(() => { const n = Math.max(1, Math.ceil(distanceM(filters.near[0], filters.near[1], pin.location.lon, pin.location.lat) / WALK_PACE_M_PER_MIN)); return filters.nearName ? s.near.fromName(n, filters.nearName) : s.near.from(n) })()}</span>}
+              {filters.near && pin.id !== filters.nearPin && <span className="block text-xs font-medium text-ink">{(() => { const n = Math.max(1, Math.ceil(distanceM(filters.near[0], filters.near[1], pin.location.lon, pin.location.lat) / WALK_PACE_M_PER_MIN)); return filters.nearName ? s.near.fromName(n, filters.nearName) : s.near.from(n) })()}</span>}
               </span>
             </button>
             {active && partners.length > 0 && (
