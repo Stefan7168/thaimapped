@@ -21,7 +21,7 @@ import { dayDirectionsUrl, directionsUrl } from '@/lib/links/directions'
 import { formatDay, formatDayRange } from '@/lib/stay/format'
 import { seasonOf } from '@/lib/stay/season'
 import { addDays, adoptStayFromUrl, dayTripOptions, adultsOf, childrenOf, daysUntil, iso, nights, roomsOf, stayParam, tripStartDefault, useStay } from '@/lib/stay/store'
-import { buildIcs, downloadIcs, type CalendarEvent } from '@/lib/stay/calendar'
+import { buildIcs, downloadIcs, TRIP_HOURS, type CalendarEvent } from '@/lib/stay/calendar'
 import { trackOutbound } from '@/lib/links/track'
 import { supports3D } from '@/lib/map/device'
 import { SiteHeader } from '@/components/explorer/site-header'
@@ -174,6 +174,18 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
         { date: stay.checkIn, start: '14:00', end: '15:00', title: s.weekendPage.calendarCheckIn(name), description: [s.weekendPage.calendarTimesVary, url].join('\n'), location: `${name}, ${areaName}`, geo: myHotel.location, url },
         { date: stay.checkOut, start: '11:00', end: '12:00', title: s.weekendPage.calendarCheckOut(name), description: [s.weekendPage.calendarTimesVary, url].join('\n'), location: `${name}, ${areaName}`, geo: myHotel.location, url },
       )
+    }
+    // Kept trips, on the day of the stay each fits (the trip page's default day), in the hours of their time of day.
+    if (stay) {
+      for (const r of routes.filter((x) => keptTrips.includes(x.id))) {
+        const day = r.days > 1 ? (r.days <= nights(stay) + 1 ? tripStartDefault(stay, r.days) : null) : (dayTripOptions(stay, r.duration).at(-1) ?? null)
+        if (!day) continue
+        const tripUrl = `${window.location.origin}/${locale}/${cityId}/trip/${r.id}`
+        for (let d = 1; d <= r.days; d++) {
+          const first = r.stops.find((st) => st.day === d) ?? r.stops[0]
+          events.push({ date: addDays(day, d - 1), start: TRIP_HOURS[r.duration][0], end: TRIP_HOURS[r.duration][1], title: s.trip.calendarDay(t(r.name, locale), d, r.days), description: [t(r.tagline, locale), tripUrl].join('\n'), location: first ? t(first.name, locale) : undefined, geo: first?.location, url: tripUrl })
+        }
+      }
     }
     downloadIcs(`weekend-${area.id}.ics`, buildIcs(events, s.weekendPage.calendarName(areaName)))
   }

@@ -4,7 +4,7 @@ import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { useEffect, useMemo, useState, useSyncExternalStore } from 'react'
 import { ArrowLeft, Bookmark, CalendarPlus, Printer, Share2 } from 'lucide-react'
-import type { Locale, RouteDuration, RouteStop, TripRoute } from '@/lib/content/types'
+import type { Locale, RouteStop, TripRoute } from '@/lib/content/types'
 import type { AirportLeg } from '@/lib/transit/from-airport'
 import { rideSentence } from '@/components/stay/from-airport'
 import { t } from '@/lib/i18n/locales'
@@ -16,7 +16,7 @@ import { useSaved } from '@/lib/saved/store'
 import { myHotelAcross, useHotelChoiceVersion } from '@/lib/saved/my-hotel'
 import { formatDay, formatDayRange } from '@/lib/stay/format'
 import { addDays, adoptStayFromUrl, dayTripOptions, nights, stayParam, tripStartDefault, tripStartOptions, useStay } from '@/lib/stay/store'
-import { buildIcs, downloadIcs, type CalendarEvent } from '@/lib/stay/calendar'
+import { buildIcs, downloadIcs, TRIP_HOURS, type CalendarEvent } from '@/lib/stay/calendar'
 import { toggleKeptTrip, useKeptTrips } from '@/lib/saved/trips'
 import { StayPicker } from '@/components/stay/stay-picker'
 import { STOP_COLORS } from '@/components/map/trip-map'
@@ -121,7 +121,6 @@ export function TripPage({ locale, cityId, cityName, route, hotelDoors = {}, sta
   // The road night keeps the party: only the dates change to that one night.
   const nightAt = (stop: RouteStop) => (startIso && stop.kind === 'hotel' ? { ...stay, checkIn: addDays(startIso, stop.day - 1), checkOut: addDays(startIso, stop.day) } : stay)
   // The trip as a calendar file: one event per day in the hours its time of day covers (a morning 08:00 to 13:00, a full day 08:00 to 20:00, Bangkok), the day's stops in the description. Needs the dates.
-  const TRIP_HOURS: Record<RouteDuration, [string, string]> = { morning: ['08:00', '13:00'], afternoon: ['13:00', '19:00'], evening: ['17:00', '23:00'], 'full-day': ['08:00', '20:00'], 'multi-day': ['08:00', '20:00'] }
   const addToCalendar = () => {
     if (!startIso) return
     const url = window.location.href.split('#')[0]

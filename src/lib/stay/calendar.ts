@@ -39,6 +39,9 @@ function fold(line: string): string {
   return out.join('\r\n')
 }
 
+/** A trip's event hours by its time of day (Bangkok): a morning 08:00 to 13:00, a full or multi-day 08:00 to 20:00. */
+export const TRIP_HOURS: Record<'morning' | 'afternoon' | 'evening' | 'full-day' | 'multi-day', [string, string]> = { morning: ['08:00', '13:00'], afternoon: ['13:00', '19:00'], evening: ['17:00', '23:00'], 'full-day': ['08:00', '20:00'], 'multi-day': ['08:00', '20:00'] }
+
 export function buildIcs(events: CalendarEvent[], calendarName: string): string {
   const now = new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '')
   const lines = [
