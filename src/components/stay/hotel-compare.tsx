@@ -99,6 +99,8 @@ export function HotelCompare({ locale, cityId, entries, stations, nearbyCount, s
                 {entries.map((e) => <td key={e.pin.id}><Link href={`/${locale}/${cityId}/weekend/${e.area.id}?hotel=${e.pin.id}`} className="tm-link">{s.home.compare.plan}</Link></td>)}
               </tr>
             )}
+            {/* No book row when a road trip takes every night of the stay: nothing here to book. */}
+            {!(stay && hereNights === 0 && away.length > 0) && (
             <tr>
               <th scope="row">{s.saved.cmpBook}</th>
               {entries.map((e) => (
@@ -110,6 +112,7 @@ export function HotelCompare({ locale, cityId, entries, stations, nearbyCount, s
                 </td>
               ))}
             </tr>
+            )}
           </tbody>
         </table>
       </CmpWrap>

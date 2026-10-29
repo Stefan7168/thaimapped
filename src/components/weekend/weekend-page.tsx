@@ -307,7 +307,8 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
           {pin.kind !== 'hotel' && (
             <button type="button" className="tm-card__link tm-card__link--quiet" onClick={() => skipStop(pin.id)}>{s.weekendPage.skipStop}</button>
           )}
-          {pin.kind === 'hotel' && (Object.keys(pin.links) as Partner[]).map((p) => {
+          {/* No booking links when a road trip takes every night: the sleep note above says no room here is needed. */}
+          {pin.kind === 'hotel' && !noRoomHere && (Object.keys(pin.links) as Partner[]).map((p) => {
               const subId = subIdFor(`${cityId}-${area.id}`, pin.id)
               return (
                 <a key={p} href={buildOutboundUrl(p, pin.links[p]!, subId, bookStay)} onClick={() => p !== 'official' && trackOutbound(p, subId)} target="_blank" rel={p === 'official' ? 'noopener' : 'noopener sponsored'} className={p === 'official' ? 'tm-card__link tm-card__link--quiet' : 'tm-card__link'}>
@@ -357,6 +358,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
   const hereNights = stay ? nights(stay) - away.length : 0
   // Booking links open on the nights slept here when they form one block.
   const bookStay = stay ? hereStay(stay, away) : null
+  const noRoomHere = !!stay && hereNights === 0 && away.length > 0
   const bookNote = stay && bookStay && (bookStay.checkIn !== stay.checkIn || bookStay.checkOut !== stay.checkOut) ? s.guide.bookOn(formatDayRange(bookStay.checkIn, bookStay.checkOut, locale)) : null
   const nightsHere = useMemo(() => tripNights(routes), [routes])
   const stayTotalLine = (from: number) => (stay && hereNights > 0 ? `${s.guide.stayTotal(thb(from * hereNights * roomsOf(stay), locale), hereNights, roomsOf(stay))}${away.length > 0 ? s.guide.stayTotalAway(away.length) : ''}` : null)
@@ -639,7 +641,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
           </div>
         </div>
       </main>
-      {myHotel && !(stay && hereNights === 0 && away.length > 0) && (
+      {myHotel && !noRoomHere && (
         // Phones: the hotel's booking links (hearted, or the one a sent link names) stay within reach at the bottom while the plan scrolls. No bar when every night is away on a road trip: there is nothing here to book.
         <aside className="tm-wk__book" data-ui aria-label={s.weekendPage.bookBarLabel}>
           <span className="tm-wk__book-text">
