@@ -122,6 +122,8 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
     // choiceVersion is read so a new choice recomputes the pick.
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [bundle, saved, choiceVersion])
+  // The chip's hotel: the saved one, else the hotel a shared "#near=" link centres on, so the link's reader can switch the circle off too.
+  const chipHotel = useMemo(() => myHotel ?? (filters.nearPin ? bundle.areas.flatMap((a) => a.pins).find((p) => p.id === filters.nearPin && p.kind === 'hotel') ?? null : null), [myHotel, filters.nearPin, bundle])
   const hotelFor = useMemo(() => {
     const byArea = new Map<string, Pin | null>()
     for (const area of bundle.areas) {
@@ -405,7 +407,7 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
         <Link href={`/${locale}/${city.id}/trip`} className="hidden shrink-0 rounded-full border border-line bg-white px-3 py-2 text-sm font-medium md:inline-block">{s.nav.trips}</Link>
         <SavedLink locale={locale} className="tm-saved-link hidden shrink-0 items-center gap-1.5 rounded-full border border-line bg-white px-3 py-2 text-sm font-medium md:inline-flex" />
       </header>
-      <KindBar locale={locale} bundle={bundle} filters={filters} onChange={update} onNear={locate} locating={locating} hotel={myHotel ? { id: myHotel.id, name: t(myHotel.name, locale), lon: myHotel.location.lon, lat: myHotel.location.lat } : null} />
+      <KindBar locale={locale} bundle={bundle} filters={filters} onChange={update} onNear={locate} locating={locating} hotel={chipHotel ? { id: chipHotel.id, name: t(chipHotel.name, locale), lon: chipHotel.location.lon, lat: chipHotel.location.lat } : null} />
       {nearNote && <p role="status" className="tm-near__note">{nearNote}</p>}
 
       <main className="relative flex min-h-0 flex-1">
