@@ -409,7 +409,8 @@ export function HomePage({ locale, bundle, routes }: { locale: Locale; bundle: C
           </section>
         </div>
 
-        <div className="tm-stage__map" data-ui>
+        {/* On a phone the band grows to the screen while a card is open: the card is taller than the 56svh band, which clipped it to its photo. */}
+        <div className={`tm-stage__map${cardPin ? ' tm-stage__map--card' : ''}`} data-ui>
           <StageMap locale={locale} camera={camera} threeD={threeD} areas={areas} route={null} focus={focusArea} card={cardPin} onCloseCard={() => setCardPin(null)} cityId={city.id} stations={stations} onSelectArea={(id) => { setActiveArea(id); document.querySelector(`[data-area="${id}"]`)?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }} />
           <div className="tm-stage__bar" data-map-overlay="bottom">
             <span>{s.home.facts(areas.length, stations.length, routes.length)}</span>

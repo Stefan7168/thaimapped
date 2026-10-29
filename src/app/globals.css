@@ -602,7 +602,9 @@ body {
 @media (max-width: 1023px) {
   :root { --axis: 20px; }
   .tm-stage { flex-direction: column; gap: 0; padding: var(--margin); }
-  .tm-stage__map { order: -1; flex: none; width: 100%; height: 56svh; top: var(--margin); z-index: 0; }
+  .tm-stage__map { order: -1; flex: none; width: 100%; height: 56svh; top: var(--margin); z-index: 0; transition: height 300ms ease; }
+  /* A tapped highlight's card needs more than the band: the band takes the screen until the card closes (the map resizes with its box). */
+  .tm-stage__map--card { height: calc(100svh - var(--margin) * 2); }
   .tm-stage__bar > span:first-child { display: none; }
   /* The sheet right under the map band carries the same links, so the band's bar would show them twice. */
   .tm-stage__bar--page { display: none; }
