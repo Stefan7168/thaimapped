@@ -548,7 +548,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
                 return away.length > 0 ? (
                   <p key={r.id} className="tm-wk__shared tm-wk__tripslot">
                     <Link href={`/${locale}/${cityId}/trip/${r.id}`} className="tm-link tm-link--under">{t(r.name, locale)}</Link>
-                    {s.weekendPage.sleepAway(away.map((d) => formatDay(d, locale)).join(` ${s.trip.or} `))}
+                    {away.length >= nights(stay) ? s.weekendPage.sleepAwayAll(away.map((d) => formatDay(d, locale)).join(` ${s.trip.and} `)) : s.weekendPage.sleepAway(away.map((d) => formatDay(d, locale)).join(` ${s.trip.and} `))}
                   </p>
                 ) : null
               })}

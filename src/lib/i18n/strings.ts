@@ -169,6 +169,7 @@ const en = {
     // A multi-day plan trip covering this slot's day.
     // Nights a plan road trip spends away, under "Where to sleep".
     sleepAway: (nights: string) => ` has you sleeping away on ${nights}. The room here is for the other nights.`,
+    sleepAwayAll: (nights: string) => ` has you sleeping away on ${nights}: every night of this stay. You need no room here.`,
     awayOnTrip: (d: number, days: number) => ` takes this day (day ${d} of ${days}).`,
     showAnyway: (n: number) => (n === 1 ? 'Show the 1 stop here anyway' : n > 1 ? `Show the ${n} stops here anyway` : 'Show this time anyway'),
     tripInSlot: (length: string) => ` is your trip here (${length}). The stops below are for the time left.`,
@@ -314,7 +315,8 @@ const en = {
     // The day chips: a kept trip already runs in these hours that day.
     sameHoursAs: (names: string) => `On this day it runs in the same hours as ${names}.`,
     pickFreeDay: 'A day without a mark is free.',
-    nightAway: (hotel: string) => `This night is away from ${hotel}`,
+    nightAway: (hotel: string, n = 1) => (n > 1 ? `These ${n} nights are away from ${hotel}` : `This night is away from ${hotel}`),
+    stopNights: (n: number, when: string) => (n === 1 ? `1 night, ${when}` : `${n} nights, ${when}`),
     startByTrain: (hotel: string, route: string) => `From your hotel, ${hotel}: ${route}`,
     startAtYourStation: (hotel: string) => `From your hotel, ${hotel}: this is your station`,
     endAtHotel: (hotel: string) => `Back to your hotel, ${hotel}`,
@@ -354,6 +356,7 @@ const en = {
     onDay: (day: string) => `On ${day}`,
     onDayOr: (day: string, others: string) => `On ${day} (or ${others})`,
     or: 'or',
+    and: 'and',
     tooLong: (n: number) => (n === 1 ? 'Needs more than your 1 night' : `Needs more than your ${n} nights`),
     copied: 'Link copied',
     copyFailed: 'Copy the address bar to share',

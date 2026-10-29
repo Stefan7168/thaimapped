@@ -31,11 +31,11 @@ export function slimRoute(route: TripRoute): TripRoute {
 }
 
 /** A trip drawn small (the home page sheet): the road line thinned to about 110 m steps, the stops kept. */
-/** A route slimmed to what the nights-here count needs (server-safe, for pages that show hotel totals): `nightsAway` is the trip days (1-based) that sleep on the road. */
+/** A route slimmed to what the nights-here count needs (server-safe, for pages that show hotel totals): `nightsAway` is the trip days (1-based) that end with a night on the road, which is every day of a multi-day trip but the last, whether or not a stop names the bed. */
 export type TripNights = Pick<TripRoute, 'id' | 'days' | 'duration'> & { nightsAway: number[] }
 
 export function tripNights(routes: readonly TripRoute[]): TripNights[] {
-  return routes.map((r) => ({ id: r.id, days: r.days, duration: r.duration, nightsAway: r.stops.filter((st) => st.kind === 'hotel').map((st) => st.day) }))
+  return routes.map((r) => ({ id: r.id, days: r.days, duration: r.duration, nightsAway: Array.from({ length: Math.max(0, r.days - 1) }, (_, i) => i + 1) }))
 }
 
 export function thinRoute(route: TripRoute): TripRoute {

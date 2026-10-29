@@ -95,7 +95,7 @@ export function SavedPage({ locale, cityId, entries, trips = [], stations, inter
     return `${s.trip.fitsStay(nights(stay))} · ${formatDayRange(from, addDays(from, r.days - 1), locale)}`
   }
   // Nights the kept road trips sleep away: hotel totals here count the other nights only.
-  const away = stay ? awayNights(stay, keptTrips.map((r) => ({ ...r, stops: r.nightsAway.map((day) => ({ kind: 'hotel' as const, day })) })), keptTrips.map((r) => r.id), picks) : []
+  const away = stay ? awayNights(stay, keptTrips, keptTrips.map((r) => r.id), picks) : []
   const hereNights = stay ? nights(stay) - away.length : 0
   const bookStay = stay ? hereStay(stay, away) : null
   const missing = ids.length - rows.length

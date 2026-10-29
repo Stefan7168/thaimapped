@@ -1,7 +1,7 @@
 import { useMemo, useSyncExternalStore } from 'react'
 import { useKeptTrips } from '@/lib/saved/trips'
 import { addDays, dayTripOptions, nights, tripStartDefault, tripStartOptions, type Stay } from './store'
-import type { RouteStop, TripRoute } from '@/lib/content/types'
+import type { TripRoute } from '@/lib/content/types'
 import { TRIP_HOURS } from './calendar'
 import type { TripNights } from '@/lib/content/slim'
 
@@ -146,21 +146,21 @@ export function useHereNights(stay: Stay | null, trips: readonly TripNights[], p
   // Memoised so a map effect keyed on the result does not rebuild on every render.
   return useMemo(() => {
     if (!stay) return { hereNights: 0, away: [], bookStay: null }
-    const away = awayNights(stay, trips.map((r) => ({ ...r, stops: r.nightsAway.map((day) => ({ kind: 'hotel' as const, day })) })), kept, picks)
+    const away = awayNights(stay, trips, kept, picks)
     return { hereNights: nights(stay) - away.length, away, bookStay: hereStay(stay, away) }
   }, [stay, trips, kept, picks])
 }
 
 /** The nights of the stay (as check-in dates) a plan road trip sleeps away, so the hotel here is only for the rest. */
-export function awayNights(stay: Stay, routes: readonly (Pick<TripRoute, 'id' | 'days' | 'duration'> & { stops: readonly Pick<RouteStop, 'kind' | 'day'>[] })[], planIds: readonly string[], picks: Readonly<Record<string, string>>): string[] {
+/** Check-in dates inside the stay slept away on a kept multi-day trip: every night of the trip but the last day's, with or without a hotel stop naming the bed (a three-day trip three hours out does not come back to the city for its second night). */
+export function awayNights(stay: Stay, routes: readonly Pick<TripRoute, 'id' | 'days' | 'duration'>[], planIds: readonly string[], picks: Readonly<Record<string, string>>): string[] {
   const out = new Set<string>()
   for (const r of routes) {
     if (!planIds.includes(r.id) || r.days < 2) continue
     const from = tripStartFor(stay, r, picks)
     if (!from) continue
-    for (const st of r.stops) {
-      if (st.kind !== 'hotel') continue
-      const d = addDays(from, st.day - 1)
+    for (let i = 0; i < r.days - 1; i++) {
+      const d = addDays(from, i)
       if (d >= stay.checkIn && d < stay.checkOut) out.add(d)
     }
   }

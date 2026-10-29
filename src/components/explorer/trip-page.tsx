@@ -148,7 +148,12 @@ export function TripPage({ locale, cityId, cityName, route, hotelDoors = {}, sta
   const isToday = (d: number): boolean => !!clock && dayIso(d) === clock.date
   // A hotel stop on the road sleeps that one night, so its search opens on that night, not on the Bangkok stay.
   // The road night keeps the party: only the dates change to that one night.
-  const nightAt = (stop: RouteStop) => (startIso && stop.kind === 'hotel' ? { ...stay, checkIn: addDays(startIso, stop.day - 1), checkOut: addDays(startIso, stop.day) } : stay)
+  // A hotel stop's nights run to the next hotel stop or the trip's last day, so one bed named on day 1 of a three-day trip books two nights.
+  const nightAt = (stop: RouteStop) => {
+    if (!startIso || stop.kind !== 'hotel') return stay
+    const next = route.stops.find((st) => st.kind === 'hotel' && st.day > stop.day)
+    return { ...stay, checkIn: addDays(startIso, stop.day - 1), checkOut: addDays(startIso, (next ? next.day : route.days) - 1) }
+  }
   // The trip as a calendar file: one event per day in the hours its time of day covers (a morning 08:00 to 13:00, a full day 08:00 to 20:00, Bangkok), the day's stops in the description. Needs the dates.
   const addToCalendar = () => {
     if (!startIso) return
@@ -312,7 +317,12 @@ export function TripPage({ locale, cityId, cityName, route, hotelDoors = {}, sta
                             {stop.search && <span className="block text-[13px] text-ink-2 tm-stoprow__search">{s.trip.searchHotels(stop.search, !!stay)}</span>}
                             {myHotel && i === 0 && <span className="block text-[13px] tm-wk__from">{startLine(stop)}</span>}
                             {myHotel && stop.kind === 'end' && i === route.stops.length - 1 && <span className="block text-[13px] tm-wk__from">{s.trip.endAtHotel(t(myHotel.name, locale))}</span>}
-                            {myHotel && stop.kind === 'hotel' && <span className="block text-[13px] tm-wk__from">{s.trip.nightAway(t(myHotel.name, locale))}</span>}
+                            {stop.kind === 'hotel' && startIso && stay && (() => {
+                              const at = nightAt(stop)!
+                              const n = nights(at)
+                              return <span className="block text-[13px] text-ink-2">{s.trip.stopNights(n, n > 1 ? formatDayRange(at.checkIn, at.checkOut, locale) : formatDay(at.checkIn, locale))}</span>
+                            })()}
+                            {myHotel && stop.kind === 'hotel' && <span className="block text-[13px] tm-wk__from">{s.trip.nightAway(t(myHotel.name, locale), startIso && stay ? nights(nightAt(stop)!) : 1)}</span>}
                           </span>
                         </button>
                         {active && (
