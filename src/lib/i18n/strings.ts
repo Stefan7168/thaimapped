@@ -451,6 +451,8 @@ const en = {
     priceFrom: (price: string) => `from about ${price} a night`,
     about: (price: string) => `about ${price}`,
     // Nights a plan road trip sleeps away are not billed here.
+    // Under a total when the booking links open on fewer nights than the stay.
+    bookOn: (range: string) => `Booking links open on ${range}`,
     stayTotalAway: (away: number) => (away === 1 ? ' (1 night away on your trip)' : ` (${away} nights away on your trips)`),
     stayTotal: (total: string, n: number, rooms = 1) => `${n === 1 ? `about ${total} for your night` : `about ${total} for your ${n} nights`}${rooms > 1 ? `, ${rooms} rooms` : ''}`,
     priceEstimate: 'typical for its class, not checked',

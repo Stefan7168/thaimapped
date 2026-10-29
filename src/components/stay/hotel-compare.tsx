@@ -6,6 +6,7 @@ import { t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
 import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
 import { roomsOf, useStay } from '@/lib/stay/store'
+import { formatDayRange } from '@/lib/stay/format'
 import { useHereNights } from '@/lib/stay/trip-start'
 import type { TripNights } from '@/lib/content/slim'
 import { trackOutbound } from '@/lib/links/track'
@@ -112,6 +113,7 @@ export function HotelCompare({ locale, cityId, entries, stations, nearbyCount, s
           </tbody>
         </table>
       </CmpWrap>
+      {stay && bookStay && (bookStay.checkIn !== stay.checkIn || bookStay.checkOut !== stay.checkOut) && <p className="tm-saved__note">{s.guide.bookOn(formatDayRange(bookStay.checkIn, bookStay.checkOut, locale))}</p>}
       <p className="tm-saved__note">* {s.guide.priceEstimate}</p>
     </>
   )

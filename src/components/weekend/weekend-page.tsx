@@ -338,6 +338,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
   const hereNights = stay ? nights(stay) - away.length : 0
   // Booking links open on the nights slept here when they form one block.
   const bookStay = stay ? hereStay(stay, away) : null
+  const bookNote = stay && bookStay && (bookStay.checkIn !== stay.checkIn || bookStay.checkOut !== stay.checkOut) ? s.guide.bookOn(formatDayRange(bookStay.checkIn, bookStay.checkOut, locale)) : null
   const nightsHere = useMemo(() => tripNights(routes), [routes])
   const stayTotalLine = (from: number) => (stay && hereNights > 0 ? `${s.guide.stayTotal(thb(from * hereNights * roomsOf(stay), locale), hereNights, roomsOf(stay))}${away.length > 0 ? s.guide.stayTotalAway(away.length) : ''}` : null)
   // Plan trips first, then the rest in content order.
@@ -563,6 +564,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
           <span className="tm-wk__book-text">
             <span className="tm-wk__book-name">{t(myHotel.name, locale)}</span>
             {myHotel.price && stayTotalLine(myHotel.price.from) && <span className="tm-wk__book-total" title={myHotel.price.basis === 'tier-estimate' ? s.guide.priceEstimate : undefined}>{stayTotalLine(myHotel.price.from)}{myHotel.price.basis === 'tier-estimate' ? '*' : ''}</span>}
+            {bookNote && <span className="tm-wk__book-total">{bookNote}</span>}
           </span>
           {(Object.keys(myHotel.links) as Partner[]).filter((p) => p !== 'official').map((p) => {
             const subId = subIdFor(`${cityId}-${area.id}`, myHotel.id)
