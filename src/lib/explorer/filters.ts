@@ -44,6 +44,8 @@ export interface FilterState {
   days: DayKind[]
   /** The visitor's own position (lon, lat) from the browser, for "near me"; never written to the address. */
   near: [number, number] | null
+  /** Who stands at `near`: unset for the visitor's own position, the hotel's name for "near your hotel". */
+  nearName?: string | null
 }
 
 export const EMPTY_FILTERS: FilterState = { areas: [], subareas: [], stations: [], lines: [], kinds: [], tiers: [], price: null, times: [], days: [], near: null }

@@ -92,6 +92,8 @@ const en = {
   },
   near: {
     chip: 'Near me',
+    hotelChip: 'Near your hotel',
+    fromName: (n: number, name: string) => `${n} min walk from ${name}`,
     you: 'You are here',
     from: (n: number) => `${n} min walk from you`,
     away: 'You are not in Bangkok right now, so the map stays on the city.',

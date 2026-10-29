@@ -172,7 +172,7 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
           window.setTimeout(() => setNearNote(null), 6000)
           return
         }
-        update({ ...filters, areas: [], subareas: [], stations: [], lines: [], near: here })
+        update({ ...filters, areas: [], subareas: [], stations: [], lines: [], near: here, nearName: null })
       },
       () => {
         setLocating(false)
@@ -329,8 +329,8 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
                   {s.city.walkMinutes(pin.walk.minutes)} {s.city.from(`${walkStation.code ? walkStation.code + ' ' : ''}${t(walkStation.name, locale)}`)}
                 </span>
               )}
-              {pin.kind !== 'hotel' && hotelFor(area.id) && fromHotel(pin, hotelFor(area.id)!) <= 45 && <span className="tm-wk__from block text-xs">{s.weekendPage.fromHotel(fromHotel(pin, hotelFor(area.id)!), t(hotelFor(area.id)!.name, locale))}</span>}
-              {filters.near && <span className="block text-xs font-medium text-ink">{s.near.from(Math.max(1, Math.ceil(distanceM(filters.near[0], filters.near[1], pin.location.lon, pin.location.lat) / WALK_PACE_M_PER_MIN)))}</span>}
+              {pin.kind !== 'hotel' && !filters.nearName && hotelFor(area.id) && fromHotel(pin, hotelFor(area.id)!) <= 45 && <span className="tm-wk__from block text-xs">{s.weekendPage.fromHotel(fromHotel(pin, hotelFor(area.id)!), t(hotelFor(area.id)!.name, locale))}</span>}
+              {filters.near && !(filters.nearName && pin.id === myHotel?.id) && <span className="block text-xs font-medium text-ink">{(() => { const n = Math.max(1, Math.ceil(distanceM(filters.near[0], filters.near[1], pin.location.lon, pin.location.lat) / WALK_PACE_M_PER_MIN)); return filters.nearName ? s.near.fromName(n, filters.nearName) : s.near.from(n) })()}</span>}
               </span>
             </button>
             {active && partners.length > 0 && (
@@ -370,7 +370,7 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
       {pins.length === 0 && (
         <div className="tm-empty">
           <p className="text-sm text-ink-2">{s.filters.noResults}</p>
-          <button type="button" className="tm-card__link tm-card__link--quiet" onClick={() => update({ ...filters, kinds: [], tiers: [], price: null, times: [], days: [], near: null })}>
+          <button type="button" className="tm-card__link tm-card__link--quiet" onClick={() => update({ ...filters, kinds: [], tiers: [], price: null, times: [], days: [], near: null, nearName: null })}>
             {s.filters.showAllHere}
           </button>
         </div>
@@ -402,7 +402,7 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
         <Link href={`/${locale}/${city.id}/trip`} className="hidden shrink-0 rounded-full border border-line bg-white px-3 py-2 text-sm font-medium md:inline-block">{s.nav.trips}</Link>
         <SavedLink locale={locale} className="tm-saved-link hidden shrink-0 items-center gap-1.5 rounded-full border border-line bg-white px-3 py-2 text-sm font-medium md:inline-flex" />
       </header>
-      <KindBar locale={locale} bundle={bundle} filters={filters} onChange={update} onNear={locate} locating={locating} />
+      <KindBar locale={locale} bundle={bundle} filters={filters} onChange={update} onNear={locate} locating={locating} hotel={myHotel ? { name: t(myHotel.name, locale), lon: myHotel.location.lon, lat: myHotel.location.lat } : null} />
       {nearNote && <p role="status" className="tm-near__note">{nearNote}</p>}
 
       <main className="relative flex min-h-0 flex-1">
@@ -414,7 +414,7 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
           ) : (
             <div className="p-3">
               {/* Back leaves the place (areas, sub-areas, stations); the budget, time and kind preferences stay. */}
-              <button type="button" onClick={() => update({ ...filters, areas: [], subareas: [], stations: [], lines: [], near: null })} className="mb-2 flex items-center gap-1.5 text-sm text-ink-2 hover:text-ink">
+              <button type="button" onClick={() => update({ ...filters, areas: [], subareas: [], stations: [], lines: [], near: null, nearName: null })} className="mb-2 flex items-center gap-1.5 text-sm text-ink-2 hover:text-ink">
                 <ArrowLeft aria-hidden="true" className="size-4" />
                 {s.guide.back}
               </button>
@@ -446,6 +446,7 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
               stations={stations}
               centres={centres}
               near={filters.near}
+              nearLabel={filters.nearName ?? null}
               outlines={outlines}
               activePinId={activePin?.id ?? null}
               hoverPinId={hoverPin}

@@ -55,6 +55,8 @@ export interface ExplorerMapProps {
   centres: [number, number][]
   /** The visitor's own position, for the "near me" circle and dot. */
   near?: [number, number] | null
+  /** The name at the near dot when it is not the visitor ("near your hotel"). */
+  nearLabel?: string | null
   /** Borders drawn and framed: ticked areas and sub-areas. */
   outlines: Outline[]
   /** Pin to highlight and open a card on, if any. */
@@ -127,7 +129,7 @@ function focusBounds(pins: VisiblePin[], stations: Station[], centres: [number, 
 }
 
 export function ExplorerMap(props: ExplorerMapProps) {
-  const { locale, cityId, cityCamera, threeD, areas, pins, allPins, allStations, airport, interchanges = [], stations, centres, near = null, outlines, activePinId, onSelectArea, onSelectPin, onClosePin, hoverPinId = null, onHoverPin } = props
+  const { locale, cityId, cityCamera, threeD, areas, pins, allPins, allStations, airport, interchanges = [], stations, centres, near = null, nearLabel = null, outlines, activePinId, onSelectArea, onSelectPin, onClosePin, hoverPinId = null, onHoverPin } = props
   const containerRef = useRef<HTMLDivElement>(null)
   const mapRef = useRef<MaplibreMap | null>(null)
   const markersRef = useRef<Marker[]>([])
@@ -263,7 +265,8 @@ export function ExplorerMap(props: ExplorerMapProps) {
         el.classList.add('tm-pin--station')
         markersRef.current.push(new maplibregl.Marker({ element: el, anchor: 'left' }).setLngLat([st.lon, st.lat]).addTo(map))
       }
-      if (near) {
+      // The visitor's own dot; around the saved hotel the hotel's own pin marks the centre, so no second label.
+      if (near && !nearLabel) {
         const el = pinElement(strings(locale).near.you, '#2b2a26', false, false)
         el.classList.add('tm-pin--station', 'tm-pin--you')
         markersRef.current.push(new maplibregl.Marker({ element: el, anchor: 'left' }).setLngLat(near).addTo(map))
@@ -273,7 +276,7 @@ export function ExplorerMap(props: ExplorerMapProps) {
     return () => {
       cancelled = true
     }
-  }, [areas, pins, stations, centres, near, activePinId, locale, mapReady])
+  }, [areas, pins, stations, centres, near, nearLabel, activePinId, locale, mapReady])
 
   // Camera: frame the pins and circles, or return to the city view.
   useEffect(() => {
