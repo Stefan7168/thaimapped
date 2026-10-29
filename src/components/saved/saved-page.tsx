@@ -20,7 +20,7 @@ import { thb } from '@/lib/explorer/price'
 import { distanceM, WALK_PACE_M_PER_MIN } from '@/lib/explorer/filters'
 import { whenLine } from '@/lib/explorer/when'
 import { addSaved, clearSaved, toggleSaved, useSaved } from '@/lib/saved/store'
-import { clearKeptTrips, toggleKeptTrip, useKeptTrips } from '@/lib/saved/trips'
+import { addKeptTrips, clearKeptTrips, toggleKeptTrip, useKeptTrips } from '@/lib/saved/trips'
 import { formatDay } from '@/lib/stay/format'
 import { addDays, dayTripOptions, tripStartDefault } from '@/lib/stay/store'
 import { TRIP_HOURS } from '@/lib/stay/calendar'
@@ -46,6 +46,8 @@ export function SavedPage({ locale, cityId, entries, trips = [], stations, inter
   const stay = useStay()
   const mine = useSaved()
   const [sentIds, setSentIds] = useState<string[] | null>(null)
+  // Trips on a sent list ("?trips="): shown with it, kept only on "Keep these".
+  const [sentTrips, setSentTrips] = useState<string[]>([])
   const [shared, setShared] = useState<'idle' | 'copied' | 'failed' | 'kept'>('idle')
   const byId = useMemo(() => new Map(entries.map((e) => [e.pin.id, e])), [entries])
   const stationById = useMemo(() => new Map(stations.map((st) => [st.id, st])), [stations])
@@ -55,6 +57,7 @@ export function SavedPage({ locale, cityId, entries, trips = [], stations, inter
     const id = window.requestAnimationFrame(() => {
       const ids = new URLSearchParams(window.location.search).get('ids')
       setSentIds(ids ? ids.split(',').filter((id) => id) : null)
+      setSentTrips((new URLSearchParams(window.location.search).get('trips') ?? '').split(',').filter(Boolean))
       adoptStayFromUrl()
     })
     return () => window.cancelAnimationFrame(id)
@@ -65,7 +68,7 @@ export function SavedPage({ locale, cityId, entries, trips = [], stations, inter
   const nearbyCount = (hotel: Pin) => entries.filter((e) => e.pin.kind !== 'hotel' && distanceM(hotel.location.lon, hotel.location.lat, e.pin.location.lon, e.pin.location.lat) <= WALK_PACE_M_PER_MIN * 10).length
   const rows = ids.map((id) => byId.get(id)).filter((e): e is SavedEntry => !!e)
   const keptIds = useKeptTrips()
-  const keptTrips = keptIds.map((id) => trips.find((r) => r.id === id)).filter((r): r is SavedTrip => !!r)
+  const keptTrips = (sentIds ? sentTrips : keptIds).map((id) => trips.find((r) => r.id === id)).filter((r): r is SavedTrip => !!r)
   // The days a kept trip takes by default (the trip page's pick), to warn when two kept trips would run in the same hours.
   const tripDays = (r: SavedTrip): string[] => {
     if (!stay) return []
@@ -133,8 +136,8 @@ export function SavedPage({ locale, cityId, entries, trips = [], stations, inter
   }
 
   const share = async () => {
-    const url = `${window.location.origin}/${locale}/saved?ids=${encodeURIComponent(ids.join(','))}${stay ? `&stay=${stayParam(stay)}` : ''}`
-    const text = s.saved.shareText(hotelRows.length, placeRows.length, hotelRows[0] ? t(hotelRows[0].pin.name, locale) : null)
+    const url = `${window.location.origin}/${locale}/saved?ids=${encodeURIComponent(ids.join(','))}${stay ? `&stay=${stayParam(stay)}` : ''}${keptTrips.length > 0 ? `&trips=${encodeURIComponent(keptTrips.map((r) => r.id).join(','))}` : ''}`
+    const text = s.saved.shareText(hotelRows.length, placeRows.length, hotelRows[0] ? t(hotelRows[0].pin.name, locale) : null) + (keptTrips.length > 0 ? s.saved.shareTrips(keptTrips.length) : '')
     try {
       if (navigator.share) {
         await navigator.share({ title: s.saved.title, text, url })
@@ -150,6 +153,7 @@ export function SavedPage({ locale, cityId, entries, trips = [], stations, inter
 
   const keep = () => {
     addSaved(rows.map((e) => e.pin.id))
+    addKeptTrips(keptTrips.map((r) => r.id))
     setShared('kept')
     window.setTimeout(() => setShared('idle'), 2500)
   }
@@ -230,7 +234,7 @@ export function SavedPage({ locale, cityId, entries, trips = [], stations, inter
               {s.saved.print}
             </button>
           )}
-          {sentIds && rows.length > 0 && (
+          {sentIds && rows.length + keptTrips.length > 0 && (
             <button type="button" onClick={keep} className="tm-button tm-button--small">{shared === 'kept' ? s.saved.kept : s.saved.keep}</button>
           )}
           {sentIds && <button type="button" onClick={() => { setSentIds(null); window.history.replaceState(null, '', window.location.pathname) }} className="tm-link">{s.saved.mine}</button>}
@@ -273,8 +277,8 @@ export function SavedPage({ locale, cityId, entries, trips = [], stations, inter
           </section>
         )}
         </div>
-        {!sentIds && keptTrips.length > 0 && (
-          // The trips kept from the trip pages: this browser's only, so a sent list leaves them out.
+        {keptTrips.length > 0 && (
+          // The trips kept from the trip pages, or the ones a sent list carries.
           <section className="tm-saved__group">
             <h2 className="tm-wk__time">{s.saved.trips}</h2>
             <p className="tm-saved__note">{s.saved.tripsNote}</p>
@@ -290,9 +294,11 @@ export function SavedPage({ locale, cityId, entries, trips = [], stations, inter
                       {clashes(r).length > 0 && <span className="tm-wk__meta">{s.saved.sameDay(clashes(r).map((o) => t(o.name, locale)).join(', '))}</span>}
                     </span>
                   </Link>
-                  <div className="tm-wk__links">
-                    <button type="button" className="tm-card__link tm-card__link--quiet" onClick={() => toggleKeptTrip(r.id)}>{s.saved.forget}</button>
-                  </div>
+                  {!sentIds && (
+                    <div className="tm-wk__links">
+                      <button type="button" className="tm-card__link tm-card__link--quiet" onClick={() => toggleKeptTrip(r.id)}>{s.saved.forget}</button>
+                    </div>
+                  )}
                 </li>
               ))}
             </ol>
