@@ -41,7 +41,9 @@ export interface SavedEntry {
  */
 /** A trip as its saved-list row shows it. */
 /** A route slimmed for the saved page; `nightsAway` is the trip days (1-based) that sleep on the road. */
-export type SavedTrip = Pick<TripRoute, 'id' | 'name' | 'tagline' | 'mode' | 'duration' | 'days' | 'distanceKm'> & { nightsAway: number[] }
+export type SavedTrip = Pick<TripRoute, 'id' | 'name' | 'tagline' | 'mode' | 'duration' | 'days' | 'distanceKm'> & { nightsAway: number[]; beds: SavedBed[] }
+/** A hotel stop of a road trip, enough for the calendar's sleep event. */
+export type SavedBed = { day: number; name: TripRoute['name']; why: TripRoute['name']; search?: string; location: { lon: number; lat: number } }
 
 export function SavedPage({ locale, cityId, entries, trips = [], stations, interchanges = [], airport = {} }: { locale: Locale; cityId: string; entries: SavedEntry[]; trips?: SavedTrip[]; stations: Station[]; interchanges?: [string, string][]; airport?: Record<string, AirportRoutes> }) {
   const s = strings(locale)
@@ -171,18 +173,25 @@ export function SavedPage({ locale, cityId, entries, trips = [], stations, inter
       const from = tripStartFor(stay, r, picks)
       if (!from) return []
       const url = `${window.location.origin}/${locale}/${cityId}/trip/${r.id}${startsParam([r.id], picks) ? `?start=${picks[r.id]}` : ''}`
-      return Array.from({ length: r.days }, (_, i) => ({
+      const days: CalendarEvent[] = Array.from({ length: r.days }, (_, i) => ({
         date: addDays(from, i), start: TRIP_HOURS[r.duration][0], end: TRIP_HOURS[r.duration][1],
         title: s.trip.calendarDay(t(r.name, locale), i + 1, r.days),
         description: [t(r.tagline, locale), url].join('\n'),
         url,
       }))
+      // Each bed on the road: an evening event on its first night with the night count, as the trip and weekend files have.
+      const beds: CalendarEvent[] = r.beds.flatMap((bed) => {
+        const next = r.beds.find((x) => x.day > bed.day)
+        const n = (next ? next.day : r.days) - bed.day
+        return n < 1 ? [] : [{ date: addDays(from, bed.day - 1), start: '19:00', end: '20:00', title: s.trip.calendarSleep(t(bed.name, locale), n), description: [t(bed.why, locale), url].join('\n'), location: bed.search ?? t(bed.name, locale), geo: bed.location, url }]
+      })
+      return [...days, ...beds]
     })
   }
   const canCalendar = !!stay && (!!homeHotel || keptTrips.some((r) => tripStartFor(stay, r, picks)))
   // The hotel's check-in and check-out go in too, on the nights slept here (a road trip's nights are its own events), so the list reads as one row in the calendar.
   const hotelEvents = (): CalendarEvent[] => {
-    if (!homeHotel || !stay) return []
+    if (!homeHotel || !stay || noRoomHere) return []
     const at = bookStay ?? stay
     const name = t(homeHotel.pin.name, locale)
     const url = `${window.location.origin}/${locale}/${cityId}#area=${homeHotel.area.id}&kind=hotel&pin=${homeHotel.pin.id}`

@@ -204,7 +204,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
       }]
     })
     // The hotel's own two moments, so the weekend reads as one row in the calendar; times are the usual ones, the booking has the real ones. With nights away on a road trip they sit on the nights slept here, as the booking links do.
-    if (myHotel && stay) {
+    if (myHotel && stay && !noRoomHere) {
       const name = t(myHotel.name, locale)
       events.push(
         { date: (bookStay ?? stay).checkIn, start: '14:00', end: '15:00', title: s.weekendPage.calendarCheckIn(name), description: [s.weekendPage.calendarTimesVary, url].join('\n'), location: `${name}, ${areaName}`, geo: myHotel.location, url },
