@@ -50,6 +50,9 @@ const en = {
     nav: 'Saved',
     title: 'Saved',
     description: 'The hotels and places you saved while looking at the map, kept in this browser. Send the list to whoever is coming with you.',
+    trips: 'Your trips',
+    tripsNote: 'Kept from the trip pages. Open one for the route, its stops and the day it fits.',
+    forget: 'Forget',
     lead: (n: number) => (n === 1 ? '1 saved in this browser.' : `${n} saved in this browser.`),
     empty: 'Nothing saved yet. Tap the heart on a hotel or a place on the map and it lands here.',
     emptyLink: 'Open the map',
@@ -308,6 +311,10 @@ const en = {
     pathNote: 'Straight lines between stops for now. The road-following line comes from the routing step.',
     back: 'Back to the map',
     share: 'Share this trip',
+    // The trip joins the saved list, beside the hotels and places.
+    keep: 'Keep this trip',
+    kept: 'Kept',
+    keptNote: 'On your saved list',
     print: 'Print',
     fitsStay: (n: number) => (n === 1 ? 'Fits your night away' : `Fits your ${n} nights`),
     // A day trip with dates set: the days of the stay it fits ("Sat, Nov 7 or Sun, Nov 8").

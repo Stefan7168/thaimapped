@@ -3,7 +3,7 @@
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { useEffect, useMemo, useState, useSyncExternalStore } from 'react'
-import { ArrowLeft, CalendarPlus, Printer, Share2 } from 'lucide-react'
+import { ArrowLeft, Bookmark, CalendarPlus, Printer, Share2 } from 'lucide-react'
 import type { Locale, RouteDuration, RouteStop, TripRoute } from '@/lib/content/types'
 import type { AirportLeg } from '@/lib/transit/from-airport'
 import { rideSentence } from '@/components/stay/from-airport'
@@ -17,6 +17,7 @@ import { myHotelAcross, useHotelChoiceVersion } from '@/lib/saved/my-hotel'
 import { formatDay, formatDayRange } from '@/lib/stay/format'
 import { addDays, adoptStayFromUrl, dayTripOptions, nights, stayParam, tripStartDefault, tripStartOptions, useStay } from '@/lib/stay/store'
 import { buildIcs, downloadIcs, type CalendarEvent } from '@/lib/stay/calendar'
+import { toggleKeptTrip, useKeptTrips } from '@/lib/saved/trips'
 import { StayPicker } from '@/components/stay/stay-picker'
 import { STOP_COLORS } from '@/components/map/trip-map'
 import { legKm, tripLegs } from '@/lib/explorer/trip-legs'
@@ -95,6 +96,7 @@ export function TripPage({ locale, cityId, cityName, route, hotelDoors = {}, sta
   const [shared, setShared] = useState<'idle' | 'copied' | 'failed'>('idle')
   // A multi-day trip inside the stay starts on a day of the reader's choosing (?start=, or the chips); by default the latest day that is back by check-out.
   const [pickedStart, setPickedStart] = useState<string | null>(null)
+  const kept = useKeptTrips().includes(route.id)
   // A multi-day trip starts on any day that gets you back by check-out; a day trip on any day of the stay its time of day fits (none for a full day in a one-night stay).
   const startOptions = useMemo(() => (stay ? (route.days > 1 ? tripStartOptions(stay, route.days) : dayTripOptions(stay, route.duration)) : []), [stay, route.days, route.duration])
   const startIso = stay ? (pickedStart && startOptions.includes(pickedStart) ? pickedStart : route.days > 1 ? tripStartDefault(stay, route.days) : (startOptions[startOptions.length - 1] ?? null)) : null
@@ -198,6 +200,10 @@ export function TripPage({ locale, cityId, cityName, route, hotelDoors = {}, sta
               {route.distanceKm !== undefined && <span className="bg-paper-2 px-2 py-0.5">{s.trip.km(route.distanceKm)}</span>}
             </p>
             <p className="mt-3 flex flex-wrap gap-2 tm-trip__tools">
+              <button type="button" aria-pressed={kept} onClick={() => toggleKeptTrip(route.id)} className={`tm-button tm-button--small${kept ? '' : ' tm-button--quiet'}`} title={kept ? s.trip.keptNote : undefined}>
+                <Bookmark aria-hidden="true" className="size-4" />
+                {kept ? s.trip.kept : s.trip.keep}
+              </button>
               <button type="button" onClick={share} className="tm-button tm-button--small tm-button--quiet">
                 <Share2 aria-hidden="true" className="size-4" />
                 {shared === 'copied' ? s.trip.copied : shared === 'failed' ? s.trip.copyFailed : s.trip.share}

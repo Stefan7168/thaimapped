@@ -1,11 +1,11 @@
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
-import { liveCityIds, loadCityBundle } from '@/lib/content/load'
+import { liveCityIds, loadCityBundle, loadRoutes } from '@/lib/content/load'
 import { LOCALES, isLocale } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
 import { pageMeta } from '@/lib/seo/page-meta'
 import { airportRoutesFor } from '@/lib/transit/from-airport'
-import { SavedPage, type SavedEntry } from '@/components/saved/saved-page'
+import { SavedPage, type SavedEntry, type SavedTrip } from '@/components/saved/saved-page'
 
 // Static shell; which hotels show is read in the browser (this browser's list, or ?ids= from a sent link).
 export const ensureStatic = 'navigation'
@@ -32,6 +32,8 @@ export default async function SavedRoute(props: PageProps<'/[locale]/saved'>) {
   const entries: SavedEntry[] = bundle.areas.flatMap((a) =>
     a.pins.map((pin) => ({ pin: { ...pin, photos: pin.photos?.slice(0, 1), shape: undefined }, area: { id: a.id, name: a.name, color: a.color } })),
   )
+  // Every trip, with only what its row shows; which ones show is this browser's kept list.
+  const trips: SavedTrip[] = loadRoutes(bundle.city.id).map((r) => ({ id: r.id, name: r.name, tagline: r.tagline, mode: r.mode, duration: r.duration, days: r.days, distanceKm: r.distanceKm }))
   // Every station and interchange (29 KB): the page is static and only the browser knows which hotel a saved place is reached from, so the train route is worked out there.
-  return <SavedPage locale={locale} cityId={bundle.city.id} entries={entries} stations={bundle.stations} interchanges={bundle.interchanges} airport={airportRoutesFor(bundle, [...new Set(entries.map((e) => e.pin).filter((p) => p.kind === 'hotel' && p.walk).map((p) => p.walk!.station))])} />
+  return <SavedPage locale={locale} cityId={bundle.city.id} entries={entries} trips={trips} stations={bundle.stations} interchanges={bundle.interchanges} airport={airportRoutesFor(bundle, [...new Set(entries.map((e) => e.pin).filter((p) => p.kind === 'hotel' && p.walk).map((p) => p.walk!.station))])} />
 }

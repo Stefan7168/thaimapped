@@ -4,7 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useMemo, useState } from 'react'
 import { Printer, Share2, X } from 'lucide-react'
-import type { Area, Locale, Pin, Station } from '@/lib/content/types'
+import type { Area, Locale, Pin, Station, TripRoute } from '@/lib/content/types'
 import { FromAirport, rideSentence } from '@/components/stay/from-airport'
 import { railLegs, type AirportRoutes } from '@/lib/transit/from-airport'
 import { t } from '@/lib/i18n/locales'
@@ -20,6 +20,9 @@ import { thb } from '@/lib/explorer/price'
 import { distanceM, WALK_PACE_M_PER_MIN } from '@/lib/explorer/filters'
 import { whenLine } from '@/lib/explorer/when'
 import { addSaved, clearSaved, toggleSaved, useSaved } from '@/lib/saved/store'
+import { toggleKeptTrip, useKeptTrips } from '@/lib/saved/trips'
+import { formatDay } from '@/lib/stay/format'
+import { addDays, dayTripOptions, tripStartDefault } from '@/lib/stay/store'
 import { chooseHotel, myHotelAcross, myHotelChoice, useHotelChoiceVersion } from '@/lib/saved/my-hotel'
 import { SiteHeader } from '@/components/explorer/site-header'
 import { SiteFooter } from '@/components/explorer/site-footer'
@@ -34,7 +37,10 @@ export interface SavedEntry {
  * The shortlist. Shows this browser's saved hotels, or the hotels named in
  * "?ids=a,b,c" when the address came from someone else's "Send this list".
  */
-export function SavedPage({ locale, cityId, entries, stations, interchanges = [], airport = {} }: { locale: Locale; cityId: string; entries: SavedEntry[]; stations: Station[]; interchanges?: [string, string][]; airport?: Record<string, AirportRoutes> }) {
+/** A trip as its saved-list row shows it. */
+export type SavedTrip = Pick<TripRoute, 'id' | 'name' | 'tagline' | 'mode' | 'duration' | 'days' | 'distanceKm'>
+
+export function SavedPage({ locale, cityId, entries, trips = [], stations, interchanges = [], airport = {} }: { locale: Locale; cityId: string; entries: SavedEntry[]; trips?: SavedTrip[]; stations: Station[]; interchanges?: [string, string][]; airport?: Record<string, AirportRoutes> }) {
   const s = strings(locale)
   const stay = useStay()
   const mine = useSaved()
@@ -57,6 +63,19 @@ export function SavedPage({ locale, cityId, entries, stations, interchanges = []
   // Places (not hotels) inside a ten-minute walk of a hotel, straight-line at walking pace.
   const nearbyCount = (hotel: Pin) => entries.filter((e) => e.pin.kind !== 'hotel' && distanceM(hotel.location.lon, hotel.location.lat, e.pin.location.lon, e.pin.location.lat) <= WALK_PACE_M_PER_MIN * 10).length
   const rows = ids.map((id) => byId.get(id)).filter((e): e is SavedEntry => !!e)
+  const keptIds = useKeptTrips()
+  const keptTrips = keptIds.map((id) => trips.find((r) => r.id === id)).filter((r): r is SavedTrip => !!r)
+  // With dates set, the days of the stay a trip fits, as the trips index says it.
+  const tripFit = (r: SavedTrip): string | null => {
+    if (!stay) return null
+    if (r.days < 2) {
+      const days = dayTripOptions(stay, r.duration).slice(0, 3).map((d) => formatDay(d, locale))
+      return days.length > 0 ? s.trip.fitsDay(days.join(` ${s.trip.or} `)) : null
+    }
+    if (r.days > nights(stay) + 1) return s.trip.tooLong(nights(stay))
+    const from = tripStartDefault(stay, r.days)
+    return `${s.trip.fitsStay(nights(stay))} · ${formatDayRange(from, addDays(from, r.days - 1), locale)}`
+  }
   const missing = ids.length - rows.length
   const hotelRows = rows.filter((e) => e.pin.kind === 'hotel')
   const placeRows = rows.filter((e) => e.pin.kind !== 'hotel')
@@ -240,6 +259,30 @@ export function SavedPage({ locale, cityId, entries, stations, interchanges = []
           </section>
         )}
         </div>
+        {!sentIds && keptTrips.length > 0 && (
+          // The trips kept from the trip pages: this browser's only, so a sent list leaves them out.
+          <section className="tm-saved__group">
+            <h2 className="tm-wk__time">{s.saved.trips}</h2>
+            <p className="tm-saved__note">{s.saved.tripsNote}</p>
+            <ol className="tm-wk__stops tm-saved__list">
+              {keptTrips.map((r) => (
+                <li key={r.id}>
+                  <Link href={`/${locale}/${cityId}/trip/${r.id}`} className="tm-wk__stop tm-wk__trip">
+                    <span className="tm-wk__text">
+                      <span className="tm-wk__kind">{r.duration === 'multi-day' ? s.trip.days(r.days) : s.trip.duration[r.duration]} · {s.trip.mode[r.mode]}{r.distanceKm !== undefined ? ` · ${s.trip.km(r.distanceKm)}` : ''}</span>
+                      <span className="tm-wk__name">{t(r.name, locale)}</span>
+                      <span className="tm-wk__why">{t(r.tagline, locale)}</span>
+                      {tripFit(r) && <span className="tm-wk__meta tm-wk__from">{tripFit(r)}</span>}
+                    </span>
+                  </Link>
+                  <div className="tm-wk__links">
+                    <button type="button" className="tm-card__link tm-card__link--quiet" onClick={() => toggleKeptTrip(r.id)}>{s.saved.forget}</button>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </section>
+        )}
       </main>
       <SiteFooter locale={locale} cityId={cityId} />
     </>
