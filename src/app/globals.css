@@ -578,6 +578,8 @@ body {
 }
 .tm-chip { min-height: 40px; padding: 0 14px; background: var(--paper-2); color: var(--ink); font-size: var(--step-small); border: 0; cursor: pointer; transition: background-color var(--t-hover) ease, color var(--t-hover) ease, transform var(--t-press) var(--ease-out); }
 .tm-chip--on { background: var(--ink); color: var(--paper); }
+/* A start day another kept trip already takes in these hours: a dot after the label. */
+.tm-chip--busy::after { content: ''; display: inline-block; width: 6px; height: 6px; margin-left: 6px; border-radius: 50%; background: currentColor; opacity: 0.55; vertical-align: middle; }
 .tm-chip:active { transform: scale(0.97); }
 @media (hover: hover) and (pointer: fine) {
   .tm-chip:not(.tm-chip--on):hover { background: var(--line); }

@@ -16,7 +16,7 @@ import { useSaved } from '@/lib/saved/store'
 import { myHotelAcross, useHotelChoiceVersion } from '@/lib/saved/my-hotel'
 import { formatDay, formatDayRange } from '@/lib/stay/format'
 import { addDays, adoptStayFromUrl, dayTripOptions, nights, stayParam, tripStartDefault, tripStartOptions, useStay } from '@/lib/stay/store'
-import { setTripStartPick, useTripStartPicks } from '@/lib/stay/trip-start'
+import { setTripStartPick, tripClashes, useTripStartPicks } from '@/lib/stay/trip-start'
 import { buildIcs, downloadIcs, TRIP_HOURS, type CalendarEvent } from '@/lib/stay/calendar'
 import { toggleKeptTrip, useKeptTrips } from '@/lib/saved/trips'
 import { StayPicker } from '@/components/stay/stay-picker'
@@ -38,7 +38,10 @@ const TripMap = dynamic(() => import('@/components/map/trip-map').then((m) => m.
 })
 
 /** A trip: the map on the left, the day-by-day plan on the right. */
-export function TripPage({ locale, cityId, cityName, route, hotelDoors = {}, startRides = {} }: { locale: Locale; cityId: string; cityName: string; route: TripRoute; hotelDoors?: Record<string, HotelDoor[]>; startRides?: Record<string, Record<string, AirportLeg[] | null>> }) {
+/** The other trips of the city, slimmed: enough to say which kept ones run in the same hours on a day. */
+export type OtherTrip = Pick<TripRoute, 'id' | 'name' | 'days' | 'duration'>
+
+export function TripPage({ locale, cityId, cityName, route, hotelDoors = {}, startRides = {}, others = [] }: { locale: Locale; cityId: string; cityName: string; route: TripRoute; hotelDoors?: Record<string, HotelDoor[]>; startRides?: Record<string, Record<string, AirportLeg[] | null>>; others?: OtherTrip[] }) {
   const s = strings(locale)
   const stay = useStay()
   const saved = useSaved()
@@ -105,7 +108,10 @@ export function TripPage({ locale, cityId, cityName, route, hotelDoors = {}, sta
     setSentStart(null)
     setTripStartPick(route.id, date)
   }
-  const kept = useKeptTrips().includes(route.id)
+  const keptIds = useKeptTrips()
+  const kept = keptIds.includes(route.id)
+  // The other kept trips that would run in the same hours if this trip started on a day: the chip says so, and a note names them for the current day.
+  const clashOn = (date: string): OtherTrip[] => (stay ? tripClashes<OtherTrip>(stay, route, others.filter((o) => keptIds.includes(o.id)), { ...picks, [route.id]: date }) : [])
   // A kept trip links to the weekend page of the hotel's area, at the slot it takes (Friday-to-Sunday stays carry slot dates; other stays open the page top).
   const weekendHref = (): string | null => {
     if (!kept || !mine || !stay || !startIso) return null
@@ -260,8 +266,14 @@ export function TripPage({ locale, cityId, cityName, route, hotelDoors = {}, sta
               <p id="tm-start" className="mt-4 flex flex-wrap items-center gap-1.5 text-[15px] text-ink-2 tm-trip__tools">
                 <span className="mr-1">{s.trip.startOn}</span>
                 {startOptions.map((date) => (
-                  <button key={date} type="button" aria-pressed={startIso === date} onClick={() => setPickedStart(date)} className={`tm-chip${startIso === date ? ' tm-chip--on' : ''}`}>{formatDay(date, locale)}</button>
+                  <button key={date} type="button" aria-pressed={startIso === date} onClick={() => setPickedStart(date)} className={`tm-chip${startIso === date ? ' tm-chip--on' : ''}${clashOn(date).length > 0 ? ' tm-chip--busy' : ''}`} title={clashOn(date).length > 0 ? s.saved.sameDay(clashOn(date).map((o) => t(o.name, locale)).join(', ')) : undefined}>{formatDay(date, locale)}</button>
                 ))}
+              </p>
+            )}
+            {startIso && clashOn(startIso).length > 0 && (
+              <p className="mt-2 text-[15px] tm-wk__from">
+                {s.trip.sameHoursAs(clashOn(startIso).map((o) => t(o.name, locale)).join(', '))}
+                {startOptions.some((d) => clashOn(d).length === 0) ? ` ${s.trip.pickFreeDay}` : ''}
               </p>
             )}
             {route.days > 1 && (

@@ -36,7 +36,7 @@ export default async function TripRoutePage(props: PageProps<'/[locale]/[city]/t
   return (
     <>
       <JsonLd data={tripLd(routeData, locale, `/${locale}/${city}/trip/${route}`)} />
-      <TripPage locale={locale} cityId={city} cityName={t(cityData.name, locale)} route={routeData} hotelDoors={doors} startRides={startRides} />
+      <TripPage locale={locale} cityId={city} cityName={t(cityData.name, locale)} route={routeData} hotelDoors={doors} startRides={startRides} others={loadRoutes(city).filter((r) => r.id !== route).map((r) => ({ id: r.id, name: r.name, days: r.days, duration: r.duration }))} />
     </>
   )
 }

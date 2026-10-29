@@ -305,6 +305,9 @@ const en = {
     startFromHotel: (hotel: string) => `From your hotel, ${hotel}`,
     shareFromHotel: (hotel: string) => `from your hotel, ${hotel}`,
     startOn: 'Start on',
+    // The day chips: a kept trip already runs in these hours that day.
+    sameHoursAs: (names: string) => `On this day it runs in the same hours as ${names}.`,
+    pickFreeDay: 'A day without a mark is free.',
     nightAway: (hotel: string) => `This night is away from ${hotel}`,
     startByTrain: (hotel: string, route: string) => `From your hotel, ${hotel}: ${route}`,
     startAtYourStation: (hotel: string) => `From your hotel, ${hotel}: this is your station`,
