@@ -18,7 +18,9 @@ import type { HotelDoor } from '@/lib/content/slim'
 import { thb } from '@/lib/explorer/price'
 import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
 import { directionsUrl } from '@/lib/links/directions'
-import { nights, useStay, roomsOf } from '@/lib/stay/store'
+import { useStay, roomsOf } from '@/lib/stay/store'
+import { useHereNights } from '@/lib/stay/trip-start'
+import type { TripNights } from '@/lib/content/slim'
 import { trackOutbound } from '@/lib/links/track'
 import { supports3D } from '@/lib/map/device'
 import { SiteHeader } from '@/components/explorer/site-header'
@@ -41,9 +43,11 @@ const noopSubscribe = () => () => {}
  * stations, the places by kind and the hotels, with the map at the side.
  * The same content the map's area card shows, laid out to be read and sent.
  */
-export function AreaPage({ locale, cityId, area, areas, stations, stationSlugs, airport = {}, rides = {}, hotelDoors = {}, elsewhereRides = {} }: { locale: Locale; cityId: string; area: Area; areas: Area[]; stations: Station[]; stationSlugs: Record<string, string>; airport?: Record<string, AirportRoutes>; rides?: Record<string, Record<string, AirportLeg[] | null>>; hotelDoors?: Record<string, HotelDoor[]>; elsewhereRides?: Record<string, Record<string, AirportLeg[] | null>> }) {
+export function AreaPage({ locale, cityId, area, areas, stations, stationSlugs, airport = {}, rides = {}, hotelDoors = {}, elsewhereRides = {}, trips = [] }: { trips?: TripNights[]; locale: Locale; cityId: string; area: Area; areas: Area[]; stations: Station[]; stationSlugs: Record<string, string>; airport?: Record<string, AirportRoutes>; rides?: Record<string, Record<string, AirportLeg[] | null>>; hotelDoors?: Record<string, HotelDoor[]>; elsewhereRides?: Record<string, Record<string, AirportLeg[] | null>> }) {
   const s = strings(locale)
   const stay = useStay()
+  // Hotel totals count the nights slept here, not the ones a kept road trip spends away.
+  const { hereNights, away } = useHereNights(stay, trips)
   const detected3D = useSyncExternalStore(noopSubscribe, supports3D, () => null)
   const [card, setCard] = useState<{ pin: Pin; area: Area } | null>(null)
   const [hoverId, setHoverId] = useState<string | null>(null)
@@ -122,7 +126,7 @@ export function AreaPage({ locale, cityId, area, areas, stations, stationSlugs, 
             <span className="tm-wk__why">{t(pin.why, locale)}</span>
             {whenLine(pin, locale) && <span className="tm-wk__when">{whenLine(pin, locale)}</span>}
             {pin.price && <span className="tm-wk__meta">{s.guide.priceFrom(thb(pin.price.from, locale))}{pin.price.basis === 'tier-estimate' ? ` (${s.guide.priceEstimate})` : ''}</span>}
-            {pin.price && stay && <span className="tm-wk__meta tm-wk__stay">{s.guide.stayTotal(thb(pin.price.from * nights(stay) * roomsOf(stay), locale), nights(stay), roomsOf(stay))}</span>}
+            {pin.price && stay && hereNights > 0 && <span className="tm-wk__meta tm-wk__stay">{s.guide.stayTotal(thb(pin.price.from * hereNights * roomsOf(stay), locale), hereNights, roomsOf(stay))}{away.length > 0 ? s.guide.stayTotalAway(away.length) : ''}</span>}
             {pin.walk && walkStation && <span className="tm-wk__meta">{s.city.walkMinutes(pin.walk.minutes)} {s.city.from(`${walkStation.code ? walkStation.code + ' ' : ''}${t(walkStation.name, locale)}`)}</span>}
             {pin.kind !== 'hotel' && myHotel && <span className="tm-wk__meta tm-wk__from">{s.weekendPage.fromHotel(fromHotel(pin)!, t(myHotel.name, locale))}</span>}
             {pin.kind !== 'hotel' && myHotel && fromHotel(pin)! > 20 && byTrain(pin) && <span className="tm-wk__meta tm-wk__train">{s.weekendPage.byTrain(byTrain(pin)!)}</span>}

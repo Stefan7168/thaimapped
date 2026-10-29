@@ -15,7 +15,9 @@ import { whenLine } from '@/lib/explorer/when'
 import { thb } from '@/lib/explorer/price'
 import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
 import { directionsUrl } from '@/lib/links/directions'
-import { nights, useStay, roomsOf } from '@/lib/stay/store'
+import { useStay, roomsOf } from '@/lib/stay/store'
+import { useHereNights } from '@/lib/stay/trip-start'
+import type { TripNights } from '@/lib/content/slim'
 import { trackOutbound } from '@/lib/links/track'
 import { supports3D } from '@/lib/map/device'
 import { SiteHeader } from '@/components/explorer/site-header'
@@ -43,9 +45,11 @@ const noopSubscribe = () => () => {}
  */
 const NO_AREAS: Area[] = []
 
-export function StationPage({ locale, cityId, page, areas, hotelDoors, stations, others, airport = {}, fromHotelRides = {} }: { locale: Locale; cityId: string; page: StationPageData; areas: Area[]; hotelDoors: Record<string, HotelDoor[]>; stations: Station[]; others: (StationPageData & { km?: number })[]; airport?: Record<string, AirportRoutes>; fromHotelRides?: Record<string, Record<string, AirportLeg[] | null>> }) {
+export function StationPage({ locale, cityId, page, areas, hotelDoors, stations, others, airport = {}, fromHotelRides = {}, trips = [] }: { trips?: TripNights[]; locale: Locale; cityId: string; page: StationPageData; areas: Area[]; hotelDoors: Record<string, HotelDoor[]>; stations: Station[]; others: (StationPageData & { km?: number })[]; airport?: Record<string, AirportRoutes>; fromHotelRides?: Record<string, Record<string, AirportLeg[] | null>> }) {
   const s = strings(locale)
   const stay = useStay()
+  // Hotel totals count the nights slept here, not the ones a kept road trip spends away.
+  const { hereNights, away } = useHereNights(stay, trips)
   // Places of this page inside a ten-minute walk of a hotel, straight-line at walking pace.
   const nearbyCount = (hotel: Pin) => page.places.filter((n) => distanceM(hotel.location.lon, hotel.location.lat, n.pin.location.lon, n.pin.location.lat) <= WALK_PACE_M_PER_MIN * 10).length
   const detected3D = useSyncExternalStore(noopSubscribe, supports3D, () => null)
@@ -135,7 +139,7 @@ export function StationPage({ locale, cityId, page, areas, hotelDoors, stations,
             <span className="tm-wk__why">{t(pin.why, locale)}</span>
             {whenLine(pin, locale) && <span className="tm-wk__when">{whenLine(pin, locale)}</span>}
             {pin.price && <span className="tm-wk__meta">{s.guide.priceFrom(thb(pin.price.from, locale))}{pin.price.basis === 'tier-estimate' ? ` (${s.guide.priceEstimate})` : ''}</span>}
-            {pin.price && stay && <span className="tm-wk__meta tm-wk__stay">{s.guide.stayTotal(thb(pin.price.from * nights(stay) * roomsOf(stay), locale), nights(stay), roomsOf(stay))}</span>}
+            {pin.price && stay && hereNights > 0 && <span className="tm-wk__meta tm-wk__stay">{s.guide.stayTotal(thb(pin.price.from * hereNights * roomsOf(stay), locale), hereNights, roomsOf(stay))}{away.length > 0 ? s.guide.stayTotalAway(away.length) : ''}</span>}
             <span className="tm-wk__meta">{s.city.walkMinutes(minutes)} {s.city.from(label)}{estimated ? ` (${s.stationPage.estimated})` : ''}</span>
             {ownStop(pin, minutes) && <span className="tm-wk__meta">{ownStop(pin, minutes)}</span>}
             {pin.kind !== 'hotel' && hotelFor(area.id) && <span className="tm-wk__meta tm-wk__from">{s.weekendPage.fromHotel(fromHotel(pin, hotelFor(area.id)!), t(hotelFor(area.id)!.name, locale))}</span>}

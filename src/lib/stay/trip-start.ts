@@ -1,7 +1,9 @@
 import { useSyncExternalStore } from 'react'
+import { useKeptTrips } from '@/lib/saved/trips'
 import { addDays, dayTripOptions, nights, tripStartDefault, tripStartOptions, type Stay } from './store'
 import type { RouteStop, TripRoute } from '@/lib/content/types'
 import { TRIP_HOURS } from './calendar'
+import type { TripNights } from '@/lib/content/slim'
 
 /**
  * The start day the visitor picked for a trip on its page, kept in this
@@ -112,6 +114,15 @@ export function tripClashes<R extends Pick<TripRoute, 'id' | 'days' | 'duration'
     const [b0, b1] = TRIP_HOURS[o.duration]
     return o.id !== r.id && a0 < b1 && b0 < a1 && tripDays(stay, o, picks).some((d) => mine.includes(d))
   })
+}
+
+/** The nights of the stay spent at a hotel here (not away on a kept road trip), live from this browser's kept trips and picks. */
+export function useHereNights(stay: Stay | null, trips: readonly TripNights[]): { hereNights: number; away: string[] } {
+  const kept = useKeptTrips()
+  const picks = useTripStartPicks()
+  if (!stay) return { hereNights: 0, away: [] }
+  const away = awayNights(stay, trips.map((r) => ({ ...r, stops: r.nightsAway.map((day) => ({ kind: 'hotel' as const, day })) })), kept, picks)
+  return { hereNights: nights(stay) - away.length, away }
 }
 
 /** The nights of the stay (as check-in dates) a plan road trip sleeps away, so the hotel here is only for the rest. */

@@ -31,6 +31,13 @@ export function slimRoute(route: TripRoute): TripRoute {
 }
 
 /** A trip drawn small (the home page sheet): the road line thinned to about 110 m steps, the stops kept. */
+/** A route slimmed to what the nights-here count needs (server-safe, for pages that show hotel totals): `nightsAway` is the trip days (1-based) that sleep on the road. */
+export type TripNights = Pick<TripRoute, 'id' | 'days' | 'duration'> & { nightsAway: number[] }
+
+export function tripNights(routes: readonly TripRoute[]): TripNights[] {
+  return routes.map((r) => ({ id: r.id, days: r.days, duration: r.duration, nightsAway: r.stops.filter((st) => st.kind === 'hotel').map((st) => st.day) }))
+}
+
 export function thinRoute(route: TripRoute): TripRoute {
   return { ...route, path: route.path ? simplifyLine(route.path, 0.001) : null }
 }

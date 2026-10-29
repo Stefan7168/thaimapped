@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
-import { liveCityIds, loadCityBundle } from '@/lib/content/load'
+import { liveCityIds, loadCityBundle, loadRoutes } from '@/lib/content/load'
+import { tripNights } from '@/lib/content/slim'
 import { stationPages } from '@/lib/explorer/stations'
 import { LOCALES, isLocale, t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
@@ -45,7 +46,7 @@ export default async function AreaRoute(props: PageProps<'/[locale]/[city]/area/
   return (
     <>
       <JsonLd data={placeListLd(strings(locale).areaPage.title(t(a.name, locale), cityName), `/${locale}/${city}/area/${area}`, a.pins.map((p) => pinNode(p, locale, cityName)))} />
-      <AreaPage locale={locale} cityId={city} area={a} areas={bundle.areas.map(slimArea)} stations={stationsFor(bundle.stations, a.pins, [...a.stations, ...elsewhere.stations])} stationSlugs={stationSlugs} airport={airportRoutesFor(bundle, hotelStations)} rides={railLegsBetween(bundle, hotelStations, a.pins.filter((p) => p.kind !== 'hotel' && p.walk).map((p) => p.walk!.station))} hotelDoors={elsewhere.doors} elsewhereRides={elsewhere.rides} />
+      <AreaPage locale={locale} cityId={city} area={a} trips={tripNights(loadRoutes(city))} areas={bundle.areas.map(slimArea)} stations={stationsFor(bundle.stations, a.pins, [...a.stations, ...elsewhere.stations])} stationSlugs={stationSlugs} airport={airportRoutesFor(bundle, hotelStations)} rides={railLegsBetween(bundle, hotelStations, a.pins.filter((p) => p.kind !== 'hotel' && p.walk).map((p) => p.walk!.station))} hotelDoors={elsewhere.doors} elsewhereRides={elsewhere.rides} />
     </>
   )
 }

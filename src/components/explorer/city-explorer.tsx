@@ -10,7 +10,7 @@ import { t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
 import { supports3D } from '@/lib/map/device'
 import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
-import { nights, useStay, roomsOf } from '@/lib/stay/store'
+import { useStay, roomsOf } from '@/lib/stay/store'
 import { trackOutbound } from '@/lib/links/track'
 import { bangkokClock, whenLine } from '@/lib/explorer/when'
 import { WEEKEND_SLOTS, borrowedSlots, slotNow, weekendPlan } from '@/lib/explorer/weekend'
@@ -28,6 +28,8 @@ import { AreaCard } from './area-card'
 import { SaveButton } from '@/components/saved/save-button'
 import { useSaved } from '@/lib/saved/store'
 import { useKeptTrips } from '@/lib/saved/trips'
+import { useHereNights } from '@/lib/stay/trip-start'
+import { tripNights } from '@/lib/content/slim'
 import { myHotelAcross, myHotelChoice, useHotelChoiceVersion } from '@/lib/saved/my-hotel'
 import { skipStop, unskipStops, useSkipped } from '@/lib/saved/skipped'
 import { SavedLink } from '@/components/saved/saved-link'
@@ -46,6 +48,9 @@ const ExplorerMap = dynamic(() => import('@/components/map/explorer-map').then((
 export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundle: CityBundle; routes: TripRoute[] }) {
   const s = strings(locale)
   const stay = useStay()
+  // Hotel totals count the nights slept here, not the ones a kept road trip spends away.
+  const nightsHere = useMemo(() => tripNights(routes), [routes])
+  const { hereNights, away } = useHereNights(stay, nightsHere)
   const { city, areas } = bundle
   const detected3D = useSyncExternalStore(noopSubscribe, supports3D, () => null)
   // Bangkok's clock, read once in the browser: the weekend tab marks the slot it is right now.
@@ -330,7 +335,7 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
               <span className="block text-ink-2">{t(pin.why, locale)}</span>
               {whenLine(pin, locale) && <span className="tm-wk__when block text-xs">{whenLine(pin, locale)}</span>}
               {pin.price && <span className="block text-xs text-ink-2">{s.guide.priceFrom(thb(pin.price.from, locale))}{pin.price.basis === 'tier-estimate' ? ` (${s.guide.priceEstimate})` : ''}</span>}
-              {pin.price && stay && <span className="tm-wk__stay block text-xs">{s.guide.stayTotal(thb(pin.price.from * nights(stay) * roomsOf(stay), locale), nights(stay), roomsOf(stay))}</span>}
+              {pin.price && stay && hereNights > 0 && <span className="tm-wk__stay block text-xs">{s.guide.stayTotal(thb(pin.price.from * hereNights * roomsOf(stay), locale), hereNights, roomsOf(stay))}{away.length > 0 ? s.guide.stayTotalAway(away.length) : ''}</span>}
               {pin.walk && walkStation && (
                 <span className="block text-xs text-ink-2">
                   {s.city.walkMinutes(pin.walk.minutes)} {s.city.from(`${walkStation.code ? walkStation.code + ' ' : ''}${t(walkStation.name, locale)}`)}
