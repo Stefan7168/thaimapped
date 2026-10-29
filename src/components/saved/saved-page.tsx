@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useMemo, useState } from 'react'
-import { Printer, Share2, X } from 'lucide-react'
+import { CalendarPlus, Printer, Share2, X } from 'lucide-react'
 import type { Area, Locale, Pin, Station, TripRoute } from '@/lib/content/types'
 import { FromAirport, rideSentence } from '@/components/stay/from-airport'
 import { railLegs, type AirportRoutes } from '@/lib/transit/from-airport'
@@ -24,6 +24,7 @@ import { addKeptTrips, clearKeptTrips, toggleKeptTrip, useKeptTrips } from '@/li
 import { formatDay } from '@/lib/stay/format'
 import { addDays, dayTripOptions } from '@/lib/stay/store'
 import { addTripStartPicks, awayNights, parseStarts, startsParam, tripClashes, tripDayOptions, tripStartFor, useTripStartPicks } from '@/lib/stay/trip-start'
+import { buildIcs, downloadIcs, TRIP_HOURS, type CalendarEvent } from '@/lib/stay/calendar'
 import { chooseHotel, myHotelAcross, myHotelChoice, useHotelChoiceVersion } from '@/lib/saved/my-hotel'
 import { SiteHeader } from '@/components/explorer/site-header'
 import { SiteFooter } from '@/components/explorer/site-footer'
@@ -152,6 +153,24 @@ export function SavedPage({ locale, cityId, entries, trips = [], stations, inter
     window.setTimeout(() => setShared('idle'), 2500)
   }
 
+  // One calendar event per trip day, on the days the list places them (the trip page has the stop-by-stop file).
+  const tripEvents = (): CalendarEvent[] => {
+    if (!stay) return []
+    return keptTrips.flatMap((r) => {
+      const from = tripStartFor(stay, r, picks)
+      if (!from) return []
+      const url = `${window.location.origin}/${locale}/${cityId}/trip/${r.id}${startsParam([r.id], picks) ? `?start=${picks[r.id]}` : ''}`
+      return Array.from({ length: r.days }, (_, i) => ({
+        date: addDays(from, i), start: TRIP_HOURS[r.duration][0], end: TRIP_HOURS[r.duration][1],
+        title: s.trip.calendarDay(t(r.name, locale), i + 1, r.days),
+        description: [t(r.tagline, locale), url].join('\n'),
+        url,
+      }))
+    })
+  }
+  const canCalendar = !!stay && keptTrips.some((r) => tripStartFor(stay, r, picks))
+  const addToCalendar = () => downloadIcs('trips.ics', buildIcs(tripEvents(), s.saved.calendarName))
+
   const keep = () => {
     addSaved(rows.map((e) => e.pin.id))
     addKeptTrips(keptTrips.map((r) => r.id))
@@ -229,6 +248,12 @@ export function SavedPage({ locale, cityId, entries, trips = [], stations, inter
             <button type="button" onClick={share} className="tm-button tm-button--small">
               <Share2 aria-hidden="true" className="size-4" />
               {shared === 'copied' ? s.saved.copied : shared === 'failed' ? s.saved.copyFailed : s.saved.share}
+            </button>
+          )}
+          {canCalendar && (
+            <button type="button" onClick={addToCalendar} className="tm-link tm-link--button">
+              <CalendarPlus aria-hidden="true" className="size-4" />
+              {s.saved.calendar}
             </button>
           )}
           {rows.length > 0 && (
