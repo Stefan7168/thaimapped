@@ -14,6 +14,7 @@ import type { AirportLeg } from '@/lib/transit/from-airport'
 import { rideSentence } from '@/components/stay/from-airport'
 import { useSaved } from '@/lib/saved/store'
 import { myHotelAcross, useHotelChoiceVersion } from '@/lib/saved/my-hotel'
+import { useKeptTrips } from '@/lib/saved/trips'
 
 const StageMap = dynamic(() => import('@/components/map/stage-map').then((m) => m.StageMap), {
   ssr: false,
@@ -62,6 +63,7 @@ export function TripList({ locale, cityId, cityCamera, routes, hotelDoors = {}, 
   const hoveringRef = useRef(false)
   // With dates set, a multi-day trip says whether it fits inside them (a two-day trip in a Fri to Sun stay) or needs more nights; day trips always fit and say nothing.
   const stay = useStay()
+  const kept = useKeptTrips()
   const fitTag = (r: TripRoute) => {
     if (!stay) return null
     if (r.days < 2) {
@@ -187,6 +189,7 @@ export function TripList({ locale, cityId, cityCamera, routes, hotelDoors = {}, 
                     {r.duration === 'multi-day' ? s.trip.days(r.days) : s.trip.duration[r.duration]}
                     {` · ${s.trip.mode[r.mode].toLowerCase()}`}
                     {r.distanceKm !== undefined ? ` · ${s.trip.km(r.distanceKm)}` : ''}
+                    {kept.includes(r.id) && <span className="tm-row__kept">{s.trip.kept}</span>}
                   </span>
                   <span className="tm-row__tag">{t(r.tagline, locale)}</span>
                   {fitTag(r) && <span className="tm-row__fit">{fitTag(r)}</span>}

@@ -470,6 +470,7 @@ body {
 .tm-row__name { font-family: var(--font-display), Georgia, serif; font-weight: 500; font-size: var(--step-row); line-height: 1.1; letter-spacing: -0.01em; }
 .tm-row__meta { font-size: var(--step-small); white-space: nowrap; }
 .tm-row__tag { grid-column: 1 / -1; margin-top: -8px; padding-bottom: 12px; font-size: 14px; line-height: 1.4; color: var(--ink-2); }
+.tm-row__kept { margin-left: 8px; padding: 1px 6px; border-radius: 999px; background: var(--ink); color: var(--paper); font-size: 11px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; }
 .tm-row__fit { grid-column: 1 / -1; margin-top: -10px; padding-bottom: 12px; font-size: 13px; font-weight: 600; color: var(--accent-text); }
 .tm-row--on .tm-row__head { color: var(--ink); }
 .tm-row--on .tm-row__name { font-weight: 600; }
