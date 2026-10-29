@@ -3,7 +3,7 @@
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { useEffect, useMemo, useState, useSyncExternalStore } from 'react'
-import { ArrowLeft, CalendarPlus, Share2 } from 'lucide-react'
+import { ArrowLeft, CalendarPlus, Printer, Share2 } from 'lucide-react'
 import type { Locale, RouteStop, TripRoute } from '@/lib/content/types'
 import type { AirportLeg } from '@/lib/transit/from-airport'
 import { rideSentence } from '@/components/stay/from-airport'
@@ -142,7 +142,7 @@ export function TripPage({ locale, cityId, cityName, route, hotelDoors = {}, sta
   }
 
   return (
-    <div className="flex h-dvh flex-col">
+    <div className="flex h-dvh flex-col tm-trip">
       <header className="flex items-center gap-3 bg-paper-2 px-3 py-2 md:px-4">
         <Link href={`/${locale}`} className="tm-wordmark shrink-0">{s.brand}</Link>
         <Link href={`/${locale}/${cityId}`} className="tm-link ml-auto flex items-center gap-1 text-[15px]">
@@ -151,13 +151,13 @@ export function TripPage({ locale, cityId, cityName, route, hotelDoors = {}, sta
         </Link>
       </header>
       <main className="flex min-h-0 flex-1 flex-col md:flex-row">
-        <div className="relative order-1 min-h-[45dvh] flex-1 md:min-h-0" data-ui>
+        <div className="relative order-1 min-h-[45dvh] flex-1 md:min-h-0 tm-trip__map" data-ui>
           <TripMap locale={locale} route={route} day={day} activeStopId={activeStop} onSelectStop={(id) => setActiveStop(id)} hoverStopId={hoverStop} onHoverStop={setHoverStop} />
           {!route.path && (
             <p className="pointer-events-none absolute inset-x-3 bottom-3 bg-paper px-3 py-2 text-[15px] text-ink-2 md:right-auto md:max-w-sm">{s.trip.pathNote}</p>
           )}
         </div>
-        <aside className="order-2 max-h-[55dvh] overflow-y-auto bg-paper md:max-h-none md:w-[24rem]">
+        <aside className="order-2 max-h-[55dvh] overflow-y-auto bg-paper md:max-h-none md:w-[24rem] tm-trip__aside">
           <div className="p-4">
             <h1 className="font-display text-[28px] font-semibold leading-tight tracking-tight">{t(route.name, locale)}</h1>
             <p className="mt-2 text-[17px] leading-normal">{t(route.tagline, locale)}</p>
@@ -178,7 +178,15 @@ export function TripPage({ locale, cityId, cityName, route, hotelDoors = {}, sta
                   {s.weekendPage.calendar}
                 </button>
               )}
+              <button type="button" onClick={() => window.print()} className="tm-button tm-button--small tm-button--quiet ml-2">
+                <Printer aria-hidden="true" className="size-4" />
+                {s.trip.print}
+              </button>
             </p>
+            {startIso && (
+              // Paper only: the start chips and hotel line are screen controls, so the printout states the dates and the hotel in one line.
+              <p className="tm-wk__paper mt-3">{[route.days > 1 ? formatDayRange(startIso, addDays(startIso, route.days - 1), locale) : formatDay(startIso, locale), myHotel ? s.trip.shareFromHotel(t(myHotel.name, locale)) : null].filter(Boolean).join(' · ')}</p>
+            )}
             {/* The dates, as on the weekend and station pages: with them the days get dates, the road hotel its night, the calendar its file. */}
             <div className="mt-4"><StayPicker locale={locale} /></div>
             {/* A trip longer than the stay says so here too, as the trips index does; the days still get dates from check-in. */}

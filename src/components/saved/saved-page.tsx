@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useMemo, useState } from 'react'
-import { Share2, X } from 'lucide-react'
+import { Printer, Share2, X } from 'lucide-react'
 import type { Area, Locale, Pin, Station } from '@/lib/content/types'
 import { FromAirport } from '@/components/stay/from-airport'
 import type { AirportRoutes } from '@/lib/transit/from-airport'
@@ -11,7 +11,8 @@ import { t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
 import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
 import { directionsUrl } from '@/lib/links/directions'
-import { adoptStayFromUrl, nights, stayParam, useStay, roomsOf } from '@/lib/stay/store'
+import { formatDayRange } from '@/lib/stay/format'
+import { adoptStayFromUrl, adultsOf, childrenOf, nights, roomsOf, stayParam, useStay } from '@/lib/stay/store'
 import { StayPicker } from '@/components/stay/stay-picker'
 import { HotelCompare } from '@/components/stay/hotel-compare'
 import { trackOutbound } from '@/lib/links/track'
@@ -166,11 +167,18 @@ export function SavedPage({ locale, cityId, entries, stations, airport = {} }: {
       <main className="tm-credits tm-saved">
         <h1 className="tm-h2">{s.saved.title}</h1>
         <p className="tm-wk__lead">{sentIds ? s.saved.sent(rows.length) : rows.length > 0 ? s.saved.lead(rows.length) : s.saved.empty}</p>
+        {stay && rows.length > 0 && <p className="tm-wk__paper">{[formatDayRange(stay.checkIn, stay.checkOut, locale), s.stay.nights(nights(stay)), s.stay.adults(adultsOf(stay), roomsOf(stay), childrenOf(stay))].join(' · ')}</p>}
         <div className="tm-wk__actions">
           {rows.length > 0 && !sentIds && (
             <button type="button" onClick={share} className="tm-button tm-button--small">
               <Share2 aria-hidden="true" className="size-4" />
               {shared === 'copied' ? s.saved.copied : shared === 'failed' ? s.saved.copyFailed : s.saved.share}
+            </button>
+          )}
+          {rows.length > 0 && (
+            <button type="button" onClick={() => window.print()} className="tm-link tm-link--button">
+              <Printer aria-hidden="true" className="size-4" />
+              {s.saved.print}
             </button>
           )}
           {sentIds && rows.length > 0 && (

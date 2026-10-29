@@ -173,5 +173,22 @@ export function TripMap({ locale, route, day, activeStopId, onSelectStop, hoverS
     framedOnce.current = true
   }, [route, day, activeStopId, mapReady])
 
+  // On paper the map box changes shape (print CSS), so the whole route is re-framed into it before the page prints, and framed back after.
+  useEffect(() => {
+    const frame = () => {
+      const map = mapRef.current
+      if (!map) return
+      map.resize()
+      const pts: [number, number][] = [...route.stops.map((s) => [s.location.lon, s.location.lat] as [number, number]), ...(route.path ?? route.waypoints)]
+      if (pts.length >= 2) map.fitBounds(bounds(pts), { padding: 40, duration: 0 })
+    }
+    window.addEventListener('beforeprint', frame)
+    window.addEventListener('afterprint', frame)
+    return () => {
+      window.removeEventListener('beforeprint', frame)
+      window.removeEventListener('afterprint', frame)
+    }
+  }, [route])
+
   return <div ref={containerRef} className="h-full w-full bg-paper" />
 }

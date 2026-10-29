@@ -699,7 +699,15 @@ a.tm-wk__stop { text-decoration: none; }
   .tm-wk__stop a[href^='http'], .tm-wk__item a[href^='http'] { display: none !important; }
 }
 /* A printed trip keeps its map and stops; the controls (share, calendar, start and day chips, zoom) are screen-only. */
-@media print { .tm-trip__tools, .maplibregl-ctrl, .tm-stoprow__search { display: none !important; } .tm-stoprow { break-inside: avoid; } }
+@media print {
+  .tm-trip__tools, .maplibregl-ctrl, .tm-stoprow__search { display: none !important; }
+  .tm-stoprow { break-inside: avoid; }
+  /* Measured 2026-10-29: the screen layout is one viewport tall with the stops in a scrolling column, so a print stopped after page one. On paper the map is one block and the stops flow below it. */
+  .tm-trip { display: block; height: auto !important; }
+  .tm-trip > main { display: block; }
+  .tm-trip__map { height: 110mm; min-height: 0 !important; break-inside: avoid; }
+  .tm-trip__aside { max-height: none !important; overflow: visible !important; width: auto !important; }
+}
 @media (max-width: 480px) {
   .tm-wk__links { margin-left: 0; }
   /* Narrow phones: the booking buttons share the first row half and half; Directions drops to its own row instead of leaving one button orphaned. */
