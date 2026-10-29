@@ -229,7 +229,6 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
             {pin.kind === 'hotel' && <span className="tm-wk__meta">{s.saved.cmpPlaces(nearbyCount(pin))}</span>}
           </span>
         </button>
-        {pin.kind === 'hotel' && pin.walk && airport[pin.walk.station] && <FromAirport locale={locale} routes={airport[pin.walk.station]} walkMinutes={pin.walk.minutes} />}
         <div className="tm-wk__links">
           <a href={pin.kind !== 'hotel' && myHotel ? directionsUrl(pin.location.lat, pin.location.lon, { from: myHotel.location, mode: fromHotel(pin)! > 20 && byTrain(pin) ? 'transit' : 'walking' }) : pin.kind !== 'hotel' && byTrainElsewhere(pin) ? directionsUrl(pin.location.lat, pin.location.lon, { from: elsewhere!.hotel.location, mode: 'transit' }) : directionsUrl(pin.location.lat, pin.location.lon)} target="_blank" rel="noopener" className="tm-card__link tm-card__link--quiet">{pin.kind !== 'hotel' && myHotel ? s.trip.directionsFrom(t(myHotel.name, locale)) : pin.kind !== 'hotel' && byTrainElsewhere(pin) ? s.trip.directionsFrom(t(elsewhere!.hotel.name, locale)) : s.card.directions}</a>
           {pin.kind === 'hotel' && !sentHotel && myHotel && myHotel.id !== pin.id && saved.includes(pin.id) && (
@@ -247,6 +246,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
               )
             })}
         </div>
+        {pin.kind === 'hotel' && pin.walk && airport[pin.walk.station] && <FromAirport locale={locale} routes={airport[pin.walk.station]} walkMinutes={pin.walk.minutes} />}
       </li>
     )
   }

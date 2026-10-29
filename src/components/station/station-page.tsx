@@ -134,7 +134,6 @@ export function StationPage({ locale, cityId, page, areas, hotelDoors, stations,
             {pin.kind !== 'hotel' && hotelFor(area.id) && <span className="tm-wk__meta tm-wk__from">{s.weekendPage.fromHotel(fromHotel(pin, hotelFor(area.id)!), t(hotelFor(area.id)!.name, locale))}</span>}
           </span>
         </button>
-        {pin.kind === 'hotel' && pin.walk && airport[pin.walk.station] && <FromAirport locale={locale} routes={airport[pin.walk.station]} walkMinutes={pin.walk.minutes} />}
         <div className="tm-wk__links">
           <a href={pin.kind !== 'hotel' && hotelFor(area.id) ? directionsUrl(pin.location.lat, pin.location.lon, { from: hotelFor(area.id)!.location }) : directionsUrl(pin.location.lat, pin.location.lon)} target="_blank" rel="noopener" className="tm-card__link tm-card__link--quiet">{pin.kind !== 'hotel' && hotelFor(area.id) ? s.trip.directionsFrom(t(hotelFor(area.id)!.name, locale)) : s.card.directions}</a>
             {partners.map((p) => {
@@ -146,6 +145,7 @@ export function StationPage({ locale, cityId, page, areas, hotelDoors, stations,
               )
             })}
         </div>
+        {pin.kind === 'hotel' && pin.walk && airport[pin.walk.station] && <FromAirport locale={locale} routes={airport[pin.walk.station]} walkMinutes={pin.walk.minutes} />}
       </li>
     )
   }
