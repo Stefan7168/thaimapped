@@ -27,6 +27,7 @@ import { KindBar, KIND_ICONS } from './kind-bar'
 import { AreaCard } from './area-card'
 import { SaveButton } from '@/components/saved/save-button'
 import { useSaved } from '@/lib/saved/store'
+import { useKeptTrips } from '@/lib/saved/trips'
 import { myHotelAcross, myHotelChoice, useHotelChoiceVersion } from '@/lib/saved/my-hotel'
 import { skipStop, unskipStops, useSkipped } from '@/lib/saved/skipped'
 import { SavedLink } from '@/components/saved/saved-link'
@@ -594,7 +595,9 @@ function tripFits(r: TripRoute, len: TripLength | null): boolean {
 function TripList({ locale, cityId, routes }: { locale: Locale; cityId: string; routes: TripRoute[] }) {
   const s = strings(locale)
   const [len, setLen] = useState<TripLength | null>(null)
-  const shown = routes.filter((r) => tripFits(r, len))
+  // Kept trips first, marked, as on the trips index.
+  const kept = useKeptTrips()
+  const shown = routes.filter((r) => tripFits(r, len)).sort((a, b) => Number(kept.includes(b.id)) - Number(kept.includes(a.id)))
   return (
     <>
       <div className="mb-2 flex flex-wrap gap-1.5">
@@ -618,7 +621,7 @@ function TripList({ locale, cityId, routes }: { locale: Locale; cityId: string; 
           <li key={r.id}>
             <Link href={`/${locale}/${cityId}/trip/${r.id}`} className="flex items-baseline justify-between gap-2 rounded-lg px-2 py-1.5 text-sm hover:bg-paper-2">
               <span className="font-medium">{t(r.name, locale)}</span>
-              <span className="shrink-0 text-xs text-ink-2">{r.duration === 'multi-day' ? s.trip.days(r.days) : s.trip.duration[r.duration]}</span>
+              <span className="shrink-0 text-xs text-ink-2">{r.duration === 'multi-day' ? s.trip.days(r.days) : s.trip.duration[r.duration]}{kept.includes(r.id) && <span className="tm-row__kept">{s.trip.kept}</span>}</span>
             </Link>
           </li>
         ))}
