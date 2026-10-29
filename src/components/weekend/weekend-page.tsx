@@ -263,7 +263,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
       const when = from ? (r.days > 1 ? formatDayRange(from, addDays(from, r.days - 1), locale) : formatDay(from, locale)) : null
       return when ? `${t(r.name, locale)} (${when})` : t(r.name, locale)
     }
-    const text = s.weekendPage.shareText(t(area.name, locale), myHotel ? t(myHotel.name, locale) : null, dates ? [dates, party].filter(Boolean).join(', ') : null) + (sharedTrips.length > 0 ? s.weekendPage.shareTrips(sharedTrips.map(tripLine).join(', '), sharedTrips.every((r) => r.days <= 1)) : '')
+    const text = s.weekendPage.shareText(t(area.name, locale), myHotel && !noRoomHere ? t(myHotel.name, locale) : null, dates ? [dates, party].filter(Boolean).join(', ') : null) + (sharedTrips.length > 0 ? s.weekendPage.shareTrips(sharedTrips.map(tripLine).join(', '), sharedTrips.every((r) => r.days <= 1)) : '')
     try {
       if (navigator.share) {
         await navigator.share({ title, text, url })
