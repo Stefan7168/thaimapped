@@ -92,7 +92,7 @@ export function SavedPage({ locale, cityId, entries, trips = [], stations, inter
     }
     if (r.days > nights(stay) + 1) return s.trip.tooLong(nights(stay))
     const from = tripStartFor(stay, r, picks)!
-    return `${s.trip.fitsStay(nights(stay))} · ${formatDayRange(from, addDays(from, r.days - 1), locale)}`
+    return `${s.trip.fitsStay(nights(stay), r.days)} · ${formatDayRange(from, addDays(from, r.days - 1), locale)}`
   }
   // Nights the kept road trips sleep away: hotel totals here count the other nights only.
   const away = stay ? awayNights(stay, keptTrips, keptTrips.map((r) => r.id), picks) : []

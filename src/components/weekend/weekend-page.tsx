@@ -592,7 +592,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
                         <span className="tm-wk__kind">{r.duration === 'multi-day' ? s.trip.days(r.days) : s.trip.duration[r.duration]} · {s.trip.mode[r.mode]}{r.distanceKm !== undefined ? ` · ${s.trip.km(r.distanceKm)}` : ''}{sentTrips.includes(r.id) ? ` · ${s.weekendPage.inPlan}` : keptTrips.includes(r.id) ? ` · ${s.trip.kept}` : ''}</span>
                         <span className="tm-wk__name">{t(r.name, locale)}</span>
                         <span className="tm-wk__why">{t(r.tagline, locale)}</span>
-                        {r.duration === 'multi-day' && stay && <span className="tm-wk__meta tm-wk__from">{s.trip.fitsStay(nights(stay))} · {tripDates(r)}</span>}
+                        {r.duration === 'multi-day' && stay && <span className="tm-wk__meta tm-wk__from">{s.trip.fitsStay(nights(stay), r.days)} · {tripDates(r)}</span>}
                         {r.duration !== 'multi-day' && stay && dayTag(r) && <span className="tm-wk__meta tm-wk__from">{dayTag(r)}</span>}
                         {tripByTrain(r.id) && <span className="tm-wk__meta tm-wk__from">{tripByTrain(r.id)}</span>}
                         {clashes(r).length > 0 && <span className="tm-wk__meta">{s.saved.sameDay(clashes(r).map((o) => t(o.name, locale)).join(', '))}</span>}

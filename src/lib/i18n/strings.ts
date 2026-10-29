@@ -349,7 +349,11 @@ const en = {
     // A kept trip's link to the weekend page slot it takes.
     inYourWeekend: 'See it in your weekend',
     print: 'Print',
-    fitsStay: (n: number) => (n === 1 ? 'Fits your night away' : `Fits your ${n} nights`),
+    fitsStay: (n: number, days = 2) => {
+      const away = Math.max(1, days - 1)
+      if (away >= n) return n === 1 ? 'Takes your whole stay, the night away' : `Takes your whole stay, ${n} nights away`
+      return away === 1 ? `Fits your ${n} nights, 1 of them away` : `Fits your ${n} nights, ${away} of them away`
+    },
     // A day trip with dates set: the days of the stay it fits ("Sat, Nov 7 or Sun, Nov 8").
     fitsDay: (days: string) => `Fits ${days}`,
     // A kept trip on the day picked for it on its page.

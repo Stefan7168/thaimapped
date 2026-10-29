@@ -81,7 +81,7 @@ export function TripList({ locale, cityId, cityCamera, routes, hotelDoors = {}, 
     }
     if (r.days > nights(stay) + 1) return s.trip.tooLong(nights(stay))
     const from = tripStartFor(stay, r, picks)!
-    return `${s.trip.fitsStay(nights(stay))} · ${formatDayRange(from, addDays(from, r.days - 1), locale)}`
+    return `${s.trip.fitsStay(nights(stay), r.days)} · ${formatDayRange(from, addDays(from, r.days - 1), locale)}`
   }
   const count = f.durations.length + f.days.length + f.modes.length + f.themes.length
   // The weekend's hotel: a trip that starts at a station says the ride there from its door, or that it starts at the hotel's own station.
