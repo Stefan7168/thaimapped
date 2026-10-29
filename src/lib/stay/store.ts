@@ -178,6 +178,15 @@ export function tripStartOptions(stay: Stay, days: number): string[] {
   return out.length > 0 ? out : [stay.checkIn]
 }
 
+/** The days of a stay a day trip fits: a morning needs a night before it, an afternoon or evening a night after it, a full day both. Empty when none. */
+export function dayTripOptions(stay: Stay, duration: 'morning' | 'afternoon' | 'evening' | 'full-day' | 'multi-day'): string[] {
+  const first = duration === 'afternoon' || duration === 'evening' ? stay.checkIn : addDays(stay.checkIn, 1)
+  const last = duration === 'morning' ? stay.checkOut : addDays(stay.checkOut, -1)
+  const out: string[] = []
+  for (let d = first; d <= last; d = addDays(d, 1)) out.push(d)
+  return out
+}
+
 /** The default start of a trip inside a stay: the latest day that gets you back by check-out, so a two-day trip in a Friday to Sunday stay runs Saturday to Sunday. */
 export function tripStartDefault(stay: Stay, days: number): string {
   const options = tripStartOptions(stay, days)

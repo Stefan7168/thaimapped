@@ -7,7 +7,7 @@ import type { Locale, RouteDuration, RouteMode, RouteTheme, TripRoute } from '@/
 import { t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
 import { RevealObserver } from '@/components/motion/reveal'
-import { addDays, nights, tripStartDefault, useStay } from '@/lib/stay/store'
+import { addDays, dayTripOptions, nights, tripStartDefault, useStay } from '@/lib/stay/store'
 import { formatDay, formatDayRange } from '@/lib/stay/format'
 import type { HotelDoor } from '@/lib/content/slim'
 import type { AirportLeg } from '@/lib/transit/from-airport'
@@ -66,10 +66,7 @@ export function TripList({ locale, cityId, cityCamera, routes, hotelDoors = {}, 
     if (!stay) return null
     if (r.days < 2) {
       // A day trip names the days of the stay it fits: a morning needs a night before it, an afternoon or evening a night after, a full day both.
-      const first = r.duration === 'afternoon' || r.duration === 'evening' ? stay.checkIn : addDays(stay.checkIn, 1)
-      const last = r.duration === 'morning' ? stay.checkOut : addDays(stay.checkOut, -1)
-      const days: string[] = []
-      for (let d = first; d <= last && days.length < 3; d = addDays(d, 1)) days.push(formatDay(d, locale))
+      const days = dayTripOptions(stay, r.duration).slice(0, 3).map((d) => formatDay(d, locale))
       return days.length > 0 ? s.trip.fitsDay(days.join(` ${s.trip.or} `)) : null
     }
     if (r.days > nights(stay) + 1) return s.trip.tooLong(nights(stay))

@@ -15,7 +15,7 @@ import type { HotelDoor } from '@/lib/content/slim'
 import { useSaved } from '@/lib/saved/store'
 import { myHotelAcross, useHotelChoiceVersion } from '@/lib/saved/my-hotel'
 import { formatDay, formatDayRange } from '@/lib/stay/format'
-import { addDays, adoptStayFromUrl, nights, stayParam, tripStartDefault, tripStartOptions, useStay } from '@/lib/stay/store'
+import { addDays, adoptStayFromUrl, dayTripOptions, nights, stayParam, tripStartDefault, tripStartOptions, useStay } from '@/lib/stay/store'
 import { buildIcs, downloadIcs, type CalendarEvent } from '@/lib/stay/calendar'
 import { StayPicker } from '@/components/stay/stay-picker'
 import { STOP_COLORS } from '@/components/map/trip-map'
@@ -95,8 +95,9 @@ export function TripPage({ locale, cityId, cityName, route, hotelDoors = {}, sta
   const [shared, setShared] = useState<'idle' | 'copied' | 'failed'>('idle')
   // A multi-day trip inside the stay starts on a day of the reader's choosing (?start=, or the chips); by default the latest day that is back by check-out.
   const [pickedStart, setPickedStart] = useState<string | null>(null)
-  const startOptions = useMemo(() => (stay && route.days > 1 ? tripStartOptions(stay, route.days) : []), [stay, route.days])
-  const startIso = stay ? (pickedStart && startOptions.includes(pickedStart) ? pickedStart : tripStartDefault(stay, route.days)) : null
+  // A multi-day trip starts on any day that gets you back by check-out; a day trip on any day of the stay its time of day fits (none for a full day in a one-night stay).
+  const startOptions = useMemo(() => (stay ? (route.days > 1 ? tripStartOptions(stay, route.days) : dayTripOptions(stay, route.duration)) : []), [stay, route.days, route.duration])
+  const startIso = stay ? (pickedStart && startOptions.includes(pickedStart) ? pickedStart : route.days > 1 ? tripStartDefault(stay, route.days) : (startOptions[startOptions.length - 1] ?? null)) : null
   const dayIso = (d: number): string | null => (startIso ? addDays(startIso, d - 1) : null)
   // With dates set, day N is the start date plus N - 1, shown beside the day heading as the weekend page does.
   const dayDate = (d: number): string | null => {
@@ -150,11 +151,11 @@ export function TripPage({ locale, cityId, cityName, route, hotelDoors = {}, sta
     const u = new URL(window.location.href)
     if (stay) u.searchParams.set('stay', stayParam(stay))
     else u.searchParams.delete('stay')
-    if (startIso && route.days > 1) u.searchParams.set('start', startIso)
+    if (startIso && startOptions.length > 1) u.searchParams.set('start', startIso)
     else u.searchParams.delete('start')
     const url = u.toString()
     // The text names the days and the hotel the trip starts from, so the other person reads the plan before opening it.
-    const when = startIso && route.days > 1 ? formatDayRange(startIso, addDays(startIso, route.days - 1), locale) : null
+    const when = startIso ? (route.days > 1 ? formatDayRange(startIso, addDays(startIso, route.days - 1), locale) : formatDay(startIso, locale)) : null
     const text = `${t(route.tagline, locale)} ${route.duration === 'multi-day' ? s.trip.days(route.days) : s.trip.duration[route.duration]} · ${s.trip.mode[route.mode].toLowerCase()}${route.distanceKm !== undefined ? ` · ${s.trip.km(route.distanceKm)}` : ''}${when ? ` · ${when}` : ''}${myHotel ? ` · ${s.trip.shareFromHotel(t(myHotel.name, locale))}` : ''}.`
     try {
       if (navigator.share) {
