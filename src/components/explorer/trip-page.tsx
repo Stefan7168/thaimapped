@@ -4,7 +4,7 @@ import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { useEffect, useMemo, useState, useSyncExternalStore } from 'react'
 import { ArrowLeft, CalendarPlus, Printer, Share2 } from 'lucide-react'
-import type { Locale, RouteStop, TripRoute } from '@/lib/content/types'
+import type { Locale, RouteDuration, RouteStop, TripRoute } from '@/lib/content/types'
 import type { AirportLeg } from '@/lib/transit/from-airport'
 import { rideSentence } from '@/components/stay/from-airport'
 import { t } from '@/lib/i18n/locales'
@@ -118,9 +118,10 @@ export function TripPage({ locale, cityId, cityName, route, hotelDoors = {}, sta
   // A hotel stop on the road sleeps that one night, so its search opens on that night, not on the Bangkok stay.
   // The road night keeps the party: only the dates change to that one night.
   const nightAt = (stop: RouteStop) => (startIso && stop.kind === 'hotel' ? { ...stay, checkIn: addDays(startIso, stop.day - 1), checkOut: addDays(startIso, stop.day) } : stay)
-  // The trip as a calendar file: one all-day-ish event per day (08:00 to 20:00 Bangkok), the day's stops in the description. Needs the dates.
+  // The trip as a calendar file: one event per day in the hours its time of day covers (a morning 08:00 to 13:00, a full day 08:00 to 20:00, Bangkok), the day's stops in the description. Needs the dates.
+  const TRIP_HOURS: Record<RouteDuration, [string, string]> = { morning: ['08:00', '13:00'], afternoon: ['13:00', '19:00'], evening: ['17:00', '23:00'], 'full-day': ['08:00', '20:00'], 'multi-day': ['08:00', '20:00'] }
   const addToCalendar = () => {
-    if (!stay) return
+    if (!startIso) return
     const url = window.location.href.split('#')[0]
     const name = t(route.name, locale)
     const events: CalendarEvent[] = days.map((d) => {
@@ -135,7 +136,7 @@ export function TripPage({ locale, cityId, cityName, route, hotelDoors = {}, sta
       const stopsText = stops.map((st, i) => `${i + 1}. ${t(st.name, locale)}${legText(st)}: ${t(st.why, locale)}`).join('\n')
       const km = dayKm(d)
       return {
-        date: iso, start: '08:00', end: '20:00',
+        date: iso, start: TRIP_HOURS[route.duration][0], end: TRIP_HOURS[route.duration][1],
         title: s.trip.calendarDay(name, d, route.days),
         description: [km !== null ? (dayHasStraight(d) ? `${s.trip.dayKmAtLeast(km)}, ${s.trip.dayKmNote}` : `${s.trip.dayKm(km)} ${s.trip.legNote}`) : '', `${s.weekendPage.calendarStops}:`, stopsText, myHotel && d === 1 ? `${s.weekendPage.calendarYourHotel}: ${t(myHotel.name, locale)}` : '', url].filter(Boolean).join('\n'),
         location: stops[0] ? t(stops[0].name, locale) : undefined,
@@ -201,7 +202,7 @@ export function TripPage({ locale, cityId, cityName, route, hotelDoors = {}, sta
                 <Share2 aria-hidden="true" className="size-4" />
                 {shared === 'copied' ? s.trip.copied : shared === 'failed' ? s.trip.copyFailed : s.trip.share}
               </button>
-              {stay && (
+              {startIso && (
                 <button type="button" onClick={addToCalendar} className="tm-button tm-button--small tm-button--quiet ">
                   <CalendarPlus aria-hidden="true" className="size-4" />
                   {s.weekendPage.calendar}
