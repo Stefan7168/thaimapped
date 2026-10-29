@@ -16,6 +16,7 @@ import { useSaved } from '@/lib/saved/store'
 import { myHotelAcross, useHotelChoiceVersion } from '@/lib/saved/my-hotel'
 import { formatDay, formatDayRange } from '@/lib/stay/format'
 import { addDays, adoptStayFromUrl, dayTripOptions, nights, stayParam, tripStartDefault, tripStartOptions, useStay } from '@/lib/stay/store'
+import { setTripStartPick, useTripStartPicks } from '@/lib/stay/trip-start'
 import { buildIcs, downloadIcs, TRIP_HOURS, type CalendarEvent } from '@/lib/stay/calendar'
 import { toggleKeptTrip, useKeptTrips } from '@/lib/saved/trips'
 import { StayPicker } from '@/components/stay/stay-picker'
@@ -95,7 +96,14 @@ export function TripPage({ locale, cityId, cityName, route, hotelDoors = {}, sta
   const dayHasStraight = (d: number): boolean => route.stops.some((stop, i) => stop.day === d && i > 0 && legs[i].straight && legs[i].m >= 150)
   const [shared, setShared] = useState<'idle' | 'copied' | 'failed'>('idle')
   // A multi-day trip inside the stay starts on a day of the reader's choosing (?start=, or the chips); by default the latest day that is back by check-out.
-  const [pickedStart, setPickedStart] = useState<string | null>(null)
+  // The pick is kept in this browser (and read back on the weekend and saved pages); ?start= from a shared link wins for this visit.
+  const [sentStart, setSentStart] = useState<string | null>(null)
+  const picks = useTripStartPicks()
+  const pickedStart = sentStart ?? picks[route.id] ?? null
+  const setPickedStart = (date: string) => {
+    setSentStart(null)
+    setTripStartPick(route.id, date)
+  }
   const kept = useKeptTrips().includes(route.id)
   // A multi-day trip starts on any day that gets you back by check-out; a day trip on any day of the stay its time of day fits (none for a full day in a one-night stay).
   const startOptions = useMemo(() => (stay ? (route.days > 1 ? tripStartOptions(stay, route.days) : dayTripOptions(stay, route.duration)) : []), [stay, route.days, route.duration])
@@ -110,7 +118,7 @@ export function TripPage({ locale, cityId, cityName, route, hotelDoors = {}, sta
     adoptStayFromUrl()
     const id = window.requestAnimationFrame(() => {
       const sent = new URLSearchParams(window.location.search).get('start')
-      if (sent && /^\d{4}-\d{2}-\d{2}$/.test(sent)) setPickedStart(sent)
+      if (sent && /^\d{4}-\d{2}-\d{2}$/.test(sent)) setSentStart(sent)
     })
     return () => window.cancelAnimationFrame(id)
   }, [])

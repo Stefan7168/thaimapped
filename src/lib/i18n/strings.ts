@@ -337,6 +337,8 @@ const en = {
     fitsStay: (n: number) => (n === 1 ? 'Fits your night away' : `Fits your ${n} nights`),
     // A day trip with dates set: the days of the stay it fits ("Sat, Nov 7 or Sun, Nov 8").
     fitsDay: (days: string) => `Fits ${days}`,
+    // A kept trip on the day picked for it on its page.
+    onDay: (day: string) => `On ${day}`,
     or: 'or',
     tooLong: (n: number) => (n === 1 ? 'Needs more than your 1 night' : `Needs more than your ${n} nights`),
     copied: 'Link copied',
@@ -436,6 +438,8 @@ const en = {
     weekend: (name: string) => `Your weekend in ${name}`,
     priceFrom: (price: string) => `from about ${price} a night`,
     about: (price: string) => `about ${price}`,
+    // Nights a plan road trip sleeps away are not billed here.
+    stayTotalAway: (away: number) => (away === 1 ? ' (1 night away on your trip)' : ` (${away} nights away on your trips)`),
     stayTotal: (total: string, n: number, rooms = 1) => `${n === 1 ? `about ${total} for your night` : `about ${total} for your ${n} nights`}${rooms > 1 ? `, ${rooms} rooms` : ''}`,
     priceEstimate: 'typical for its class, not checked',
     weekendLead: 'Friday night to Sunday, from the places on this map. Tap a stop to see it.',

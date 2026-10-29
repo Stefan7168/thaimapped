@@ -22,7 +22,8 @@ import { whenLine } from '@/lib/explorer/when'
 import { addSaved, clearSaved, toggleSaved, useSaved } from '@/lib/saved/store'
 import { addKeptTrips, clearKeptTrips, toggleKeptTrip, useKeptTrips } from '@/lib/saved/trips'
 import { formatDay } from '@/lib/stay/format'
-import { addDays, dayTripOptions, tripStartDefault } from '@/lib/stay/store'
+import { addDays, dayTripOptions } from '@/lib/stay/store'
+import { awayNights, tripStartFor, useTripStartPicks } from '@/lib/stay/trip-start'
 import { TRIP_HOURS } from '@/lib/stay/calendar'
 import { chooseHotel, myHotelAcross, myHotelChoice, useHotelChoiceVersion } from '@/lib/saved/my-hotel'
 import { SiteHeader } from '@/components/explorer/site-header'
@@ -39,7 +40,8 @@ export interface SavedEntry {
  * "?ids=a,b,c" when the address came from someone else's "Send this list".
  */
 /** A trip as its saved-list row shows it. */
-export type SavedTrip = Pick<TripRoute, 'id' | 'name' | 'tagline' | 'mode' | 'duration' | 'days' | 'distanceKm'>
+/** A route slimmed for the saved page; `nightsAway` is the trip days (1-based) that sleep on the road. */
+export type SavedTrip = Pick<TripRoute, 'id' | 'name' | 'tagline' | 'mode' | 'duration' | 'days' | 'distanceKm'> & { nightsAway: number[] }
 
 export function SavedPage({ locale, cityId, entries, trips = [], stations, interchanges = [], airport = {} }: { locale: Locale; cityId: string; entries: SavedEntry[]; trips?: SavedTrip[]; stations: Station[]; interchanges?: [string, string][]; airport?: Record<string, AirportRoutes> }) {
   const s = strings(locale)
@@ -68,13 +70,13 @@ export function SavedPage({ locale, cityId, entries, trips = [], stations, inter
   const nearbyCount = (hotel: Pin) => entries.filter((e) => e.pin.kind !== 'hotel' && distanceM(hotel.location.lon, hotel.location.lat, e.pin.location.lon, e.pin.location.lat) <= WALK_PACE_M_PER_MIN * 10).length
   const rows = ids.map((id) => byId.get(id)).filter((e): e is SavedEntry => !!e)
   const keptIds = useKeptTrips()
+  const picks = useTripStartPicks()
   const keptTrips = (sentIds ? sentTrips : keptIds).map((id) => trips.find((r) => r.id === id)).filter((r): r is SavedTrip => !!r)
   // The days a kept trip takes by default (the trip page's pick), to warn when two kept trips would run in the same hours.
   const tripDays = (r: SavedTrip): string[] => {
     if (!stay) return []
-    if (r.days < 2) { const d = dayTripOptions(stay, r.duration).at(-1); return d ? [d] : [] }
-    if (r.days > nights(stay) + 1) return []
-    const from = tripStartDefault(stay, r.days)
+    const from = tripStartFor(stay, r, picks)
+    if (!from) return []
     return Array.from({ length: r.days }, (_, i) => addDays(from, i))
   }
   const clashes = (r: SavedTrip): SavedTrip[] => {
@@ -86,13 +88,17 @@ export function SavedPage({ locale, cityId, entries, trips = [], stations, inter
   const tripFit = (r: SavedTrip): string | null => {
     if (!stay) return null
     if (r.days < 2) {
+      if (picks[r.id] && dayTripOptions(stay, r.duration).includes(picks[r.id])) return s.trip.onDay(formatDay(picks[r.id], locale))
       const days = dayTripOptions(stay, r.duration).slice(0, 3).map((d) => formatDay(d, locale))
       return days.length > 0 ? s.trip.fitsDay(days.join(` ${s.trip.or} `)) : null
     }
     if (r.days > nights(stay) + 1) return s.trip.tooLong(nights(stay))
-    const from = tripStartDefault(stay, r.days)
+    const from = tripStartFor(stay, r, picks)!
     return `${s.trip.fitsStay(nights(stay))} · ${formatDayRange(from, addDays(from, r.days - 1), locale)}`
   }
+  // Nights the kept road trips sleep away: hotel totals here count the other nights only.
+  const away = stay ? awayNights(stay, keptTrips.map((r) => ({ ...r, stops: r.nightsAway.map((day) => ({ kind: 'hotel' as const, day })) })), keptTrips.map((r) => r.id), picks) : []
+  const hereNights = stay ? nights(stay) - away.length : 0
   const missing = ids.length - rows.length
   const hotelRows = rows.filter((e) => e.pin.kind === 'hotel')
   const placeRows = rows.filter((e) => e.pin.kind !== 'hotel')
@@ -182,7 +188,7 @@ export function SavedPage({ locale, cityId, entries, trips = [], stations, inter
                 <span className="tm-wk__why">{t(pin.why, locale)}</span>
                 {whenLine(pin, locale) && <span className="tm-wk__when">{whenLine(pin, locale)}</span>}
                 {pin.price && <span className="tm-wk__meta">{s.guide.priceFrom(thb(pin.price.from, locale))}{pin.price.basis === 'tier-estimate' ? ` (${s.guide.priceEstimate})` : ''}</span>}
-            {pin.price && stay && <span className="tm-wk__meta tm-wk__stay">{s.guide.stayTotal(thb(pin.price.from * nights(stay) * roomsOf(stay), locale), nights(stay), roomsOf(stay))}</span>}
+            {pin.price && stay && hereNights > 0 && <span className="tm-wk__meta tm-wk__stay">{s.guide.stayTotal(thb(pin.price.from * hereNights * roomsOf(stay), locale), hereNights, roomsOf(stay))}{away.length > 0 ? s.guide.stayTotalAway(away.length) : ''}</span>}
                 {pin.walk && walkStation && <span className="tm-wk__meta">{s.city.walkMinutes(pin.walk.minutes)} {s.city.from(`${walkStation.code ? walkStation.code + ' ' : ''}${t(walkStation.name, locale)}`)}</span>}
                 {pin.kind === 'hotel' && !sentIds && areaHotelCount(area.id) > 1 && pickFor(area.id) === pin.id && <span className="tm-wk__meta tm-wk__from">{s.saved.yourPick(t(area.name, locale))}</span>}
                 {pin.kind !== 'hotel' && byTrain(pin, area.id) && <span className="tm-wk__meta tm-wk__from">{byTrain(pin, area.id)}</span>}

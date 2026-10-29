@@ -32,6 +32,7 @@ import { HotelCompare } from '@/components/stay/hotel-compare'
 import { addSaved, useSaved } from '@/lib/saved/store'
 import { chooseHotel, useMyHotelChoice } from '@/lib/saved/my-hotel'
 import { addKeptTrips, toggleKeptTrip, useKeptTrips } from '@/lib/saved/trips'
+import { awayNights, tripStartFor, useTripStartPicks } from '@/lib/stay/trip-start'
 import { HotelElsewhere, useHotelElsewhere } from '@/components/stay/hotel-elsewhere'
 import { skipStop, unskipStops, useSkipped } from '@/lib/saved/skipped'
 import { KIND_ICONS } from '@/components/explorer/kind-bar'
@@ -72,6 +73,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
   // Trips the sender had kept ("?trips="): marked and listed first for this visit, never written to this browser's own list.
   const [sentTrips, setSentTrips] = useState<readonly string[]>([])
   const keptTrips = useKeptTrips()
+  const picks = useTripStartPicks()
   // The trips in this plan: the sender's on a shared link, else this browser's kept ones. They come first and go into the calendar file.
   const planTrips = sentTrips.length > 0 ? sentTrips : keptTrips
   // With two or more hotels of this area saved, the reader can say which one the plan walks from (kept per area in this browser).
@@ -147,7 +149,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
     if (!stay || !d) return null
     const day = iso(d)
     const fits: Record<WeekendSlot, string[]> = { fridayNight: ['evening'], saturdayMorning: ['morning'], saturdayAfternoon: ['afternoon'], saturdayNight: ['evening'], sunday: ['morning', 'afternoon'] }
-    return routes.find((r) => planTrips.includes(r.id) && r.days < 2 && fits[slot].includes(r.duration) && dayTripOptions(stay, r.duration).at(-1) === day) ?? null
+    return routes.find((r) => planTrips.includes(r.id) && r.days < 2 && fits[slot].includes(r.duration) && tripStartFor(stay, r, picks) === day) ?? null
   }
   // A multi-day plan trip that covers the slot's day, with which day of the trip it is.
   const awayOnTrip = (slot: WeekendSlot): { route: TripRoute; day: number } | null => {
@@ -155,8 +157,9 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
     if (!stay || !d) return null
     const day = iso(d)
     for (const r of routes) {
-      if (!planTrips.includes(r.id) || r.days < 2 || r.days > nights(stay) + 1) continue
-      const from = tripStartDefault(stay, r.days)
+      if (!planTrips.includes(r.id) || r.days < 2) continue
+      const from = tripStartFor(stay, r, picks)
+      if (!from) continue
       for (let i = 0; i < r.days; i++) if (addDays(from, i) === day) return { route: r, day: i + 1 }
     }
     return null
@@ -205,7 +208,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
     // Kept trips, on the day of the stay each fits (the trip page's default day), in the hours of their time of day.
     if (stay) {
       for (const r of routes.filter((x) => planTrips.includes(x.id))) {
-        const day = r.days > 1 ? (r.days <= nights(stay) + 1 ? tripStartDefault(stay, r.days) : null) : (dayTripOptions(stay, r.duration).at(-1) ?? null)
+        const day = tripStartFor(stay, r, picks)
         if (!day) continue
         const tripUrl = `${window.location.origin}/${locale}/${cityId}/trip/${r.id}`
         for (let d = 1; d <= r.days; d++) {
@@ -272,7 +275,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
             <span className="tm-wk__why">{t(pin.why, locale)}</span>
             {whenLine(pin, locale) && <span className="tm-wk__when">{whenLine(pin, locale)}</span>}
             {pin.price && <span className="tm-wk__meta">{s.guide.priceFrom(thb(pin.price.from, locale))}{pin.price.basis === 'tier-estimate' ? ` (${s.guide.priceEstimate})` : ''}</span>}
-            {pin.price && stay && <span className="tm-wk__meta tm-wk__stay">{s.guide.stayTotal(thb(pin.price.from * nights(stay) * roomsOf(stay), locale), nights(stay), roomsOf(stay))}</span>}
+            {pin.price && stayTotalLine(pin.price.from) && <span className="tm-wk__meta tm-wk__stay">{stayTotalLine(pin.price.from)}</span>}
             {pin.walk && walkStation && <span className="tm-wk__meta">{s.city.walkMinutes(pin.walk.minutes)} {s.city.from(`${walkStation.code ? walkStation.code + ' ' : ''}${t(walkStation.name, locale)}`)}</span>}
             {pin.kind !== 'hotel' && myHotel && <span className="tm-wk__meta tm-wk__from">{s.weekendPage.fromHotel(fromHotel(pin)!, t(myHotel.name, locale))}</span>}
             {pin.kind !== 'hotel' && myHotel && fromHotel(pin)! > 20 && byTrain(pin) && <span className="tm-wk__meta tm-wk__train">{s.weekendPage.byTrain(byTrain(pin)!)}</span>}
@@ -313,10 +316,14 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
   const others = areas.filter((a) => a.id !== area.id)
   // Trips that fit inside one weekend day, plus, with dates set, the multi-day trips that fit inside the stay (a two-day trip in a Fri to Sun stay).
   // A road trip's default days inside the stay: the latest start that is back by check-out.
-  const tripDates = (days: number): string => {
-    const from = tripStartDefault(stay!, days)
-    return formatDayRange(from, addDays(from, days - 1), locale)
+  const tripDates = (r: TripRoute): string => {
+    const from = tripStartFor(stay!, r, picks) ?? tripStartDefault(stay!, r.days)
+    return formatDayRange(from, addDays(from, r.days - 1), locale)
   }
+  // Nights a plan road trip sleeps away: the room here, and its total, are for the other nights.
+  const away = stay ? awayNights(stay, routes, planTrips, picks) : []
+  const hereNights = stay ? nights(stay) - away.length : 0
+  const stayTotalLine = (from: number) => (stay && hereNights > 0 ? `${s.guide.stayTotal(thb(from * hereNights * roomsOf(stay), locale), hereNights, roomsOf(stay))}${away.length > 0 ? s.guide.stayTotalAway(away.length) : ''}` : null)
   // Plan trips first, then the rest in content order.
   const dayTrips = [...routes.filter((r) => r.duration !== 'multi-day'), ...routes.filter((r) => r.duration === 'multi-day' && stay && r.days >= 2 && r.days <= nights(stay) + 1)].sort((a, b) => Number(planTrips.includes(b.id)) - Number(planTrips.includes(a.id)))
   return (
@@ -439,9 +446,8 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
             <li className="tm-wk__slot tm-wk__slot--stay" id="tm-stay">
               <h2 className="tm-wk__time">{s.guide.stay}</h2>
               {stay && routes.filter((r) => planTrips.includes(r.id) && r.days >= 2 && r.days <= nights(stay) + 1).map((r) => {
-                // The road trip's nights inside the stay, from its default start: the reader sleeps there, not here.
-                const from = tripStartDefault(stay, r.days)
-                const away = r.stops.filter((st) => st.kind === 'hotel').map((st) => addDays(from, st.day - 1)).filter((d) => d >= stay.checkIn && d < stay.checkOut)
+                // The road trip's nights inside the stay, from the start picked on its page (else the default): the reader sleeps there, not here.
+                const away = awayNights(stay, [r], [r.id], picks)
                 return away.length > 0 ? (
                   <p key={r.id} className="tm-wk__shared tm-wk__tripslot">
                     <Link href={`/${locale}/${cityId}/trip/${r.id}`} className="tm-link tm-link--under">{t(r.name, locale)}</Link>
@@ -489,7 +495,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
                         <span className="tm-wk__kind">{r.duration === 'multi-day' ? s.trip.days(r.days) : s.trip.duration[r.duration]} · {s.trip.mode[r.mode]}{r.distanceKm !== undefined ? ` · ${s.trip.km(r.distanceKm)}` : ''}{sentTrips.includes(r.id) ? ` · ${s.weekendPage.inPlan}` : keptTrips.includes(r.id) ? ` · ${s.trip.kept}` : ''}</span>
                         <span className="tm-wk__name">{t(r.name, locale)}</span>
                         <span className="tm-wk__why">{t(r.tagline, locale)}</span>
-                        {r.duration === 'multi-day' && stay && <span className="tm-wk__meta tm-wk__from">{s.trip.fitsStay(nights(stay))} · {tripDates(r.days)}</span>}
+                        {r.duration === 'multi-day' && stay && <span className="tm-wk__meta tm-wk__from">{s.trip.fitsStay(nights(stay))} · {tripDates(r)}</span>}
                         {r.duration !== 'multi-day' && stay && dayTripOptions(stay, r.duration).length > 0 && <span className="tm-wk__meta tm-wk__from">{s.trip.fitsDay(dayTripOptions(stay, r.duration).slice(0, 3).map((d) => formatDay(d, locale)).join(` ${s.trip.or} `))}</span>}
                         {tripByTrain(r.id) && <span className="tm-wk__meta tm-wk__from">{tripByTrain(r.id)}</span>}
                       </span>
@@ -538,7 +544,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
         <aside className="tm-wk__book" data-ui aria-label={s.weekendPage.bookBarLabel}>
           <span className="tm-wk__book-text">
             <span className="tm-wk__book-name">{t(myHotel.name, locale)}</span>
-            {myHotel.price && stay && <span className="tm-wk__book-total" title={myHotel.price.basis === 'tier-estimate' ? s.guide.priceEstimate : undefined}>{s.guide.stayTotal(thb(myHotel.price.from * nights(stay) * roomsOf(stay), locale), nights(stay), roomsOf(stay))}{myHotel.price.basis === 'tier-estimate' ? '*' : ''}</span>}
+            {myHotel.price && stayTotalLine(myHotel.price.from) && <span className="tm-wk__book-total" title={myHotel.price.basis === 'tier-estimate' ? s.guide.priceEstimate : undefined}>{stayTotalLine(myHotel.price.from)}{myHotel.price.basis === 'tier-estimate' ? '*' : ''}</span>}
           </span>
           {(Object.keys(myHotel.links) as Partner[]).filter((p) => p !== 'official').map((p) => {
             const subId = subIdFor(`${cityId}-${area.id}`, myHotel.id)

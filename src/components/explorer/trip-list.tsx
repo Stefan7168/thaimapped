@@ -7,7 +7,7 @@ import type { Locale, RouteDuration, RouteMode, RouteTheme, TripRoute } from '@/
 import { t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
 import { RevealObserver } from '@/components/motion/reveal'
-import { addDays, dayTripOptions, nights, tripStartDefault, useStay } from '@/lib/stay/store'
+import { addDays, dayTripOptions, nights, useStay } from '@/lib/stay/store'
 import { formatDay, formatDayRange } from '@/lib/stay/format'
 import type { HotelDoor } from '@/lib/content/slim'
 import type { AirportLeg } from '@/lib/transit/from-airport'
@@ -15,6 +15,7 @@ import { rideSentence } from '@/components/stay/from-airport'
 import { useSaved } from '@/lib/saved/store'
 import { myHotelAcross, useHotelChoiceVersion } from '@/lib/saved/my-hotel'
 import { toggleKeptTrip, useKeptTrips } from '@/lib/saved/trips'
+import { tripStartFor, useTripStartPicks } from '@/lib/stay/trip-start'
 
 const StageMap = dynamic(() => import('@/components/map/stage-map').then((m) => m.StageMap), {
   ssr: false,
@@ -64,15 +65,17 @@ export function TripList({ locale, cityId, cityCamera, routes, hotelDoors = {}, 
   // With dates set, a multi-day trip says whether it fits inside them (a two-day trip in a Fri to Sun stay) or needs more nights; day trips always fit and say nothing.
   const stay = useStay()
   const kept = useKeptTrips()
+  const picks = useTripStartPicks()
   const fitTag = (r: TripRoute) => {
     if (!stay) return null
     if (r.days < 2) {
       // A day trip names the days of the stay it fits: a morning needs a night before it, an afternoon or evening a night after, a full day both.
+      if (picks[r.id] && dayTripOptions(stay, r.duration).includes(picks[r.id])) return s.trip.onDay(formatDay(picks[r.id], locale))
       const days = dayTripOptions(stay, r.duration).slice(0, 3).map((d) => formatDay(d, locale))
       return days.length > 0 ? s.trip.fitsDay(days.join(` ${s.trip.or} `)) : null
     }
     if (r.days > nights(stay) + 1) return s.trip.tooLong(nights(stay))
-    const from = tripStartDefault(stay, r.days)
+    const from = tripStartFor(stay, r, picks)!
     return `${s.trip.fitsStay(nights(stay))} · ${formatDayRange(from, addDays(from, r.days - 1), locale)}`
   }
   const count = f.durations.length + f.days.length + f.modes.length + f.themes.length

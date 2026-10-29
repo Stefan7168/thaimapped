@@ -33,7 +33,7 @@ export default async function SavedRoute(props: PageProps<'/[locale]/saved'>) {
     a.pins.map((pin) => ({ pin: { ...pin, photos: pin.photos?.slice(0, 1), shape: undefined }, area: { id: a.id, name: a.name, color: a.color } })),
   )
   // Every trip, with only what its row shows; which ones show is this browser's kept list.
-  const trips: SavedTrip[] = loadRoutes(bundle.city.id).map((r) => ({ id: r.id, name: r.name, tagline: r.tagline, mode: r.mode, duration: r.duration, days: r.days, distanceKm: r.distanceKm }))
+  const trips: SavedTrip[] = loadRoutes(bundle.city.id).map((r) => ({ id: r.id, name: r.name, tagline: r.tagline, mode: r.mode, duration: r.duration, days: r.days, distanceKm: r.distanceKm, nightsAway: r.stops.filter((st) => st.kind === 'hotel').map((st) => st.day) }))
   // Every station and interchange (29 KB): the page is static and only the browser knows which hotel a saved place is reached from, so the train route is worked out there.
   return <SavedPage locale={locale} cityId={bundle.city.id} entries={entries} trips={trips} stations={bundle.stations} interchanges={bundle.interchanges} airport={airportRoutesFor(bundle, [...new Set(entries.map((e) => e.pin).filter((p) => p.kind === 'hotel' && p.walk).map((p) => p.walk!.station))])} />
 }
