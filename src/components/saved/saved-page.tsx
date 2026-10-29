@@ -23,8 +23,7 @@ import { addSaved, clearSaved, toggleSaved, useSaved } from '@/lib/saved/store'
 import { addKeptTrips, clearKeptTrips, toggleKeptTrip, useKeptTrips } from '@/lib/saved/trips'
 import { formatDay } from '@/lib/stay/format'
 import { addDays, dayTripOptions } from '@/lib/stay/store'
-import { awayNights, tripDayOptions, tripStartFor, useTripStartPicks } from '@/lib/stay/trip-start'
-import { TRIP_HOURS } from '@/lib/stay/calendar'
+import { awayNights, tripClashes, tripDayOptions, tripStartFor, useTripStartPicks } from '@/lib/stay/trip-start'
 import { chooseHotel, myHotelAcross, myHotelChoice, useHotelChoiceVersion } from '@/lib/saved/my-hotel'
 import { SiteHeader } from '@/components/explorer/site-header'
 import { SiteFooter } from '@/components/explorer/site-footer'
@@ -72,20 +71,10 @@ export function SavedPage({ locale, cityId, entries, trips = [], stations, inter
   const keptIds = useKeptTrips()
   const picks = useTripStartPicks()
   const keptTrips = (sentIds ? sentTrips : keptIds).map((id) => trips.find((r) => r.id === id)).filter((r): r is SavedTrip => !!r)
-  // The days a kept trip takes by default (the trip page's pick), to warn when two kept trips would run in the same hours.
-  const tripDays = (r: SavedTrip): string[] => {
-    if (!stay) return []
-    const from = tripStartFor(stay, r, picks)
-    if (!from) return []
-    return Array.from({ length: r.days }, (_, i) => addDays(from, i))
-  }
   // A clashing trip with more than one day to choose from links to its start chips.
   const canMove = (r: SavedTrip): boolean => !!stay && clashes(r).length > 0 && tripDayOptions(stay, r).length > 1
-  const clashes = (r: SavedTrip): SavedTrip[] => {
-    const mine = tripDays(r)
-    const [a0, a1] = TRIP_HOURS[r.duration]
-    return keptTrips.filter((o) => { const [b0, b1] = TRIP_HOURS[o.duration]; return o.id !== r.id && a0 < b1 && b0 < a1 && tripDays(o).some((d) => mine.includes(d)) })
-  }
+  // Two kept trips in the same hours on the same day (each on its picked or default day).
+  const clashes = (r: SavedTrip): SavedTrip[] => (stay ? tripClashes(stay, r, keptTrips, picks) : [])
   // With dates set, the days of the stay a trip fits, as the trips index says it.
   const tripFit = (r: SavedTrip): string | null => {
     if (!stay) return null

@@ -1,6 +1,7 @@
 import { useSyncExternalStore } from 'react'
 import { addDays, dayTripOptions, nights, tripStartDefault, tripStartOptions, type Stay } from './store'
 import type { RouteStop, TripRoute } from '@/lib/content/types'
+import { TRIP_HOURS } from './calendar'
 
 /**
  * The start day the visitor picked for a trip on its page, kept in this
@@ -66,6 +67,22 @@ export function tripStartFor(stay: Stay, r: Pick<TripRoute, 'id' | 'days' | 'dur
   const pick = picks[r.id]
   if (pick && options.includes(pick)) return pick
   return r.days > 1 ? tripStartDefault(stay, r.days) : (options.at(-1) ?? null)
+}
+
+/** The days a trip takes inside the stay, from its start; empty when it does not fit. */
+export function tripDays(stay: Stay, r: Pick<TripRoute, 'id' | 'days' | 'duration'>, picks: Readonly<Record<string, string>>): string[] {
+  const from = tripStartFor(stay, r, picks)
+  return from ? Array.from({ length: r.days }, (_, i) => addDays(from, i)) : []
+}
+
+/** The other plan trips that run in the same hours on one of this trip's days. */
+export function tripClashes<R extends Pick<TripRoute, 'id' | 'days' | 'duration'>>(stay: Stay, r: R, others: readonly R[], picks: Readonly<Record<string, string>>): R[] {
+  const mine = tripDays(stay, r, picks)
+  const [a0, a1] = TRIP_HOURS[r.duration]
+  return others.filter((o) => {
+    const [b0, b1] = TRIP_HOURS[o.duration]
+    return o.id !== r.id && a0 < b1 && b0 < a1 && tripDays(stay, o, picks).some((d) => mine.includes(d))
+  })
 }
 
 /** The nights of the stay (as check-in dates) a plan road trip sleeps away, so the hotel here is only for the rest. */

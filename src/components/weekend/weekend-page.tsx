@@ -32,7 +32,7 @@ import { HotelCompare } from '@/components/stay/hotel-compare'
 import { addSaved, useSaved } from '@/lib/saved/store'
 import { chooseHotel, useMyHotelChoice } from '@/lib/saved/my-hotel'
 import { addKeptTrips, toggleKeptTrip, useKeptTrips } from '@/lib/saved/trips'
-import { awayNights, tripStartFor, useTripStartPicks } from '@/lib/stay/trip-start'
+import { awayNights, tripClashes, tripDayOptions, tripStartFor, useTripStartPicks } from '@/lib/stay/trip-start'
 import { HotelElsewhere, useHotelElsewhere } from '@/components/stay/hotel-elsewhere'
 import { skipStop, unskipStops, useSkipped } from '@/lib/saved/skipped'
 import { KIND_ICONS } from '@/components/explorer/kind-bar'
@@ -321,6 +321,10 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
     const from = tripStartFor(stay!, r, picks) ?? tripStartDefault(stay!, r.days)
     return formatDayRange(from, addDays(from, r.days - 1), locale)
   }
+  // Plan trips in the same hours on the same day, as the saved list warns; a trip with more than one day to choose from links to its chips.
+  const planRoutes = routes.filter((r) => planTrips.includes(r.id))
+  const clashes = (r: TripRoute): TripRoute[] => (stay && planTrips.includes(r.id) ? tripClashes(stay, r, planRoutes, picks) : [])
+  const canMove = (r: TripRoute): boolean => !!stay && clashes(r).length > 0 && tripDayOptions(stay, r).length > 1
   // Nights a plan road trip sleeps away: the room here, and its total, are for the other nights.
   const away = stay ? awayNights(stay, routes, planTrips, picks) : []
   const hereNights = stay ? nights(stay) - away.length : 0
@@ -499,9 +503,11 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
                         {r.duration === 'multi-day' && stay && <span className="tm-wk__meta tm-wk__from">{s.trip.fitsStay(nights(stay))} · {tripDates(r)}</span>}
                         {r.duration !== 'multi-day' && stay && dayTripOptions(stay, r.duration).length > 0 && <span className="tm-wk__meta tm-wk__from">{s.trip.fitsDay(dayTripOptions(stay, r.duration).slice(0, 3).map((d) => formatDay(d, locale)).join(` ${s.trip.or} `))}</span>}
                         {tripByTrain(r.id) && <span className="tm-wk__meta tm-wk__from">{tripByTrain(r.id)}</span>}
+                        {clashes(r).length > 0 && <span className="tm-wk__meta">{s.saved.sameDay(clashes(r).map((o) => t(o.name, locale)).join(', '))}</span>}
                       </span>
                     </Link>
                     <div className="tm-wk__links">
+                      {canMove(r) && <Link href={`/${locale}/${cityId}/trip/${r.id}#tm-start`} className="tm-card__link">{s.saved.pickAnotherDay}</Link>}
                       <button type="button" aria-pressed={keptTrips.includes(r.id)} className="tm-card__link tm-card__link--quiet" onClick={() => toggleKeptTrip(r.id)}>{keptTrips.includes(r.id) ? s.trip.kept : s.trip.keep}</button>
                     </div>
                   </li>
