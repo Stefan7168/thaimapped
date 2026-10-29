@@ -100,6 +100,13 @@ export function tripStartFor(stay: Stay, r: Pick<TripRoute, 'id' | 'days' | 'dur
   return r.days > 1 ? tripStartDefault(stay, r.days) : (options.at(-1) ?? null)
 }
 
+/** A day trip's placed day (picked or default) and the other days it could move to; null for a road trip or when nothing fits. */
+export function placedDay(stay: Stay, r: Pick<TripRoute, 'id' | 'days' | 'duration'>, picks: Readonly<Record<string, string>>): { day: string; others: string[] } | null {
+  if (r.days > 1) return null
+  const day = tripStartFor(stay, r, picks)
+  return day ? { day, others: dayTripOptions(stay, r.duration).filter((d) => d !== day) } : null
+}
+
 /** The days a trip takes inside the stay, from its start; empty when it does not fit. */
 export function tripDays(stay: Stay, r: Pick<TripRoute, 'id' | 'days' | 'duration'>, picks: Readonly<Record<string, string>>): string[] {
   const from = tripStartFor(stay, r, picks)

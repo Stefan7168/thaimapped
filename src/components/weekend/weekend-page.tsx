@@ -33,7 +33,7 @@ import { addSaved, useSaved } from '@/lib/saved/store'
 import { chooseHotel, useMyHotelChoice } from '@/lib/saved/my-hotel'
 import { addKeptTrips, toggleKeptTrip, useKeptTrips } from '@/lib/saved/trips'
 import { tripNights } from '@/lib/content/slim'
-import { addTripStartPicks, awayNights, hereStay, parseStarts, startsParam, tripClashes, tripDayOptions, tripStartFor, useTripStartPicks } from '@/lib/stay/trip-start'
+import { addTripStartPicks, awayNights, hereStay, parseStarts, placedDay, startsParam, tripClashes, tripDayOptions, tripStartFor, useTripStartPicks } from '@/lib/stay/trip-start'
 import { HotelElsewhere, useHotelElsewhere } from '@/components/stay/hotel-elsewhere'
 import { skipStop, unskipStops, useSkipped } from '@/lib/saved/skipped'
 import { KIND_ICONS } from '@/components/explorer/kind-bar'
@@ -329,6 +329,18 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
     const from = tripStartFor(stay!, r, picks) ?? tripStartDefault(stay!, r.days)
     return formatDayRange(from, addDays(from, r.days - 1), locale)
   }
+  // A day trip's fit line: a plan trip names the day it sits on (and the others it could move to), the rest the days they fit.
+  const dayTag = (r: TripRoute): string | null => {
+    if (!stay) return null
+    if (planTrips.includes(r.id)) {
+      const placed = placedDay(stay, r, picks)
+      if (!placed) return null
+      const others = placed.others.slice(0, 2).map((d) => formatDay(d, locale)).join(` ${s.trip.or} `)
+      return others ? s.trip.onDayOr(formatDay(placed.day, locale), others) : s.trip.onDay(formatDay(placed.day, locale))
+    }
+    const days = dayTripOptions(stay, r.duration).slice(0, 3).map((d) => formatDay(d, locale))
+    return days.length > 0 ? s.trip.fitsDay(days.join(` ${s.trip.or} `)) : null
+  }
   // Plan trips in the same hours on the same day, as the saved list warns; a trip with more than one day to choose from links to its chips.
   const planRoutes = routes.filter((r) => planTrips.includes(r.id))
   const clashes = (r: TripRoute): TripRoute[] => (stay && planTrips.includes(r.id) ? tripClashes(stay, r, planRoutes, picks) : [])
@@ -513,7 +525,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
                         <span className="tm-wk__name">{t(r.name, locale)}</span>
                         <span className="tm-wk__why">{t(r.tagline, locale)}</span>
                         {r.duration === 'multi-day' && stay && <span className="tm-wk__meta tm-wk__from">{s.trip.fitsStay(nights(stay))} · {tripDates(r)}</span>}
-                        {r.duration !== 'multi-day' && stay && dayTripOptions(stay, r.duration).length > 0 && <span className="tm-wk__meta tm-wk__from">{s.trip.fitsDay(dayTripOptions(stay, r.duration).slice(0, 3).map((d) => formatDay(d, locale)).join(` ${s.trip.or} `))}</span>}
+                        {r.duration !== 'multi-day' && stay && dayTag(r) && <span className="tm-wk__meta tm-wk__from">{dayTag(r)}</span>}
                         {tripByTrain(r.id) && <span className="tm-wk__meta tm-wk__from">{tripByTrain(r.id)}</span>}
                         {clashes(r).length > 0 && <span className="tm-wk__meta">{s.saved.sameDay(clashes(r).map((o) => t(o.name, locale)).join(', '))}</span>}
                       </span>

@@ -15,7 +15,7 @@ import { rideSentence } from '@/components/stay/from-airport'
 import { useSaved } from '@/lib/saved/store'
 import { myHotelAcross, useHotelChoiceVersion } from '@/lib/saved/my-hotel'
 import { toggleKeptTrip, useKeptTrips } from '@/lib/saved/trips'
-import { tripStartFor, useTripStartPicks } from '@/lib/stay/trip-start'
+import { placedDay, tripStartFor, useTripStartPicks } from '@/lib/stay/trip-start'
 
 const StageMap = dynamic(() => import('@/components/map/stage-map').then((m) => m.StageMap), {
   ssr: false,
@@ -70,7 +70,12 @@ export function TripList({ locale, cityId, cityCamera, routes, hotelDoors = {}, 
     if (!stay) return null
     if (r.days < 2) {
       // A day trip names the days of the stay it fits: a morning needs a night before it, an afternoon or evening a night after, a full day both.
-      if (picks[r.id] && dayTripOptions(stay, r.duration).includes(picks[r.id])) return s.trip.onDay(formatDay(picks[r.id], locale))
+      if (kept.includes(r.id)) {
+        const placed = placedDay(stay, r, picks)
+        if (!placed) return null
+        const others = placed.others.slice(0, 2).map((d) => formatDay(d, locale)).join(` ${s.trip.or} `)
+        return others ? s.trip.onDayOr(formatDay(placed.day, locale), others) : s.trip.onDay(formatDay(placed.day, locale))
+      }
       const days = dayTripOptions(stay, r.duration).slice(0, 3).map((d) => formatDay(d, locale))
       return days.length > 0 ? s.trip.fitsDay(days.join(` ${s.trip.or} `)) : null
     }

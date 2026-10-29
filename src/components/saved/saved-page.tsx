@@ -22,8 +22,8 @@ import { whenLine } from '@/lib/explorer/when'
 import { addSaved, clearSaved, toggleSaved, useSaved } from '@/lib/saved/store'
 import { addKeptTrips, clearKeptTrips, toggleKeptTrip, useKeptTrips } from '@/lib/saved/trips'
 import { formatDay } from '@/lib/stay/format'
-import { addDays, dayTripOptions } from '@/lib/stay/store'
-import { addTripStartPicks, awayNights, hereStay, parseStarts, startsParam, tripClashes, tripDayOptions, tripStartFor, useTripStartPicks } from '@/lib/stay/trip-start'
+import { addDays } from '@/lib/stay/store'
+import { addTripStartPicks, awayNights, hereStay, parseStarts, placedDay, startsParam, tripClashes, tripDayOptions, tripStartFor, useTripStartPicks } from '@/lib/stay/trip-start'
 import { buildIcs, downloadIcs, TRIP_HOURS, type CalendarEvent } from '@/lib/stay/calendar'
 import { chooseHotel, myHotelAcross, myHotelChoice, useHotelChoiceVersion } from '@/lib/saved/my-hotel'
 import { SiteHeader } from '@/components/explorer/site-header'
@@ -84,9 +84,11 @@ export function SavedPage({ locale, cityId, entries, trips = [], stations, inter
   const tripFit = (r: SavedTrip): string | null => {
     if (!stay) return null
     if (r.days < 2) {
-      if (picks[r.id] && dayTripOptions(stay, r.duration).includes(picks[r.id])) return s.trip.onDay(formatDay(picks[r.id], locale))
-      const days = dayTripOptions(stay, r.duration).slice(0, 3).map((d) => formatDay(d, locale))
-      return days.length > 0 ? s.trip.fitsDay(days.join(` ${s.trip.or} `)) : null
+      // A kept day trip sits on one day; the others it could move to follow in brackets.
+      const placed = placedDay(stay, r, picks)
+      if (!placed) return null
+      const others = placed.others.slice(0, 2).map((d) => formatDay(d, locale)).join(` ${s.trip.or} `)
+      return others ? s.trip.onDayOr(formatDay(placed.day, locale), others) : s.trip.onDay(formatDay(placed.day, locale))
     }
     if (r.days > nights(stay) + 1) return s.trip.tooLong(nights(stay))
     const from = tripStartFor(stay, r, picks)!

@@ -351,6 +351,7 @@ const en = {
     fitsDay: (days: string) => `Fits ${days}`,
     // A kept trip on the day picked for it on its page.
     onDay: (day: string) => `On ${day}`,
+    onDayOr: (day: string, others: string) => `On ${day} (or ${others})`,
     or: 'or',
     tooLong: (n: number) => (n === 1 ? 'Needs more than your 1 night' : `Needs more than your ${n} nights`),
     copied: 'Link copied',
