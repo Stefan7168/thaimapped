@@ -81,7 +81,7 @@ export function TripList({ locale, cityId, cityCamera, routes, hotelDoors = {}, 
       if (free.length === 0 && taken.length === 0) return null
       if (free.length === 0) return s.trip.noFreeDay(t(taken[0].by.name, locale), taken.map((x) => formatDay(x.day, locale)).join(` ${s.trip.and} `))
       const line = s.trip.fitsDay(free.slice(0, 3).map((d) => formatDay(d, locale)).join(` ${s.trip.or} `))
-      return taken.length > 0 ? line + s.trip.daysTaken(taken.map((x) => formatDay(x.day, locale)).join(` ${s.trip.and} `), t(taken[0].by.name, locale)) : line
+      return taken.length > 0 ? line + s.trip.daysTaken(taken.map((x) => formatDay(x.day, locale)).join(` ${s.trip.and} `), t(taken[0].by.name, locale), taken.length === 1) : line
     }
     if (r.days > nights(stay) + 1) return s.trip.tooLong(nights(stay))
     const from = tripStartFor(stay, r, picks)!

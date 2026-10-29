@@ -350,7 +350,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
     if (free.length === 0 && taken.length === 0) return null
     if (free.length === 0) return s.trip.noFreeDay(t(taken[0].by.name, locale), taken.map((x) => formatDay(x.day, locale)).join(` ${s.trip.and} `))
     const line = s.trip.fitsDay(free.slice(0, 3).map((d) => formatDay(d, locale)).join(` ${s.trip.or} `))
-    return taken.length > 0 ? line + s.trip.daysTaken(taken.map((x) => formatDay(x.day, locale)).join(` ${s.trip.and} `), t(taken[0].by.name, locale)) : line
+    return taken.length > 0 ? line + s.trip.daysTaken(taken.map((x) => formatDay(x.day, locale)).join(` ${s.trip.and} `), t(taken[0].by.name, locale), taken.length === 1) : line
   }
   // A day trip's fit line: a plan trip names the day it sits on (and the others it could move to), the rest the days they fit.
   const dayTag = (r: TripRoute): string | null => {

@@ -371,7 +371,7 @@ const en = {
     },
     // A day trip with dates set: the days of the stay it fits ("Sat, Nov 7 or Sun, Nov 8").
     fitsDay: (days: string) => `Fits ${days}`,
-    daysTaken: (days: string, trip: string) => ` · ${days} on ${trip}`,
+    daysTaken: (days: string, trip: string, one = true) => ` (${days} ${one ? 'is' : 'are'} taken by ${trip})`,
     noFreeDay: (trip: string, days: string) => `No free day: ${trip} takes ${days}`,
     // A kept trip on the day picked for it on its page.
     onDay: (day: string) => `On ${day}`,
