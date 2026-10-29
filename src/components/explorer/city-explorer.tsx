@@ -73,11 +73,14 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
       const pinId = h.get('pin')
       const pinHit = pinId ? areas.flatMap((a) => a.pins.map((pin) => ({ pin, area: a }))).find((x) => x.pin.id === pinId) : undefined
       if (pinHit && areaList.length === 0) areaList.push(pinHit.area.id)
-      if (!area && !pinHit && !tier && !priceParam && !station && times.length === 0 && days.length === 0 && kinds.length === 0) return
+      // "#near=<hotel id>" (a shared "near your hotel" view): the walk circle around that hotel's door.
+      const nearId = h.get('near')
+      const nearHotel = nearId ? areas.flatMap((a) => a.pins).find((p) => p.id === nearId && p.kind === 'hotel') : undefined
+      if (!area && !pinHit && !nearHotel && !tier && !priceParam && !station && times.length === 0 && days.length === 0 && kinds.length === 0) return
       const m = priceParam?.match(/^(\d+)-(\d+)$/)
       const fromParam: PriceRange | null = m ? { min: Math.max(PRICE_RANGE.min, Number(m[1])), max: Math.min(PRICE_RANGE.max, Number(m[2])) } : null
       const price = fromParam && fromParam.min < fromParam.max ? fromParam : tier && (TIERS as readonly string[]).includes(tier) ? TIER_PRICE[tier as Tier] : null
-      const next: FilterState = { ...EMPTY_FILTERS, areas: areaList, stations: stationList, price: isFullRange(price) ? null : price, times, days, kinds }
+      const next: FilterState = { ...EMPTY_FILTERS, areas: areaList, stations: stationList, price: isFullRange(price) ? null : price, times, days, kinds, ...(nearHotel ? { near: [nearHotel.location.lon, nearHotel.location.lat] as [number, number], nearName: t(nearHotel.name, locale), nearPin: nearHotel.id } : {}) }
       setFilters(next)
       if (pinHit) setActivePin(pinHit.pin)
     }
@@ -87,7 +90,7 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
       window.cancelAnimationFrame(id)
       window.removeEventListener('hashchange', apply)
     }
-  }, [areas, bundle.stations])
+  }, [areas, bundle.stations, locale])
   const [sheetOpen, setSheetOpen] = useState(false)
   // Phones: the place list starts as a one-line handle so the map stays visible.
   const [listOpen, setListOpen] = useState(false)
@@ -172,7 +175,7 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
           window.setTimeout(() => setNearNote(null), 6000)
           return
         }
-        update({ ...filters, areas: [], subareas: [], stations: [], lines: [], near: here, nearName: null })
+        update({ ...filters, areas: [], subareas: [], stations: [], lines: [], near: here, nearName: null, nearPin: null })
       },
       () => {
         setLocating(false)
@@ -370,7 +373,7 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
       {pins.length === 0 && (
         <div className="tm-empty">
           <p className="text-sm text-ink-2">{s.filters.noResults}</p>
-          <button type="button" className="tm-card__link tm-card__link--quiet" onClick={() => update({ ...filters, kinds: [], tiers: [], price: null, times: [], days: [], near: null, nearName: null })}>
+          <button type="button" className="tm-card__link tm-card__link--quiet" onClick={() => update({ ...filters, kinds: [], tiers: [], price: null, times: [], days: [], near: null, nearName: null, nearPin: null })}>
             {s.filters.showAllHere}
           </button>
         </div>
@@ -402,7 +405,7 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
         <Link href={`/${locale}/${city.id}/trip`} className="hidden shrink-0 rounded-full border border-line bg-white px-3 py-2 text-sm font-medium md:inline-block">{s.nav.trips}</Link>
         <SavedLink locale={locale} className="tm-saved-link hidden shrink-0 items-center gap-1.5 rounded-full border border-line bg-white px-3 py-2 text-sm font-medium md:inline-flex" />
       </header>
-      <KindBar locale={locale} bundle={bundle} filters={filters} onChange={update} onNear={locate} locating={locating} hotel={myHotel ? { name: t(myHotel.name, locale), lon: myHotel.location.lon, lat: myHotel.location.lat } : null} />
+      <KindBar locale={locale} bundle={bundle} filters={filters} onChange={update} onNear={locate} locating={locating} hotel={myHotel ? { id: myHotel.id, name: t(myHotel.name, locale), lon: myHotel.location.lon, lat: myHotel.location.lat } : null} />
       {nearNote && <p role="status" className="tm-near__note">{nearNote}</p>}
 
       <main className="relative flex min-h-0 flex-1">
@@ -414,7 +417,7 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
           ) : (
             <div className="p-3">
               {/* Back leaves the place (areas, sub-areas, stations); the budget, time and kind preferences stay. */}
-              <button type="button" onClick={() => update({ ...filters, areas: [], subareas: [], stations: [], lines: [], near: null, nearName: null })} className="mb-2 flex items-center gap-1.5 text-sm text-ink-2 hover:text-ink">
+              <button type="button" onClick={() => update({ ...filters, areas: [], subareas: [], stations: [], lines: [], near: null, nearName: null, nearPin: null })} className="mb-2 flex items-center gap-1.5 text-sm text-ink-2 hover:text-ink">
                 <ArrowLeft aria-hidden="true" className="size-4" />
                 {s.guide.back}
               </button>
@@ -535,6 +538,7 @@ function writeHash(f: FilterState) {
   if (f.times.length) h.set('time', f.times.join(','))
   if (f.days.length) h.set('day', f.days.join(','))
   if (f.kinds.length) h.set('kind', f.kinds.join(','))
+  if (f.near && f.nearPin) h.set('near', f.nearPin)
   const next = h.toString().replace(/%2C/g, ',')
   const url = `${window.location.pathname}${window.location.search}${next ? `#${next}` : ''}`
   if (url !== `${window.location.pathname}${window.location.search}${window.location.hash}`) window.history.replaceState(null, '', url)

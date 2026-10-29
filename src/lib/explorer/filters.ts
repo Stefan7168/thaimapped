@@ -46,6 +46,8 @@ export interface FilterState {
   near: [number, number] | null
   /** Who stands at `near`: unset for the visitor's own position, the hotel's name for "near your hotel". */
   nearName?: string | null
+  /** The hotel pin `near` stands on, when it is a hotel: the one part of "near" the address may carry. */
+  nearPin?: string | null
 }
 
 export const EMPTY_FILTERS: FilterState = { areas: [], subareas: [], stations: [], lines: [], kinds: [], tiers: [], price: null, times: [], days: [], near: null }
