@@ -238,7 +238,13 @@ body {
 .tm-st__index-row { display: flex; align-items: center; gap: 12px; min-height: 44px; padding: 4px 0; border-top: 1px solid var(--line); color: var(--ink); text-decoration: none; }
 .tm-st__index-row:hover .tm-st__index-name { text-decoration: underline; }
 .tm-st__index-name { flex: 1; font-size: 16px; font-weight: 600; }
-.tm-st__index-meta { font-size: 13px; color: var(--ink-2); }
+.tm-st__index-meta { font-size: 13px; color: var(--ink-2); text-align: right; }
+/* Narrow phones: the name keeps its line; a long meta (airport ride, your hotel) wraps under it instead of squeezing the name. */
+@media (max-width: 480px) {
+  .tm-st__index-row { flex-wrap: wrap; row-gap: 0; }
+  .tm-st__index-name { flex: 1 0 auto; white-space: nowrap; }
+  .tm-st__index-meta { flex: 0 1 auto; margin-left: auto; }
+}
 .tm-pin--station .tm-pin__dot { width: 16px; height: 16px; }
 .tm-pin--station .tm-pin__label { font-weight: 700; border-color: var(--ink); }
 .tm-wk__trip { text-decoration: none; }
