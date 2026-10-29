@@ -282,7 +282,7 @@ export function TripPage({ locale, cityId, cityName, route, hotelDoors = {}, sta
                     )
                   })}
                 </ol>
-                {dayRouteUrl(d) && <p className="mt-2"><a href={dayRouteUrl(d)!} target="_blank" rel="noopener" className="tm-link tm-link--under text-[14px]">{route.days > 1 ? s.trip.openDay(d) : s.trip.openWholeTrip}</a></p>}
+                {dayRouteUrl(d) && <p className="mt-2 tm-trip__dayroute"><a href={dayRouteUrl(d)!} target="_blank" rel="noopener" className="tm-link tm-link--under text-[14px]">{route.days > 1 ? s.trip.openDay(d) : s.trip.openWholeTrip}</a></p>}
               </section>
             ))}
           </div>

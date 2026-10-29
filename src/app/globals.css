@@ -708,12 +708,12 @@ a.tm-wk__stop { text-decoration: none; }
 .tm-wk__paper { display: none; }
 @media print {
   .tm-wk__paper { display: block; margin: 0 0 12px; font-weight: 600; }
-  .tm-wk__others--chips, .tm-wk__elsewhere a, .tm-wk__shared a, .tm-wk__empty a, .tm-wk__empty button, .tm-wk__skipped { display: none !important; }
+  .tm-wk__others--chips, .tm-wk__elsewhere a, .tm-wk__shared a, .tm-wk__empty a, .tm-wk__empty button, .tm-wk__skipped, .tm-wk__route, .tm-wk__back { display: none !important; }
   .tm-wk__stop a[href^='http'], .tm-wk__item a[href^='http'] { display: none !important; }
 }
 /* A printed trip keeps its map and stops; the controls (share, calendar, start and day chips, zoom) are screen-only. */
 @media print {
-  .tm-trip__tools, .maplibregl-ctrl, .tm-stoprow__search { display: none !important; }
+  .tm-trip__tools, .maplibregl-ctrl, .tm-stoprow__search, .tm-trip__dayroute { display: none !important; }
   .tm-stoprow { break-inside: avoid; }
   /* Measured 2026-10-29: the screen layout is one viewport tall with the stops in a scrolling column, so a print stopped after page one. On paper the map is one block and the stops flow below it. */
   .tm-trip { display: block; height: auto !important; }
