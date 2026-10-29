@@ -118,7 +118,7 @@ function airportBlock(locale: Locale, s: ReturnType<typeof strings>, routes: Air
   return d
 }
 
-export function cardElement(locale: Locale, cityId: string, pin: Pin, area: Area, station: Station | undefined, nearby: NearbyPin[], onClose: () => void, onPick: (pin: Pin) => void, airport?: AirportRoutes, elsewhere?: { hotel: Pin; legs: AirportLeg[] }): HTMLElement {
+export function cardElement(locale: Locale, cityId: string, pin: Pin, area: Area, station: Station | undefined, nearby: NearbyPin[], onClose: () => void, onPick: (pin: Pin) => void, airport?: AirportRoutes, elsewhere?: { hotel: Pin; legs: AirportLeg[] }, nearHotel?: Pin | null): HTMLElement {
   const s = strings(locale)
   const el = document.createElement('div')
   el.className = 'tm-card'
@@ -197,7 +197,8 @@ export function cardElement(locale: Locale, cityId: string, pin: Pin, area: Area
     const saved = savedIds()
     const hotels = area.pins.filter((p) => p.kind === 'hotel' && saved.includes(p.id))
     const chosen = myHotelChoice(area.id)
-    const mine = hotels.find((h) => h.id === chosen) ?? hotels[0]
+    // The hotel the "near your hotel" circle stands on wins: the view is centred on that door, saved or not.
+    const mine = nearHotel ?? hotels.find((h) => h.id === chosen) ?? hotels[0]
     if (mine) {
       fromDoor = mine
       const from = document.createElement('p')

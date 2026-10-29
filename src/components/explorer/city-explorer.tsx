@@ -123,7 +123,8 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [bundle, saved, choiceVersion])
   // The chip's hotel: the saved one, else the hotel a shared "#near=" link centres on, so the link's reader can switch the circle off too.
-  const chipHotel = useMemo(() => myHotel ?? (filters.nearPin ? bundle.areas.flatMap((a) => a.pins).find((p) => p.id === filters.nearPin && p.kind === 'hotel') ?? null : null), [myHotel, filters.nearPin, bundle])
+  const nearHotel = useMemo(() => (filters.nearPin ? bundle.areas.flatMap((a) => a.pins).find((p) => p.id === filters.nearPin && p.kind === 'hotel') ?? null : null), [filters.nearPin, bundle])
+  const chipHotel = nearHotel ?? myHotel
   const hotelFor = useMemo(() => {
     const byArea = new Map<string, Pin | null>()
     for (const area of bundle.areas) {
@@ -452,6 +453,7 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
               centres={centres}
               near={filters.near}
               nearLabel={filters.nearName ?? null}
+              nearHotel={nearHotel}
               outlines={outlines}
               activePinId={activePin?.id ?? null}
               hoverPinId={hoverPin}
