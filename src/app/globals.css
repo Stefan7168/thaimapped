@@ -792,3 +792,9 @@ a.tm-wk__stop { text-decoration: none; }
 /* The walk from the hotel the reader picked, on each weekend stop. */
 .tm-wk__from, .tm-card__from { color: var(--accent-text); }
 .tm-wk__train { display: block; }
+
+/* A weekend slot a road trip takes: the stops fold behind one quiet line. */
+.tm-wk__folded { margin: 0 0 8px; }
+.tm-wk__folded-summary { cursor: pointer; padding: 4px 0; color: var(--ink-2); font-size: 0.95rem; text-decoration: underline; text-underline-offset: 3px; list-style: none; }
+.tm-wk__folded-summary::-webkit-details-marker { display: none; }
+.tm-wk__folded[open] > .tm-wk__folded-summary { margin-bottom: 8px; }

@@ -13,7 +13,7 @@ export function SavedLink({ locale, className }: { locale: Locale; className: st
   // Hotels and places plus kept trips: everything the saved page lists.
   const n = useSaved().length + useKeptTrips().length
   return (
-    <Link href={`/${locale}/saved`} className={className} aria-label={n > 0 ? `${s.saved.nav} (${n})` : s.saved.nav}>
+    <Link href={`/${locale}/saved`} className={className} aria-label={n > 0 ? `${s.saved.nav} ${n}` : s.saved.nav}>
       <Heart aria-hidden="true" className="size-4" />
       <span>{s.saved.nav}</span>
       {n > 0 && <span className="tm-saved-link__count">{n}</span>}

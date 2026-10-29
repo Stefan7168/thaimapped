@@ -423,6 +423,10 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
                     {s.weekendPage.tripInSlot(s.trip.duration[tripInSlot(slot)!.duration].toLowerCase())}
                   </p>
                 )}
+                {/* A day a road trip takes: its stops fold away behind one line, so the page reads as the weekend it is. */}
+                {!tripInSlot(slot) && awayOnTrip(slot) ? (
+                  <details className="tm-wk__folded">
+                    <summary className="tm-wk__folded-summary">{s.weekendPage.showAnyway(plan.slots[slot].length)}</summary>
                 {plan.slots[slot].length === 0 ? (
                   <>
                     <p className="tm-wk__empty">
@@ -474,6 +478,64 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
                       const last = plan.slots[slot][plan.slots[slot].length - 1]
                       return <p className="tm-wk__back"><a href={directionsUrl(myHotel.location.lat, myHotel.location.lon, { from: last.location, mode: fromHotel(last)! > 20 && byTrain(last) ? 'transit' : 'walking' })} target="_blank" rel="noopener" className="tm-link tm-link--under">{s.trip.endAtHotel(t(myHotel.name, locale))}</a></p>
                     })()}
+                  </>
+                )}
+                  </details>
+                ) : (
+                  <>
+                {plan.slots[slot].length === 0 ? (
+                  <>
+                    <p className="tm-wk__empty">
+                      {s.guide.slotEmpty}{' · '}
+                      <Link href={`/${locale}/${cityId}#area=${area.id}&time=${SLOT_TIMES[slot].join(',')}`} className="tm-link tm-link--under">{s.weekendPage.slotEmptyLink}</Link>
+                    </p>
+                    {borrowed[slot] && (
+                      <div className="tm-wk__borrowed" style={{ '--pin': `var(--${borrowed[slot].area.color})` } as CSSProperties}>
+                        <p className="tm-wk__empty tm-wk__borrowed-lead">{s.weekendPage.borrowed(t(borrowed[slot].area.name, locale))}</p>
+                        <ul className="tm-wk__borrowed-list">
+                          {borrowed[slot].pins.map((pin) => (
+                            <li key={pin.id}>
+                              <Link href={`/${locale}/${cityId}#area=${borrowed[slot]!.area.id}&pin=${pin.id}`} className="tm-wk__borrowed-name">{t(pin.name, locale)}</Link>
+                              <span className="tm-wk__why">{t(pin.why, locale)}</span>
+                              {whenLine(pin, locale) && <span className="tm-wk__meta tm-wk__when">{whenLine(pin, locale)}</span>}
+                              {pin.walk && stationById.get(pin.walk.station) && <span className="tm-wk__meta">{s.city.walkMinutes(pin.walk.minutes)} {s.city.from(`${stationById.get(pin.walk.station)!.code ? stationById.get(pin.walk.station)!.code + ' ' : ''}${t(stationById.get(pin.walk.station)!.name, locale)}`)}</span>}
+                              {myHotel && byTrain(pin) && <span className="tm-wk__meta tm-wk__train">{s.weekendPage.byTrainFrom(t(myHotel.name, locale), byTrain(pin)!)}</span>}
+                              {byTrainElsewhere(pin) && <span className="tm-wk__meta tm-wk__train" title={byTrainElsewhere(pin)!.long}>{byTrainElsewhere(pin)!.short}</span>}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <ul className="tm-wk__stops">
+                      {plan.slots[slot].map((pin, i, arr) => (
+                        <Fragment key={pin.id}>
+                          {/* The leg between two stops of one slot: a walking estimate, straight line, so the plan reads as a route and not a list. */}
+                          {i > 0 && (() => {
+                            const prev = arr[i - 1]
+                            const walk = Math.max(1, Math.round(distanceM(prev.location.lon, prev.location.lat, pin.location.lon, pin.location.lat) / WALK_PACE_M_PER_MIN))
+                            // Over 25 minutes on foot, and both stops at different stations: the ride between them, when the lines connect.
+                            const legs = walk > 25 && prev.walk && pin.walk && prev.walk.station !== pin.walk.station ? stopRides[prev.walk.station]?.[pin.walk.station] : null
+                            return <li className="tm-wk__leg" title={s.stationPage.estimated}>{s.weekendPage.legWalk(walk, t(prev.name, locale))}{legs && legs.length > 0 && <span className="tm-wk__leg-train">{s.weekendPage.legTrain(rideShort(legs, pin.walk!.minutes, locale))}</span>}</li>
+                          })()}
+                          {stop(pin)}
+                        </Fragment>
+                      ))}
+                    </ul>
+                    {/* Two stops or more: the slot as one walking route in Google Maps, from the saved hotel when there is one. */}
+                    {plan.slots[slot].length >= 2 && (() => {
+                      const href = dayDirectionsUrl([...(myHotel ? [myHotel.location] : []), ...plan.slots[slot].map((p) => p.location)], 'walking')
+                      return href ? <p className="tm-wk__route"><a href={href} target="_blank" rel="noopener" className="tm-link tm-link--under">{myHotel ? s.weekendPage.openSlotFrom(t(myHotel.name, locale)) : s.weekendPage.openSlot}</a></p> : null
+                    })()}
+                    {/* The night ends at the hotel: the way back from the slot's last stop, by train when it is a real ride. */}
+                    {myHotel && (slot === 'fridayNight' || slot === 'saturdayNight') && (() => {
+                      const last = plan.slots[slot][plan.slots[slot].length - 1]
+                      return <p className="tm-wk__back"><a href={directionsUrl(myHotel.location.lat, myHotel.location.lon, { from: last.location, mode: fromHotel(last)! > 20 && byTrain(last) ? 'transit' : 'walking' })} target="_blank" rel="noopener" className="tm-link tm-link--under">{s.trip.endAtHotel(t(myHotel.name, locale))}</a></p>
+                    })()}
+                  </>
+                )}
                   </>
                 )}
               </li>

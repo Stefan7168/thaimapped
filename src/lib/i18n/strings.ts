@@ -169,7 +169,8 @@ const en = {
     // A multi-day plan trip covering this slot's day.
     // Nights a plan road trip spends away, under "Where to sleep".
     sleepAway: (nights: string) => ` has you sleeping away on ${nights}. The room here is for the other nights.`,
-    awayOnTrip: (d: number, days: number) => ` takes this day (day ${d} of ${days}). The stops below are for another time.`,
+    awayOnTrip: (d: number, days: number) => ` takes this day (day ${d} of ${days}).`,
+    showAnyway: (n: number) => (n === 1 ? 'Show the 1 stop here anyway' : n > 1 ? `Show the ${n} stops here anyway` : 'Show this time anyway'),
     tripInSlot: (length: string) => ` is your trip here (${length}). The stops below are for the time left.`,
     sentTrips: (n: number) => (n === 1 ? 'One trip came with this plan.' : `${n} trips came with this plan.`),
     keepSentTrips: 'Keep them on your list',
