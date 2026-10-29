@@ -114,11 +114,18 @@ export function TripPage({ locale, cityId, cityName, route, hotelDoors = {}, sta
     const events: CalendarEvent[] = days.map((d) => {
       const iso = dayIso(d)!
       const stops = route.stops.filter((st) => st.day === d)
-      const stopsText = stops.map((st, i) => `${i + 1}. ${t(st.name, locale)}: ${t(st.why, locale)}`).join('\n')
+      // Each stop carries the leg into it, as on the page, so the event reads as the day's route.
+      const legText = (st: RouteStop): string => {
+        const leg = legs[route.stops.indexOf(st)]
+        if (!leg || leg.m < 150) return ''
+        return ` (${route.mode === 'walk' ? s.trip.legWalk(Math.max(1, Math.round(leg.m / WALK_PACE_M_PER_MIN))) : s.trip.legRoad(legKm(leg.m), leg.straight ? 'straight' : route.mode)})`.replace('↓ ', '')
+      }
+      const stopsText = stops.map((st, i) => `${i + 1}. ${t(st.name, locale)}${legText(st)}: ${t(st.why, locale)}`).join('\n')
+      const km = dayKm(d)
       return {
         date: iso, start: '08:00', end: '20:00',
         title: s.trip.calendarDay(name, d, route.days),
-        description: [`${s.weekendPage.calendarStops}:`, stopsText, myHotel && d === 1 ? `${s.weekendPage.calendarYourHotel}: ${t(myHotel.name, locale)}` : '', url].filter(Boolean).join('\n'),
+        description: [km !== null ? `${s.trip.dayKm(km)} ${s.trip.legNote}` : '', `${s.weekendPage.calendarStops}:`, stopsText, myHotel && d === 1 ? `${s.weekendPage.calendarYourHotel}: ${t(myHotel.name, locale)}` : '', url].filter(Boolean).join('\n'),
         location: stops[0] ? t(stops[0].name, locale) : undefined,
         geo: stops[0]?.location,
         url,
