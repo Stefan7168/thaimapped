@@ -39,6 +39,10 @@ export function toggleKeptTrip(id: string) {
   write(cur.includes(id) ? cur.filter((x) => x !== id) : [...cur, id])
 }
 
+export function clearKeptTrips() {
+  write([])
+}
+
 function subscribe(cb: () => void) {
   window.addEventListener('storage', cb)
   window.addEventListener(EVENT, cb)

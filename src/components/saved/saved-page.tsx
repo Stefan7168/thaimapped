@@ -20,7 +20,7 @@ import { thb } from '@/lib/explorer/price'
 import { distanceM, WALK_PACE_M_PER_MIN } from '@/lib/explorer/filters'
 import { whenLine } from '@/lib/explorer/when'
 import { addSaved, clearSaved, toggleSaved, useSaved } from '@/lib/saved/store'
-import { toggleKeptTrip, useKeptTrips } from '@/lib/saved/trips'
+import { clearKeptTrips, toggleKeptTrip, useKeptTrips } from '@/lib/saved/trips'
 import { formatDay } from '@/lib/stay/format'
 import { addDays, dayTripOptions, tripStartDefault } from '@/lib/stay/store'
 import { TRIP_HOURS } from '@/lib/stay/calendar'
@@ -240,7 +240,7 @@ export function SavedPage({ locale, cityId, entries, trips = [], stations, inter
               <Link href={`/${locale}#tm-quiz`} className="tm-link tm-link--under">{s.saved.emptyQuiz}</Link>
             </>
           )}
-          {rows.length > 0 && !sentIds && <button type="button" onClick={clearSaved} className="tm-link">{s.saved.clear}</button>}
+          {rows.length + keptTrips.length > 0 && !sentIds && <button type="button" onClick={() => { clearSaved(); clearKeptTrips() }} className="tm-link">{s.saved.clear}</button>}
         </div>
         {missing > 0 && <p className="tm-saved__note">{s.saved.unknown(missing)}</p>}
         {hotelRows.length > 1 && (
