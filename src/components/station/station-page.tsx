@@ -139,6 +139,7 @@ export function StationPage({ locale, cityId, page, areas, hotelDoors, stations,
             <span className="tm-wk__why">{t(pin.why, locale)}</span>
             {whenLine(pin, locale) && <span className="tm-wk__when">{whenLine(pin, locale)}</span>}
             {pin.price && <span className="tm-wk__meta">{s.guide.priceFrom(thb(pin.price.from, locale))}{pin.price.basis === 'tier-estimate' ? ` (${s.guide.priceEstimate})` : ''}</span>}
+            {pin.kind === 'hotel' && stay && hereNights === 0 && away.length > 0 && <span className="tm-wk__meta tm-wk__from">{s.guide.noRoomHere}</span>}
             {pin.price && stay && hereNights > 0 && <span className="tm-wk__meta tm-wk__stay">{s.guide.stayTotal(thb(pin.price.from * hereNights * roomsOf(stay), locale), hereNights, roomsOf(stay))}{away.length > 0 ? s.guide.stayTotalAway(away.length) : ''}</span>}
             <span className="tm-wk__meta">{s.city.walkMinutes(minutes)} {s.city.from(label)}{estimated ? ` (${s.stationPage.estimated})` : ''}</span>
             {ownStop(pin, minutes) && <span className="tm-wk__meta">{ownStop(pin, minutes)}</span>}
