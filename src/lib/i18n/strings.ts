@@ -165,6 +165,11 @@ const en = {
     title: 'Nothing here',
     lead: 'That address does not match a page on this site. The map is one tap away.',
     action: 'Open the map',
+    hints: {
+      area: (city: string) => `Areas in ${city}`,
+      station: (city: string) => `Stations in ${city}`,
+      trip: (city: string) => `Trips from ${city}`,
+    } as Record<'area' | 'station' | 'trip', (city: string) => string>,
   },
   credits: {
     title: 'Photo credits',
