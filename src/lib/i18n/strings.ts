@@ -59,8 +59,8 @@ const en = {
     pickAnotherDay: 'Pick another day',
     changeDay: 'Change the day',
     // A calendar file of the kept trips on their days.
-    calendar: 'Trips to calendar',
-    calendarName: 'Your trips',
+    calendar: 'Add to calendar',
+    calendarName: 'Your weekend',
     lead: (n: number) => (n === 1 ? '1 saved in this browser.' : `${n} saved in this browser.`),
     empty: 'Nothing saved yet. Tap the heart on a hotel or a place on the map and it lands here.',
     emptyLink: 'Open the map',

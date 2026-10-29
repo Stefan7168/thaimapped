@@ -176,8 +176,20 @@ export function SavedPage({ locale, cityId, entries, trips = [], stations, inter
       }))
     })
   }
-  const canCalendar = !!stay && keptTrips.some((r) => tripStartFor(stay, r, picks))
-  const addToCalendar = () => downloadIcs('trips.ics', buildIcs(tripEvents(), s.saved.calendarName))
+  const canCalendar = !!stay && (!!homeHotel || keptTrips.some((r) => tripStartFor(stay, r, picks)))
+  // The hotel's check-in and check-out go in too, on the nights slept here (a road trip's nights are its own events), so the list reads as one row in the calendar.
+  const hotelEvents = (): CalendarEvent[] => {
+    if (!homeHotel || !stay) return []
+    const at = bookStay ?? stay
+    const name = t(homeHotel.pin.name, locale)
+    const url = `${window.location.origin}/${locale}/${cityId}#area=${homeHotel.area.id}&kind=hotel&pin=${homeHotel.pin.id}`
+    const location = `${name}, ${t(homeHotel.area.name, locale)}`
+    return [
+      { date: at.checkIn, start: '14:00', end: '15:00', title: s.weekendPage.calendarCheckIn(name), description: [s.weekendPage.calendarTimesVary, url].join('\n'), location, geo: homeHotel.pin.location, url },
+      { date: at.checkOut, start: '11:00', end: '12:00', title: s.weekendPage.calendarCheckOut(name), description: [s.weekendPage.calendarTimesVary, url].join('\n'), location, geo: homeHotel.pin.location, url },
+    ]
+  }
+  const addToCalendar = () => downloadIcs('trips.ics', buildIcs([...hotelEvents(), ...tripEvents()], s.saved.calendarName))
 
   const keep = () => {
     addSaved(rows.map((e) => e.pin.id))
