@@ -325,7 +325,7 @@ export function SavedPage({ locale, cityId, entries, trips = [], stations, inter
                   </Link>
                   {(!sentIds || canMove(r)) && (
                     <div className="tm-wk__links">
-                      {canMove(r) && <Link href={`/${locale}/${cityId}/trip/${r.id}#tm-start`} className="tm-card__link">{s.saved.pickAnotherDay}</Link>}
+                      {canMove(r) && <Link href={`/${locale}/${cityId}/trip/${r.id}#tm-start`} className="tm-card__link tm-card__link--quiet">{s.saved.pickAnotherDay}</Link>}
                       {!sentIds && <button type="button" className="tm-card__link tm-card__link--quiet" onClick={() => toggleKeptTrip(r.id)}>{s.saved.forget}</button>}
                     </div>
                   )}

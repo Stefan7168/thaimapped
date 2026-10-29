@@ -519,7 +519,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
                       </span>
                     </Link>
                     <div className="tm-wk__links">
-                      {canMove(r) && <Link href={`/${locale}/${cityId}/trip/${r.id}#tm-start`} className="tm-card__link">{s.saved.pickAnotherDay}</Link>}
+                      {canMove(r) && <Link href={`/${locale}/${cityId}/trip/${r.id}#tm-start`} className="tm-card__link tm-card__link--quiet">{s.saved.pickAnotherDay}</Link>}
                       <button type="button" aria-pressed={keptTrips.includes(r.id)} className="tm-card__link tm-card__link--quiet" onClick={() => toggleKeptTrip(r.id)}>{keptTrips.includes(r.id) ? s.trip.kept : s.trip.keep}</button>
                     </div>
                   </li>
@@ -563,8 +563,8 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
         <aside className="tm-wk__book" data-ui aria-label={s.weekendPage.bookBarLabel}>
           <span className="tm-wk__book-text">
             <span className="tm-wk__book-name">{t(myHotel.name, locale)}</span>
-            {myHotel.price && stayTotalLine(myHotel.price.from) && <span className="tm-wk__book-total" title={myHotel.price.basis === 'tier-estimate' ? s.guide.priceEstimate : undefined}>{stayTotalLine(myHotel.price.from)}{myHotel.price.basis === 'tier-estimate' ? '*' : ''}</span>}
-            {bookNote && <span className="tm-wk__book-total">{bookNote}</span>}
+            {/* The bar has one line: with nights away, the dates the links open on stand in for the night count. */}
+            {myHotel.price && stay && hereNights > 0 && <span className="tm-wk__book-total" title={myHotel.price.basis === 'tier-estimate' ? s.guide.priceEstimate : undefined}>{bookNote && bookStay ? s.guide.stayTotalFor(thb(myHotel.price.from * hereNights * roomsOf(stay), locale), formatDayRange(bookStay.checkIn, bookStay.checkOut, locale), roomsOf(stay)) : stayTotalLine(myHotel.price.from)}{myHotel.price.basis === 'tier-estimate' ? '*' : ''}</span>}
           </span>
           {(Object.keys(myHotel.links) as Partner[]).filter((p) => p !== 'official').map((p) => {
             const subId = subIdFor(`${cityId}-${area.id}`, myHotel.id)
