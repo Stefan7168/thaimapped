@@ -206,6 +206,8 @@ const en = {
     weekendLink: 'Plan this weekend',
     yourWeekend: (hotel: string, area: string) => `Your weekend: ${hotel} in ${area}`,
     yourWeekendLink: 'Open your plan',
+    // Kept trips, as a link to the saved list beside the plan link.
+    keptTrips: (n: number) => (n === 1 ? '1 trip kept' : `${n} trips kept`),
     inDays: (n: number) => (n > 1 ? `in ${n} days` : n === 1 ? 'tomorrow' : n === 0 ? 'today' : 'on now'),
     jumpNow: (slot: string) => `It is ${slot} of your weekend · Jump to now`,
     setDates: 'Set your dates',

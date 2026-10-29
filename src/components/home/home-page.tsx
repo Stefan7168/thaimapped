@@ -16,6 +16,7 @@ import { supports3D } from '@/lib/map/device'
 import { bangkokClock, bangkokNow } from '@/lib/explorer/when'
 import { slotNow } from '@/lib/explorer/weekend'
 import { addSaved, useSaved } from '@/lib/saved/store'
+import { useKeptTrips } from '@/lib/saved/trips'
 import { StayPicker } from '@/components/stay/stay-picker'
 import { chooseHotel, myHotelAcross, useHotelChoiceVersion } from '@/lib/saved/my-hotel'
 import { daysUntil, nights, useStay, roomsOf } from '@/lib/stay/store'
@@ -68,6 +69,7 @@ export function HomePage({ locale, bundle, routes }: { locale: Locale; bundle: C
   const [cardPin, setCardPin] = useState<{ pin: Pin; area: Area } | null>(null)
   // A returning visitor with a hearted hotel gets a way straight back to their plan.
   const saved = useSaved()
+  const keptTrips = useKeptTrips()
   const stay = useStay()
   // The saved hotel the weekend sleeps in (the home area's chosen one, else the last saved), so the line and the plan pages agree.
   const choiceVersion = useHotelChoiceVersion()
@@ -203,6 +205,7 @@ export function HomePage({ locale, bundle, routes }: { locale: Locale; bundle: C
                     <Link href={`/${locale}/${city.id}/weekend/${myHotel.area.id}?hotel=${myHotel.pin.id}`} className="tm-link tm-link--under">{s.home.yourWeekendLink}</Link>
                   )}
                   {!stay && <>{' · '}<a href="#tm-quiz" className="tm-link tm-link--under">{s.home.setDates}</a></>}
+                  {keptTrips.length > 0 && <>{' · '}<Link href={`/${locale}/saved`} className="tm-link tm-link--under">{s.home.keptTrips(keptTrips.length)}</Link></>}
                 </p>
               )}
               {/* Half a plan: dates with no hotel, or a saved place with no hotel. Each line says what it knows and the one next step. */}
