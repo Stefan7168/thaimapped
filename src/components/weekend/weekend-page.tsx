@@ -638,8 +638,8 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
           </div>
         </div>
       </main>
-      {myHotel && (
-        // Phones: the hotel's booking links (hearted, or the one a sent link names) stay within reach at the bottom while the plan scrolls.
+      {myHotel && !(stay && hereNights === 0 && away.length > 0) && (
+        // Phones: the hotel's booking links (hearted, or the one a sent link names) stay within reach at the bottom while the plan scrolls. No bar when every night is away on a road trip: there is nothing here to book.
         <aside className="tm-wk__book" data-ui aria-label={s.weekendPage.bookBarLabel}>
           <span className="tm-wk__book-text">
             <span className="tm-wk__book-name">{t(myHotel.name, locale)}</span>
