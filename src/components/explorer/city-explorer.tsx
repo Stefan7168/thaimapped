@@ -155,7 +155,7 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
     const url = window.location.href
     try {
       if (navigator.share) {
-        await navigator.share({ title: document.title, url })
+        await navigator.share({ title: filters.nearName ? s.guide.shareNear(filters.nearName) : document.title, url })
         return
       }
       await navigator.clipboard.writeText(url)

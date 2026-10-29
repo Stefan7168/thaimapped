@@ -395,6 +395,8 @@ const en = {
     tripsLink: 'All trips',
     showing: (n: number) => (n === 1 ? '1 place on the map' : `${n} places on the map`),
     shareView: 'Share this view',
+    // The share sheet's title for a "near your hotel" view, so the link says what it opens.
+    shareNear: (hotel: string) => `Within a walk of ${hotel}`,
     viewCopied: 'Link copied',
     viewCopyFailed: 'Copy the address bar to share',
     back: 'Back to the areas',
