@@ -221,6 +221,14 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
           const first = r.stops.find((st) => st.day === d) ?? r.stops[0]
           events.push({ date: addDays(day, d - 1), start: TRIP_HOURS[r.duration][0], end: TRIP_HOURS[r.duration][1], title: s.trip.calendarDay(t(r.name, locale), d, r.days), description: [t(r.tagline, locale), tripUrl].join('\n'), location: first ? t(first.name, locale) : undefined, geo: first?.location, url: tripUrl })
         }
+        // Each bed on the road: an evening event on its first night with the night count, as the trip page's file has.
+        for (const st of r.stops) {
+          if (st.kind !== 'hotel') continue
+          const next = r.stops.find((x) => x.kind === 'hotel' && x.day > st.day)
+          const n = (next ? next.day : r.days) - st.day
+          if (n < 1) continue
+          events.push({ date: addDays(day, st.day - 1), start: '19:00', end: '20:00', title: s.trip.calendarSleep(t(st.name, locale), n), description: [t(st.why, locale), tripUrl].join('\n'), location: st.search ?? t(st.name, locale), geo: st.location, url: tripUrl })
+        }
       }
     }
     downloadIcs(`weekend-${area.id}.ics`, buildIcs(events, s.weekendPage.calendarName(areaName)))
