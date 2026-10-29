@@ -456,7 +456,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
       </main>
       {myHotel && (
         // Phones: the hotel's booking links (hearted, or the one a sent link names) stay within reach at the bottom while the plan scrolls.
-        <div className="tm-wk__book" data-ui>
+        <aside className="tm-wk__book" data-ui aria-label={s.weekendPage.bookBarLabel}>
           <span className="tm-wk__book-text">
             <span className="tm-wk__book-name">{t(myHotel.name, locale)}</span>
             {myHotel.price && stay && <span className="tm-wk__book-total" title={myHotel.price.basis === 'tier-estimate' ? s.guide.priceEstimate : undefined}>{s.guide.stayTotal(thb(myHotel.price.from * nights(stay) * roomsOf(stay), locale), nights(stay), roomsOf(stay))}{myHotel.price.basis === 'tier-estimate' ? '*' : ''}</span>}
@@ -467,7 +467,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
               <a key={p} href={buildOutboundUrl(p, myHotel.links[p]!, subId, stay)} onClick={() => trackOutbound(p, subId)} target="_blank" rel="noopener sponsored" className="tm-card__link">{p.charAt(0).toUpperCase() + p.slice(1)}</a>
             )
           })}
-        </div>
+        </aside>
       )}
     </>
   )
