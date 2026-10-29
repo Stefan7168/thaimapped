@@ -16,9 +16,9 @@ import { useSaved } from '@/lib/saved/store'
 import { myHotelAcross, useHotelChoiceVersion } from '@/lib/saved/my-hotel'
 import { formatDay, formatDayRange } from '@/lib/stay/format'
 import { addDays, adoptStayFromUrl, dayTripOptions, nights, stayParam, tripStartDefault, tripStartOptions, useStay } from '@/lib/stay/store'
-import { setTripStartPick, tripClashes, useTripStartPicks } from '@/lib/stay/trip-start'
+import { keepTrip, setTripStartPick, tripClashes, useTripStartPicks } from '@/lib/stay/trip-start'
 import { buildIcs, downloadIcs, TRIP_HOURS, type CalendarEvent } from '@/lib/stay/calendar'
-import { toggleKeptTrip, useKeptTrips } from '@/lib/saved/trips'
+import { useKeptTrips } from '@/lib/saved/trips'
 import { StayPicker } from '@/components/stay/stay-picker'
 import { STOP_COLORS } from '@/components/map/trip-map'
 import { legKm, tripLegs } from '@/lib/explorer/trip-legs'
@@ -233,7 +233,7 @@ export function TripPage({ locale, cityId, cityName, route, hotelDoors = {}, sta
               {route.distanceKm !== undefined && <span className="bg-paper-2 px-2 py-0.5">{s.trip.km(route.distanceKm)}</span>}
             </p>
             <p className="mt-3 flex flex-wrap gap-2 tm-trip__tools">
-              <button type="button" aria-pressed={kept} onClick={() => toggleKeptTrip(route.id)} className={`tm-button tm-button--small${kept ? '' : ' tm-button--quiet'}`} title={kept ? s.trip.keptNote : undefined}>
+              <button type="button" aria-pressed={kept} onClick={() => keepTrip<OtherTrip>(stay, route, others.filter((o) => keptIds.includes(o.id)), picks, !kept)} className={`tm-button tm-button--small${kept ? '' : ' tm-button--quiet'}`} title={kept ? s.trip.keptNote : undefined}>
                 <Bookmark aria-hidden="true" className="size-4" />
                 {kept ? s.trip.kept : s.trip.keep}
               </button>

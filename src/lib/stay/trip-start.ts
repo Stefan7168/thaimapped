@@ -1,5 +1,5 @@
 import { useMemo, useSyncExternalStore } from 'react'
-import { useKeptTrips } from '@/lib/saved/trips'
+import { toggleKeptTrip, useKeptTrips } from '@/lib/saved/trips'
 import { addDays, dayTripOptions, nights, tripStartDefault, tripStartOptions, type Stay } from './store'
 import type { TripRoute } from '@/lib/content/types'
 import { TRIP_HOURS } from './calendar'
@@ -127,6 +127,18 @@ export function freeDays<R extends Pick<TripRoute, 'id' | 'days' | 'duration'>>(
     else free.push(day)
   }
   return { free, taken }
+}
+
+/** Keep or forget a trip; a trip just kept whose default day a kept trip already takes moves to the latest free day, so it does not land on a clash the reader then has to fix. Returns the day it was moved to, else null. */
+export function keepTrip<R extends Pick<TripRoute, 'id' | 'days' | 'duration'>>(stay: Stay | null, r: R, kept: readonly R[], picks: Readonly<Record<string, string>>, keeping: boolean): string | null {
+  toggleKeptTrip(r.id)
+  if (!keeping || !stay) return null
+  const { free, taken } = freeDays(stay, r, kept, picks)
+  const current = tripStartFor(stay, r, picks)
+  if (!current || !taken.some((x) => x.day === current) || free.length === 0) return null
+  const day = free[free.length - 1]
+  setTripStartPick(r.id, day)
+  return day
 }
 
 /** The other plan trips that run in the same hours on one of this trip's days. */

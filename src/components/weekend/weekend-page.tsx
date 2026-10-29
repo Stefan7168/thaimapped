@@ -31,9 +31,9 @@ import { StayPicker } from '@/components/stay/stay-picker'
 import { HotelCompare } from '@/components/stay/hotel-compare'
 import { addSaved, useSaved } from '@/lib/saved/store'
 import { chooseHotel, useMyHotelChoice } from '@/lib/saved/my-hotel'
-import { addKeptTrips, toggleKeptTrip, useKeptTrips } from '@/lib/saved/trips'
+import { addKeptTrips, useKeptTrips } from '@/lib/saved/trips'
 import { tripNights } from '@/lib/content/slim'
-import { addTripStartPicks, awayNights, freeDays, hereStay, parseStarts, placedDay, startsParam, tripClashes, tripDayOptions, tripStartFor, useTripStartPicks } from '@/lib/stay/trip-start'
+import { addTripStartPicks, awayNights, freeDays, hereStay, keepTrip, parseStarts, placedDay, startsParam, tripClashes, tripDayOptions, tripStartFor, useTripStartPicks } from '@/lib/stay/trip-start'
 import { HotelElsewhere, useHotelElsewhere } from '@/components/stay/hotel-elsewhere'
 import { skipStop, unskipStops, useSkipped } from '@/lib/saved/skipped'
 import { KIND_ICONS } from '@/components/explorer/kind-bar'
@@ -610,7 +610,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
                     </Link>
                     <div className="tm-wk__links">
                       {canMove(r) && <Link href={`/${locale}/${cityId}/trip/${r.id}#tm-start`} className="tm-card__link tm-card__link--quiet">{clashes(r).length > 0 ? s.saved.pickAnotherDay : s.saved.changeDay}</Link>}
-                      <button type="button" aria-pressed={keptTrips.includes(r.id)} className="tm-card__link tm-card__link--quiet" onClick={() => toggleKeptTrip(r.id)}>{keptTrips.includes(r.id) ? s.trip.kept : s.trip.keep}</button>
+                      <button type="button" aria-pressed={keptTrips.includes(r.id)} className="tm-card__link tm-card__link--quiet" onClick={() => keepTrip(stay, r, planRoutes, picks, !keptTrips.includes(r.id))}>{keptTrips.includes(r.id) ? s.trip.kept : s.trip.keep}</button>
                     </div>
                   </li>
                 ))}

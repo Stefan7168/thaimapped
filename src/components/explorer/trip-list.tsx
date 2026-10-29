@@ -14,8 +14,8 @@ import type { AirportLeg } from '@/lib/transit/from-airport'
 import { rideSentence } from '@/components/stay/from-airport'
 import { useSaved } from '@/lib/saved/store'
 import { myHotelAcross, useHotelChoiceVersion } from '@/lib/saved/my-hotel'
-import { toggleKeptTrip, useKeptTrips } from '@/lib/saved/trips'
-import { freeDays, placedDay, tripStartFor, useTripStartPicks } from '@/lib/stay/trip-start'
+import { useKeptTrips } from '@/lib/saved/trips'
+import { freeDays, keepTrip, placedDay, tripStartFor, useTripStartPicks } from '@/lib/stay/trip-start'
 
 const StageMap = dynamic(() => import('@/components/map/stage-map').then((m) => m.StageMap), {
   ssr: false,
@@ -213,7 +213,7 @@ export function TripList({ locale, cityId, cityCamera, routes, hotelDoors = {}, 
                   </p>
                   <span className="tm-row__actions">
                     <Link href={`/${locale}/${cityId}/trip/${r.id}`} className="tm-button tm-button--small">{s.trip.open}</Link>
-                    <button type="button" aria-pressed={kept.includes(r.id)} onClick={() => toggleKeptTrip(r.id)} className="tm-button tm-button--small tm-button--quiet">{kept.includes(r.id) ? s.trip.kept : s.trip.keep}</button>
+                    <button type="button" aria-pressed={kept.includes(r.id)} onClick={() => keepTrip(stay, r, routes.filter((k) => kept.includes(k.id)), picks, !kept.includes(r.id))} className="tm-button tm-button--small tm-button--quiet">{kept.includes(r.id) ? s.trip.kept : s.trip.keep}</button>
                   </span>
                 </div>
                 </div>
