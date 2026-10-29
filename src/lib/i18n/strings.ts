@@ -275,6 +275,7 @@ const en = {
     legRoad: (km: number, mode: string) => `↓ about ${km} km ${mode === 'straight' ? 'as the crow flies' : mode === 'boat' ? 'by boat' : 'by road'}`,
     legWalk: (n: number) => `↓ about ${n} min on foot`,
     legNote: 'measured along the drawn line',
+    dayKm: (n: number) => `about ${n} km`,
     mode: { car: 'By car', scooter: 'By scooter', transit: 'By train and bus', walk: 'On foot', boat: 'By boat' } as Record<string, string>,
     pathNote: 'Straight lines between stops for now. The road-following line comes from the routing step.',
     back: 'Back to the map',

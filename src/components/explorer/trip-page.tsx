@@ -75,6 +75,12 @@ export function TripPage({ locale, cityId, cityName, route, hotelDoors = {}, sta
   const [hoverStop, setHoverStop] = useState<string | null>(null)
   const days = Array.from({ length: route.days }, (_, i) => i + 1)
   const legs = useMemo(() => tripLegs(route), [route])
+  // The day's driving: every leg into a stop of that day (the first stop of day 2 is reached on day 2).
+  const dayKm = (d: number): number | null => {
+    if (route.mode === 'walk') return null
+    const m = route.stops.reduce((sum, stop, i) => (stop.day === d && i > 0 ? sum + legs[i].m : sum), 0)
+    return m >= 1000 ? Math.round(m / 1000) : null
+  }
   const [shared, setShared] = useState<'idle' | 'copied' | 'failed'>('idle')
   // A multi-day trip inside the stay starts on a day of the reader's choosing (?start=, or the chips); by default the latest day that is back by check-out.
   const [pickedStart, setPickedStart] = useState<string | null>(null)
@@ -217,7 +223,7 @@ export function TripPage({ locale, cityId, cityName, route, hotelDoors = {}, sta
             )}
             {days.map((d) => (
               <section key={d} className={`mt-5 ${day !== null && day !== d ? 'opacity-50' : ''}`}>
-                {route.days > 1 && <h2 className="text-[17px] font-semibold">{s.trip.day(d)}{dayDate(d) && <span className="tm-wk__date"> · {dayDate(d)}</span>}{isToday(d) && <span className="tm-wk__now">{s.trip.today}</span>}</h2>}
+                {route.days > 1 && <h2 className="text-[17px] font-semibold">{s.trip.day(d)}{dayDate(d) && <span className="tm-wk__date"> · {dayDate(d)}</span>}{dayKm(d) !== null && <span className="tm-wk__date" title={s.trip.legNote}> · {s.trip.dayKm(dayKm(d)!)}</span>}{isToday(d) && <span className="tm-wk__now">{s.trip.today}</span>}</h2>}
                 <ol className="mt-2 space-y-1.5">
                   {route.stops.map((stop, i) => {
                     if (stop.day !== d) return null
