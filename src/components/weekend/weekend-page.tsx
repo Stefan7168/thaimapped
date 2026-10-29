@@ -18,9 +18,9 @@ import { bangkokClock, whenLine } from '@/lib/explorer/when'
 import { thb } from '@/lib/explorer/price'
 import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
 import { dayDirectionsUrl, directionsUrl } from '@/lib/links/directions'
-import { formatDayRange } from '@/lib/stay/format'
+import { formatDay, formatDayRange } from '@/lib/stay/format'
 import { seasonOf } from '@/lib/stay/season'
-import { addDays, adoptStayFromUrl, adultsOf, childrenOf, daysUntil, iso, nights, roomsOf, stayParam, tripStartDefault, useStay } from '@/lib/stay/store'
+import { addDays, adoptStayFromUrl, dayTripOptions, adultsOf, childrenOf, daysUntil, iso, nights, roomsOf, stayParam, tripStartDefault, useStay } from '@/lib/stay/store'
 import { buildIcs, downloadIcs, type CalendarEvent } from '@/lib/stay/calendar'
 import { trackOutbound } from '@/lib/links/track'
 import { supports3D } from '@/lib/map/device'
@@ -416,6 +416,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
                         <span className="tm-wk__name">{t(r.name, locale)}</span>
                         <span className="tm-wk__why">{t(r.tagline, locale)}</span>
                         {r.duration === 'multi-day' && stay && <span className="tm-wk__meta tm-wk__from">{s.trip.fitsStay(nights(stay))} · {tripDates(r.days)}</span>}
+                        {r.duration !== 'multi-day' && stay && dayTripOptions(stay, r.duration).length > 0 && <span className="tm-wk__meta tm-wk__from">{s.trip.fitsDay(dayTripOptions(stay, r.duration).slice(0, 3).map((d) => formatDay(d, locale)).join(` ${s.trip.or} `))}</span>}
                         {tripByTrain(r.id) && <span className="tm-wk__meta tm-wk__from">{tripByTrain(r.id)}</span>}
                       </span>
                     </Link>
