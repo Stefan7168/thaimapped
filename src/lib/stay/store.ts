@@ -32,7 +32,8 @@ function read(): Stay | null {
     if (raw === cacheRaw) return cache
     cacheRaw = raw
     const parsed: unknown = raw ? JSON.parse(raw) : null
-    cache = valid(parsed) ? parsed : null
+    // A stay whose check-out has passed is not a stay any more: the pages show no dates and the booking links go plain. The record stays put so the party carries into the next dates.
+    cache = valid(parsed) && parsed.checkOut >= iso(new Date()) ? parsed : null
   } catch {
     // Private windows and blocked storage: no dates, plain links.
   }
@@ -54,7 +55,17 @@ export function stayNow(): Stay | null {
 }
 
 /** Stores the dates when both are present and in order; anything else clears them. The party size carries over unless given. */
-export function setStay(checkIn: string, checkOut: string, adults: number | undefined = stayNow()?.adults, children: number | undefined = stayNow()?.children) {
+/** The stored party, kept even when the dates have passed, so new dates start from the same people. */
+function partyOnFile(): Pick<Stay, 'adults' | 'children'> {
+  try {
+    const parsed: unknown = JSON.parse(window.localStorage.getItem(KEY) ?? 'null')
+    return valid(parsed) ? { adults: parsed.adults, children: parsed.children } : {}
+  } catch {
+    return {}
+  }
+}
+
+export function setStay(checkIn: string, checkOut: string, adults: number | undefined = partyOnFile().adults, children: number | undefined = partyOnFile().children) {
   const next: Stay = { checkIn, checkOut }
   if (adults !== undefined) next.adults = adults
   if (children !== undefined) next.children = children
@@ -115,6 +126,13 @@ function iso(d: Date): string {
   const m = String(d.getMonth() + 1).padStart(2, '0')
   const day = String(d.getDate()).padStart(2, '0')
   return `${y}-${m}-${day}`
+}
+
+/** Days from today to check-in: 0 is today, negative while the stay is on. */
+export function daysUntil(stay: Stay, today = new Date()): number {
+  const a = Date.UTC(today.getFullYear(), today.getMonth(), today.getDate())
+  const b = Date.UTC(+stay.checkIn.slice(0, 4), +stay.checkIn.slice(5, 7) - 1, +stay.checkIn.slice(8, 10))
+  return Math.round((b - a) / 86400000)
 }
 
 export function nights(stay: Stay): number {

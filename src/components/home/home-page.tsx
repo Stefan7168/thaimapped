@@ -18,7 +18,7 @@ import { slotNow } from '@/lib/explorer/weekend'
 import { addSaved, useSaved } from '@/lib/saved/store'
 import { StayPicker } from '@/components/stay/stay-picker'
 import { chooseHotel, myHotelAcross, useHotelChoiceVersion } from '@/lib/saved/my-hotel'
-import { nights, useStay, roomsOf } from '@/lib/stay/store'
+import { daysUntil, nights, useStay, roomsOf } from '@/lib/stay/store'
 import { thb } from '@/lib/explorer/price'
 import { RevealObserver } from '@/components/motion/reveal'
 import { SiteFooter } from '@/components/explorer/site-footer'
@@ -196,7 +196,7 @@ export function HomePage({ locale, bundle, routes }: { locale: Locale; bundle: C
                 <p className="tm-hero__now tm-hero__mine">
                   {s.home.yourWeekend(t(myHotel.pin.name, locale), t(myHotel.area.name, locale))}
                   {/* With dates: the range, then the stay's cost at the hotel's class-typical rate (which names the nights), else the range and the nights. */}
-                  {stay && stayLabel ? (myHotel.pin.price ? <>{` · ${stayLabel} · `}<span title={myHotel.pin.price.basis === 'tier-estimate' ? s.guide.priceEstimate : undefined}>{s.guide.stayTotal(thb(myHotel.pin.price.from * nights(stay) * roomsOf(stay), locale), nights(stay), roomsOf(stay))}{myHotel.pin.price.basis === 'tier-estimate' ? '*' : ''}</span></> : ` · ${stayLabel}, ${s.stay.nights(nights(stay))}`) : ''}{' · '}
+                  {stay && stayLabel ? (myHotel.pin.price ? <>{` · ${stayLabel}, ${s.home.inDays(daysUntil(stay))} · `}<span title={myHotel.pin.price.basis === 'tier-estimate' ? s.guide.priceEstimate : undefined}>{s.guide.stayTotal(thb(myHotel.pin.price.from * nights(stay) * roomsOf(stay), locale), nights(stay), roomsOf(stay))}{myHotel.pin.price.basis === 'tier-estimate' ? '*' : ''}</span></> : ` · ${stayLabel}, ${s.stay.nights(nights(stay))}, ${s.home.inDays(daysUntil(stay))}`) : ''}{' · '}
                   {nowSlot ? (
                     <Link href={`/${locale}/${city.id}/weekend/${myHotel.area.id}?hotel=${myHotel.pin.id}#tm-slot-${nowSlot}`} className="tm-link tm-link--under">{s.home.jumpNow(s.guide.slots[nowSlot].toLowerCase())}</Link>
                   ) : (
@@ -208,7 +208,7 @@ export function HomePage({ locale, bundle, routes }: { locale: Locale; bundle: C
               {/* Half a plan: dates with no hotel, or a saved place with no hotel. Each line says what it knows and the one next step. */}
               {!myHotel && stay && stayLabel && (
                 <p className="tm-hero__now tm-hero__mine">
-                  {s.home.yourDates(stayLabel, s.stay.nights(nights(stay)))}{' · '}
+                  {s.home.yourDates(stayLabel, s.stay.nights(nights(stay)))}{`, ${s.home.inDays(daysUntil(stay))} · `}
                   {myPlace ? (
                     <Link href={`/${locale}/${city.id}/weekend/${myPlace.area.id}`} className="tm-link tm-link--under">{s.home.quiz.plan(t(myPlace.area.name, locale))}</Link>
                   ) : (

@@ -178,6 +178,7 @@ const en = {
     weekendLink: 'Plan this weekend',
     yourWeekend: (hotel: string, area: string) => `Your weekend: ${hotel} in ${area}`,
     yourWeekendLink: 'Open your plan',
+    inDays: (n: number) => (n > 1 ? `in ${n} days` : n === 1 ? 'tomorrow' : n === 0 ? 'today' : 'on now'),
     jumpNow: (slot: string) => `It is ${slot} of your weekend · Jump to now`,
     setDates: 'Set your dates',
     yourDates: (range: string, nights: string) => `Your dates: ${range}, ${nights}`,
