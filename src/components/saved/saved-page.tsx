@@ -23,7 +23,7 @@ import { addSaved, clearSaved, toggleSaved, useSaved } from '@/lib/saved/store'
 import { addKeptTrips, clearKeptTrips, toggleKeptTrip, useKeptTrips } from '@/lib/saved/trips'
 import { formatDay } from '@/lib/stay/format'
 import { addDays, dayTripOptions } from '@/lib/stay/store'
-import { addTripStartPicks, awayNights, parseStarts, startsParam, tripClashes, tripDayOptions, tripStartFor, useTripStartPicks } from '@/lib/stay/trip-start'
+import { addTripStartPicks, awayNights, hereStay, parseStarts, startsParam, tripClashes, tripDayOptions, tripStartFor, useTripStartPicks } from '@/lib/stay/trip-start'
 import { buildIcs, downloadIcs, TRIP_HOURS, type CalendarEvent } from '@/lib/stay/calendar'
 import { chooseHotel, myHotelAcross, myHotelChoice, useHotelChoiceVersion } from '@/lib/saved/my-hotel'
 import { SiteHeader } from '@/components/explorer/site-header'
@@ -95,6 +95,7 @@ export function SavedPage({ locale, cityId, entries, trips = [], stations, inter
   // Nights the kept road trips sleep away: hotel totals here count the other nights only.
   const away = stay ? awayNights(stay, keptTrips.map((r) => ({ ...r, stops: r.nightsAway.map((day) => ({ kind: 'hotel' as const, day })) })), keptTrips.map((r) => r.id), picks) : []
   const hereNights = stay ? nights(stay) - away.length : 0
+  const bookStay = stay ? hereStay(stay, away) : null
   const missing = ids.length - rows.length
   const hotelRows = rows.filter((e) => e.pin.kind === 'hotel')
   const placeRows = rows.filter((e) => e.pin.kind !== 'hotel')
@@ -225,7 +226,7 @@ export function SavedPage({ locale, cityId, entries, trips = [], stations, inter
                 {partners.map((p) => {
                   const subId = subIdFor(`${cityId}-${area.id}`, pin.id)
                   return (
-                    <a key={p} href={buildOutboundUrl(p, pin.links[p]!, subId, stay)} onClick={() => p !== 'official' && trackOutbound(p, subId)} target="_blank" rel={p === 'official' ? 'noopener' : 'noopener sponsored'} className={p === 'official' ? 'tm-card__link tm-card__link--quiet' : 'tm-card__link'}>
+                    <a key={p} href={buildOutboundUrl(p, pin.links[p]!, subId, bookStay)} onClick={() => p !== 'official' && trackOutbound(p, subId)} target="_blank" rel={p === 'official' ? 'noopener' : 'noopener sponsored'} className={p === 'official' ? 'tm-card__link tm-card__link--quiet' : 'tm-card__link'}>
                       {p === 'official' ? s.card.official : s.card.open(p.charAt(0).toUpperCase() + p.slice(1))}
                     </a>
                   )
@@ -280,7 +281,7 @@ export function SavedPage({ locale, cityId, entries, trips = [], stations, inter
             <h2 className="tm-wk__time">{s.saved.compare}</h2>
             <p className="tm-saved__note">{sentIds ? s.saved.compareLeadSent : s.saved.compareLead}</p>
             <StayPicker locale={locale} />
-            <HotelCompare locale={locale} cityId={cityId} entries={hotelRows} stations={stations} nearbyCount={nearbyCount} mine={sentIds ? null : hotelRows.find((e) => pickFor(e.area.id) === e.pin.id && areaHotelCount(e.area.id) > 1)?.pin.id} airport={airport} />
+            <HotelCompare locale={locale} cityId={cityId} entries={hotelRows} stations={stations} nearbyCount={nearbyCount} mine={sentIds ? null : hotelRows.find((e) => pickFor(e.area.id) === e.pin.id && areaHotelCount(e.area.id) > 1)?.pin.id} airport={airport} trips={keptTrips} plan={{ ids: keptTrips.map((r) => r.id), picks }} />
           </section>
         )}
         <div className="tm-saved__cols">

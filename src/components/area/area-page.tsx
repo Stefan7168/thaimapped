@@ -47,7 +47,7 @@ export function AreaPage({ locale, cityId, area, areas, stations, stationSlugs, 
   const s = strings(locale)
   const stay = useStay()
   // Hotel totals count the nights slept here, not the ones a kept road trip spends away.
-  const { hereNights, away } = useHereNights(stay, trips)
+  const { hereNights, away, bookStay } = useHereNights(stay, trips)
   const detected3D = useSyncExternalStore(noopSubscribe, supports3D, () => null)
   const [card, setCard] = useState<{ pin: Pin; area: Area } | null>(null)
   const [hoverId, setHoverId] = useState<string | null>(null)
@@ -143,7 +143,7 @@ export function AreaPage({ locale, cityId, area, areas, stations, stationSlugs, 
             {partners.map((p) => {
               const subId = subIdFor(`${cityId}-${area.id}`, pin.id)
               return (
-                <a key={p} href={buildOutboundUrl(p, pin.links[p]!, subId, stay)} onClick={() => p !== 'official' && trackOutbound(p, subId)} target="_blank" rel={p === 'official' ? 'noopener' : 'noopener sponsored'} className={p === 'official' ? 'tm-card__link tm-card__link--quiet' : 'tm-card__link'}>
+                <a key={p} href={buildOutboundUrl(p, pin.links[p]!, subId, bookStay)} onClick={() => p !== 'official' && trackOutbound(p, subId)} target="_blank" rel={p === 'official' ? 'noopener' : 'noopener sponsored'} className={p === 'official' ? 'tm-card__link tm-card__link--quiet' : 'tm-card__link'}>
                   {p === 'official' ? s.card.official : s.card.open(p.charAt(0).toUpperCase() + p.slice(1))}
                 </a>
               )
@@ -221,7 +221,7 @@ export function AreaPage({ locale, cityId, area, areas, stations, stationSlugs, 
                 <div className="tm-ar__cmp">
                   <h3 className="tm-wk__time">{s.areaPage.compare}</h3>
                   <p className="tm-saved__note">{s.areaPage.compareLead}</p>
-                  <HotelCompare locale={locale} cityId={cityId} entries={hotels.map((pin) => ({ pin, area }))} stations={stations} nearbyCount={nearbyCount} showArea={false} mine={myHotel?.id} airport={airport} />
+                  <HotelCompare locale={locale} cityId={cityId} entries={hotels.map((pin) => ({ pin, area }))} stations={stations} nearbyCount={nearbyCount} showArea={false} mine={myHotel?.id} airport={airport} trips={trips} />
                 </div>
               )}
             </li>

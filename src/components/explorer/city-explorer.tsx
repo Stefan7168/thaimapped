@@ -50,7 +50,8 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
   const stay = useStay()
   // Hotel totals count the nights slept here, not the ones a kept road trip spends away.
   const nightsHere = useMemo(() => tripNights(routes), [routes])
-  const { hereNights, away } = useHereNights(stay, nightsHere)
+  const here = useHereNights(stay, nightsHere)
+  const { hereNights, away, bookStay } = here
   const { city, areas } = bundle
   const detected3D = useSyncExternalStore(noopSubscribe, supports3D, () => null)
   // Bangkok's clock, read once in the browser: the weekend tab marks the slot it is right now.
@@ -348,7 +349,7 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
             {active && partners.length > 0 && (
               <div className="mt-1 flex gap-2 px-1">
                 {partners.map((p) => (
-                  <a key={p} href={buildOutboundUrl(p, pin.links[p]!, subIdFor(`${city.id}-${area.id}`, pin.id), stay)} onClick={() => trackOutbound(p, subIdFor(`${city.id}-${area.id}`, pin.id))} target="_blank" rel="noopener sponsored" className="rounded bg-accent px-2 py-1 text-xs font-semibold text-white">
+                  <a key={p} href={buildOutboundUrl(p, pin.links[p]!, subIdFor(`${city.id}-${area.id}`, pin.id), bookStay)} onClick={() => trackOutbound(p, subIdFor(`${city.id}-${area.id}`, pin.id))} target="_blank" rel="noopener sponsored" className="rounded bg-accent px-2 py-1 text-xs font-semibold text-white">
                     {p}
                   </a>
                 ))}
@@ -460,6 +461,7 @@ export function CityExplorer({ locale, bundle, routes }: { locale: Locale; bundl
               near={filters.near}
               nearLabel={filters.nearName ?? null}
               nearHotel={nearHotel}
+              here={here}
               outlines={outlines}
               activePinId={activePin?.id ?? null}
               hoverPinId={hoverPin}

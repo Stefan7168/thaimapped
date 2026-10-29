@@ -32,7 +32,8 @@ import { HotelCompare } from '@/components/stay/hotel-compare'
 import { addSaved, useSaved } from '@/lib/saved/store'
 import { chooseHotel, useMyHotelChoice } from '@/lib/saved/my-hotel'
 import { addKeptTrips, toggleKeptTrip, useKeptTrips } from '@/lib/saved/trips'
-import { addTripStartPicks, awayNights, parseStarts, startsParam, tripClashes, tripDayOptions, tripStartFor, useTripStartPicks } from '@/lib/stay/trip-start'
+import { tripNights } from '@/lib/content/slim'
+import { addTripStartPicks, awayNights, hereStay, parseStarts, startsParam, tripClashes, tripDayOptions, tripStartFor, useTripStartPicks } from '@/lib/stay/trip-start'
 import { HotelElsewhere, useHotelElsewhere } from '@/components/stay/hotel-elsewhere'
 import { skipStop, unskipStops, useSkipped } from '@/lib/saved/skipped'
 import { KIND_ICONS } from '@/components/explorer/kind-bar'
@@ -303,7 +304,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
           {pin.kind === 'hotel' && (Object.keys(pin.links) as Partner[]).map((p) => {
               const subId = subIdFor(`${cityId}-${area.id}`, pin.id)
               return (
-                <a key={p} href={buildOutboundUrl(p, pin.links[p]!, subId, stay)} onClick={() => p !== 'official' && trackOutbound(p, subId)} target="_blank" rel={p === 'official' ? 'noopener' : 'noopener sponsored'} className={p === 'official' ? 'tm-card__link tm-card__link--quiet' : 'tm-card__link'}>
+                <a key={p} href={buildOutboundUrl(p, pin.links[p]!, subId, bookStay)} onClick={() => p !== 'official' && trackOutbound(p, subId)} target="_blank" rel={p === 'official' ? 'noopener' : 'noopener sponsored'} className={p === 'official' ? 'tm-card__link tm-card__link--quiet' : 'tm-card__link'}>
                   {p === 'official' ? s.card.official : s.card.open(p.charAt(0).toUpperCase() + p.slice(1))}
                 </a>
               )
@@ -335,6 +336,9 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
   // Nights a plan road trip sleeps away: the room here, and its total, are for the other nights.
   const away = stay ? awayNights(stay, routes, planTrips, picks) : []
   const hereNights = stay ? nights(stay) - away.length : 0
+  // Booking links open on the nights slept here when they form one block.
+  const bookStay = stay ? hereStay(stay, away) : null
+  const nightsHere = useMemo(() => tripNights(routes), [routes])
   const stayTotalLine = (from: number) => (stay && hereNights > 0 ? `${s.guide.stayTotal(thb(from * hereNights * roomsOf(stay), locale), hereNights, roomsOf(stay))}${away.length > 0 ? s.guide.stayTotalAway(away.length) : ''}` : null)
   // Plan trips first, then the rest in content order.
   const dayTrips = [...routes.filter((r) => r.duration !== 'multi-day'), ...routes.filter((r) => r.duration === 'multi-day' && stay && r.days >= 2 && r.days <= nights(stay) + 1)].sort((a, b) => Number(planTrips.includes(b.id)) - Number(planTrips.includes(a.id)))
@@ -483,7 +487,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
                 <div className="tm-ar__cmp">
                   <h3 className="tm-wk__time">{s.areaPage.compare}</h3>
                   <p className="tm-saved__note">{s.weekendPage.compareLead}</p>
-                  <HotelCompare locale={locale} cityId={cityId} entries={hotels.map((pin) => ({ pin, area }))} stations={stations} nearbyCount={nearbyCount} showArea={false} mine={myHotel?.id} airport={airport} />
+                  <HotelCompare locale={locale} cityId={cityId} entries={hotels.map((pin) => ({ pin, area }))} stations={stations} nearbyCount={nearbyCount} showArea={false} mine={myHotel?.id} airport={airport} trips={nightsHere} plan={{ ids: planTrips, picks }} />
                 </div>
               )}
             </li>
@@ -563,7 +567,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
           {(Object.keys(myHotel.links) as Partner[]).filter((p) => p !== 'official').map((p) => {
             const subId = subIdFor(`${cityId}-${area.id}`, myHotel.id)
             return (
-              <a key={p} href={buildOutboundUrl(p, myHotel.links[p]!, subId, stay)} onClick={() => trackOutbound(p, subId)} target="_blank" rel="noopener sponsored" className="tm-card__link">{p.charAt(0).toUpperCase() + p.slice(1)}</a>
+              <a key={p} href={buildOutboundUrl(p, myHotel.links[p]!, subId, bookStay)} onClick={() => trackOutbound(p, subId)} target="_blank" rel="noopener sponsored" className="tm-card__link">{p.charAt(0).toUpperCase() + p.slice(1)}</a>
             )
           })}
         </aside>

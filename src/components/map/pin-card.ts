@@ -6,6 +6,7 @@ import { thb } from '@/lib/explorer/price'
 import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
 import { directionsUrl } from '@/lib/links/directions'
 import { nights, stayNow, roomsOf } from '@/lib/stay/store'
+import type { HereNights } from '@/lib/stay/trip-start'
 import { savedIds, toggleSaved } from '@/lib/saved/store'
 import { chooseHotel, myHotelChoice } from '@/lib/saved/my-hotel'
 import { distanceM, WALK_PACE_M_PER_MIN } from '@/lib/explorer/filters'
@@ -118,7 +119,7 @@ function airportBlock(locale: Locale, s: ReturnType<typeof strings>, routes: Air
   return d
 }
 
-export function cardElement(locale: Locale, cityId: string, pin: Pin, area: Area, station: Station | undefined, nearby: NearbyPin[], onClose: () => void, onPick: (pin: Pin) => void, airport?: AirportRoutes, elsewhere?: { hotel: Pin; legs: AirportLeg[] }, nearHotel?: Pin | null): HTMLElement {
+export function cardElement(locale: Locale, cityId: string, pin: Pin, area: Area, station: Station | undefined, nearby: NearbyPin[], onClose: () => void, onPick: (pin: Pin) => void, airport?: AirportRoutes, elsewhere?: { hotel: Pin; legs: AirportLeg[] }, nearHotel?: Pin | null, here?: HereNights | null): HTMLElement {
   const s = strings(locale)
   const el = document.createElement('div')
   el.className = 'tm-card'
@@ -138,11 +139,13 @@ export function cardElement(locale: Locale, cityId: string, pin: Pin, area: Area
     price.className = 'tm-card__price'
     price.textContent = s.guide.priceFrom(thb(pin.price.from, locale)) + (pin.price.basis === 'tier-estimate' ? ` (${s.guide.priceEstimate})` : '')
     priceLines.push(price)
+    // The total counts the nights slept here (a kept road trip's nights away are left out), as every list does.
     const stay = stayNow()
-    if (stay) {
+    const hereNights = here ? here.hereNights : stay ? nights(stay) : 0
+    if (stay && hereNights > 0) {
       const total = document.createElement('p')
       total.className = 'tm-card__price tm-card__stay'
-      total.textContent = s.guide.stayTotal(thb(pin.price.from * nights(stay) * roomsOf(stay), locale), nights(stay), roomsOf(stay))
+      total.textContent = s.guide.stayTotal(thb(pin.price.from * hereNights * roomsOf(stay), locale), hereNights, roomsOf(stay)) + (here && here.away.length > 0 ? s.guide.stayTotalAway(here.away.length) : '')
       priceLines.push(total)
     }
   }
@@ -245,7 +248,7 @@ export function cardElement(locale: Locale, cityId: string, pin: Pin, area: Area
       const a = document.createElement('a')
       a.className = partner === 'official' ? 'tm-card__link tm-card__link--quiet' : 'tm-card__link'
       const subId = subIdFor(`${cityId}-${area.id}`, pin.id)
-      a.href = buildOutboundUrl(partner, pin.links[partner]!, subId, stayNow())
+      a.href = buildOutboundUrl(partner, pin.links[partner]!, subId, here ? here.bookStay : stayNow())
       if (partner !== 'official') a.addEventListener('click', () => trackOutbound(partner, subId))
       a.target = '_blank'
       a.rel = partner === 'official' ? 'noopener' : 'noopener sponsored'

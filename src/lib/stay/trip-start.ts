@@ -1,4 +1,4 @@
-import { useSyncExternalStore } from 'react'
+import { useMemo, useSyncExternalStore } from 'react'
 import { useKeptTrips } from '@/lib/saved/trips'
 import { addDays, dayTripOptions, nights, tripStartDefault, tripStartOptions, type Stay } from './store'
 import type { RouteStop, TripRoute } from '@/lib/content/types'
@@ -117,12 +117,31 @@ export function tripClashes<R extends Pick<TripRoute, 'id' | 'days' | 'duration'
 }
 
 /** The nights of the stay spent at a hotel here (not away on a kept road trip), live from this browser's kept trips and picks. */
-export function useHereNights(stay: Stay | null, trips: readonly TripNights[]): { hereNights: number; away: string[] } {
-  const kept = useKeptTrips()
-  const picks = useTripStartPicks()
-  if (!stay) return { hereNights: 0, away: [] }
-  const away = awayNights(stay, trips.map((r) => ({ ...r, stops: r.nightsAway.map((day) => ({ kind: 'hotel' as const, day })) })), kept, picks)
-  return { hereNights: nights(stay) - away.length, away }
+/** What a hotel here gets booked for: the nights slept here, the nights away, and the stay the links open on. */
+export type HereNights = { hereNights: number; away: string[]; bookStay: Stay | null }
+
+/** The stay a hotel here is booked for: the nights not spent away when they form one block (a trip at the start or the end of the stay); the whole stay otherwise. */
+export function hereStay(stay: Stay, away: readonly string[]): Stay {
+  if (away.length === 0) return stay
+  const here: string[] = []
+  for (let d = stay.checkIn; d < stay.checkOut; d = addDays(d, 1)) if (!away.includes(d)) here.push(d)
+  if (here.length === 0) return stay
+  const contiguous = here.every((d, i) => i === 0 || d === addDays(here[i - 1], 1))
+  return contiguous ? { ...stay, checkIn: here[0], checkOut: addDays(here[here.length - 1], 1) } : stay
+}
+
+export function useHereNights(stay: Stay | null, trips: readonly TripNights[], plan?: { ids: readonly string[]; picks: Readonly<Record<string, string>> }): HereNights {
+  const ownKept = useKeptTrips()
+  const ownPicks = useTripStartPicks()
+  // A shared plan (sent trips with their days) counts instead of this browser's own list.
+  const kept = plan?.ids ?? ownKept
+  const picks = plan?.picks ?? ownPicks
+  // Memoised so a map effect keyed on the result does not rebuild on every render.
+  return useMemo(() => {
+    if (!stay) return { hereNights: 0, away: [], bookStay: null }
+    const away = awayNights(stay, trips.map((r) => ({ ...r, stops: r.nightsAway.map((day) => ({ kind: 'hotel' as const, day })) })), kept, picks)
+    return { hereNights: nights(stay) - away.length, away, bookStay: hereStay(stay, away) }
+  }, [stay, trips, kept, picks])
 }
 
 /** The nights of the stay (as check-in dates) a plan road trip sleeps away, so the hotel here is only for the rest. */

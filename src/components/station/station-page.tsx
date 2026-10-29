@@ -49,7 +49,7 @@ export function StationPage({ locale, cityId, page, areas, hotelDoors, stations,
   const s = strings(locale)
   const stay = useStay()
   // Hotel totals count the nights slept here, not the ones a kept road trip spends away.
-  const { hereNights, away } = useHereNights(stay, trips)
+  const { hereNights, away, bookStay } = useHereNights(stay, trips)
   // Places of this page inside a ten-minute walk of a hotel, straight-line at walking pace.
   const nearbyCount = (hotel: Pin) => page.places.filter((n) => distanceM(hotel.location.lon, hotel.location.lat, n.pin.location.lon, n.pin.location.lat) <= WALK_PACE_M_PER_MIN * 10).length
   const detected3D = useSyncExternalStore(noopSubscribe, supports3D, () => null)
@@ -151,7 +151,7 @@ export function StationPage({ locale, cityId, page, areas, hotelDoors, stations,
             {partners.map((p) => {
               const subId = subIdFor(`${cityId}-${area.id}`, pin.id)
               return (
-                <a key={p} href={buildOutboundUrl(p, pin.links[p]!, subId, stay)} onClick={() => p !== 'official' && trackOutbound(p, subId)} target="_blank" rel={p === 'official' ? 'noopener' : 'noopener sponsored'} className={p === 'official' ? 'tm-card__link tm-card__link--quiet' : 'tm-card__link'}>
+                <a key={p} href={buildOutboundUrl(p, pin.links[p]!, subId, bookStay)} onClick={() => p !== 'official' && trackOutbound(p, subId)} target="_blank" rel={p === 'official' ? 'noopener' : 'noopener sponsored'} className={p === 'official' ? 'tm-card__link tm-card__link--quiet' : 'tm-card__link'}>
                   {p === 'official' ? s.card.official : s.card.open(p.charAt(0).toUpperCase() + p.slice(1))}
                 </a>
               )
@@ -189,7 +189,7 @@ export function StationPage({ locale, cityId, page, areas, hotelDoors, stations,
                 <div className="tm-ar__cmp">
                   <h3 className="tm-wk__time">{s.areaPage.compare}</h3>
                   <p className="tm-saved__note">{s.stationPage.compareLead}</p>
-                  <HotelCompare locale={locale} cityId={cityId} entries={page.hotels.map((h) => ({ pin: h.pin, area: h.area }))} stations={stations} nearbyCount={nearbyCount} mine={page.hotels.map((h) => hotelFor(h.area.id)?.id).find((id) => id && page.hotels.some((h) => h.pin.id === id))} airport={airport} />
+                  <HotelCompare locale={locale} cityId={cityId} entries={page.hotels.map((h) => ({ pin: h.pin, area: h.area }))} stations={stations} nearbyCount={nearbyCount} mine={page.hotels.map((h) => hotelFor(h.area.id)?.id).find((id) => id && page.hotels.some((h) => h.pin.id === id))} airport={airport} trips={trips} />
                 </div>
               )}
             </li>

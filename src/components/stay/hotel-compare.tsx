@@ -5,7 +5,9 @@ import type { Area, Locale, Pin, Station } from '@/lib/content/types'
 import { t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
 import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
-import { nights, roomsOf, useStay } from '@/lib/stay/store'
+import { roomsOf, useStay } from '@/lib/stay/store'
+import { useHereNights } from '@/lib/stay/trip-start'
+import type { TripNights } from '@/lib/content/slim'
 import { trackOutbound } from '@/lib/links/track'
 import { thb } from '@/lib/explorer/price'
 import { CmpWrap } from './cmp-wrap'
@@ -22,7 +24,11 @@ export interface CompareEntry {
  * to the train, what is walkable, where to book. The saved page shows the
  * area row and a "Plan it" row too; an area or weekend page leaves both out.
  */
-export function HotelCompare({ locale, cityId, entries, stations, nearbyCount, showArea = true, mine, airport = {} }: {
+export function HotelCompare({ locale, cityId, entries, stations, nearbyCount, showArea = true, mine, airport = {}, trips = [], plan }: {
+  /** The city's trips slimmed for the nights-here count: a kept road trip's nights away leave the totals and the booking dates. */
+  trips?: TripNights[]
+  /** A shared plan's trips and days, when the page shows a sent plan rather than this browser's own. */
+  plan?: { ids: readonly string[]; picks: Readonly<Record<string, string>> }
   locale: Locale
   cityId: string
   entries: CompareEntry[]
@@ -36,6 +42,7 @@ export function HotelCompare({ locale, cityId, entries, stations, nearbyCount, s
 }) {
   const s = strings(locale)
   const stay = useStay()
+  const { hereNights, away, bookStay } = useHereNights(stay, trips, plan)
   const stationById = new Map(stations.map((st) => [st.id, st]))
   const fromAirport = (pin: Pin) => (pin.walk ? airport[pin.walk.station]?.suvarnabhumi : undefined)
   const airportRow = entries.some((e) => fromAirport(e.pin) !== undefined)
@@ -65,10 +72,10 @@ export function HotelCompare({ locale, cityId, entries, stations, nearbyCount, s
               <th scope="row">{s.saved.cmpPrice}</th>
               {entries.map((e) => <td key={e.pin.id}>{e.pin.price ? `${s.guide.priceFrom(thb(e.pin.price.from, locale))}${e.pin.price.basis === 'tier-estimate' ? '*' : ''}` : (e.pin.tier ? s.filters.tier[e.pin.tier] : '')}</td>)}
             </tr>
-            {stay && (
+            {stay && hereNights > 0 && (
               <tr>
-                <th scope="row">{s.saved.cmpStay(nights(stay), roomsOf(stay))}</th>
-                {entries.map((e) => <td key={e.pin.id}>{e.pin.price ? `${s.guide.about(thb(e.pin.price.from * nights(stay) * roomsOf(stay), locale))}${e.pin.price.basis === 'tier-estimate' ? '*' : ''}` : ''}</td>)}
+                <th scope="row">{s.saved.cmpStay(hereNights, roomsOf(stay))}{away.length > 0 ? s.saved.cmpStayAway(away.length) : ''}</th>
+                {entries.map((e) => <td key={e.pin.id}>{e.pin.price ? `${s.guide.about(thb(e.pin.price.from * hereNights * roomsOf(stay), locale))}${e.pin.price.basis === 'tier-estimate' ? '*' : ''}` : ''}</td>)}
               </tr>
             )}
             <tr>
@@ -97,7 +104,7 @@ export function HotelCompare({ locale, cityId, entries, stations, nearbyCount, s
                 <td key={e.pin.id} className="tm-cmp__links">
                   {(Object.keys(e.pin.links) as Partner[]).filter((p) => p !== 'official').map((p) => {
                     const subId = subIdFor(`${cityId}-${e.area.id}`, e.pin.id)
-                    return <a key={p} href={buildOutboundUrl(p, e.pin.links[p]!, subId, stay)} onClick={() => trackOutbound(p, subId)} target="_blank" rel="noopener sponsored" className="tm-link">{p.charAt(0).toUpperCase() + p.slice(1)}</a>
+                    return <a key={p} href={buildOutboundUrl(p, e.pin.links[p]!, subId, bookStay)} onClick={() => trackOutbound(p, subId)} target="_blank" rel="noopener sponsored" className="tm-link">{p.charAt(0).toUpperCase() + p.slice(1)}</a>
                   })}
                 </td>
               ))}

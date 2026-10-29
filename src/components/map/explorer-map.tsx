@@ -1,5 +1,6 @@
 'use client'
 
+import type { HereNights } from '@/lib/stay/trip-start'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import type { ExpressionSpecification, LngLatBoundsLike, Map as MaplibreMap, Marker, Popup } from 'maplibre-gl'
 import type { Area, Camera, Locale, Pin, Station } from '@/lib/content/types'
@@ -59,6 +60,8 @@ export interface ExplorerMapProps {
   nearLabel?: string | null
   /** The hotel pin the near circle stands on, when it is a hotel: a place's card then measures and routes from that door. */
   nearHotel?: Pin | null
+  /** The nights slept here and the booking stay, for the pop-up card's total and links. */
+  here?: HereNights | null
   /** Borders drawn and framed: ticked areas and sub-areas. */
   outlines: Outline[]
   /** Pin to highlight and open a card on, if any. */
@@ -131,7 +134,7 @@ function focusBounds(pins: VisiblePin[], stations: Station[], centres: [number, 
 }
 
 export function ExplorerMap(props: ExplorerMapProps) {
-  const { locale, cityId, cityCamera, threeD, areas, pins, allPins, allStations, airport, interchanges = [], stations, centres, near = null, nearLabel = null, nearHotel = null, outlines, activePinId, onSelectArea, onSelectPin, onClosePin, hoverPinId = null, onHoverPin } = props
+  const { locale, cityId, cityCamera, threeD, areas, pins, allPins, allStations, airport, interchanges = [], stations, centres, near = null, nearLabel = null, nearHotel = null, here = null, outlines, activePinId, onSelectArea, onSelectPin, onClosePin, hoverPinId = null, onHoverPin } = props
   const containerRef = useRef<HTMLDivElement>(null)
   const mapRef = useRef<MaplibreMap | null>(null)
   const markersRef = useRef<Marker[]>([])
@@ -351,7 +354,7 @@ export function ExplorerMap(props: ExplorerMapProps) {
       const narrowScreen = map.getContainer().clientWidth < 768
       const popup = new maplibregl.Popup({ closeButton: false, closeOnClick: false, offset: 14, maxWidth: '300px', className: 'tm-card-popup', anchor: narrowScreen ? 'bottom' : undefined })
         .setLngLat([pin.location.lon, pin.location.lat])
-        .setDOMContent(cardElement(locale, cityId, pin, area, station, nearby, () => callbacks.current.onClosePin(), (next) => callbacks.current.onSelectPin(next), pin.walk ? airport?.[pin.walk.station] : undefined, elsewhere, nearHotel))
+        .setDOMContent(cardElement(locale, cityId, pin, area, station, nearby, () => callbacks.current.onClosePin(), (next) => callbacks.current.onSelectPin(next), pin.walk ? airport?.[pin.walk.station] : undefined, elsewhere, nearHotel, here))
         .addTo(map)
       popup.on('close', () => {
         if (popupRef.current === popup) callbacks.current.onClosePin()
@@ -367,7 +370,7 @@ export function ExplorerMap(props: ExplorerMapProps) {
       cancelled = true
       stopFit?.()
     }
-  }, [activePinId, pins, allPins, stationById, airport, locale, cityId, mapReady, nearHotel])
+  }, [activePinId, pins, allPins, stationById, airport, locale, cityId, mapReady, nearHotel, here])
 
   // Outlines of the ticked areas. The colour comes from the same CSS token
   // the labels use, read once per update so the map and the panel agree.

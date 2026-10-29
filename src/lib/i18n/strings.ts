@@ -90,6 +90,8 @@ const en = {
     cmpSwipe: 'Swipe sideways for the rest',
     cmpArea: 'Area',
     cmpPrice: 'A night',
+    // After the stay row's heading: nights a kept road trip sleeps away are not in the total.
+    cmpStayAway: (away: number) => (away === 1 ? ' (1 away)' : ` (${away} away)`),
     cmpStay: (n: number, rooms = 1) => `${n === 1 ? 'Your night' : `Your ${n} nights`}${rooms > 1 ? `, ${rooms} rooms` : ''}`,
     cmpStation: 'To the train',
     cmpNearby: 'Walkable',
