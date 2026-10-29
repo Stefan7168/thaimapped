@@ -95,7 +95,8 @@ export function TripPage({ locale, cityId, cityName, route, hotelDoors = {}, sta
   const clock = useSyncExternalStore(noopSubscribe, clockSnapshot, () => null)
   const isToday = (d: number): boolean => !!clock && dayIso(d) === clock.date
   // A hotel stop on the road sleeps that one night, so its search opens on that night, not on the Bangkok stay.
-  const nightAt = (stop: RouteStop) => (startIso && stop.kind === 'hotel' ? { checkIn: addDays(startIso, stop.day - 1), checkOut: addDays(startIso, stop.day) } : stay)
+  // The road night keeps the party: only the dates change to that one night.
+  const nightAt = (stop: RouteStop) => (startIso && stop.kind === 'hotel' ? { ...stay, checkIn: addDays(startIso, stop.day - 1), checkOut: addDays(startIso, stop.day) } : stay)
   // The trip as a calendar file: one all-day-ish event per day (08:00 to 20:00 Bangkok), the day's stops in the description. Needs the dates.
   const addToCalendar = () => {
     if (!stay) return
