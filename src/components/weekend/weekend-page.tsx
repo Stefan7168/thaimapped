@@ -17,7 +17,7 @@ import { WEEKEND_SLOTS, weekendPlan, slotNow, type WeekendSlot, SLOT_TIMES, type
 import { bangkokClock, whenLine } from '@/lib/explorer/when'
 import { thb } from '@/lib/explorer/price'
 import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
-import { directionsUrl } from '@/lib/links/directions'
+import { dayDirectionsUrl, directionsUrl } from '@/lib/links/directions'
 import { formatDayRange } from '@/lib/stay/format'
 import { seasonOf } from '@/lib/stay/season'
 import { addDays, adoptStayFromUrl, adultsOf, childrenOf, daysUntil, iso, nights, roomsOf, stayParam, tripStartDefault, useStay } from '@/lib/stay/store'
@@ -365,6 +365,11 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
                         </Fragment>
                       ))}
                     </ul>
+                    {/* Two stops or more: the slot as one walking route in Google Maps, from the saved hotel when there is one. */}
+                    {plan.slots[slot].length >= 2 && (() => {
+                      const href = dayDirectionsUrl([...(myHotel ? [myHotel.location] : []), ...plan.slots[slot].map((p) => p.location)], 'walking')
+                      return href ? <p className="tm-wk__route"><a href={href} target="_blank" rel="noopener" className="tm-link tm-link--under">{myHotel ? s.weekendPage.openSlotFrom(t(myHotel.name, locale)) : s.weekendPage.openSlot}</a></p> : null
+                    })()}
                     {/* The night ends at the hotel: the way back from the slot's last stop, by train when it is a real ride. */}
                     {myHotel && (slot === 'fridayNight' || slot === 'saturdayNight') && (() => {
                       const last = plan.slots[slot][plan.slots[slot].length - 1]
