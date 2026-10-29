@@ -19,6 +19,7 @@ import { thb } from '@/lib/explorer/price'
 import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
 import { directionsUrl } from '@/lib/links/directions'
 import { formatDayRange } from '@/lib/stay/format'
+import { seasonOf } from '@/lib/stay/season'
 import { addDays, adoptStayFromUrl, adultsOf, childrenOf, daysUntil, iso, nights, roomsOf, stayParam, tripStartDefault, useStay } from '@/lib/stay/store'
 import { buildIcs, downloadIcs, type CalendarEvent } from '@/lib/stay/calendar'
 import { trackOutbound } from '@/lib/links/track'
@@ -281,6 +282,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
           <p className="tm-wk__eyebrow">{s.weekendPage.eyebrow}{stay && <span className="tm-wk__date">{s.home.inDays(daysUntil(stay))}</span>}</p>
           <h1 className="tm-h2">{s.weekendPage.title(t(area.name, locale))}</h1>
           <p className="tm-wk__lead">{t(area.tagline, locale)} {price ? s.weekendPage.budget(thb(price.min, locale), thb(price.max, locale)) : s.weekendPage.anyBudget}</p>
+          {stay && seasonOf(cityId, stay.checkIn) && <p className="tm-wk__season" title={s.weekendPage.seasonNote}>{s.weekendPage.season[seasonOf(cityId, stay.checkIn)!]}</p>}
           {stay && (
             // Paper only: the dates row and booking bar are screen controls, so the printout states the stay in one line.
             <p className="tm-wk__paper">{[formatDayRange(stay.checkIn, stay.checkOut, locale), s.stay.nights(nights(stay)), s.stay.adults(adultsOf(stay), roomsOf(stay), childrenOf(stay)), myHotel ? s.weekendPage.paperHotel(t(myHotel.name, locale)) : null].filter(Boolean).join(' · ')}</p>

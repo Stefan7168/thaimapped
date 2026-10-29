@@ -178,6 +178,7 @@ body {
 .tm-wk__eyebrow { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-2); }
 .tm-wk__eyebrow::before { content: ""; width: 10px; height: 10px; border-radius: 9999px; background: var(--pin, var(--accent)); }
 .tm-wk__lead { margin-top: 12px; font-size: 17px; line-height: 1.5; color: var(--ink); max-width: 52ch; }
+.tm-wk__season { margin-top: 8px; font-size: 14px; line-height: 1.5; color: var(--ink-2); max-width: 52ch; }
 .tm-wk__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; margin-top: 18px; }
 .tm-wk__actions .tm-button { display: inline-flex; align-items: center; gap: 8px; }
 .tm-link--button { display: inline-flex; align-items: center; gap: 6px; font: inherit; background: none; border: 0; padding: 0; cursor: pointer; }

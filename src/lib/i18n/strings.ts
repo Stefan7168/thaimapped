@@ -160,6 +160,13 @@ const en = {
     calendarCheckIn: (hotel: string) => `Check in: ${hotel}`,
     calendarCheckOut: (hotel: string) => `Check out: ${hotel}`,
     checkOutDay: 'Check-out day',
+    season: {
+      cool: 'Cool season: usually dry, with mild evenings. The easiest months to be out all day.',
+      hot: 'Hot season: afternoons usually in the mid-thirties. Mornings and air-conditioned stops in the afternoon.',
+      rainy: 'Rainy season: usually a short, heavy shower in the late afternoon; mornings are mostly fine.',
+      rainyPeak: 'Wettest months: a heavy shower most afternoons and some flooded streets; mornings are the safer bet.',
+    } as Record<string, string>,
+    seasonNote: 'What the month usually brings, not a forecast',
     checkOutDayNote: 'Leave the bags at the desk and pick them up after.',
     calendarTimesVary: 'Check-in and check-out times vary by hotel; your booking has the real ones.',
     calendarHotel: 'Where to sleep',
