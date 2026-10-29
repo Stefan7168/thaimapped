@@ -82,6 +82,7 @@ const en = {
     cmpNearby: 'Walkable',
     cmpAirport: 'From Suvarnabhumi',
     cmpPlaces: (n: number) => (n === 1 ? '1 place within 10 min' : `${n} places within 10 min`),
+    cmpNearest: (name: string, n: number) => `Nothing within 10 min; nearest is ${name}, about ${n} min on foot`,
     cmpBook: 'Book',
     unknown: (n: number) => (n === 1 ? '1 saved item is no longer on the map.' : `${n} saved items are no longer on the map.`),
   },

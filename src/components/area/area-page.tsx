@@ -78,6 +78,16 @@ export function AreaPage({ locale, cityId, area, areas, stations, stationSlugs, 
   const focus = useMemo(() => ({ pins: pinned, area, numbered: true, mine: myHotel?.id }), [pinned, area, myHotel?.id])
   // Places (not hotels) of this area inside a ten-minute walk of a hotel, straight-line at walking pace.
   const nearbyCount = (hotel: Pin) => area.pins.filter((p) => p.kind !== 'hotel' && distanceM(hotel.location.lon, hotel.location.lat, p.location.lon, p.location.lat) <= WALK_PACE_M_PER_MIN * 10).length
+  // With nothing inside ten minutes, the card names the closest place instead of a bare zero.
+  const nearestPlace = (hotel: Pin): { pin: Pin; minutes: number } | null => {
+    let best: { pin: Pin; minutes: number } | null = null
+    for (const p of area.pins) {
+      if (p.kind === 'hotel') continue
+      const minutes = Math.max(1, Math.round(distanceM(hotel.location.lon, hotel.location.lat, p.location.lon, p.location.lat) / WALK_PACE_M_PER_MIN))
+      if (!best || minutes < best.minutes) best = { pin: p, minutes }
+    }
+    return best
+  }
   const areaStations = area.stations.map((id) => stationById.get(id)).filter((st): st is Station => !!st)
   const photos = area.photos ?? []
   const explorerHref = `/${locale}/${cityId}#area=${area.id}`
@@ -117,7 +127,7 @@ export function AreaPage({ locale, cityId, area, areas, stations, stationSlugs, 
             {pin.kind !== 'hotel' && myHotel && <span className="tm-wk__meta tm-wk__from">{s.weekendPage.fromHotel(fromHotel(pin)!, t(myHotel.name, locale))}</span>}
             {pin.kind !== 'hotel' && myHotel && fromHotel(pin)! > 20 && byTrain(pin) && <span className="tm-wk__meta tm-wk__train">{s.weekendPage.byTrain(byTrain(pin)!)}</span>}
             {pin.kind !== 'hotel' && byTrainElsewhere(pin) && <span className="tm-wk__meta tm-wk__from" title={byTrainElsewhere(pin)!.long}>{byTrainElsewhere(pin)!.short}</span>}
-            {pin.kind === 'hotel' && <span className="tm-wk__meta">{s.saved.cmpPlaces(nearbyCount(pin))}</span>}
+            {pin.kind === 'hotel' && <span className="tm-wk__meta">{nearbyCount(pin) === 0 && nearestPlace(pin) ? s.saved.cmpNearest(t(nearestPlace(pin)!.pin.name, locale), nearestPlace(pin)!.minutes) : s.saved.cmpPlaces(nearbyCount(pin))}</span>}
           </span>
         </button>
         <div className="tm-wk__links">
