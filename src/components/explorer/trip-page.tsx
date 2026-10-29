@@ -179,6 +179,22 @@ export function TripPage({ locale, cityId, cityName, route, hotelDoors = {}, sta
         url,
       }
     })
+    // Each bed on the road is its own evening event on its first night, with the night count, so the nights away stand out from the day routes.
+    if (stay) {
+      for (const st of route.stops) {
+        if (st.kind !== 'hotel') continue
+        const at = nightAt(st)!
+        const n = nights(at)
+        events.push({
+          date: at.checkIn, start: '19:00', end: '20:00',
+          title: s.trip.calendarSleep(t(st.name, locale), n),
+          description: [t(st.why, locale), st.search ? s.trip.searchHotels(st.search, true) : '', url].filter(Boolean).join('\n'),
+          location: st.search ?? t(st.name, locale),
+          geo: st.location,
+          url,
+        })
+      }
+    }
     downloadIcs(`trip-${route.id}.ics`, buildIcs(events, name))
   }
 

@@ -310,6 +310,7 @@ const en = {
     heading: 'Trips from Bangkok',
     today: 'Today',
     calendarDay: (name: string, d: number, days: number) => (days > 1 ? `${name}, day ${d} of ${days}` : name),
+    calendarSleep: (name: string, n: number) => (n === 1 ? `Sleep: ${name}` : `Sleep: ${name}, ${n} nights`),
     startFromHotel: (hotel: string) => `From your hotel, ${hotel}`,
     shareFromHotel: (hotel: string) => `from your hotel, ${hotel}`,
     startOn: 'Start on',
