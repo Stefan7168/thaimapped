@@ -37,9 +37,12 @@ const en = {
     nights: (n: number) => (n === 1 ? '1 night' : `${n} nights`),
     addNight: '+1 night',
     dropNight: '−1 night',
-    adults: (n: number, rooms = 1) => `${n === 1 ? '1 adult' : `${n} adults`}${rooms > 1 ? `, ${rooms} rooms` : ''}`,
+    adults: (n: number, rooms = 1, children = 0) => `${n === 1 ? '1 adult' : `${n} adults`}${children === 1 ? ', 1 child' : children > 1 ? `, ${children} children` : ''}${rooms > 1 ? `, ${rooms} rooms` : ''}`,
     addAdult: '+1 adult',
     dropAdult: '−1 adult',
+    addChild: '+1 child',
+    dropChild: '−1 child',
+    childAges: 'The hotel site asks the children’s ages.',
     clear: 'Clear',
   },
   saved: {

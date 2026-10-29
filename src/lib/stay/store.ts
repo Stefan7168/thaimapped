@@ -6,9 +6,10 @@ import { useSyncExternalStore } from 'react'
  * carries them, so the hotel page opens priced for the stay instead of for
  * "tonight". Null means no dates picked and the links stay plain.
  */
-/** The dates, and who is going (adults in one room; 2 when unset), so booking searches open on the right party. */
-export type Stay = { checkIn: string; checkOut: string; adults?: number }
+/** The dates, and who is going (adults, 2 when unset; children, 0 when unset), so booking searches open on the right party. Children's ages are asked by the booking site itself, never guessed here. */
+export type Stay = { checkIn: string; checkOut: string; adults?: number; children?: number }
 export const MAX_ADULTS = 6
+export const MAX_CHILDREN = 4
 
 const KEY = 'tm.stay.v1'
 const EVENT = 'tm-stay'
@@ -19,9 +20,10 @@ let cache: Stay | null = null
 
 function valid(x: unknown): x is Stay {
   if (!x || typeof x !== 'object') return false
-  const { checkIn, checkOut, adults } = x as Record<string, unknown>
+  const { checkIn, checkOut, adults, children } = x as Record<string, unknown>
   const party = adults === undefined || (Number.isInteger(adults) && (adults as number) >= 1 && (adults as number) <= MAX_ADULTS)
-  return typeof checkIn === 'string' && typeof checkOut === 'string' && DATE.test(checkIn) && DATE.test(checkOut) && checkOut > checkIn && party
+  const kids = children === undefined || (Number.isInteger(children) && (children as number) >= 0 && (children as number) <= MAX_CHILDREN)
+  return typeof checkIn === 'string' && typeof checkOut === 'string' && DATE.test(checkIn) && DATE.test(checkOut) && checkOut > checkIn && party && kids
 }
 
 function read(): Stay | null {
@@ -52,8 +54,10 @@ export function stayNow(): Stay | null {
 }
 
 /** Stores the dates when both are present and in order; anything else clears them. The party size carries over unless given. */
-export function setStay(checkIn: string, checkOut: string, adults: number | undefined = stayNow()?.adults) {
-  const next = adults === undefined ? { checkIn, checkOut } : { checkIn, checkOut, adults }
+export function setStay(checkIn: string, checkOut: string, adults: number | undefined = stayNow()?.adults, children: number | undefined = stayNow()?.children) {
+  const next: Stay = { checkIn, checkOut }
+  if (adults !== undefined) next.adults = adults
+  if (children !== undefined) next.children = children
   write(valid(next) ? next : null)
 }
 
@@ -67,6 +71,20 @@ export function setAdults(adults: number) {
 
 export function adultsOf(stay: Stay | null): number {
   return stay?.adults ?? 2
+}
+
+/** Children travelling, 0 to 4; the booking site asks their ages. Needs dates to live in. */
+export function setChildren(children: number) {
+  const cur = stayNow()
+  if (!cur) return
+  const n = Math.min(MAX_CHILDREN, Math.max(0, Math.round(children)))
+  const { children: _drop, ...rest } = cur
+  void _drop
+  write(n === 0 ? rest : { ...rest, children: n })
+}
+
+export function childrenOf(stay: Stay | null): number {
+  return stay?.children ?? 0
 }
 
 /** Rooms for the party, two to a room: a search for 5 adults in 1 room shows almost nothing. */

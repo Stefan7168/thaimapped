@@ -1,6 +1,6 @@
 import { env } from '@/lib/env'
 import type { PinLinks } from '@/lib/content/types'
-import { nights, roomsOf, type Stay } from '@/lib/stay/store'
+import { childrenOf, nights, roomsOf, type Stay } from '@/lib/stay/store'
 
 /**
  * Outbound link builder. Content stores plain destination URLs; the
@@ -21,9 +21,10 @@ const TP_PROGRAM: Partial<Record<Partner, { trs: string; p: string }>> = {
 
 /**
  * Adds the visitor's dates to a hotel page so it opens priced for the stay.
- * Booking's names (checkin, checkout, group_adults, no_rooms) are read off a
- * live hotel URL; Agoda's (checkIn, checkOut, los, adults, rooms) are the
- * usual ones but not yet checked on a live page. Unknown names are ignored by
+ * Booking's names (checkin, checkout, group_adults, group_children, no_rooms)
+ * are read off a live hotel URL; Agoda's (checkIn, checkOut, los, adults,
+ * children, rooms) are the usual ones but not yet checked on a live page.
+ * Children go as a count only: both sites ask the ages themselves. Unknown names are ignored by
  * the site, so the worst case is a page priced for tonight, as before.
  */
 export function withStay(partner: Partner, destination: string, stay: Stay | null): string {
@@ -40,11 +41,13 @@ export function withStay(partner: Partner, destination: string, stay: Stay | nul
     u.searchParams.set('los', String(nights(stay)))
     u.searchParams.set('adults', String(stay.adults ?? 2))
     u.searchParams.set('rooms', String(roomsOf(stay)))
+    if (childrenOf(stay) > 0) u.searchParams.set('children', String(childrenOf(stay)))
   } else {
     u.searchParams.set('checkin', stay.checkIn)
     u.searchParams.set('checkout', stay.checkOut)
     u.searchParams.set('group_adults', String(stay.adults ?? 2))
     u.searchParams.set('no_rooms', String(roomsOf(stay)))
+    if (childrenOf(stay) > 0) u.searchParams.set('group_children', String(childrenOf(stay)))
   }
   return u.toString()
 }
