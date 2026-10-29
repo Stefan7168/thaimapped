@@ -53,6 +53,8 @@ const en = {
     trips: 'Your trips',
     tripsNote: 'Kept from the trip pages. Open one for the route, its stops and the day it fits.',
     forget: 'Forget',
+    // Two kept trips whose default days and hours overlap.
+    sameDay: (name: string) => `Same hours as ${name}`,
     lead: (n: number) => (n === 1 ? '1 saved in this browser.' : `${n} saved in this browser.`),
     empty: 'Nothing saved yet. Tap the heart on a hotel or a place on the map and it lands here.',
     emptyLink: 'Open the map',

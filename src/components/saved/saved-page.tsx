@@ -23,6 +23,7 @@ import { addSaved, clearSaved, toggleSaved, useSaved } from '@/lib/saved/store'
 import { toggleKeptTrip, useKeptTrips } from '@/lib/saved/trips'
 import { formatDay } from '@/lib/stay/format'
 import { addDays, dayTripOptions, tripStartDefault } from '@/lib/stay/store'
+import { TRIP_HOURS } from '@/lib/stay/calendar'
 import { chooseHotel, myHotelAcross, myHotelChoice, useHotelChoiceVersion } from '@/lib/saved/my-hotel'
 import { SiteHeader } from '@/components/explorer/site-header'
 import { SiteFooter } from '@/components/explorer/site-footer'
@@ -65,6 +66,19 @@ export function SavedPage({ locale, cityId, entries, trips = [], stations, inter
   const rows = ids.map((id) => byId.get(id)).filter((e): e is SavedEntry => !!e)
   const keptIds = useKeptTrips()
   const keptTrips = keptIds.map((id) => trips.find((r) => r.id === id)).filter((r): r is SavedTrip => !!r)
+  // The days a kept trip takes by default (the trip page's pick), to warn when two kept trips would run in the same hours.
+  const tripDays = (r: SavedTrip): string[] => {
+    if (!stay) return []
+    if (r.days < 2) { const d = dayTripOptions(stay, r.duration).at(-1); return d ? [d] : [] }
+    if (r.days > nights(stay) + 1) return []
+    const from = tripStartDefault(stay, r.days)
+    return Array.from({ length: r.days }, (_, i) => addDays(from, i))
+  }
+  const clashes = (r: SavedTrip): SavedTrip[] => {
+    const mine = tripDays(r)
+    const [a0, a1] = TRIP_HOURS[r.duration]
+    return keptTrips.filter((o) => { const [b0, b1] = TRIP_HOURS[o.duration]; return o.id !== r.id && a0 < b1 && b0 < a1 && tripDays(o).some((d) => mine.includes(d)) })
+  }
   // With dates set, the days of the stay a trip fits, as the trips index says it.
   const tripFit = (r: SavedTrip): string | null => {
     if (!stay) return null
@@ -273,6 +287,7 @@ export function SavedPage({ locale, cityId, entries, trips = [], stations, inter
                       <span className="tm-wk__name">{t(r.name, locale)}</span>
                       <span className="tm-wk__why">{t(r.tagline, locale)}</span>
                       {tripFit(r) && <span className="tm-wk__meta tm-wk__from">{tripFit(r)}</span>}
+                      {clashes(r).length > 0 && <span className="tm-wk__meta">{s.saved.sameDay(clashes(r).map((o) => t(o.name, locale)).join(', '))}</span>}
                     </span>
                   </Link>
                   <div className="tm-wk__links">
