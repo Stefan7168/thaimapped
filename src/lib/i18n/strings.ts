@@ -176,7 +176,7 @@ const en = {
     sharedWithYou: (hotel: string, dates: string | null) => (dates ? `This plan is built around ${hotel} for ${dates}.` : `This plan is built around ${hotel}.`),
     saveSentHotel: 'Keep this hotel on your list',
     // Kept trips named in the share message, after the plan line.
-    shareTrips: (names: string) => ` Day trips: ${names}.`,
+    shareTrips: (names: string, dayTripsOnly = true) => ` ${dayTripsOnly ? 'Day trips' : 'Trips'}: ${names}.`,
     // A trip the sender had kept, on a shared link.
     inPlan: 'In the plan',
     // A kept day trip placed in the slot its day and time of day fall in; the slot's own stops are for the time left.
