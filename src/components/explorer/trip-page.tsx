@@ -19,6 +19,8 @@ import { addDays, adoptStayFromUrl, nights, stayParam, tripStartDefault, tripSta
 import { buildIcs, downloadIcs, type CalendarEvent } from '@/lib/stay/calendar'
 import { StayPicker } from '@/components/stay/stay-picker'
 import { STOP_COLORS } from '@/components/map/trip-map'
+import { legKm, tripLegs } from '@/lib/explorer/trip-legs'
+import { WALK_PACE_M_PER_MIN } from '@/lib/explorer/filters'
 import { bangkokClock } from '@/lib/explorer/when'
 
 // Bangkok's date, read once in the browser; the server renders no "Today".
@@ -72,6 +74,7 @@ export function TripPage({ locale, cityId, cityName, route, hotelDoors = {}, sta
   const [activeStop, setActiveStop] = useState<string | null>(null)
   const [hoverStop, setHoverStop] = useState<string | null>(null)
   const days = Array.from({ length: route.days }, (_, i) => i + 1)
+  const legs = useMemo(() => tripLegs(route), [route])
   const [shared, setShared] = useState<'idle' | 'copied' | 'failed'>('idle')
   // A multi-day trip inside the stay starts on a day of the reader's choosing (?start=, or the chips); by default the latest day that is back by check-out.
   const [pickedStart, setPickedStart] = useState<string | null>(null)
@@ -220,8 +223,10 @@ export function TripPage({ locale, cityId, cityName, route, hotelDoors = {}, sta
                     if (stop.day !== d) return null
                     const active = stop.id === activeStop
                     const partners = Object.keys(stop.links) as Partner[]
+                    const leg = legs[i]
                     return (
                       <li key={stop.id}>
+                        {i > 0 && leg.m >= 150 && <span className="tm-stoprow__leg" title={leg.straight ? s.stationPage.estimated : s.trip.legNote}>{route.mode === 'walk' ? s.trip.legWalk(Math.max(1, Math.round(leg.m / WALK_PACE_M_PER_MIN))) : s.trip.legRoad(legKm(leg.m), leg.straight ? 'straight' : route.mode)}</span>}
                         <button type="button" onClick={() => setActiveStop(active ? null : stop.id)} onMouseEnter={() => setHoverStop(stop.id)} onMouseLeave={() => setHoverStop(null)} onFocus={() => setHoverStop(stop.id)} onBlur={() => setHoverStop(null)} className={`tm-stoprow${active ? ' tm-stoprow--on' : ''}${hoverStop === stop.id ? ' tm-stoprow--hover' : ''}`}>
                           <span className="tm-stoprow__num" style={{ ['--lc' as string]: STOP_COLORS[stop.kind] }}>{i + 1}</span>
                           <span className="min-w-0">
