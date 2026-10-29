@@ -77,7 +77,7 @@ const en = {
     cmpSwipe: 'Swipe sideways for the rest',
     cmpArea: 'Area',
     cmpPrice: 'A night',
-    cmpStay: (n: number) => (n === 1 ? 'Your night' : `Your ${n} nights`),
+    cmpStay: (n: number, rooms = 1) => `${n === 1 ? 'Your night' : `Your ${n} nights`}${rooms > 1 ? `, ${rooms} rooms` : ''}`,
     cmpStation: 'To the train',
     cmpNearby: 'Walkable',
     cmpAirport: 'From Suvarnabhumi',

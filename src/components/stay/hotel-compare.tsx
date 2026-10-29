@@ -5,7 +5,7 @@ import type { Area, Locale, Pin, Station } from '@/lib/content/types'
 import { t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
 import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
-import { nights, useStay } from '@/lib/stay/store'
+import { nights, roomsOf, useStay } from '@/lib/stay/store'
 import { trackOutbound } from '@/lib/links/track'
 import { thb } from '@/lib/explorer/price'
 import { CmpWrap } from './cmp-wrap'
@@ -67,8 +67,8 @@ export function HotelCompare({ locale, cityId, entries, stations, nearbyCount, s
             </tr>
             {stay && (
               <tr>
-                <th scope="row">{s.saved.cmpStay(nights(stay))}</th>
-                {entries.map((e) => <td key={e.pin.id}>{e.pin.price ? `${s.guide.about(thb(e.pin.price.from * nights(stay), locale))}${e.pin.price.basis === 'tier-estimate' ? '*' : ''}` : ''}</td>)}
+                <th scope="row">{s.saved.cmpStay(nights(stay), roomsOf(stay))}</th>
+                {entries.map((e) => <td key={e.pin.id}>{e.pin.price ? `${s.guide.about(thb(e.pin.price.from * nights(stay) * roomsOf(stay), locale))}${e.pin.price.basis === 'tier-estimate' ? '*' : ''}` : ''}</td>)}
               </tr>
             )}
             <tr>
