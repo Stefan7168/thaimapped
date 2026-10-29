@@ -142,7 +142,12 @@ export function SavedPage({ locale, cityId, entries, trips = [], stations, inter
 
   const share = async () => {
     const url = `${window.location.origin}/${locale}/saved?ids=${encodeURIComponent(ids.join(','))}${stay ? `&stay=${stayParam(stay)}` : ''}${keptTrips.length > 0 ? `&trips=${encodeURIComponent(keptTrips.map((r) => r.id).join(','))}` : ''}${startsParam(keptTrips.map((r) => r.id), picks) ? `&starts=${encodeURIComponent(startsParam(keptTrips.map((r) => r.id), picks)!)}` : ''}`
-    const text = s.saved.shareText(hotelRows.length, placeRows.length, hotelRows[0] ? t(hotelRows[0].pin.name, locale) : null) + (keptTrips.length > 0 ? s.saved.shareTrips(keptTrips.length) : '')
+    const tripLine = (r: SavedTrip): string => {
+      const from = stay ? tripStartFor(stay, r, picks) : null
+      const when = from ? (r.days > 1 ? formatDayRange(from, addDays(from, r.days - 1), locale) : formatDay(from, locale)) : null
+      return when ? `${t(r.name, locale)} (${when})` : t(r.name, locale)
+    }
+    const text = s.saved.shareText(hotelRows.length, placeRows.length, hotelRows[0] ? t(hotelRows[0].pin.name, locale) : null) + (keptTrips.length > 0 ? s.saved.shareTrips(keptTrips.map(tripLine).join(', ')) : '')
     try {
       if (navigator.share) {
         await navigator.share({ title: s.saved.title, text, url })

@@ -68,7 +68,7 @@ const en = {
     remove: 'Remove from saved',
     share: 'Send this list',
     // Kept trips, named after the hotel-and-place count in the share message.
-    shareTrips: (n: number) => (n === 1 ? ' Plus 1 trip.' : ` Plus ${n} trips.`),
+    shareTrips: (names: string) => ` Trips: ${names}.`,
     print: 'Print',
     copied: 'Link copied',
     copyFailed: 'Could not copy, use the address bar',
