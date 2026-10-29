@@ -310,6 +310,9 @@ const en = {
     share: 'Share this trip',
     print: 'Print',
     fitsStay: (n: number) => (n === 1 ? 'Fits your night away' : `Fits your ${n} nights`),
+    // A day trip with dates set: the days of the stay it fits ("Sat, Nov 7 or Sun, Nov 8").
+    fitsDay: (days: string) => `Fits ${days}`,
+    or: 'or',
     tooLong: (n: number) => (n === 1 ? 'Needs more than your 1 night' : `Needs more than your ${n} nights`),
     copied: 'Link copied',
     copyFailed: 'Copy the address bar to share',

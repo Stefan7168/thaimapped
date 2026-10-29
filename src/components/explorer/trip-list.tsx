@@ -8,7 +8,7 @@ import { t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
 import { RevealObserver } from '@/components/motion/reveal'
 import { addDays, nights, tripStartDefault, useStay } from '@/lib/stay/store'
-import { formatDayRange } from '@/lib/stay/format'
+import { formatDay, formatDayRange } from '@/lib/stay/format'
 import type { HotelDoor } from '@/lib/content/slim'
 import type { AirportLeg } from '@/lib/transit/from-airport'
 import { rideSentence } from '@/components/stay/from-airport'
@@ -63,7 +63,15 @@ export function TripList({ locale, cityId, cityCamera, routes, hotelDoors = {}, 
   // With dates set, a multi-day trip says whether it fits inside them (a two-day trip in a Fri to Sun stay) or needs more nights; day trips always fit and say nothing.
   const stay = useStay()
   const fitTag = (r: TripRoute) => {
-    if (!stay || r.days < 2) return null
+    if (!stay) return null
+    if (r.days < 2) {
+      // A day trip names the days of the stay it fits: a morning needs a night before it, an afternoon or evening a night after, a full day both.
+      const first = r.duration === 'afternoon' || r.duration === 'evening' ? stay.checkIn : addDays(stay.checkIn, 1)
+      const last = r.duration === 'morning' ? stay.checkOut : addDays(stay.checkOut, -1)
+      const days: string[] = []
+      for (let d = first; d <= last && days.length < 3; d = addDays(d, 1)) days.push(formatDay(d, locale))
+      return days.length > 0 ? s.trip.fitsDay(days.join(` ${s.trip.or} `)) : null
+    }
     if (r.days > nights(stay) + 1) return s.trip.tooLong(nights(stay))
     const from = tripStartDefault(stay, r.days)
     return `${s.trip.fitsStay(nights(stay))} · ${formatDayRange(from, addDays(from, r.days - 1), locale)}`
