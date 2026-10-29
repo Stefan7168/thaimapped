@@ -26,12 +26,22 @@ function valid(x: unknown): x is Stay {
   return typeof checkIn === 'string' && typeof checkOut === 'string' && DATE.test(checkIn) && DATE.test(checkOut) && checkOut > checkIn && party && kids
 }
 
+/** A stored record with good dates and a party that is not: the dates are kept and the party dropped, rather than losing the dates too. */
+function repair(x: unknown): unknown {
+  if (!x || typeof x !== 'object') return x
+  const { checkIn, checkOut, adults, children } = x as Record<string, unknown>
+  const out: Record<string, unknown> = { checkIn, checkOut }
+  if (Number.isInteger(adults) && (adults as number) >= 1 && (adults as number) <= MAX_ADULTS) out.adults = adults
+  if (Number.isInteger(children) && (children as number) >= 1 && (children as number) <= MAX_CHILDREN) out.children = children
+  return out
+}
+
 function read(): Stay | null {
   try {
     const raw = window.localStorage.getItem(KEY)
     if (raw === cacheRaw) return cache
     cacheRaw = raw
-    const parsed: unknown = raw ? JSON.parse(raw) : null
+    const parsed: unknown = repair(raw ? JSON.parse(raw) : null)
     // A stay whose check-out has passed is not a stay any more: the pages show no dates and the booking links go plain. The record stays put so the party carries into the next dates.
     cache = valid(parsed) && parsed.checkOut >= iso(new Date()) ? parsed : null
   } catch {
@@ -58,7 +68,7 @@ export function stayNow(): Stay | null {
 /** The stored party, kept even when the dates have passed, so new dates start from the same people. */
 function partyOnFile(): Pick<Stay, 'adults' | 'children'> {
   try {
-    const parsed: unknown = JSON.parse(window.localStorage.getItem(KEY) ?? 'null')
+    const parsed: unknown = repair(JSON.parse(window.localStorage.getItem(KEY) ?? 'null'))
     return valid(parsed) ? { adults: parsed.adults, children: parsed.children } : {}
   } catch {
     return {}
