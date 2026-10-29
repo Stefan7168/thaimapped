@@ -69,6 +69,11 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
   const [sentHotel, setSentHotel] = useState<string | null>(null)
   // Stops the sender took out ("?skip="): left out for this visit, never written to this browser's own list.
   const [sentSkips, setSentSkips] = useState<readonly string[]>([])
+  // Trips the sender had kept ("?trips="): marked and listed first for this visit, never written to this browser's own list.
+  const [sentTrips, setSentTrips] = useState<readonly string[]>([])
+  const keptTrips = useKeptTrips()
+  // The trips in this plan: the sender's on a shared link, else this browser's kept ones. They come first and go into the calendar file.
+  const planTrips = sentTrips.length > 0 ? sentTrips : keptTrips
   // With two or more hotels of this area saved, the reader can say which one the plan walks from (kept per area in this browser).
   const chosenHotel = useMyHotelChoice(area.id)
   // The address is not known on the server; read it once the page is live.
@@ -77,6 +82,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
       setPrice(readPrice())
       setSentHotel(new URLSearchParams(window.location.search).get('hotel'))
       setSentSkips((new URLSearchParams(window.location.search).get('skip') ?? '').split(',').filter(Boolean))
+      setSentTrips((new URLSearchParams(window.location.search).get('trips') ?? '').split(',').filter(Boolean))
       adoptStayFromUrl()
     })
     return () => window.cancelAnimationFrame(id)
@@ -177,7 +183,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
     }
     // Kept trips, on the day of the stay each fits (the trip page's default day), in the hours of their time of day.
     if (stay) {
-      for (const r of routes.filter((x) => keptTrips.includes(x.id))) {
+      for (const r of routes.filter((x) => planTrips.includes(x.id))) {
         const day = r.days > 1 ? (r.days <= nights(stay) + 1 ? tripStartDefault(stay, r.days) : null) : (dayTripOptions(stay, r.duration).at(-1) ?? null)
         if (!day) continue
         const tripUrl = `${window.location.origin}/${locale}/${cityId}/trip/${r.id}`
@@ -201,13 +207,16 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
     else u.searchParams.delete('hotel')
     if (skippedHere.length > 0) u.searchParams.set('skip', skippedHere.map((p) => p.id).join(','))
     else u.searchParams.delete('skip')
+    const sharedTrips = routes.filter((r) => keptTrips.includes(r.id))
+    if (sharedTrips.length > 0) u.searchParams.set('trips', sharedTrips.map((r) => r.id).join(','))
+    else u.searchParams.delete('trips')
     const url = u.toString()
     const title = s.weekendPage.title(t(area.name, locale))
     // The share sheet's text names the hotel and the dates, so the message reads as a plan, not a bare link.
     const dates = stay ? new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short' }).formatRange(new Date(`${stay.checkIn}T12:00:00`), new Date(`${stay.checkOut}T12:00:00`)) : null
     // The party rides along when it is not the default pair, so "3 adults, 1 child" reads in the message as well as in the link.
     const party = stay && (adultsOf(stay) !== 2 || childrenOf(stay) > 0) ? s.stay.adults(adultsOf(stay), 1, childrenOf(stay)) : null
-    const text = s.weekendPage.shareText(t(area.name, locale), myHotel ? t(myHotel.name, locale) : null, dates ? [dates, party].filter(Boolean).join(', ') : null)
+    const text = s.weekendPage.shareText(t(area.name, locale), myHotel ? t(myHotel.name, locale) : null, dates ? [dates, party].filter(Boolean).join(', ') : null) + (sharedTrips.length > 0 ? s.weekendPage.shareTrips(sharedTrips.map((r) => t(r.name, locale)).join(', ')) : '')
     try {
       if (navigator.share) {
         await navigator.share({ title, text, url })
@@ -287,9 +296,8 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
     const from = tripStartDefault(stay!, days)
     return formatDayRange(from, addDays(from, days - 1), locale)
   }
-  const keptTrips = useKeptTrips()
-  // Kept trips first, then the rest in content order.
-  const dayTrips = [...routes.filter((r) => r.duration !== 'multi-day'), ...routes.filter((r) => r.duration === 'multi-day' && stay && r.days >= 2 && r.days <= nights(stay) + 1)].sort((a, b) => Number(keptTrips.includes(b.id)) - Number(keptTrips.includes(a.id)))
+  // Plan trips first, then the rest in content order.
+  const dayTrips = [...routes.filter((r) => r.duration !== 'multi-day'), ...routes.filter((r) => r.duration === 'multi-day' && stay && r.days >= 2 && r.days <= nights(stay) + 1)].sort((a, b) => Number(planTrips.includes(b.id)) - Number(planTrips.includes(a.id)))
   return (
     <>
       <SiteHeader locale={locale} cityId={cityId} />
@@ -427,7 +435,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
                   <li key={r.id}>
                     <Link href={`/${locale}/${cityId}/trip/${r.id}`} className="tm-wk__stop tm-wk__trip">
                       <span className="tm-wk__text">
-                        <span className="tm-wk__kind">{r.duration === 'multi-day' ? s.trip.days(r.days) : s.trip.duration[r.duration]} · {s.trip.mode[r.mode]}{r.distanceKm !== undefined ? ` · ${s.trip.km(r.distanceKm)}` : ''}{keptTrips.includes(r.id) ? ` · ${s.trip.kept}` : ''}</span>
+                        <span className="tm-wk__kind">{r.duration === 'multi-day' ? s.trip.days(r.days) : s.trip.duration[r.duration]} · {s.trip.mode[r.mode]}{r.distanceKm !== undefined ? ` · ${s.trip.km(r.distanceKm)}` : ''}{sentTrips.includes(r.id) ? ` · ${s.weekendPage.inPlan}` : keptTrips.includes(r.id) ? ` · ${s.trip.kept}` : ''}</span>
                         <span className="tm-wk__name">{t(r.name, locale)}</span>
                         <span className="tm-wk__why">{t(r.tagline, locale)}</span>
                         {r.duration === 'multi-day' && stay && <span className="tm-wk__meta tm-wk__from">{s.trip.fitsStay(nights(stay))} · {tripDates(r.days)}</span>}

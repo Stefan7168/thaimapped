@@ -152,6 +152,10 @@ const en = {
     slotEmptyLink: 'See what the map has at this time',
     sharedWithYou: (hotel: string, dates: string | null) => (dates ? `This plan is built around ${hotel} for ${dates}.` : `This plan is built around ${hotel}.`),
     saveSentHotel: 'Keep this hotel on your list',
+    // Kept trips named in the share message, after the plan line.
+    shareTrips: (names: string) => ` Day trips: ${names}.`,
+    // A trip the sender had kept, on a shared link.
+    inPlan: 'In the plan',
     shareText: (area: string, hotel: string | null, dates: string | null) => [`A weekend in ${area}`, hotel ? `from ${hotel}` : null, dates].filter(Boolean).join(', ') + ': Friday night to Sunday, with how far each stop is on foot.',
     sentHotelSaved: 'On your list.',
     borrowed: (area: string) => `The nearest listed, in ${area}:`,
