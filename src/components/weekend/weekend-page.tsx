@@ -31,7 +31,7 @@ import { StayPicker } from '@/components/stay/stay-picker'
 import { HotelCompare } from '@/components/stay/hotel-compare'
 import { addSaved, useSaved } from '@/lib/saved/store'
 import { chooseHotel, useMyHotelChoice } from '@/lib/saved/my-hotel'
-import { useKeptTrips } from '@/lib/saved/trips'
+import { toggleKeptTrip, useKeptTrips } from '@/lib/saved/trips'
 import { HotelElsewhere, useHotelElsewhere } from '@/components/stay/hotel-elsewhere'
 import { skipStop, unskipStops, useSkipped } from '@/lib/saved/skipped'
 import { KIND_ICONS } from '@/components/explorer/kind-bar'
@@ -435,6 +435,9 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
                         {tripByTrain(r.id) && <span className="tm-wk__meta tm-wk__from">{tripByTrain(r.id)}</span>}
                       </span>
                     </Link>
+                    <div className="tm-wk__links">
+                      <button type="button" aria-pressed={keptTrips.includes(r.id)} className="tm-card__link tm-card__link--quiet" onClick={() => toggleKeptTrip(r.id)}>{keptTrips.includes(r.id) ? s.trip.kept : s.trip.keep}</button>
+                    </div>
                   </li>
                 ))}
               </ul>
