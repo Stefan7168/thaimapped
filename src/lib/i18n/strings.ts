@@ -25,6 +25,7 @@ const en = {
     noHotels: 'No hotel listed within a ten-minute walk yet.',
     noPlaces: 'No place listed within a ten-minute walk yet.',
     estimated: 'straight line, not checked',
+    ownStop: (station: string, n: number) => `Closer to ${station}: ${n} min walk`,
     others: 'Nearest stations',
     all: 'All stations',
   },

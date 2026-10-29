@@ -51,6 +51,12 @@ export function StationPage({ locale, cityId, page, areas, hotelDoors, stations,
   const detected3D = useSyncExternalStore(noopSubscribe, supports3D, () => null)
   const st = page.stations[0]
   const label = `${st.code ? st.code + ' ' : ''}${t(st.name, locale)}`
+  // A pin whose own stop is another station (an interchange away, a closer line): the card says so, with the checked walk.
+  const ownStop = (pin: Pin, fromHere: number): string | null => {
+    if (!pin.walk || pin.walk.minutes >= fromHere || page.stations.some((x) => x.id === pin.walk!.station)) return null
+    const own = stations.find((x) => x.id === pin.walk!.station)
+    return own ? s.stationPage.ownStop(`${own.code ? own.code + ' ' : ''}${t(own.name, locale)}`, pin.walk.minutes) : null
+  }
   const [card, setCard] = useState<{ pin: Pin; area: Area } | null>(null)
   const [hoverId, setHoverId] = useState<string | null>(null)
   const pinned = useMemo(() => [...page.hotels, ...page.places], [page])
@@ -131,6 +137,7 @@ export function StationPage({ locale, cityId, page, areas, hotelDoors, stations,
             {pin.price && <span className="tm-wk__meta">{s.guide.priceFrom(thb(pin.price.from, locale))}{pin.price.basis === 'tier-estimate' ? ` (${s.guide.priceEstimate})` : ''}</span>}
             {pin.price && stay && <span className="tm-wk__meta tm-wk__stay">{s.guide.stayTotal(thb(pin.price.from * nights(stay) * roomsOf(stay), locale), nights(stay), roomsOf(stay))}</span>}
             <span className="tm-wk__meta">{s.city.walkMinutes(minutes)} {s.city.from(label)}{estimated ? ` (${s.stationPage.estimated})` : ''}</span>
+            {ownStop(pin, minutes) && <span className="tm-wk__meta">{ownStop(pin, minutes)}</span>}
             {pin.kind !== 'hotel' && hotelFor(area.id) && <span className="tm-wk__meta tm-wk__from">{s.weekendPage.fromHotel(fromHotel(pin, hotelFor(area.id)!), t(hotelFor(area.id)!.name, locale))}</span>}
           </span>
         </button>
