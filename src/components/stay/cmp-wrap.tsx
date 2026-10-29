@@ -33,7 +33,8 @@ export function CmpWrap({ locale, children }: { locale: Locale; children: ReactN
   }, [])
   return (
     <>
-      <div ref={ref} className="tm-cmp__wrap" data-more={more || undefined}>{children}</div>
+      {/* Focusable only while it overflows, so a keyboard can scroll the hidden columns and a reader is told what the box is. */}
+      <div ref={ref} className="tm-cmp__wrap" data-more={more || undefined} tabIndex={more ? 0 : undefined} role={more ? 'region' : undefined} aria-label={more ? s.saved.cmpRegion : undefined}>{children}</div>
       {more === 'right' && !moved && <p className="tm-cmp__hint" aria-hidden="true">{s.saved.cmpSwipe}</p>}
     </>
   )

@@ -103,6 +103,7 @@ const en = {
     compareLeadSent: 'The hotels on this list, one line each: where, what it costs, how far to the train, what is walkable.',
     compareWhat: 'What',
     cmpSwipe: 'Swipe sideways for the rest',
+    cmpRegion: 'Hotels side by side, scrolls sideways',
     cmpArea: 'Area',
     cmpPrice: 'A night',
     // After the stay row's heading: nights a kept road trip sleeps away are not in the total.
