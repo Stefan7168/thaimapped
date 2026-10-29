@@ -168,18 +168,18 @@ export function TripPage({ locale, cityId, cityName, route, hotelDoors = {}, sta
               <span className="bg-paper-2 px-2 py-0.5">{s.trip.mode[route.mode]}</span>
               {route.distanceKm !== undefined && <span className="bg-paper-2 px-2 py-0.5">{s.trip.km(route.distanceKm)}</span>}
             </p>
-            <p className="mt-3 tm-trip__tools">
+            <p className="mt-3 flex flex-wrap gap-2 tm-trip__tools">
               <button type="button" onClick={share} className="tm-button tm-button--small tm-button--quiet">
                 <Share2 aria-hidden="true" className="size-4" />
                 {shared === 'copied' ? s.trip.copied : shared === 'failed' ? s.trip.copyFailed : s.trip.share}
               </button>
               {stay && (
-                <button type="button" onClick={addToCalendar} className="tm-button tm-button--small tm-button--quiet ml-2">
+                <button type="button" onClick={addToCalendar} className="tm-button tm-button--small tm-button--quiet ">
                   <CalendarPlus aria-hidden="true" className="size-4" />
                   {s.weekendPage.calendar}
                 </button>
               )}
-              <button type="button" onClick={() => window.print()} className="tm-button tm-button--small tm-button--quiet ml-2">
+              <button type="button" onClick={() => window.print()} className="tm-button tm-button--small tm-button--quiet ">
                 <Printer aria-hidden="true" className="size-4" />
                 {s.trip.print}
               </button>
