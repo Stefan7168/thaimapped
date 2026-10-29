@@ -84,6 +84,8 @@ const en = {
     cmpAirport: 'From Suvarnabhumi',
     cmpPlaces: (n: number) => (n === 1 ? '1 place within 10 min' : `${n} places within 10 min`),
     cmpNearest: (name: string, n: number) => `Nothing within 10 min; nearest is ${name}, about ${n} min on foot`,
+    // Opens the explorer with the walk circle around this hotel's door (the "Near your hotel" view).
+    walkFromHere: 'Map the walk from here',
     cmpBook: 'Book',
     unknown: (n: number) => (n === 1 ? '1 saved item is no longer on the map.' : `${n} saved items are no longer on the map.`),
   },
