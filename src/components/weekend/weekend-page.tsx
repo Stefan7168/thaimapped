@@ -32,7 +32,7 @@ import { HotelCompare } from '@/components/stay/hotel-compare'
 import { addSaved, useSaved } from '@/lib/saved/store'
 import { chooseHotel, useMyHotelChoice } from '@/lib/saved/my-hotel'
 import { addKeptTrips, toggleKeptTrip, useKeptTrips } from '@/lib/saved/trips'
-import { awayNights, parseStarts, startsParam, tripClashes, tripDayOptions, tripStartFor, useTripStartPicks } from '@/lib/stay/trip-start'
+import { addTripStartPicks, awayNights, parseStarts, startsParam, tripClashes, tripDayOptions, tripStartFor, useTripStartPicks } from '@/lib/stay/trip-start'
 import { HotelElsewhere, useHotelElsewhere } from '@/components/stay/hotel-elsewhere'
 import { skipStop, unskipStops, useSkipped } from '@/lib/saved/skipped'
 import { KIND_ICONS } from '@/components/explorer/kind-bar'
@@ -496,7 +496,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
                 // Trips sent with the link: one tap keeps them on this browser's list; once kept, nothing.
                 <p className="tm-wk__shared">
                   {s.weekendPage.sentTrips(sentTrips.filter((id) => routes.some((r) => r.id === id)).length)}{' '}
-                  <button type="button" className="tm-link tm-link--under" onClick={() => addKeptTrips(sentTrips.filter((id) => routes.some((r) => r.id === id)))}>{s.weekendPage.keepSentTrips}</button>
+                  <button type="button" className="tm-link tm-link--under" onClick={() => { const ids = sentTrips.filter((id) => routes.some((r) => r.id === id)); addKeptTrips(ids); addTripStartPicks(Object.fromEntries(ids.filter((id) => sentStarts[id]).map((id) => [id, sentStarts[id]]))) }}>{s.weekendPage.keepSentTrips}</button>
                 </p>
               )}
               <ul className="tm-wk__stops">

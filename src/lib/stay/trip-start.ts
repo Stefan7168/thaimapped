@@ -41,6 +41,19 @@ export function setTripStartPick(routeId: string, day: string | null) {
   window.dispatchEvent(new Event(EVENT))
 }
 
+/** Several picks at once (the days a shared plan came with, kept along with its trips). */
+export function addTripStartPicks(picks: Readonly<Record<string, string>>) {
+  const entries = Object.entries(picks)
+  if (entries.length === 0) return
+  const next = { ...read(), ...Object.fromEntries(entries) }
+  try {
+    window.localStorage.setItem(KEY, JSON.stringify(next))
+  } catch {
+    // Nothing to do.
+  }
+  window.dispatchEvent(new Event(EVENT))
+}
+
 function subscribe(cb: () => void) {
   window.addEventListener('storage', cb)
   window.addEventListener(EVENT, cb)

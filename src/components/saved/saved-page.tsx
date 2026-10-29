@@ -23,7 +23,7 @@ import { addSaved, clearSaved, toggleSaved, useSaved } from '@/lib/saved/store'
 import { addKeptTrips, clearKeptTrips, toggleKeptTrip, useKeptTrips } from '@/lib/saved/trips'
 import { formatDay } from '@/lib/stay/format'
 import { addDays, dayTripOptions } from '@/lib/stay/store'
-import { awayNights, parseStarts, startsParam, tripClashes, tripDayOptions, tripStartFor, useTripStartPicks } from '@/lib/stay/trip-start'
+import { addTripStartPicks, awayNights, parseStarts, startsParam, tripClashes, tripDayOptions, tripStartFor, useTripStartPicks } from '@/lib/stay/trip-start'
 import { chooseHotel, myHotelAcross, myHotelChoice, useHotelChoiceVersion } from '@/lib/saved/my-hotel'
 import { SiteHeader } from '@/components/explorer/site-header'
 import { SiteFooter } from '@/components/explorer/site-footer'
@@ -155,6 +155,8 @@ export function SavedPage({ locale, cityId, entries, trips = [], stations, inter
   const keep = () => {
     addSaved(rows.map((e) => e.pin.id))
     addKeptTrips(keptTrips.map((r) => r.id))
+    // The sender's days come along, so the trips sit where they did in the sent list.
+    addTripStartPicks(Object.fromEntries(keptTrips.filter((r) => sentStarts[r.id]).map((r) => [r.id, sentStarts[r.id]])))
     setShared('kept')
     window.setTimeout(() => setShared('idle'), 2500)
   }
