@@ -333,6 +333,8 @@ const en = {
     keep: 'Keep this trip',
     kept: 'Kept',
     keptNote: 'On your saved list',
+    // A kept trip's link to the weekend page slot it takes.
+    inYourWeekend: 'See it in your weekend',
     print: 'Print',
     fitsStay: (n: number) => (n === 1 ? 'Fits your night away' : `Fits your ${n} nights`),
     // A day trip with dates set: the days of the stay it fits ("Sat, Nov 7 or Sun, Nov 8").

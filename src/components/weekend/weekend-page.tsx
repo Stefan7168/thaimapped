@@ -148,7 +148,8 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
     const d = slotDay(slot)
     if (!stay || !d) return null
     const day = iso(d)
-    const fits: Record<WeekendSlot, string[]> = { fridayNight: ['evening'], saturdayMorning: ['morning'], saturdayAfternoon: ['afternoon'], saturdayNight: ['evening'], sunday: ['morning', 'afternoon'] }
+    // Friday has one slot, so an afternoon trip on arrival day lands there too; a full day takes both Saturday daytime slots.
+    const fits: Record<WeekendSlot, string[]> = { fridayNight: ['afternoon', 'evening'], saturdayMorning: ['morning', 'full-day'], saturdayAfternoon: ['afternoon', 'full-day'], saturdayNight: ['evening'], sunday: ['morning', 'afternoon'] }
     return routes.find((r) => planTrips.includes(r.id) && r.days < 2 && fits[slot].includes(r.duration) && tripStartFor(stay, r, picks) === day) ?? null
   }
   // A multi-day plan trip that covers the slot's day, with which day of the trip it is.

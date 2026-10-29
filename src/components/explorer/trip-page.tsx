@@ -3,7 +3,7 @@
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { useEffect, useMemo, useState, useSyncExternalStore } from 'react'
-import { ArrowLeft, Bookmark, CalendarPlus, Printer, Share2 } from 'lucide-react'
+import { ArrowLeft, Bookmark, CalendarDays, CalendarPlus, Printer, Share2 } from 'lucide-react'
 import type { Locale, RouteStop, TripRoute } from '@/lib/content/types'
 import type { AirportLeg } from '@/lib/transit/from-airport'
 import { rideSentence } from '@/components/stay/from-airport'
@@ -44,10 +44,11 @@ export function TripPage({ locale, cityId, cityName, route, hotelDoors = {}, sta
   const saved = useSaved()
   const choiceVersion = useHotelChoiceVersion()
   // The reader's hotel in the city (the home area's chosen one, else the last saved): the trip then starts and ends at its door.
-  const myHotel = useMemo(() => myHotelAcross(hotelDoors, saved)?.hotel ?? null,
+  const mine = useMemo(() => myHotelAcross(hotelDoors, saved),
     // choiceVersion is read so a new choice recomputes the pick.
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [hotelDoors, saved, choiceVersion])
+  const myHotel = mine?.hotel ?? null
   const mode = TRAVEL_MODE[route.mode]
   // Getting from the hotel to a walking or boat trip is a train ride, not a walk across the city; a car trip drives from the door.
   const hotelMode = mode === 'driving' ? 'driving' : 'transit'
@@ -105,6 +106,15 @@ export function TripPage({ locale, cityId, cityName, route, hotelDoors = {}, sta
     setTripStartPick(route.id, date)
   }
   const kept = useKeptTrips().includes(route.id)
+  // A kept trip links to the weekend page of the hotel's area, at the slot it takes (Friday-to-Sunday stays carry slot dates; other stays open the page top).
+  const weekendHref = (): string | null => {
+    if (!kept || !mine || !stay || !startIso) return null
+    const base = `/${locale}/${cityId}/weekend/${mine.areaId}`
+    if (nights(stay) !== 2 || new Date(stay.checkIn + 'T00:00:00').getDay() !== 5) return base
+    const offset = Math.round((Date.UTC(+startIso.slice(0, 4), +startIso.slice(5, 7) - 1, +startIso.slice(8, 10)) - Date.UTC(+stay.checkIn.slice(0, 4), +stay.checkIn.slice(5, 7) - 1, +stay.checkIn.slice(8, 10))) / 86400000)
+    const slot = offset === 0 ? 'fridayNight' : offset === 2 ? 'sunday' : route.duration === 'afternoon' ? 'saturdayAfternoon' : route.duration === 'evening' ? 'saturdayNight' : 'saturdayMorning'
+    return `${base}#tm-slot-${slot}`
+  }
   // A multi-day trip starts on any day that gets you back by check-out; a day trip on any day of the stay its time of day fits (none for a full day in a one-night stay).
   const startOptions = useMemo(() => (stay ? (route.days > 1 ? tripStartOptions(stay, route.days) : dayTripOptions(stay, route.duration)) : []), [stay, route.days, route.duration])
   const startIso = stay ? (pickedStart && startOptions.includes(pickedStart) ? pickedStart : route.days > 1 ? tripStartDefault(stay, route.days) : (startOptions[startOptions.length - 1] ?? null)) : null
@@ -211,6 +221,12 @@ export function TripPage({ locale, cityId, cityName, route, hotelDoors = {}, sta
                 <Bookmark aria-hidden="true" className="size-4" />
                 {kept ? s.trip.kept : s.trip.keep}
               </button>
+              {weekendHref() && (
+                <Link href={weekendHref()!} className="tm-button tm-button--small tm-button--quiet">
+                  <CalendarDays aria-hidden="true" className="size-4" />
+                  {s.trip.inYourWeekend}
+                </Link>
+              )}
               <button type="button" onClick={share} className="tm-button tm-button--small tm-button--quiet">
                 <Share2 aria-hidden="true" className="size-4" />
                 {shared === 'copied' ? s.trip.copied : shared === 'failed' ? s.trip.copyFailed : s.trip.share}
