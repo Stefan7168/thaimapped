@@ -246,6 +246,7 @@ const en = {
     nowLink: (slot: string) => (slot === 'morning' ? 'What is good this morning' : slot === 'afternoon' ? 'What is good this afternoon' : 'What is good tonight'),
     weekendLink: 'Plan this weekend',
     yourWeekend: (hotel: string, area: string) => `Your weekend: ${hotel} in ${area}`,
+    noRoomShort: 'no room needed, every night is away on your trip',
     yourWeekendLink: 'Open your plan',
     // Kept trips, as a link to the saved list beside the plan link.
     keptTrips: (n: number) => (n === 1 ? '1 trip kept' : `${n} trips kept`),
