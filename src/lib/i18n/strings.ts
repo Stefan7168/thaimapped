@@ -158,6 +158,8 @@ const en = {
     shareTrips: (names: string) => ` Day trips: ${names}.`,
     // A trip the sender had kept, on a shared link.
     inPlan: 'In the plan',
+    // A kept day trip placed in the slot its day and time of day fall in; the slot's own stops are for the time left.
+    tripInSlot: (length: string) => ` is your trip here (${length}). The stops below are for the time left.`,
     sentTrips: (n: number) => (n === 1 ? 'One trip came with this plan.' : `${n} trips came with this plan.`),
     keepSentTrips: 'Keep them on your list',
     shareText: (area: string, hotel: string | null, dates: string | null) => [`A weekend in ${area}`, hotel ? `from ${hotel}` : null, dates].filter(Boolean).join(', ') + ': Friday night to Sunday, with how far each stop is on foot.',

@@ -141,6 +141,14 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
     d.setDate(d.getDate() + (slot === 'fridayNight' ? 0 : slot === 'sunday' ? 2 : 1))
     return d
   }
+  // A plan day trip lands in the slot its default day and time of day fall in (a Friday-to-Sunday stay only, like the slot dates); the calendar then gives that slot to the trip.
+  const tripInSlot = (slot: WeekendSlot): TripRoute | null => {
+    const d = slotDay(slot)
+    if (!stay || !d) return null
+    const day = iso(d)
+    const fits: Record<WeekendSlot, string[]> = { fridayNight: ['evening'], saturdayMorning: ['morning'], saturdayAfternoon: ['afternoon'], saturdayNight: ['evening'], sunday: ['morning', 'afternoon'] }
+    return routes.find((r) => planTrips.includes(r.id) && r.days < 2 && fits[slot].includes(r.duration) && dayTripOptions(stay, r.duration).at(-1) === day) ?? null
+  }
   // The slot that falls on check-out day (Sunday of a Friday-to-Sunday stay): the heading says so, as the bags come along.
   const isCheckOutDay = (slot: WeekendSlot): boolean => {
     const d = slotDay(slot)
@@ -159,7 +167,8 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
     const events: CalendarEvent[] = WEEKEND_SLOTS.flatMap((slot) => {
       const d = slotDay(slot)
       const items = plan.slots[slot]
-      if (!d || items.length === 0) return []
+      // A slot a plan trip takes is the trip's event, added below.
+      if (!d || items.length === 0 || tripInSlot(slot)) return []
       const date = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
       // Each stop after the first carries the walk from the one before, as on the page.
       const walkText = (p: Pin, i: number): string => (i === 0 ? '' : ` (${s.weekendPage.legWalk(Math.max(1, Math.round(distanceM(items[i - 1].location.lon, items[i - 1].location.lat, p.location.lon, p.location.lat) / WALK_PACE_M_PER_MIN)), t(items[i - 1].name, locale)).replace('↓ ', '')})`)
@@ -348,6 +357,12 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
             {WEEKEND_SLOTS.map((slot) => (
               <li key={slot} className={`tm-wk__slot${nowSlot === slot ? ' tm-wk__slot--now' : ''}`} id={`tm-slot-${slot}`}>
                 <h2 className="tm-wk__time">{s.guide.slots[slot]}{slotDate(slot) && <span className="tm-wk__date"> · {slotDate(slot)}</span>}{nowSlot === slot && <span className="tm-wk__now">{s.weekendPage.now}</span>}{isCheckOutDay(slot) && <span className="tm-wk__now tm-wk__checkout" title={s.weekendPage.checkOutDayNote}>{s.weekendPage.checkOutDay}</span>}</h2>
+                {tripInSlot(slot) && (
+                  <p className="tm-wk__shared tm-wk__tripslot">
+                    <Link href={`/${locale}/${cityId}/trip/${tripInSlot(slot)!.id}`} className="tm-link tm-link--under">{t(tripInSlot(slot)!.name, locale)}</Link>
+                    {s.weekendPage.tripInSlot(s.trip.duration[tripInSlot(slot)!.duration].toLowerCase())}
+                  </p>
+                )}
                 {plan.slots[slot].length === 0 ? (
                   <>
                     <p className="tm-wk__empty">
