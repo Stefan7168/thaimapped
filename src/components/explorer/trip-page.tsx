@@ -20,6 +20,7 @@ import { buildIcs, downloadIcs, type CalendarEvent } from '@/lib/stay/calendar'
 import { StayPicker } from '@/components/stay/stay-picker'
 import { STOP_COLORS } from '@/components/map/trip-map'
 import { legKm, tripLegs } from '@/lib/explorer/trip-legs'
+import { seasonOf } from '@/lib/stay/season'
 import { WALK_PACE_M_PER_MIN } from '@/lib/explorer/filters'
 import { bangkokClock } from '@/lib/explorer/when'
 
@@ -204,6 +205,7 @@ export function TripPage({ locale, cityId, cityName, route, hotelDoors = {}, sta
               // Paper only: the start chips and hotel line are screen controls, so the printout states the dates and the hotel in one line.
               <p className="tm-wk__paper mt-3">{[route.days > 1 ? formatDayRange(startIso, addDays(startIso, route.days - 1), locale) : formatDay(startIso, locale), myHotel ? s.trip.shareFromHotel(t(myHotel.name, locale)) : null].filter(Boolean).join(' · ')}</p>
             )}
+            {startIso && seasonOf(cityId, startIso) && <p className="mt-3 tm-wk__season" title={s.weekendPage.seasonNote}>{s.weekendPage.season[seasonOf(cityId, startIso)!]}</p>}
             {/* The dates, as on the weekend and station pages: with them the days get dates, the road hotel its night, the calendar its file. */}
             <div className="mt-4"><StayPicker locale={locale} /></div>
             {/* A trip longer than the stay says so here too, as the trips index does; the days still get dates from check-in. */}
