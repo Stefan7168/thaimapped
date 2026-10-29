@@ -203,12 +203,12 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
         url,
       }]
     })
-    // The hotel's own two moments, so the weekend reads as one row in the calendar; times are the usual ones, the booking has the real ones.
+    // The hotel's own two moments, so the weekend reads as one row in the calendar; times are the usual ones, the booking has the real ones. With nights away on a road trip they sit on the nights slept here, as the booking links do.
     if (myHotel && stay) {
       const name = t(myHotel.name, locale)
       events.push(
-        { date: stay.checkIn, start: '14:00', end: '15:00', title: s.weekendPage.calendarCheckIn(name), description: [s.weekendPage.calendarTimesVary, url].join('\n'), location: `${name}, ${areaName}`, geo: myHotel.location, url },
-        { date: stay.checkOut, start: '11:00', end: '12:00', title: s.weekendPage.calendarCheckOut(name), description: [s.weekendPage.calendarTimesVary, url].join('\n'), location: `${name}, ${areaName}`, geo: myHotel.location, url },
+        { date: (bookStay ?? stay).checkIn, start: '14:00', end: '15:00', title: s.weekendPage.calendarCheckIn(name), description: [s.weekendPage.calendarTimesVary, url].join('\n'), location: `${name}, ${areaName}`, geo: myHotel.location, url },
+        { date: (bookStay ?? stay).checkOut, start: '11:00', end: '12:00', title: s.weekendPage.calendarCheckOut(name), description: [s.weekendPage.calendarTimesVary, url].join('\n'), location: `${name}, ${areaName}`, geo: myHotel.location, url },
       )
     }
     // Kept trips, on the day of the stay each fits (the trip page's default day), in the hours of their time of day.
