@@ -249,7 +249,13 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
     const dates = stay ? new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short' }).formatRange(new Date(`${stay.checkIn}T12:00:00`), new Date(`${stay.checkOut}T12:00:00`)) : null
     // The party rides along when it is not the default pair, so "3 adults, 1 child" reads in the message as well as in the link.
     const party = stay && (adultsOf(stay) !== 2 || childrenOf(stay) > 0) ? s.stay.adults(adultsOf(stay), 1, childrenOf(stay)) : null
-    const text = s.weekendPage.shareText(t(area.name, locale), myHotel ? t(myHotel.name, locale) : null, dates ? [dates, party].filter(Boolean).join(', ') : null) + (sharedTrips.length > 0 ? s.weekendPage.shareTrips(sharedTrips.map((r) => t(r.name, locale)).join(', ')) : '')
+    // Each trip carries its day (or days) in the message, so the plan reads whole without opening the link.
+    const tripLine = (r: TripRoute): string => {
+      const from = stay ? tripStartFor(stay, r, picks) : null
+      const when = from ? (r.days > 1 ? formatDayRange(from, addDays(from, r.days - 1), locale) : formatDay(from, locale)) : null
+      return when ? `${t(r.name, locale)} (${when})` : t(r.name, locale)
+    }
+    const text = s.weekendPage.shareText(t(area.name, locale), myHotel ? t(myHotel.name, locale) : null, dates ? [dates, party].filter(Boolean).join(', ') : null) + (sharedTrips.length > 0 ? s.weekendPage.shareTrips(sharedTrips.map(tripLine).join(', ')) : '')
     try {
       if (navigator.share) {
         await navigator.share({ title, text, url })
