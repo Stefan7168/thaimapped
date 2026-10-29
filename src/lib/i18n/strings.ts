@@ -63,6 +63,7 @@ const en = {
     trips: 'Your trips',
     tripsNote: 'Kept from the trip pages. Open one for the route, its stops and the day it fits.',
     tripsSent: 'Trips',
+    noRoom: (trips: string) => `No room needed: ${trips} has you sleeping away every night of your stay.`,
     tripsNoteSent: 'The trips on this list. Open one for the route, its stops and the day it fits.',
     forget: 'Forget',
     // Two kept trips whose default days and hours overlap.

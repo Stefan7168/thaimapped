@@ -97,6 +97,9 @@ export function SavedPage({ locale, cityId, entries, trips = [], stations, inter
   // Nights the kept road trips sleep away: hotel totals here count the other nights only.
   const away = stay ? awayNights(stay, keptTrips, keptTrips.map((r) => r.id), picks) : []
   const hereNights = stay ? nights(stay) - away.length : 0
+  // Every night of the stay is on a road trip, so a hotel card shows no booking links and says why.
+  const noRoomHere = !!stay && hereNights === 0 && away.length > 0
+  const awayTripNames = () => keptTrips.filter((r) => r.days > 1).map((r) => t(r.name, locale)).join(` ${s.trip.and} `)
   const bookStay = stay ? hereStay(stay, away) : null
   const missing = ids.length - rows.length
   const hotelRows = rows.filter((e) => e.pin.kind === 'hotel')
@@ -224,7 +227,8 @@ export function SavedPage({ locale, cityId, entries, trips = [], stations, inter
                 <span className="tm-wk__why">{t(pin.why, locale)}</span>
                 {whenLine(pin, locale) && <span className="tm-wk__when">{whenLine(pin, locale)}</span>}
                 {pin.price && <span className="tm-wk__meta">{s.guide.priceFrom(thb(pin.price.from, locale))}{pin.price.basis === 'tier-estimate' ? ` (${s.guide.priceEstimate})` : ''}</span>}
-            {pin.price && stay && hereNights > 0 && <span className="tm-wk__meta tm-wk__stay">{s.guide.stayTotal(thb(pin.price.from * hereNights * roomsOf(stay), locale), hereNights, roomsOf(stay))}{away.length > 0 ? s.guide.stayTotalAway(away.length) : ''}</span>}
+            {pin.kind === 'hotel' && noRoomHere && <span className="tm-wk__meta tm-wk__from">{s.saved.noRoom(awayTripNames())}</span>}
+                {pin.price && stay && hereNights > 0 && <span className="tm-wk__meta tm-wk__stay">{s.guide.stayTotal(thb(pin.price.from * hereNights * roomsOf(stay), locale), hereNights, roomsOf(stay))}{away.length > 0 ? s.guide.stayTotalAway(away.length) : ''}</span>}
                 {pin.walk && walkStation && <span className="tm-wk__meta">{s.city.walkMinutes(pin.walk.minutes)} {s.city.from(`${walkStation.code ? walkStation.code + ' ' : ''}${t(walkStation.name, locale)}`)}</span>}
                 {pin.kind === 'hotel' && !sentIds && areaHotelCount(area.id) > 1 && pickFor(area.id) === pin.id && <span className="tm-wk__meta tm-wk__from">{s.saved.yourPick(t(area.name, locale))}</span>}
                 {pin.kind !== 'hotel' && byTrain(pin, area.id) && <span className="tm-wk__meta tm-wk__from">{byTrain(pin, area.id)}</span>}
@@ -242,7 +246,7 @@ export function SavedPage({ locale, cityId, entries, trips = [], stations, inter
                 <button type="button" className="tm-card__link tm-card__link--quiet" onClick={() => chooseHotel(area.id, pin.id)}>{s.saved.sleepHere}</button>
               )}
               {pin.kind === 'hotel' && cityPick && cityPick.hotel.id === pin.id && <span className="tm-card__link tm-card__link--quiet tm-wk__shared-done">{s.saved.weekendHotel}</span>}
-                {partners.map((p) => {
+                {(pin.kind !== 'hotel' || !noRoomHere) && partners.map((p) => {
                   const subId = subIdFor(`${cityId}-${area.id}`, pin.id)
                   return (
                     <a key={p} href={buildOutboundUrl(p, pin.links[p]!, subId, bookStay)} onClick={() => p !== 'official' && trackOutbound(p, subId)} target="_blank" rel={p === 'official' ? 'noopener' : 'noopener sponsored'} className={p === 'official' ? 'tm-card__link tm-card__link--quiet' : 'tm-card__link'}>
