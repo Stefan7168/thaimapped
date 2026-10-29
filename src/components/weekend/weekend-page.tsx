@@ -31,7 +31,7 @@ import { StayPicker } from '@/components/stay/stay-picker'
 import { HotelCompare } from '@/components/stay/hotel-compare'
 import { addSaved, useSaved } from '@/lib/saved/store'
 import { chooseHotel, useMyHotelChoice } from '@/lib/saved/my-hotel'
-import { toggleKeptTrip, useKeptTrips } from '@/lib/saved/trips'
+import { addKeptTrips, toggleKeptTrip, useKeptTrips } from '@/lib/saved/trips'
 import { HotelElsewhere, useHotelElsewhere } from '@/components/stay/hotel-elsewhere'
 import { skipStop, unskipStops, useSkipped } from '@/lib/saved/skipped'
 import { KIND_ICONS } from '@/components/explorer/kind-bar'
@@ -430,6 +430,13 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
             <section className="tm-wk__others">
               <h2 className="tm-wk__time">{s.weekendPage.dayOut}</h2>
               <p className="tm-wk__empty">{stay && dayTrips.some((r) => r.duration === 'multi-day') ? s.weekendPage.dayOutLeadStay(nights(stay)) : s.weekendPage.dayOutLead}</p>
+              {sentTrips.some((id) => routes.some((r) => r.id === id) && !keptTrips.includes(id)) && (
+                // Trips sent with the link: one tap keeps them on this browser's list; once kept, nothing.
+                <p className="tm-wk__shared">
+                  {s.weekendPage.sentTrips(sentTrips.filter((id) => routes.some((r) => r.id === id)).length)}{' '}
+                  <button type="button" className="tm-link tm-link--under" onClick={() => addKeptTrips(sentTrips.filter((id) => routes.some((r) => r.id === id)))}>{s.weekendPage.keepSentTrips}</button>
+                </p>
+              )}
               <ul className="tm-wk__stops">
                 {dayTrips.map((r) => (
                   <li key={r.id}>

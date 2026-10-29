@@ -39,6 +39,11 @@ export function toggleKeptTrip(id: string) {
   write(cur.includes(id) ? cur.filter((x) => x !== id) : [...cur, id])
 }
 
+export function addKeptTrips(ids: readonly string[]) {
+  const cur = read()
+  write([...cur, ...ids.filter((id) => !cur.includes(id))])
+}
+
 export function clearKeptTrips() {
   write([])
 }
