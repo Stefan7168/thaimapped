@@ -19,7 +19,7 @@ import { thb } from '@/lib/explorer/price'
 import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
 import { directionsUrl } from '@/lib/links/directions'
 import { formatDayRange } from '@/lib/stay/format'
-import { addDays, adoptStayFromUrl, adultsOf, childrenOf, nights, roomsOf, stayParam, tripStartDefault, useStay } from '@/lib/stay/store'
+import { addDays, adoptStayFromUrl, adultsOf, childrenOf, daysUntil, nights, roomsOf, stayParam, tripStartDefault, useStay } from '@/lib/stay/store'
 import { buildIcs, downloadIcs, type CalendarEvent } from '@/lib/stay/calendar'
 import { trackOutbound } from '@/lib/links/track'
 import { supports3D } from '@/lib/map/device'
@@ -184,7 +184,9 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
     const title = s.weekendPage.title(t(area.name, locale))
     // The share sheet's text names the hotel and the dates, so the message reads as a plan, not a bare link.
     const dates = stay ? new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short' }).formatRange(new Date(`${stay.checkIn}T12:00:00`), new Date(`${stay.checkOut}T12:00:00`)) : null
-    const text = s.weekendPage.shareText(t(area.name, locale), myHotel ? t(myHotel.name, locale) : null, dates)
+    // The party rides along when it is not the default pair, so "3 adults, 1 child" reads in the message as well as in the link.
+    const party = stay && (adultsOf(stay) !== 2 || childrenOf(stay) > 0) ? s.stay.adults(adultsOf(stay), 1, childrenOf(stay)) : null
+    const text = s.weekendPage.shareText(t(area.name, locale), myHotel ? t(myHotel.name, locale) : null, dates ? [dates, party].filter(Boolean).join(', ') : null)
     try {
       if (navigator.share) {
         await navigator.share({ title, text, url })
@@ -269,7 +271,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
       <SiteHeader locale={locale} cityId={cityId} />
       <main className="tm-stage tm-wk" style={{ ['--pin' as string]: `var(--${area.color})` }}>
         <div className="tm-sheet tm-wk__sheet">
-          <p className="tm-wk__eyebrow">{s.weekendPage.eyebrow}</p>
+          <p className="tm-wk__eyebrow">{s.weekendPage.eyebrow}{stay && <span className="tm-wk__date">{s.home.inDays(daysUntil(stay))}</span>}</p>
           <h1 className="tm-h2">{s.weekendPage.title(t(area.name, locale))}</h1>
           <p className="tm-wk__lead">{t(area.tagline, locale)} {price ? s.weekendPage.budget(thb(price.min, locale), thb(price.max, locale)) : s.weekendPage.anyBudget}</p>
           {stay && (
