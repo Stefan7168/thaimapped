@@ -5,8 +5,8 @@ import Link from 'next/link'
 import { useEffect, useMemo, useState } from 'react'
 import { Printer, Share2, X } from 'lucide-react'
 import type { Area, Locale, Pin, Station } from '@/lib/content/types'
-import { FromAirport } from '@/components/stay/from-airport'
-import type { AirportRoutes } from '@/lib/transit/from-airport'
+import { FromAirport, rideSentence } from '@/components/stay/from-airport'
+import { railLegs, type AirportRoutes } from '@/lib/transit/from-airport'
 import { t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
 import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
@@ -34,7 +34,7 @@ export interface SavedEntry {
  * The shortlist. Shows this browser's saved hotels, or the hotels named in
  * "?ids=a,b,c" when the address came from someone else's "Send this list".
  */
-export function SavedPage({ locale, cityId, entries, stations, airport = {} }: { locale: Locale; cityId: string; entries: SavedEntry[]; stations: Station[]; airport?: Record<string, AirportRoutes> }) {
+export function SavedPage({ locale, cityId, entries, stations, interchanges = [], airport = {} }: { locale: Locale; cityId: string; entries: SavedEntry[]; stations: Station[]; interchanges?: [string, string][]; airport?: Record<string, AirportRoutes> }) {
   const s = strings(locale)
   const stay = useStay()
   const mine = useSaved()
@@ -84,6 +84,20 @@ export function SavedPage({ locale, cityId, entries, stations, airport = {} }: {
   }, [hotelRows, mine, choiceVersion])
   // The hotel a saved place measures its walk from: the area's pick (one saved hotel is its own pick).
   const hotelFor = (areaId: string) => hotelRows.find((h) => h.area.id === areaId && h.pin.id === pickFor(areaId))
+  // The hotel the whole weekend sleeps in (the city-wide pick, or the only one), for places saved in other areas: reached by train, not on foot.
+  const homeHotel = useMemo(() => {
+    const byArea: Record<string, { id: string }[]> = {}
+    for (const e of hotelRows) (byArea[e.area.id] ??= []).push({ id: e.pin.id })
+    const pick = myHotelAcross(byArea, sentIds ?? mine)
+    return pick ? hotelRows.find((h) => h.pin.id === pick.hotel.id) ?? null : null
+    // choiceVersion is read so a new choice recomputes the pick.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hotelRows, mine, sentIds, choiceVersion])
+  const byTrain = (pin: Pin, areaId: string): string | null => {
+    if (hotelFor(areaId) || !homeHotel?.pin.walk || !pin.walk) return null
+    const legs = railLegs(stations, interchanges, homeHotel.pin.walk.station, pin.walk.station)
+    return legs && legs.length > 0 ? s.weekendPage.byTrainFrom(t(homeHotel.pin.name, locale), rideSentence(legs, pin.walk.minutes, locale)) : null
+  }
 
   const share = async () => {
     const url = `${window.location.origin}/${locale}/saved?ids=${encodeURIComponent(ids.join(','))}${stay ? `&stay=${stayParam(stay)}` : ''}`
@@ -134,13 +148,14 @@ export function SavedPage({ locale, cityId, entries, stations, airport = {} }: {
             {pin.price && stay && <span className="tm-wk__meta tm-wk__stay">{s.guide.stayTotal(thb(pin.price.from * nights(stay) * roomsOf(stay), locale), nights(stay), roomsOf(stay))}</span>}
                 {pin.walk && walkStation && <span className="tm-wk__meta">{s.city.walkMinutes(pin.walk.minutes)} {s.city.from(`${walkStation.code ? walkStation.code + ' ' : ''}${t(walkStation.name, locale)}`)}</span>}
                 {pin.kind === 'hotel' && !sentIds && areaHotelCount(area.id) > 1 && pickFor(area.id) === pin.id && <span className="tm-wk__meta tm-wk__from">{s.saved.yourPick(t(area.name, locale))}</span>}
+                {pin.kind !== 'hotel' && byTrain(pin, area.id) && <span className="tm-wk__meta tm-wk__from">{byTrain(pin, area.id)}</span>}
                 {pin.kind !== 'hotel' && hotelFor(area.id) && <span className="tm-wk__meta tm-wk__from">{s.weekendPage.fromHotel(Math.max(1, Math.round(distanceM(hotelFor(area.id)!.pin.location.lon, hotelFor(area.id)!.pin.location.lat, pin.location.lon, pin.location.lat) / WALK_PACE_M_PER_MIN)), t(hotelFor(area.id)!.pin.name, locale))}</span>}
                 <span className="tm-wk__meta tm-saved__map">{s.saved.showOnMap}</span>
               </span>
             </Link>
             {pin.kind === 'hotel' && pin.walk && airport[pin.walk.station] && <FromAirport locale={locale} routes={airport[pin.walk.station]} walkMinutes={pin.walk.minutes} />}
             <div className="tm-wk__links">
-              <a href={pin.kind !== 'hotel' && hotelFor(area.id) ? directionsUrl(pin.location.lat, pin.location.lon, { from: hotelFor(area.id)!.pin.location }) : directionsUrl(pin.location.lat, pin.location.lon)} target="_blank" rel="noopener" className="tm-card__link tm-card__link--quiet">{pin.kind !== 'hotel' && hotelFor(area.id) ? s.trip.directionsFrom(t(hotelFor(area.id)!.pin.name, locale)) : s.card.directions}</a>
+              <a href={pin.kind !== 'hotel' && hotelFor(area.id) ? directionsUrl(pin.location.lat, pin.location.lon, { from: hotelFor(area.id)!.pin.location }) : pin.kind !== 'hotel' && byTrain(pin, area.id) ? directionsUrl(pin.location.lat, pin.location.lon, { from: homeHotel!.pin.location, mode: 'transit' }) : directionsUrl(pin.location.lat, pin.location.lon)} target="_blank" rel="noopener" className="tm-card__link tm-card__link--quiet">{pin.kind !== 'hotel' && hotelFor(area.id) ? s.trip.directionsFrom(t(hotelFor(area.id)!.pin.name, locale)) : pin.kind !== 'hotel' && byTrain(pin, area.id) ? s.trip.directionsFrom(t(homeHotel!.pin.name, locale)) : s.card.directions}</a>
               {pin.kind === 'hotel' && !sentIds && areaHotelCount(area.id) > 1 && pickFor(area.id) !== pin.id && (
                 <button type="button" className="tm-card__link tm-card__link--quiet" onClick={() => chooseHotel(area.id, pin.id)}>{s.weekendPage.useHotel}</button>
               )}
