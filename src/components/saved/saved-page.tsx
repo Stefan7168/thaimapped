@@ -23,7 +23,7 @@ import { addSaved, clearSaved, toggleSaved, useSaved } from '@/lib/saved/store'
 import { addKeptTrips, clearKeptTrips, toggleKeptTrip, useKeptTrips } from '@/lib/saved/trips'
 import { formatDay } from '@/lib/stay/format'
 import { addDays, dayTripOptions } from '@/lib/stay/store'
-import { awayNights, tripStartFor, useTripStartPicks } from '@/lib/stay/trip-start'
+import { awayNights, tripDayOptions, tripStartFor, useTripStartPicks } from '@/lib/stay/trip-start'
 import { TRIP_HOURS } from '@/lib/stay/calendar'
 import { chooseHotel, myHotelAcross, myHotelChoice, useHotelChoiceVersion } from '@/lib/saved/my-hotel'
 import { SiteHeader } from '@/components/explorer/site-header'
@@ -79,6 +79,8 @@ export function SavedPage({ locale, cityId, entries, trips = [], stations, inter
     if (!from) return []
     return Array.from({ length: r.days }, (_, i) => addDays(from, i))
   }
+  // A clashing trip with more than one day to choose from links to its start chips.
+  const canMove = (r: SavedTrip): boolean => !!stay && clashes(r).length > 0 && tripDayOptions(stay, r).length > 1
   const clashes = (r: SavedTrip): SavedTrip[] => {
     const mine = tripDays(r)
     const [a0, a1] = TRIP_HOURS[r.duration]
@@ -300,9 +302,10 @@ export function SavedPage({ locale, cityId, entries, trips = [], stations, inter
                       {clashes(r).length > 0 && <span className="tm-wk__meta">{s.saved.sameDay(clashes(r).map((o) => t(o.name, locale)).join(', '))}</span>}
                     </span>
                   </Link>
-                  {!sentIds && (
+                  {(!sentIds || canMove(r)) && (
                     <div className="tm-wk__links">
-                      <button type="button" className="tm-card__link tm-card__link--quiet" onClick={() => toggleKeptTrip(r.id)}>{s.saved.forget}</button>
+                      {canMove(r) && <Link href={`/${locale}/${cityId}/trip/${r.id}#tm-start`} className="tm-card__link">{s.saved.pickAnotherDay}</Link>}
+                      {!sentIds && <button type="button" className="tm-card__link tm-card__link--quiet" onClick={() => toggleKeptTrip(r.id)}>{s.saved.forget}</button>}
                     </div>
                   )}
                 </li>

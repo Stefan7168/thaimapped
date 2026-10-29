@@ -55,6 +55,8 @@ const en = {
     forget: 'Forget',
     // Two kept trips whose default days and hours overlap.
     sameDay: (name: string) => `Same hours as ${name}`,
+    // Opens the trip page at its start-day chips.
+    pickAnotherDay: 'Pick another day',
     lead: (n: number) => (n === 1 ? '1 saved in this browser.' : `${n} saved in this browser.`),
     empty: 'Nothing saved yet. Tap the heart on a hotel or a place on the map and it lands here.',
     emptyLink: 'Open the map',

@@ -132,6 +132,11 @@ export function TripPage({ locale, cityId, cityName, route, hotelDoors = {}, sta
     })
     return () => window.cancelAnimationFrame(id)
   }, [])
+  // The start chips exist only once the stay is read in the browser, so a #tm-start link (from the saved list's "Pick another day") scrolls to them here.
+  const chipCount = startOptions.length
+  useEffect(() => {
+    if (chipCount > 1 && window.location.hash === '#tm-start') document.getElementById('tm-start')?.scrollIntoView({ block: 'center' })
+  }, [chipCount])
   // With dates set, the day whose date is today in Bangkok is marked.
   const clock = useSyncExternalStore(noopSubscribe, clockSnapshot, () => null)
   const isToday = (d: number): boolean => !!clock && dayIso(d) === clock.date
@@ -252,7 +257,7 @@ export function TripPage({ locale, cityId, cityName, route, hotelDoors = {}, sta
             {/* A trip longer than the stay says so here too, as the trips index does; the days still get dates from check-in. */}
             {stay && route.days > nights(stay) + 1 && <p className="mt-3 text-[15px] tm-wk__from">{s.trip.tooLong(nights(stay))}</p>}
             {startOptions.length > 1 && (
-              <p className="mt-4 flex flex-wrap items-center gap-1.5 text-[15px] text-ink-2 tm-trip__tools">
+              <p id="tm-start" className="mt-4 flex flex-wrap items-center gap-1.5 text-[15px] text-ink-2 tm-trip__tools">
                 <span className="mr-1">{s.trip.startOn}</span>
                 {startOptions.map((date) => (
                   <button key={date} type="button" aria-pressed={startIso === date} onClick={() => setPickedStart(date)} className={`tm-chip${startIso === date ? ' tm-chip--on' : ''}`}>{formatDay(date, locale)}</button>
