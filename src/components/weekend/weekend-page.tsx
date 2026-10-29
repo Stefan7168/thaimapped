@@ -350,7 +350,8 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
   // Plan trips in the same hours on the same day, as the saved list warns; a trip with more than one day to choose from links to its chips.
   const planRoutes = routes.filter((r) => planTrips.includes(r.id))
   const clashes = (r: TripRoute): TripRoute[] => (stay && planTrips.includes(r.id) ? tripClashes(stay, r, planRoutes, picks) : [])
-  const canMove = (r: TripRoute): boolean => !!stay && clashes(r).length > 0 && tripDayOptions(stay, r).length > 1
+  // A kept trip with more than one day to choose from links to its start chips; the label says why when it clashes.
+  const canMove = (r: TripRoute): boolean => !!stay && planTrips.includes(r.id) && tripDayOptions(stay, r).length > 1
   // Nights a plan road trip sleeps away: the room here, and its total, are for the other nights.
   const away = stay ? awayNights(stay, routes, planTrips, picks) : []
   const hereNights = stay ? nights(stay) - away.length : 0
@@ -599,7 +600,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
                       </span>
                     </Link>
                     <div className="tm-wk__links">
-                      {canMove(r) && <Link href={`/${locale}/${cityId}/trip/${r.id}#tm-start`} className="tm-card__link tm-card__link--quiet">{s.saved.pickAnotherDay}</Link>}
+                      {canMove(r) && <Link href={`/${locale}/${cityId}/trip/${r.id}#tm-start`} className="tm-card__link tm-card__link--quiet">{clashes(r).length > 0 ? s.saved.pickAnotherDay : s.saved.changeDay}</Link>}
                       <button type="button" aria-pressed={keptTrips.includes(r.id)} className="tm-card__link tm-card__link--quiet" onClick={() => toggleKeptTrip(r.id)}>{keptTrips.includes(r.id) ? s.trip.kept : s.trip.keep}</button>
                     </div>
                   </li>

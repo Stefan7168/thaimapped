@@ -76,8 +76,8 @@ export function SavedPage({ locale, cityId, entries, trips = [], stations, inter
   // A sent list shows its trips on the sender's days (starts=); the reader's own list on their own picks.
   const picks = sentIds ? sentStarts : ownPicks
   const keptTrips = (sentIds ? sentTrips : keptIds).map((id) => trips.find((r) => r.id === id)).filter((r): r is SavedTrip => !!r)
-  // A clashing trip with more than one day to choose from links to its start chips.
-  const canMove = (r: SavedTrip): boolean => !!stay && clashes(r).length > 0 && tripDayOptions(stay, r).length > 1
+  // A kept trip with more than one day to choose from links to its start chips (sent lists too: the receiver can move it on the trip page).
+  const canMove = (r: SavedTrip): boolean => !!stay && tripDayOptions(stay, r).length > 1
   // Two kept trips in the same hours on the same day (each on its picked or default day).
   const clashes = (r: SavedTrip): SavedTrip[] => (stay ? tripClashes(stay, r, keptTrips, picks) : [])
   // With dates set, the days of the stay a trip fits, as the trips index says it.
@@ -332,7 +332,7 @@ export function SavedPage({ locale, cityId, entries, trips = [], stations, inter
                   </Link>
                   {(!sentIds || canMove(r)) && (
                     <div className="tm-wk__links">
-                      {canMove(r) && <Link href={`/${locale}/${cityId}/trip/${r.id}#tm-start`} className="tm-card__link tm-card__link--quiet">{s.saved.pickAnotherDay}</Link>}
+                      {canMove(r) && <Link href={`/${locale}/${cityId}/trip/${r.id}#tm-start`} className="tm-card__link tm-card__link--quiet">{clashes(r).length > 0 ? s.saved.pickAnotherDay : s.saved.changeDay}</Link>}
                       {!sentIds && <button type="button" className="tm-card__link tm-card__link--quiet" onClick={() => toggleKeptTrip(r.id)}>{s.saved.forget}</button>}
                     </div>
                   )}

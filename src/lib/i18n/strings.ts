@@ -57,6 +57,7 @@ const en = {
     sameDay: (name: string) => `Same hours as ${name}`,
     // Opens the trip page at its start-day chips.
     pickAnotherDay: 'Pick another day',
+    changeDay: 'Change the day',
     // A calendar file of the kept trips on their days.
     calendar: 'Trips to calendar',
     calendarName: 'Your trips',
