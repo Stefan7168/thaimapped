@@ -732,7 +732,10 @@ a.tm-wk__stop { text-decoration: none; }
 .tm-stay--bare input[type='date'] { flex: 1; min-width: 0; width: auto; }
 .tm-wk__stay { color: var(--ink); font-weight: 600; }
 .tm-stay__to { color: var(--ink-2); }
-.tm-stay__tail { display: inline-flex; align-items: center; gap: 10px; white-space: nowrap; } /* the night count and Clear wrap as one */
+/* Measured 2026-10-29: with nights, adults and children in one no-wrap row the picker was 973 px wide on a 390 px phone and the page scrolled sideways. Each count with its buttons is one unbreakable group; the groups wrap. */
+.tm-stay__tail { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; min-width: 0; max-width: 100%; }
+.tm-stay__group { display: inline-flex; align-items: center; gap: 10px; white-space: nowrap; }
+.tm-stay__note { flex-basis: 100%; }
 .tm-stay__nights { font-size: var(--step-small); color: var(--ink-2); }
 .tm-stay__clear { font: inherit; font-size: var(--step-small); font-weight: 600; color: var(--accent-text); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
 .tm-cmp__wrap { overflow-x: auto; margin-top: 10px; -webkit-overflow-scrolling: touch; }

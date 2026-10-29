@@ -63,16 +63,22 @@ export function StayPicker({ locale, bare = false }: { locale: Locale; bare?: bo
       </button>
       {stay && (
         <span className="tm-stay__tail">
+          <span className="tm-stay__group">
           <span className="tm-stay__nights">{s.stay.nights(nights(stay))}</span>
           <button type="button" className="tm-stay__clear" onClick={() => moveOut(1)} aria-label={`${s.stay.addNight} (${s.stay.nights(nights(stay) + 1)})`}>{s.stay.addNight}</button>
           {nights(stay) > 1 && <button type="button" className="tm-stay__clear" onClick={() => moveOut(-1)} aria-label={`${s.stay.dropNight} (${s.stay.nights(nights(stay) - 1)})`}>{s.stay.dropNight}</button>}
+          </span>
+          <span className="tm-stay__group">
           <span className="tm-stay__nights">{s.stay.adults(adultsOf(stay), roomsOf(stay), childrenOf(stay))}</span>
           {adultsOf(stay) < MAX_ADULTS && <button type="button" className="tm-stay__clear" onClick={() => setAdults(adultsOf(stay) + 1)} aria-label={`${s.stay.addAdult} (${s.stay.adults(adultsOf(stay) + 1)})`}>{s.stay.addAdult}</button>}
           {adultsOf(stay) > 1 && <button type="button" className="tm-stay__clear" onClick={() => setAdults(adultsOf(stay) - 1)} aria-label={`${s.stay.dropAdult} (${s.stay.adults(adultsOf(stay) - 1)})`}>{s.stay.dropAdult}</button>}
+          </span>
+          <span className="tm-stay__group">
           {childrenOf(stay) < MAX_CHILDREN && <button type="button" className="tm-stay__clear" onClick={() => setChildren(childrenOf(stay) + 1)} aria-label={`${s.stay.addChild} (${s.stay.adults(adultsOf(stay), 1, childrenOf(stay) + 1)})`}>{s.stay.addChild}</button>}
           {childrenOf(stay) > 0 && <button type="button" className="tm-stay__clear" onClick={() => setChildren(childrenOf(stay) - 1)} aria-label={`${s.stay.dropChild} (${s.stay.adults(adultsOf(stay), 1, childrenOf(stay) - 1)})`}>{s.stay.dropChild}</button>}
-          {childrenOf(stay) > 0 && <span className="tm-stay__nights">{s.stay.childAges}</span>}
           <button type="button" className="tm-stay__clear" onClick={clearStay}>{s.stay.clear}</button>
+          </span>
+          {childrenOf(stay) > 0 && <span className="tm-stay__nights tm-stay__note">{s.stay.childAges}</span>}
         </span>
       )}
     </div>
