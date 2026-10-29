@@ -153,7 +153,9 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
       const items = plan.slots[slot]
       if (!d || items.length === 0) return []
       const date = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
-      const stopsText = items.map((p, i) => `${i + 1}. ${t(p.name, locale)}: ${t(p.why, locale)}`).join('\n')
+      // Each stop after the first carries the walk from the one before, as on the page.
+      const walkText = (p: Pin, i: number): string => (i === 0 ? '' : ` (${s.weekendPage.legWalk(Math.max(1, Math.round(distanceM(items[i - 1].location.lon, items[i - 1].location.lat, p.location.lon, p.location.lat) / WALK_PACE_M_PER_MIN)), t(items[i - 1].name, locale)).replace('↓ ', '')})`)
+      const stopsText = items.map((p, i) => `${i + 1}. ${t(p.name, locale)}${walkText(p, i)}: ${t(p.why, locale)}`).join('\n')
       return [{
         date, start: SLOT_HOURS[slot][0], end: SLOT_HOURS[slot][1],
         title: `${s.guide.slots[slot]}, ${areaName}`,
