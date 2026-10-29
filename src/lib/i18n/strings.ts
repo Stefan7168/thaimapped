@@ -296,6 +296,8 @@ const en = {
     legWalk: (n: number) => `↓ about ${n} min on foot`,
     legNote: 'measured along the drawn line',
     dayKm: (n: number) => `about ${n} km`,
+    dayKmAtLeast: (n: number) => `at least ${n} km`,
+    dayKmNote: 'part of it as the crow flies, where the drawn road does not reach a stop',
     openDay: (d: number) => `Open day ${d} as one route in Google Maps`,
     openWholeTrip: 'Open the whole trip as one route in Google Maps',
     mode: { car: 'By car', scooter: 'By scooter', transit: 'By train and bus', walk: 'On foot', boat: 'By boat' } as Record<string, string>,
