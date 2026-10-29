@@ -31,6 +31,7 @@ import { StayPicker } from '@/components/stay/stay-picker'
 import { HotelCompare } from '@/components/stay/hotel-compare'
 import { addSaved, useSaved } from '@/lib/saved/store'
 import { chooseHotel, useMyHotelChoice } from '@/lib/saved/my-hotel'
+import { useKeptTrips } from '@/lib/saved/trips'
 import { HotelElsewhere, useHotelElsewhere } from '@/components/stay/hotel-elsewhere'
 import { skipStop, unskipStops, useSkipped } from '@/lib/saved/skipped'
 import { KIND_ICONS } from '@/components/explorer/kind-bar'
@@ -274,7 +275,9 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
     const from = tripStartDefault(stay!, days)
     return formatDayRange(from, addDays(from, days - 1), locale)
   }
-  const dayTrips = [...routes.filter((r) => r.duration !== 'multi-day'), ...routes.filter((r) => r.duration === 'multi-day' && stay && r.days >= 2 && r.days <= nights(stay) + 1)]
+  const keptTrips = useKeptTrips()
+  // Kept trips first, then the rest in content order.
+  const dayTrips = [...routes.filter((r) => r.duration !== 'multi-day'), ...routes.filter((r) => r.duration === 'multi-day' && stay && r.days >= 2 && r.days <= nights(stay) + 1)].sort((a, b) => Number(keptTrips.includes(b.id)) - Number(keptTrips.includes(a.id)))
   return (
     <>
       <SiteHeader locale={locale} cityId={cityId} />
@@ -412,7 +415,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
                   <li key={r.id}>
                     <Link href={`/${locale}/${cityId}/trip/${r.id}`} className="tm-wk__stop tm-wk__trip">
                       <span className="tm-wk__text">
-                        <span className="tm-wk__kind">{r.duration === 'multi-day' ? s.trip.days(r.days) : s.trip.duration[r.duration]} · {s.trip.mode[r.mode]}{r.distanceKm !== undefined ? ` · ${s.trip.km(r.distanceKm)}` : ''}</span>
+                        <span className="tm-wk__kind">{r.duration === 'multi-day' ? s.trip.days(r.days) : s.trip.duration[r.duration]} · {s.trip.mode[r.mode]}{r.distanceKm !== undefined ? ` · ${s.trip.km(r.distanceKm)}` : ''}{keptTrips.includes(r.id) ? ` · ${s.trip.kept}` : ''}</span>
                         <span className="tm-wk__name">{t(r.name, locale)}</span>
                         <span className="tm-wk__why">{t(r.tagline, locale)}</span>
                         {r.duration === 'multi-day' && stay && <span className="tm-wk__meta tm-wk__from">{s.trip.fitsStay(nights(stay))} · {tripDates(r.days)}</span>}
