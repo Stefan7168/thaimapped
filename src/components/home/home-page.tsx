@@ -17,6 +17,7 @@ import { bangkokClock, bangkokNow } from '@/lib/explorer/when'
 import { slotNow } from '@/lib/explorer/weekend'
 import { addSaved, useSaved } from '@/lib/saved/store'
 import { useKeptTrips } from '@/lib/saved/trips'
+import { awayNights, useTripStartPicks } from '@/lib/stay/trip-start'
 import { StayPicker } from '@/components/stay/stay-picker'
 import { chooseHotel, myHotelAcross, useHotelChoiceVersion } from '@/lib/saved/my-hotel'
 import { daysUntil, nights, useStay, roomsOf } from '@/lib/stay/store'
@@ -70,7 +71,11 @@ export function HomePage({ locale, bundle, routes }: { locale: Locale; bundle: C
   // A returning visitor with a hearted hotel gets a way straight back to their plan.
   const saved = useSaved()
   const keptTrips = useKeptTrips()
+  const picks = useTripStartPicks()
   const stay = useStay()
+  // Nights a kept road trip sleeps away: the hotel total counts the rest, as the weekend page does.
+  const away = stay ? awayNights(stay, routes, keptTrips, picks) : []
+  const hereNights = stay ? nights(stay) - away.length : 0
   // The saved hotel the weekend sleeps in (the home area's chosen one, else the last saved), so the line and the plan pages agree.
   const choiceVersion = useHotelChoiceVersion()
   const myHotel = useMemo(() => {
@@ -198,7 +203,7 @@ export function HomePage({ locale, bundle, routes }: { locale: Locale; bundle: C
                 <p className="tm-hero__now tm-hero__mine">
                   {s.home.yourWeekend(t(myHotel.pin.name, locale), t(myHotel.area.name, locale))}
                   {/* With dates: the range, then the stay's cost at the hotel's class-typical rate (which names the nights), else the range and the nights. */}
-                  {stay && stayLabel ? (myHotel.pin.price ? <>{` · ${stayLabel}, ${s.home.inDays(daysUntil(stay))} · `}<span title={myHotel.pin.price.basis === 'tier-estimate' ? s.guide.priceEstimate : undefined}>{s.guide.stayTotal(thb(myHotel.pin.price.from * nights(stay) * roomsOf(stay), locale), nights(stay), roomsOf(stay))}{myHotel.pin.price.basis === 'tier-estimate' ? '*' : ''}</span></> : ` · ${stayLabel}, ${s.stay.nights(nights(stay))}, ${s.home.inDays(daysUntil(stay))}`) : ''}{' · '}
+                  {stay && stayLabel ? (myHotel.pin.price ? <>{` · ${stayLabel}, ${s.home.inDays(daysUntil(stay))} · `}<span title={myHotel.pin.price.basis === 'tier-estimate' ? s.guide.priceEstimate : undefined}>{s.guide.stayTotal(thb(myHotel.pin.price.from * hereNights * roomsOf(stay), locale), hereNights, roomsOf(stay))}{myHotel.pin.price.basis === 'tier-estimate' ? '*' : ''}{away.length > 0 ? s.guide.stayTotalAway(away.length) : ''}</span></> : ` · ${stayLabel}, ${s.stay.nights(nights(stay))}, ${s.home.inDays(daysUntil(stay))}`) : ''}{' · '}
                   {nowSlot ? (
                     <Link href={`/${locale}/${city.id}/weekend/${myHotel.area.id}?hotel=${myHotel.pin.id}#tm-slot-${nowSlot}`} className="tm-link tm-link--under">{s.home.jumpNow(s.guide.slots[nowSlot].toLowerCase())}</Link>
                   ) : (
