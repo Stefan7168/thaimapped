@@ -111,6 +111,7 @@ const en = {
     eyebrow: 'A weekend plan',
     showAllHotels: 'Show every hotel here',
     fromHotel: (n: number, hotel: string) => `about ${n} min on foot from ${hotel}`,
+    legWalk: (n: number, from: string) => `↓ about ${n} min on foot from ${from}`,
     byTrain: (route: string) => `or by train: ${route}`,
     sleepElsewhere: (hotel: string, area: string) => `You sleep in ${area}, at ${hotel}.`,
     gettingHere: (route: string) => `Getting here: ${route}.`,

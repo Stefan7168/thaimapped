@@ -3,7 +3,7 @@
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useEffect, useMemo, useState, useSyncExternalStore, type CSSProperties } from 'react'
+import { Fragment, useEffect, useMemo, useState, useSyncExternalStore, type CSSProperties } from 'react'
 import { CalendarPlus, Printer, Share2 } from 'lucide-react'
 import type { Area, Locale, Pin, Station, TripRoute } from '@/lib/content/types'
 import { FromAirport } from '@/components/stay/from-airport'
@@ -341,7 +341,15 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
                   </>
                 ) : (
                   <>
-                    <ul className="tm-wk__stops">{plan.slots[slot].map(stop)}</ul>
+                    <ul className="tm-wk__stops">
+                      {plan.slots[slot].map((pin, i, arr) => (
+                        <Fragment key={pin.id}>
+                          {/* The leg between two stops of one slot: a walking estimate, straight line, so the plan reads as a route and not a list. */}
+                          {i > 0 && <li className="tm-wk__leg" title={s.stationPage.estimated}>{s.weekendPage.legWalk(Math.max(1, Math.round(distanceM(arr[i - 1].location.lon, arr[i - 1].location.lat, pin.location.lon, pin.location.lat) / WALK_PACE_M_PER_MIN)), t(arr[i - 1].name, locale))}</li>}
+                          {stop(pin)}
+                        </Fragment>
+                      ))}
+                    </ul>
                     {/* The night ends at the hotel: the way back from the slot's last stop, by train when it is a real ride. */}
                     {myHotel && (slot === 'fridayNight' || slot === 'saturdayNight') && (() => {
                       const last = plan.slots[slot][plan.slots[slot].length - 1]
