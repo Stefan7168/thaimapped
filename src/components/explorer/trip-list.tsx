@@ -54,6 +54,8 @@ function toggle<T>(list: T[], v: T): T[] {
 export function TripList({ locale, cityId, cityCamera, routes, hotelDoors = {}, tripStarts = {}, tripRides = {} }: { locale: Locale; cityId: string; cityCamera: { center: [number, number]; zoom: number; pitch: number; bearing: number }; routes: TripRoute[]; hotelDoors?: Record<string, HotelDoor[]>; tripStarts?: Record<string, string>; tripRides?: Record<string, Record<string, AirportLeg[] | null>> }) {
   const s = strings(locale)
   const [f, setF] = useState<TripFilters>(EMPTY)
+  // With dates set: show only the trips that have a free day, or fit inside the stay, on them.
+  const [fitOnly, setFitOnly] = useState(false)
   // Phones: the four chip rows fold behind one button, closed until tapped, so the trips come first.
   const [filtersOpen, setFiltersOpen] = useState(false)
   const [activeId, setActiveId] = useState<string | null>(null)
@@ -87,7 +89,18 @@ export function TripList({ locale, cityId, cityCamera, routes, hotelDoors = {}, 
     const from = tripStartFor(stay, r, picks)!
     return `${s.trip.fitsStay(nights(stay), r.days)} · ${formatDayRange(from, addDays(from, r.days - 1), locale)}`
   }
-  const count = f.durations.length + f.days.length + f.modes.length + f.themes.length
+  // Whether a trip has a day on these dates: a day trip needs a free day in its hours, a road trip needs to fit inside the stay.
+  const fitting = useMemo(() => {
+    const keptRoutes = routes.filter((k) => kept.includes(k.id))
+    const fits = (r: TripRoute): boolean => {
+      if (!stay) return true
+      if (r.days > 1) return r.days <= nights(stay) + 1 && !!tripStartFor(stay, r, picks)
+      if (kept.includes(r.id)) return true
+      return freeDays(stay, r, keptRoutes, picks).free.length > 0
+    }
+    return new Set(routes.filter(fits).map((r) => r.id))
+  }, [routes, stay, kept, picks])
+  const count = f.durations.length + f.days.length + f.modes.length + f.themes.length + (stay && fitOnly ? 1 : 0)
   // The weekend's hotel: a trip that starts at a station says the ride there from its door, or that it starts at the hotel's own station.
   const saved = useSaved()
   const choiceVersion = useHotelChoiceVersion()
@@ -118,12 +131,13 @@ export function TripList({ locale, cityId, cityCamera, routes, hotelDoors = {}, 
     () =>
       routes.filter(
         (r) =>
+          (!stay || !fitOnly || fitting.has(r.id)) &&
           (f.durations.length === 0 || f.durations.includes(r.duration)) &&
           (f.days.length === 0 || f.days.includes(bucketOf(r.days))) &&
           (f.modes.length === 0 || f.modes.includes(r.mode)) &&
           (f.themes.length === 0 || r.themes.some((th) => f.themes.includes(th))),
       ),
-    [routes, f],
+    [routes, f, stay, fitOnly, fitting],
   )
 
   const active = shown.find((r) => r.id === activeId) ?? null
@@ -167,6 +181,11 @@ export function TripList({ locale, cityId, cityCamera, routes, hotelDoors = {}, 
           <button type="button" className={`tm-chip tm-filters__toggle${count > 0 ? ' tm-chip--on' : ''}`} aria-expanded={filtersOpen} onClick={() => setFiltersOpen((o) => !o)}>
             {count > 0 ? s.trip.filters.showCount(count) : s.trip.filters.show}
           </button>
+          {stay && (
+            <Row label={s.trip.filters.dates}>
+              {chip(fitOnly, s.trip.filters.fitsDates, () => setFitOnly((v) => !v), 'fit')}
+            </Row>
+          )}
           <Row label={s.trip.filters.duration}>
             {DURATIONS.filter((d) => available.durations.has(d)).map((d) => chip(f.durations.includes(d), s.trip.duration[d], () => setF({ ...f, durations: toggle(f.durations, d) }), d))}
           </Row>
@@ -182,7 +201,7 @@ export function TripList({ locale, cityId, cityCamera, routes, hotelDoors = {}, 
           <p className="tm-filters__count">
             <span>{s.trip.filters.count(shown.length)}</span>
             {count > 0 && (
-              <button type="button" onClick={() => setF(EMPTY)} className="tm-link tm-link--under">
+              <button type="button" onClick={() => { setF(EMPTY); setFitOnly(false) }} className="tm-link tm-link--under">
                 {s.trip.filters.clear}
               </button>
             )}
