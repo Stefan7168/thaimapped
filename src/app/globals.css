@@ -472,6 +472,9 @@ body {
 .tm-row__tag { grid-column: 1 / -1; margin-top: -8px; padding-bottom: 12px; font-size: 14px; line-height: 1.4; color: var(--ink-2); }
 .tm-row__kept { margin-left: 8px; padding: 1px 6px; border-radius: 999px; background: var(--ink); color: var(--paper); font-size: 11px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; }
 .tm-row__fit { grid-column: 1 / -1; margin-top: -10px; padding-bottom: 12px; font-size: 13px; font-weight: 600; color: var(--accent-text); }
+/* The ride from the hotel is help, not the headline: it sits under the fit line in the secondary ink, regular weight, with no gap between them. */
+.tm-row__fit--quiet { color: var(--ink-2); font-weight: 400; }
+.tm-row__fit + .tm-row__fit--quiet { margin-top: -12px; }
 .tm-row--on .tm-row__head { color: var(--ink); }
 .tm-row--on .tm-row__name { font-weight: 600; }
 .tm-row__body { max-width: 34ch; padding: 4px 0 20px 26px; font-size: 16px; line-height: 1.5; color: var(--ink); }

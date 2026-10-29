@@ -205,7 +205,7 @@ export function TripList({ locale, cityId, cityCamera, routes, hotelDoors = {}, 
                   </span>
                   <span className="tm-row__tag">{t(r.tagline, locale)}</span>
                   {fitTag(r) && <span className="tm-row__fit">{fitTag(r)}</span>}
-                  {byTrain(r) && <span className="tm-row__fit">{byTrain(r)}</span>}
+                  {byTrain(r) && <span className="tm-row__fit tm-row__fit--quiet">{byTrain(r)}</span>}
                 </button>
                 <div className="tm-row__body" hidden={!on}>
                   <p>
