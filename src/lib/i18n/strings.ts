@@ -335,6 +335,8 @@ const en = {
     startByTrain: (hotel: string, route: string) => `From your hotel, ${hotel}: ${route}`,
     startAtYourStation: (hotel: string) => `From your hotel, ${hotel}: this is your station`,
     endAtHotel: (hotel: string) => `Back to your hotel, ${hotel}`,
+    endOnCheckout: (hotel: string) => `Back in the city on your check-out day; your stay at ${hotel} is over by then`,
+    startNoRoom: (hotel: string) => `Leaves on your check-in day and sleeps away every night, so you need no room at ${hotel}`,
     directionsFrom: (hotel: string) => `Directions from ${hotel}`,
     directionsTo: (hotel: string) => `Directions to ${hotel}`,
     intro: 'Road trips with the route, the stops and a place to sleep, day by day. Pick a row and the map moves to it.',

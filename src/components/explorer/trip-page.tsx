@@ -58,6 +58,7 @@ export function TripPage({ locale, cityId, cityName, route, hotelDoors = {}, sta
   // The line under the first stop: the rail ride from the hotel when the trip starts at a station, else just the hotel's name.
   function startLine(stop: RouteStop): string {
     const name = t(myHotel!.name, locale)
+    if (noRoom) return s.trip.startNoRoom(name)
     const from = myHotel!.walk?.station
     if (!stop.station || !from) return s.trip.startFromHotel(name)
     if (stop.station === from) return s.trip.startAtYourStation(name)
@@ -124,6 +125,10 @@ export function TripPage({ locale, cityId, cityName, route, hotelDoors = {}, sta
   // A multi-day trip starts on any day that gets you back by check-out; a day trip on any day of the stay its time of day fits (none for a full day in a one-night stay).
   const startOptions = useMemo(() => (stay ? (route.days > 1 ? tripStartOptions(stay, route.days) : dayTripOptions(stay, route.duration)) : []), [stay, route.days, route.duration])
   const startIso = stay ? (pickedStart && startOptions.includes(pickedStart) ? pickedStart : route.days > 1 ? tripStartDefault(stay, route.days) : (startOptions[startOptions.length - 1] ?? null)) : null
+  // The trip's last day falls on the stay's check-out day: the room is done before the trip ends.
+  const endsOnCheckout = route.days > 1 && !!stay && !!startIso && addDays(startIso, route.days - 1) >= stay.checkOut
+  // Every night of the stay is spent on this trip, so the hotel is never slept in.
+  const noRoom = !!stay && !!startIso && startIso <= stay.checkIn && endsOnCheckout
   const dayIso = (d: number): string | null => (startIso ? addDays(startIso, d - 1) : null)
   // With dates set, day N is the start date plus N - 1, shown beside the day heading as the weekend page does.
   const dayDate = (d: number): string | null => {
@@ -332,7 +337,7 @@ export function TripPage({ locale, cityId, cityName, route, hotelDoors = {}, sta
                             {stop.placeholder && <span className="tm-stoprow__tbc">{s.trip.placeholder}</span>}
                             {stop.search && <span className="block text-[13px] text-ink-2 tm-stoprow__search">{s.trip.searchHotels(stop.search, !!stay)}</span>}
                             {myHotel && i === 0 && <span className="block text-[13px] tm-wk__from">{startLine(stop)}</span>}
-                            {myHotel && stop.kind === 'end' && i === route.stops.length - 1 && <span className="block text-[13px] tm-wk__from">{s.trip.endAtHotel(t(myHotel.name, locale))}</span>}
+                            {myHotel && stop.kind === 'end' && i === route.stops.length - 1 && <span className="block text-[13px] tm-wk__from">{endsOnCheckout ? s.trip.endOnCheckout(t(myHotel.name, locale)) : s.trip.endAtHotel(t(myHotel.name, locale))}</span>}
                             {stop.kind === 'hotel' && startIso && stay && (() => {
                               const at = nightAt(stop)!
                               const n = nights(at)
