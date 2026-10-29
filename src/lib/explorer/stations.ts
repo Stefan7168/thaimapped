@@ -52,5 +52,7 @@ export function stationPages(bundle: CityBundle): StationPage[] {
     const lines = stations.map((st) => bundle.lines.find((l) => l.system === st.system && l.line === st.line)).filter((l): l is Line => Boolean(l))
     pages.push({ slug: slugOf(first), stations, lines, hotels, places })
   }
-  return pages.sort((a, b) => b.hotels.length * 2 + b.places.length - (a.hotels.length * 2 + a.places.length))
+  // Busiest first; on a tie the station with more hotels wins, since the index is "hotels near a station".
+  const weight = (p: StationPage) => p.hotels.length * 2 + p.places.length
+  return pages.sort((a, b) => weight(b) - weight(a) || b.hotels.length - a.hotels.length)
 }
