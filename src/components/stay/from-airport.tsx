@@ -16,6 +16,11 @@ export function rideSentence(legs: AirportLeg[], walkMinutes: number | null, loc
   return walkMinutes === null ? rides.join(', ') : `${rides.join(', ')}, ${s.airport.thenWalk(walkMinutes)}`
 }
 
+/** The short form with the walk: "BTS Sukhumvit to CEN Siam, then 3 min on foot" or "2 rides, change at CEN Siam, then 5 min on foot". */
+export function rideShort(legs: AirportLeg[], walkMinutes: number, locale: Locale): string {
+  return `${airportCell(legs, locale)}, ${strings(locale).airport.thenWalk(walkMinutes)}`
+}
+
 /**
  * One short cell for the hotels table: "Airport Rail Link to A8 Phaya Thai",
  * "2 rides, change at A8 Phaya Thai", "Airport station" or "No rail line".

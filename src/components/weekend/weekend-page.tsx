@@ -8,7 +8,7 @@ import { CalendarPlus, Printer, Share2 } from 'lucide-react'
 import type { Area, Locale, Pin, Station, TripRoute } from '@/lib/content/types'
 import { FromAirport } from '@/components/stay/from-airport'
 import type { AirportLeg, AirportRoutes } from '@/lib/transit/from-airport'
-import { rideSentence } from '@/components/stay/from-airport'
+import { rideSentence, rideShort } from '@/components/stay/from-airport'
 import type { HotelDoor } from '@/lib/content/slim'
 import { t } from '@/lib/i18n/locales'
 import { strings } from '@/lib/i18n/strings'
@@ -113,11 +113,12 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
     return legs && legs.length > 0 ? s.weekendPage.byTrainFrom(t(myHotel.name, locale), rideSentence(legs, null, locale)) : null
   }
   // With the hotel in another area: the ride from its station to this place's station, then the walk; the directions start at that door by train.
-  const byTrainElsewhere = (pin: Pin): string | null => {
+  // Sleeping in another area, every stop is a train ride: the stop's line is the short form (the box above already names the hotel's line and station), the full ride sits in its title.
+  const byTrainElsewhere = (pin: Pin): { short: string; long: string } | null => {
     const hotel = elsewhere?.hotel
     if (myHotel || !hotel?.walk || !pin.walk) return null
     const legs = elsewhereRides[hotel.walk.station]?.[pin.walk.station]
-    return legs && legs.length > 0 ? s.weekendPage.byTrainFrom(t(hotel.name, locale), rideSentence(legs, pin.walk.minutes, locale)) : null
+    return legs && legs.length > 0 ? { short: s.weekendPage.byTrainFrom(t(hotel.name, locale), rideShort(legs, pin.walk.minutes, locale)), long: s.weekendPage.byTrainFrom(t(hotel.name, locale), rideSentence(legs, pin.walk.minutes, locale)) } : null
   }
   const fromHotel = (pin: Pin) => (myHotel ? Math.max(1, Math.round(distanceM(myHotel.location.lon, myHotel.location.lat, pin.location.lon, pin.location.lat) / WALK_PACE_M_PER_MIN)) : null)
   // Stops of this weekend inside a ten-minute walk of a hotel, straight-line at walking pace.
@@ -222,7 +223,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
             {pin.walk && walkStation && <span className="tm-wk__meta">{s.city.walkMinutes(pin.walk.minutes)} {s.city.from(`${walkStation.code ? walkStation.code + ' ' : ''}${t(walkStation.name, locale)}`)}</span>}
             {pin.kind !== 'hotel' && myHotel && <span className="tm-wk__meta tm-wk__from">{s.weekendPage.fromHotel(fromHotel(pin)!, t(myHotel.name, locale))}</span>}
             {pin.kind !== 'hotel' && myHotel && fromHotel(pin)! > 20 && byTrain(pin) && <span className="tm-wk__meta tm-wk__train">{s.weekendPage.byTrain(byTrain(pin)!)}</span>}
-            {pin.kind !== 'hotel' && byTrainElsewhere(pin) && <span className="tm-wk__meta tm-wk__from">{byTrainElsewhere(pin)}</span>}
+            {pin.kind !== 'hotel' && byTrainElsewhere(pin) && <span className="tm-wk__meta tm-wk__from" title={byTrainElsewhere(pin)!.long}>{byTrainElsewhere(pin)!.short}</span>}
             {pin.kind === 'hotel' && <span className="tm-wk__meta">{s.saved.cmpPlaces(nearbyCount(pin))}</span>}
           </span>
         </button>
@@ -329,7 +330,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
                               {whenLine(pin, locale) && <span className="tm-wk__meta tm-wk__when">{whenLine(pin, locale)}</span>}
                               {pin.walk && stationById.get(pin.walk.station) && <span className="tm-wk__meta">{s.city.walkMinutes(pin.walk.minutes)} {s.city.from(`${stationById.get(pin.walk.station)!.code ? stationById.get(pin.walk.station)!.code + ' ' : ''}${t(stationById.get(pin.walk.station)!.name, locale)}`)}</span>}
                               {myHotel && byTrain(pin) && <span className="tm-wk__meta tm-wk__train">{s.weekendPage.byTrainFrom(t(myHotel.name, locale), byTrain(pin)!)}</span>}
-                              {byTrainElsewhere(pin) && <span className="tm-wk__meta tm-wk__train">{byTrainElsewhere(pin)}</span>}
+                              {byTrainElsewhere(pin) && <span className="tm-wk__meta tm-wk__train" title={byTrainElsewhere(pin)!.long}>{byTrainElsewhere(pin)!.short}</span>}
                             </li>
                           ))}
                         </ul>
