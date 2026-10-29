@@ -342,7 +342,7 @@ export function SavedPage({ locale, cityId, entries, trips = [], stations, inter
                       {clashes(r).length > 0 && <span className="tm-wk__meta">{s.saved.sameDay(clashes(r).map((o) => t(o.name, locale)).join(', '))}</span>}
                     </span>
                   </Link>
-                  {(!sentIds || canMove(r)) && (
+                  {!sentIds && (
                     <div className="tm-wk__links">
                       {canMove(r) && <Link href={`/${locale}/${cityId}/trip/${r.id}#tm-start`} className="tm-card__link tm-card__link--quiet">{clashes(r).length > 0 ? s.saved.pickAnotherDay : s.saved.changeDay}</Link>}
                       {!sentIds && <button type="button" className="tm-card__link tm-card__link--quiet" onClick={() => toggleKeptTrip(r.id)}>{s.saved.forget}</button>}
