@@ -617,6 +617,10 @@ body {
   .tm-intro { max-width: 78%; padding: 72px 0 96px 20px; }
   .tm-areas, .tm-how { padding: 0 20px 96px; }
   .tm-row__head { min-height: 56px; }
+  /* Trips index on a phone: the title takes the full width and the length, mode and distance wrap under it, instead of squeezing the name into four short lines. */
+  .tm-trips-index .tm-row__head { grid-template-columns: 1fr; row-gap: 2px; }
+  .tm-trips-index .tm-row__meta { white-space: normal; }
+  .tm-trips-index .tm-row__tag { margin-top: 2px; }
   /* Phones: an area's five highlights run sideways as a snap rail, not a 2,000px column per area; the page went from ~20,000px to a scroll a thumb can finish. */
   .tm-hl { flex-direction: row; gap: 12px; margin: 0 -20px 8px; padding: 0 20px 4px; max-width: none; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
   .tm-hl::-webkit-scrollbar { display: none; }
