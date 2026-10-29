@@ -328,7 +328,7 @@ const en = {
     shareFromHotel: (hotel: string) => `from your hotel, ${hotel}`,
     startOn: 'Start on',
     // The day chips: a kept trip already runs in these hours that day.
-    sameHoursAs: (names: string) => `On this day it runs in the same hours as ${names}.`,
+    sameHoursAs: (names: string, days = 1) => (days > 1 ? `These days overlap with ${names}.` : `On this day it runs in the same hours as ${names}.`),
     pickFreeDay: 'A day without a mark is free.',
     nightAway: (hotel: string, n = 1) => (n > 1 ? `These ${n} nights are away from ${hotel}` : `This night is away from ${hotel}`),
     stopNights: (n: number, when: string) => (n === 1 ? `1 night, ${when}` : `${n} nights, ${when}`),

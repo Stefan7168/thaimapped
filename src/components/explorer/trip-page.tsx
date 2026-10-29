@@ -293,7 +293,7 @@ export function TripPage({ locale, cityId, cityName, route, hotelDoors = {}, sta
             )}
             {startIso && clashOn(startIso).length > 0 && (
               <p className="mt-2 text-[15px] tm-wk__from">
-                {s.trip.sameHoursAs(clashOn(startIso).map((o) => t(o.name, locale)).join(', '))}
+                {s.trip.sameHoursAs(clashOn(startIso).map((o) => t(o.name, locale)).join(', '), route.days)}
                 {startOptions.some((d) => clashOn(d).length === 0) ? ` ${s.trip.pickFreeDay}` : ''}
               </p>
             )}
