@@ -26,7 +26,8 @@ export function stationsFor(stations: Station[], pins: Pin[], keep: string[] = [
 
 /** A trip that is only named and linked: no road line, no stops. The two multi-day routes carry 3,000 to 4,000 road points each. */
 export function slimRoute(route: TripRoute): TripRoute {
-  return { ...route, path: null, waypoints: [], stops: [] }
+  // Each day's first stop (the calendar event's place) and the hotel stops (the nights slept away) stay; the rest of the stops and the drawn line go.
+  return { ...route, path: null, waypoints: [], stops: route.stops.filter((st, i, all) => st.kind === 'hotel' || all.findIndex((x) => x.day === st.day) === i) }
 }
 
 /** A trip drawn small (the home page sheet): the road line thinned to about 110 m steps, the stops kept. */

@@ -438,6 +438,17 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
             ))}
             <li className="tm-wk__slot tm-wk__slot--stay" id="tm-stay">
               <h2 className="tm-wk__time">{s.guide.stay}</h2>
+              {stay && routes.filter((r) => planTrips.includes(r.id) && r.days >= 2 && r.days <= nights(stay) + 1).map((r) => {
+                // The road trip's nights inside the stay, from its default start: the reader sleeps there, not here.
+                const from = tripStartDefault(stay, r.days)
+                const away = r.stops.filter((st) => st.kind === 'hotel').map((st) => addDays(from, st.day - 1)).filter((d) => d >= stay.checkIn && d < stay.checkOut)
+                return away.length > 0 ? (
+                  <p key={r.id} className="tm-wk__shared tm-wk__tripslot">
+                    <Link href={`/${locale}/${cityId}/trip/${r.id}`} className="tm-link tm-link--under">{t(r.name, locale)}</Link>
+                    {s.weekendPage.sleepAway(away.map((d) => formatDay(d, locale)).join(` ${s.trip.or} `))}
+                  </p>
+                ) : null
+              })}
               {hotels.length > 0 && <p className={myHotel ? 'tm-wk__empty' : 'tm-wk__empty tm-wk__hint'}>{myHotel ? s.weekendPage.hotelPicked(t(myHotel.name, locale)) : s.weekendPage.pickHotelHint}{myHotel && hotels.filter((h) => saved.includes(h.id)).length > 1 ? ` ${s.weekendPage.switchHint}` : ''}</p>}
               {hotels.length === 0 ? (
                 <p className="tm-wk__empty">
