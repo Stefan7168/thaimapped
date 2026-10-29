@@ -159,6 +159,8 @@ const en = {
     calendarStops: 'Stops',
     calendarCheckIn: (hotel: string) => `Check in: ${hotel}`,
     calendarCheckOut: (hotel: string) => `Check out: ${hotel}`,
+    checkOutDay: 'Check-out day',
+    checkOutDayNote: 'Leave the bags at the desk and pick them up after.',
     calendarTimesVary: 'Check-in and check-out times vary by hotel; your booking has the real ones.',
     calendarHotel: 'Where to sleep',
   },

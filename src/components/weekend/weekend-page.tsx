@@ -19,7 +19,7 @@ import { thb } from '@/lib/explorer/price'
 import { buildOutboundUrl, subIdFor, type Partner } from '@/lib/links/build'
 import { directionsUrl } from '@/lib/links/directions'
 import { formatDayRange } from '@/lib/stay/format'
-import { addDays, adoptStayFromUrl, adultsOf, childrenOf, daysUntil, nights, roomsOf, stayParam, tripStartDefault, useStay } from '@/lib/stay/store'
+import { addDays, adoptStayFromUrl, adultsOf, childrenOf, daysUntil, iso, nights, roomsOf, stayParam, tripStartDefault, useStay } from '@/lib/stay/store'
 import { buildIcs, downloadIcs, type CalendarEvent } from '@/lib/stay/calendar'
 import { trackOutbound } from '@/lib/links/track'
 import { supports3D } from '@/lib/map/device'
@@ -132,6 +132,11 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
     if (d.getDay() !== 5) return null
     d.setDate(d.getDate() + (slot === 'fridayNight' ? 0 : slot === 'sunday' ? 2 : 1))
     return d
+  }
+  // The slot that falls on check-out day (Sunday of a Friday-to-Sunday stay): the heading says so, as the bags come along.
+  const isCheckOutDay = (slot: WeekendSlot): boolean => {
+    const d = slotDay(slot)
+    return !!d && !!stay && iso(d) === stay.checkOut
   }
   const slotDate = (slot: WeekendSlot): string | null => {
     const d = slotDay(slot)
@@ -314,7 +319,7 @@ export function WeekendPage({ locale, cityId, area, areas, stations, routes, bor
           <ol className="tm-wk__slots">
             {WEEKEND_SLOTS.map((slot) => (
               <li key={slot} className={`tm-wk__slot${nowSlot === slot ? ' tm-wk__slot--now' : ''}`} id={`tm-slot-${slot}`}>
-                <h2 className="tm-wk__time">{s.guide.slots[slot]}{slotDate(slot) && <span className="tm-wk__date"> · {slotDate(slot)}</span>}{nowSlot === slot && <span className="tm-wk__now">{s.weekendPage.now}</span>}</h2>
+                <h2 className="tm-wk__time">{s.guide.slots[slot]}{slotDate(slot) && <span className="tm-wk__date"> · {slotDate(slot)}</span>}{nowSlot === slot && <span className="tm-wk__now">{s.weekendPage.now}</span>}{isCheckOutDay(slot) && <span className="tm-wk__now tm-wk__checkout" title={s.weekendPage.checkOutDayNote}>{s.weekendPage.checkOutDay}</span>}</h2>
                 {plan.slots[slot].length === 0 ? (
                   <>
                     <p className="tm-wk__empty">

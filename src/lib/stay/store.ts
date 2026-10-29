@@ -131,7 +131,7 @@ export function useStay(): Stay | null {
   return useSyncExternalStore(subscribe, stayNow, () => null)
 }
 
-function iso(d: Date): string {
+export function iso(d: Date): string {
   const y = d.getFullYear()
   const m = String(d.getMonth() + 1).padStart(2, '0')
   const day = String(d.getDate()).padStart(2, '0')
