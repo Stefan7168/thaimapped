@@ -46,3 +46,12 @@ next-env.d.ts
 # taste-skill working files: keep the dealt direction, not the inspector's screenshots
 .taste-skill/*
 !.taste-skill/direction.json
+
+# Claude Code: personal, machine-local files. settings.local.json can hold
+# approved shell commands with secrets in them, so never commit it.
+# Shared team config (.claude/settings.json, .claude/skills/) stays tracked.
+.claude/settings.local.json
+.claude/**/*.local.json
+CLAUDE.local.md
+.claude/todos/
+.claude/shell-snapshots/
